@@ -20,4 +20,6 @@ A decoder-only transformer, the 124M-parameter GPT-2 configuration. Used here as
 
 ## Open in Neurarch
 
-Once `model.json` is added, download it and open it at [neurarch.com](https://www.neurarch.com/) to edit, validate, or export to training code.
+[**▶ Open this architecture in Neurarch**](https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/neurarch-model-zoo/main/architectures/gpt2-small/model.json)
+
+The link loads the graph directly onto the canvas (once `model.json` is added). From there you can edit, validate, or export to training code.

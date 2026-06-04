@@ -23,7 +23,9 @@ A pretty diagram alone is not enough. The value of this zoo is that every entry 
    - `assets/diagram.png`
    - `README.md`
 5. Add a row to the catalog table in the top-level `README.md`.
-6. Open a pull request.
+6. Add an **Open in Neurarch** link to your entry's README:
+   `https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/neurarch-model-zoo/main/architectures/<your-id>/model.json`
+7. Open a pull request.
 
 ## Naming
 

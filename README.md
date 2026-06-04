@@ -23,7 +23,15 @@ Each folder under [`architectures/`](architectures/) contains:
 | `assets/diagram.png` | Raster diagram (renders everywhere: GitHub, social previews, docs). |
 | `README.md` | A short explanation of the architecture and its design choices. |
 
-To work with any architecture: download its `model.json`, open it in Neurarch, and you have a live, validated graph you can fork or export to training code.
+### Open any architecture in one click
+
+Every entry has an **Open in Neurarch** link that loads its graph straight onto the canvas, no download step:
+
+```
+https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/neurarch-model-zoo/main/architectures/<id>/model.json
+```
+
+From there you have a live, validated graph you can fork, edit, re-validate, or export to training code.
 
 ## Catalog
 
