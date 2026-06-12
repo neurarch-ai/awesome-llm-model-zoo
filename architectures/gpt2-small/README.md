@@ -1,25 +1,48 @@
 # GPT-2 Small
 
-A decoder-only transformer, the 124M-parameter GPT-2 configuration. Used here as the first reference entry.
+The 124M-parameter GPT-2 configuration from OpenAI, the classic decoder-only transformer and the reference point most later LLM architectures are described against.
 
-- **Family:** decoder-only transformer
-- **Parameters:** ~124M
-- **Status:** scaffold (graph and diagrams to be added)
+## Model URLs
+
+| Where | URL |
+|---|---|
+| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/neurarch-model-zoo/main/architectures/gpt2-small/model.json |
+| Hugging Face | https://huggingface.co/openai-community/gpt2 |
+| GitHub | https://github.com/openai/gpt-2 |
+
+## Architecture
+
+![GPT-2 Small architecture](assets/diagram.svg)
+
+| Hyperparameter | Value |
+|---|---|
+| Type | Decoder-only transformer (causal LM) |
+| Parameters | ~124M |
+| Layers | 12 |
+| Hidden size | 768 |
+| Attention | Multi-head: 12 heads (causal) |
+| Head dim | 64 |
+| FFN | Dense MLP, 3072, GeLU |
+| Normalization | LayerNorm, pre-norm |
+| Positions | Learned absolute, max 1024 |
+| Vocabulary | 50,257 |
+| Max context | 1,024 |
+
+The diagram and `model.json` show the full forward path with one of the 12 identical decoder blocks expanded (the stack repeats x12).
 
 ## Design notes
 
-(To fill: embed dim, number of layers, attention heads, head dim, and any divisibility constraints worth calling out. Confirm `embedDim % numHeads == 0`.)
+- Pre-norm placement (LayerNorm before attention and MLP) plus a final `ln_f`, the detail that separates GPT-2 from the original post-norm Transformer.
+- Learned absolute position embeddings added to token embeddings, no RoPE; context is hard-capped at 1024 tokens.
+- Dense GeLU MLP at 4x hidden (3072), the ratio later Llama-style models replaced with ~2.7x SwiGLU.
+- LM head shares weights with the token embedding (weight tying).
 
 ## Files
 
-| File | Status |
-|------|--------|
-| `model.json` | TODO: export from Neurarch via Save JSON |
-| `assets/diagram.svg` | TODO: export via Export Image (SVG) |
-| `assets/diagram.png` | TODO: export PNG (pending PNG export feature) |
+| File | What it is |
+|---|---|
+| [`model.json`](model.json) | The Neurarch graph. Shape-validated; open it at [neurarch.com](https://www.neurarch.com/) to edit or export training code. |
+| [`assets/diagram.svg`](assets/diagram.svg) | Vector diagram (papers, slides). |
+| [`assets/diagram.png`](assets/diagram.png) | Raster diagram (renders everywhere). |
 
-## Open in Neurarch
-
-[**▶ Open this architecture in Neurarch**](https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/neurarch-model-zoo/main/architectures/gpt2-small/model.json)
-
-The link loads the graph directly onto the canvas (once `model.json` is added). From there you can edit, validate, or export to training code.
+**License:** MIT (model weights and code from OpenAI).

@@ -1,0 +1,306 @@
+{
+  "id": "deepseek-llm-7b",
+  "name": "DeepSeek-LLM-7B",
+  "description": "DeepSeek-LLM-7B (DeepSeek): decoder-only transformer, 30 layers x 4096 hidden, MHA 32 heads, RoPE + RMSNorm + SwiGLU. One decoder block expanded; repeats x30. Verified against the official config.json.",
+  "components": [
+    {
+      "id": "input-1",
+      "type": "input",
+      "name": "tokens",
+      "position": {
+        "x": 300,
+        "y": 50
+      },
+      "params": {
+        "shape": [
+          1,
+          4096
+        ]
+      },
+      "inputs": [],
+      "outputs": [
+        "embedding-2"
+      ],
+      "notes": "Token ids. Max context 4,096 tokens; shown at 4,096 for shape preview."
+    },
+    {
+      "id": "embedding-2",
+      "type": "embedding",
+      "name": "token_embed",
+      "position": {
+        "x": 300,
+        "y": 200
+      },
+      "params": {
+        "numEmbeddings": 102400,
+        "embeddingDim": 4096
+      },
+      "inputs": [
+        "input-1"
+      ],
+      "outputs": [
+        "rmsNorm-3",
+        "add-6"
+      ],
+      "scope": "embeddings",
+      "notes": "102,400-token vocabulary, 4096-dim embeddings."
+    },
+    {
+      "id": "rmsNorm-3",
+      "type": "rmsNorm",
+      "name": "attn_norm",
+      "position": {
+        "x": 300,
+        "y": 350
+      },
+      "params": {
+        "normalizedShape": 4096
+      },
+      "inputs": [
+        "embedding-2"
+      ],
+      "outputs": [
+        "causalAttention-4"
+      ],
+      "scope": "layer.0.attention",
+      "notes": "Pre-norm RMSNorm. One of 30 identical decoder blocks is expanded below; the stack repeats x30."
+    },
+    {
+      "id": "causalAttention-4",
+      "type": "causalAttention",
+      "name": "self_attn",
+      "position": {
+        "x": 300,
+        "y": 500
+      },
+      "params": {
+        "embedDim": 4096,
+        "numHeads": 32
+      },
+      "inputs": [
+        "rmsNorm-3",
+        "rope-5"
+      ],
+      "outputs": [
+        "add-6"
+      ],
+      "scope": "layer.0.attention",
+      "notes": "MHA 32 heads, head dim 128, causal mask."
+    },
+    {
+      "id": "rope-5",
+      "type": "rope",
+      "name": "rope",
+      "position": {
+        "x": 580,
+        "y": 500
+      },
+      "params": {
+        "dim": 128
+      },
+      "inputs": [],
+      "outputs": [
+        "causalAttention-4"
+      ],
+      "scope": "layer.0.attention",
+      "notes": "Rotary position embedding, rotary dim 128 per head."
+    },
+    {
+      "id": "add-6",
+      "type": "add",
+      "name": "residual_1",
+      "position": {
+        "x": 300,
+        "y": 650
+      },
+      "params": {},
+      "inputs": [
+        "causalAttention-4",
+        "embedding-2"
+      ],
+      "outputs": [
+        "rmsNorm-7",
+        "add-9"
+      ],
+      "scope": "layer.0.attention"
+    },
+    {
+      "id": "rmsNorm-7",
+      "type": "rmsNorm",
+      "name": "ffn_norm",
+      "position": {
+        "x": 300,
+        "y": 800
+      },
+      "params": {
+        "normalizedShape": 4096
+      },
+      "inputs": [
+        "add-6"
+      ],
+      "outputs": [
+        "swiglu-8"
+      ],
+      "scope": "layer.0.ffn"
+    },
+    {
+      "id": "swiglu-8",
+      "type": "swiglu",
+      "name": "swiglu_ffn",
+      "position": {
+        "x": 300,
+        "y": 950
+      },
+      "params": {
+        "embedDim": 4096,
+        "intermediateSize": 11008
+      },
+      "inputs": [
+        "rmsNorm-7"
+      ],
+      "outputs": [
+        "add-9"
+      ],
+      "scope": "layer.0.ffn",
+      "notes": "SwiGLU gated FFN, intermediate size 11,008 (2.69x hidden)."
+    },
+    {
+      "id": "add-9",
+      "type": "add",
+      "name": "residual_2",
+      "position": {
+        "x": 300,
+        "y": 1100
+      },
+      "params": {},
+      "inputs": [
+        "swiglu-8",
+        "add-6"
+      ],
+      "outputs": [
+        "rmsNorm-10"
+      ],
+      "scope": "layer.0.ffn"
+    },
+    {
+      "id": "rmsNorm-10",
+      "type": "rmsNorm",
+      "name": "final_norm",
+      "position": {
+        "x": 300,
+        "y": 1250
+      },
+      "params": {
+        "normalizedShape": 4096
+      },
+      "inputs": [
+        "add-9"
+      ],
+      "outputs": [
+        "linear-11"
+      ],
+      "scope": "norm"
+    },
+    {
+      "id": "linear-11",
+      "type": "linear",
+      "name": "lm_head",
+      "position": {
+        "x": 300,
+        "y": 1400
+      },
+      "params": {
+        "inFeatures": 4096,
+        "outFeatures": 102400
+      },
+      "inputs": [
+        "rmsNorm-10"
+      ],
+      "outputs": [
+        "output-12"
+      ],
+      "scope": "head"
+    },
+    {
+      "id": "output-12",
+      "type": "output",
+      "name": "logits",
+      "position": {
+        "x": 300,
+        "y": 1550
+      },
+      "params": {},
+      "inputs": [
+        "linear-11"
+      ],
+      "outputs": []
+    }
+  ],
+  "connections": [
+    {
+      "id": "c1",
+      "from": "input-1",
+      "to": "embedding-2"
+    },
+    {
+      "id": "c2",
+      "from": "embedding-2",
+      "to": "rmsNorm-3"
+    },
+    {
+      "id": "c3",
+      "from": "rmsNorm-3",
+      "to": "causalAttention-4"
+    },
+    {
+      "id": "c4",
+      "from": "rope-5",
+      "to": "causalAttention-4"
+    },
+    {
+      "id": "c5",
+      "from": "causalAttention-4",
+      "to": "add-6"
+    },
+    {
+      "id": "c6",
+      "from": "embedding-2",
+      "to": "add-6"
+    },
+    {
+      "id": "c7",
+      "from": "add-6",
+      "to": "rmsNorm-7"
+    },
+    {
+      "id": "c8",
+      "from": "rmsNorm-7",
+      "to": "swiglu-8"
+    },
+    {
+      "id": "c9",
+      "from": "swiglu-8",
+      "to": "add-9"
+    },
+    {
+      "id": "c10",
+      "from": "add-6",
+      "to": "add-9"
+    },
+    {
+      "id": "c11",
+      "from": "add-9",
+      "to": "rmsNorm-10"
+    },
+    {
+      "id": "c12",
+      "from": "rmsNorm-10",
+      "to": "linear-11"
+    },
+    {
+      "id": "c13",
+      "from": "linear-11",
+      "to": "output-12"
+    }
+  ]
+}
