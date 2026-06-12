@@ -1,0 +1,327 @@
+{
+  "id": "vit-b16",
+  "name": "ViT-B/16",
+  "components": [
+    {
+      "id": "input-1",
+      "type": "input",
+      "name": "image",
+      "position": {
+        "x": 300,
+        "y": 50
+      },
+      "params": {
+        "shape": [
+          3,
+          224,
+          224
+        ]
+      },
+      "inputs": [],
+      "outputs": [
+        "patchEmbed-1"
+      ]
+    },
+    {
+      "id": "patchEmbed-1",
+      "type": "patchEmbed",
+      "name": "patch_embed",
+      "scope": "embeddings",
+      "position": {
+        "x": 300,
+        "y": 230
+      },
+      "params": {
+        "imgSize": 224,
+        "patchSize": 16,
+        "inChans": 3,
+        "embedDim": 768
+      },
+      "inputs": [
+        "input-1"
+      ],
+      "outputs": [
+        "positionalEncoding-1"
+      ]
+    },
+    {
+      "id": "positionalEncoding-1",
+      "type": "positionalEncoding",
+      "name": "pos_embed",
+      "scope": "embeddings",
+      "position": {
+        "x": 300,
+        "y": 410
+      },
+      "params": {
+        "maxLen": 197,
+        "embedDim": 768
+      },
+      "inputs": [
+        "patchEmbed-1"
+      ],
+      "outputs": [
+        "dropout-1"
+      ]
+    },
+    {
+      "id": "dropout-1",
+      "type": "dropout",
+      "name": "dropout",
+      "scope": "embeddings",
+      "position": {
+        "x": 300,
+        "y": 590
+      },
+      "params": {
+        "p": 0
+      },
+      "inputs": [
+        "positionalEncoding-1"
+      ],
+      "outputs": [
+        "layerNorm-1",
+        "add-1"
+      ]
+    },
+    {
+      "id": "layerNorm-1",
+      "type": "layerNorm",
+      "name": "norm_1",
+      "scope": "encoder.layer.0.attention",
+      "position": {
+        "x": 300,
+        "y": 770
+      },
+      "params": {
+        "normalizedShape": 768
+      },
+      "inputs": [
+        "dropout-1"
+      ],
+      "outputs": [
+        "multiHeadAttention-1"
+      ]
+    },
+    {
+      "id": "multiHeadAttention-1",
+      "type": "multiHeadAttention",
+      "name": "attn",
+      "scope": "encoder.layer.0.attention",
+      "position": {
+        "x": 300,
+        "y": 950
+      },
+      "params": {
+        "embedDim": 768,
+        "numHeads": 12
+      },
+      "inputs": [
+        "layerNorm-1"
+      ],
+      "outputs": [
+        "add-1"
+      ]
+    },
+    {
+      "id": "add-1",
+      "type": "add",
+      "name": "residual_1",
+      "scope": "encoder.layer.0.attention",
+      "position": {
+        "x": 300,
+        "y": 1130
+      },
+      "params": {},
+      "inputs": [
+        "multiHeadAttention-1",
+        "dropout-1"
+      ],
+      "outputs": [
+        "layerNorm-2",
+        "add-2"
+      ]
+    },
+    {
+      "id": "layerNorm-2",
+      "type": "layerNorm",
+      "name": "norm_2",
+      "scope": "encoder.layer.0.mlp",
+      "position": {
+        "x": 300,
+        "y": 1310
+      },
+      "params": {
+        "normalizedShape": 768
+      },
+      "inputs": [
+        "add-1"
+      ],
+      "outputs": [
+        "feedForward-1"
+      ]
+    },
+    {
+      "id": "feedForward-1",
+      "type": "feedForward",
+      "name": "mlp",
+      "scope": "encoder.layer.0.mlp",
+      "position": {
+        "x": 300,
+        "y": 1490
+      },
+      "params": {
+        "hiddenDim": 768,
+        "ffDim": 3072
+      },
+      "inputs": [
+        "layerNorm-2"
+      ],
+      "outputs": [
+        "add-2"
+      ]
+    },
+    {
+      "id": "add-2",
+      "type": "add",
+      "name": "residual_2",
+      "scope": "encoder.layer.0.mlp",
+      "position": {
+        "x": 300,
+        "y": 1670
+      },
+      "params": {},
+      "inputs": [
+        "feedForward-1",
+        "add-1"
+      ],
+      "outputs": [
+        "layerNorm-3"
+      ]
+    },
+    {
+      "id": "layerNorm-3",
+      "type": "layerNorm",
+      "name": "norm_final",
+      "scope": "classifier",
+      "position": {
+        "x": 300,
+        "y": 1850
+      },
+      "params": {
+        "normalizedShape": 768
+      },
+      "inputs": [
+        "add-2"
+      ],
+      "outputs": [
+        "linear-1"
+      ]
+    },
+    {
+      "id": "linear-1",
+      "type": "linear",
+      "name": "head",
+      "scope": "classifier",
+      "position": {
+        "x": 300,
+        "y": 2030
+      },
+      "params": {
+        "outFeatures": 1000
+      },
+      "inputs": [
+        "layerNorm-3"
+      ],
+      "outputs": [
+        "output-1"
+      ]
+    },
+    {
+      "id": "output-1",
+      "type": "output",
+      "name": "class_logits",
+      "position": {
+        "x": 300,
+        "y": 2210
+      },
+      "params": {},
+      "inputs": [
+        "linear-1"
+      ],
+      "outputs": []
+    }
+  ],
+  "connections": [
+    {
+      "id": "c1",
+      "from": "input-1",
+      "to": "patchEmbed-1"
+    },
+    {
+      "id": "c2",
+      "from": "patchEmbed-1",
+      "to": "positionalEncoding-1"
+    },
+    {
+      "id": "c3",
+      "from": "positionalEncoding-1",
+      "to": "dropout-1"
+    },
+    {
+      "id": "c4",
+      "from": "dropout-1",
+      "to": "layerNorm-1"
+    },
+    {
+      "id": "c5",
+      "from": "layerNorm-1",
+      "to": "multiHeadAttention-1"
+    },
+    {
+      "id": "c6",
+      "from": "multiHeadAttention-1",
+      "to": "add-1"
+    },
+    {
+      "id": "c7",
+      "from": "dropout-1",
+      "to": "add-1"
+    },
+    {
+      "id": "c8",
+      "from": "add-1",
+      "to": "layerNorm-2"
+    },
+    {
+      "id": "c9",
+      "from": "layerNorm-2",
+      "to": "feedForward-1"
+    },
+    {
+      "id": "c10",
+      "from": "feedForward-1",
+      "to": "add-2"
+    },
+    {
+      "id": "c11",
+      "from": "add-1",
+      "to": "add-2"
+    },
+    {
+      "id": "c12",
+      "from": "add-2",
+      "to": "layerNorm-3"
+    },
+    {
+      "id": "c13",
+      "from": "layerNorm-3",
+      "to": "linear-1"
+    },
+    {
+      "id": "c14",
+      "from": "linear-1",
+      "to": "output-1"
+    }
+  ]
+}

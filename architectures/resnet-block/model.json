@@ -1,0 +1,138 @@
+{
+  "id": "resnet-block",
+  "name": "ResNet Block",
+  "components": [
+    {
+      "id": "input-1",
+      "type": "input",
+      "name": "Input",
+      "position": {
+        "x": 200,
+        "y": 50
+      },
+      "params": {
+        "shape": [
+          64,
+          32,
+          32
+        ]
+      },
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "id": "conv2d-1",
+      "type": "conv2d",
+      "name": "Conv2D_1",
+      "scope": "block.0",
+      "position": {
+        "x": 100,
+        "y": 250
+      },
+      "params": {
+        "outChannels": 64,
+        "kernelSize": 3,
+        "stride": 1,
+        "padding": 1
+      },
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "id": "batchNorm-1",
+      "type": "batchNorm",
+      "name": "BatchNorm_1",
+      "scope": "block.0",
+      "position": {
+        "x": 100,
+        "y": 450
+      },
+      "params": {},
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "id": "relu-1",
+      "type": "relu",
+      "name": "ReLU_1",
+      "scope": "block.0",
+      "position": {
+        "x": 100,
+        "y": 650
+      },
+      "params": {},
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "id": "conv2d-2",
+      "type": "conv2d",
+      "name": "Conv2D_2",
+      "scope": "block.0",
+      "position": {
+        "x": 100,
+        "y": 850
+      },
+      "params": {
+        "outChannels": 64,
+        "kernelSize": 3,
+        "stride": 1,
+        "padding": 1
+      },
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "id": "batchNorm-2",
+      "type": "batchNorm",
+      "name": "BatchNorm_2",
+      "scope": "block.0",
+      "position": {
+        "x": 100,
+        "y": 1050
+      },
+      "params": {},
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "id": "add-1",
+      "type": "add",
+      "name": "Add",
+      "scope": "block.0",
+      "position": {
+        "x": 200,
+        "y": 1250
+      },
+      "params": {},
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "id": "relu-2",
+      "type": "relu",
+      "name": "ReLU_2",
+      "scope": "block.0",
+      "position": {
+        "x": 200,
+        "y": 1450
+      },
+      "params": {},
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "id": "output-1",
+      "type": "output",
+      "name": "Output",
+      "position": {
+        "x": 200,
+        "y": 1650
+      },
+      "params": {},
+      "inputs": [],
+      "outputs": []
+    }
+  ],
+  "connections": []
+}

@@ -1,0 +1,411 @@
+{
+  "id": "mamba-block",
+  "name": "Mamba SSM Block",
+  "description": "Mamba State Space Model block — selective SSM with causal conv + gating, no attention O(T²) complexity",
+  "components": [
+    {
+      "id": "input_tokens",
+      "type": "input",
+      "name": "tokens",
+      "params": {
+        "shape": [
+          1,
+          1024
+        ]
+      },
+      "position": {
+        "x": 400,
+        "y": 40
+      },
+      "inputs": [],
+      "outputs": [
+        "embed"
+      ]
+    },
+    {
+      "id": "embed",
+      "type": "embedding",
+      "name": "embed",
+      "scope": "embeddings",
+      "params": {
+        "numEmbeddings": 50280,
+        "embeddingDim": 1024
+      },
+      "position": {
+        "x": 400,
+        "y": 140
+      },
+      "notes": "Token embedding D=1024 (Mamba-1.4B dim)",
+      "inputs": [
+        "input_tokens"
+      ],
+      "outputs": [
+        "norm1",
+        "residual1"
+      ]
+    },
+    {
+      "id": "norm1",
+      "type": "rmsNorm",
+      "name": "norm_ssm",
+      "scope": "layer.0.ssm",
+      "params": {
+        "normalizedShape": 1024
+      },
+      "position": {
+        "x": 400,
+        "y": 240
+      },
+      "notes": "Pre-SSM RMSNorm (Mamba uses RMSNorm not LayerNorm)",
+      "inputs": [
+        "embed"
+      ],
+      "outputs": [
+        "in_proj"
+      ]
+    },
+    {
+      "id": "in_proj",
+      "type": "linear",
+      "name": "in_proj",
+      "scope": "layer.0.ssm",
+      "params": {
+        "outFeatures": 4096
+      },
+      "position": {
+        "x": 260,
+        "y": 340
+      },
+      "notes": "Projects to 2×expand (4096) — split into x and z branches",
+      "inputs": [
+        "norm1"
+      ],
+      "outputs": [
+        "causal_conv",
+        "z_gate"
+      ]
+    },
+    {
+      "id": "causal_conv",
+      "type": "conv1d",
+      "name": "causal_conv",
+      "scope": "layer.0.ssm",
+      "params": {
+        "outChannels": 2048,
+        "kernelSize": 4,
+        "stride": 1,
+        "padding": 3
+      },
+      "position": {
+        "x": 260,
+        "y": 440
+      },
+      "notes": "Causal depthwise conv1d: captures short-range context before SSM scan. d_conv=4 (Mamba paper default)",
+      "inputs": [
+        "in_proj"
+      ],
+      "outputs": [
+        "silu_x"
+      ]
+    },
+    {
+      "id": "silu_x",
+      "type": "swish",
+      "name": "silu_x",
+      "scope": "layer.0.ssm",
+      "params": {},
+      "position": {
+        "x": 260,
+        "y": 540
+      },
+      "notes": "SiLU activation on x branch before selective SSM scan",
+      "inputs": [
+        "causal_conv"
+      ],
+      "outputs": [
+        "ssm_proj"
+      ]
+    },
+    {
+      "id": "ssm_proj",
+      "type": "linear",
+      "name": "ssm_BC_dt",
+      "scope": "layer.0.ssm",
+      "params": {
+        "outFeatures": 128
+      },
+      "position": {
+        "x": 260,
+        "y": 620
+      },
+      "notes": "Selective SSM: projects to B, C, Δ (dt). d_state=16, dt rank=32. This is the key selective parameterization vs S4.",
+      "inputs": [
+        "silu_x"
+      ],
+      "outputs": [
+        "gate_multiply"
+      ]
+    },
+    {
+      "id": "z_gate",
+      "type": "swish",
+      "name": "z_gate",
+      "scope": "layer.0.ssm",
+      "params": {},
+      "position": {
+        "x": 540,
+        "y": 440
+      },
+      "notes": "z branch: SiLU gating signal — multiplied with SSM output to form output gate",
+      "inputs": [
+        "in_proj"
+      ],
+      "outputs": [
+        "gate_multiply"
+      ]
+    },
+    {
+      "id": "gate_multiply",
+      "type": "multiply",
+      "name": "gate_out",
+      "scope": "layer.0.ssm",
+      "params": {},
+      "position": {
+        "x": 400,
+        "y": 680
+      },
+      "notes": "Element-wise gate: SSM(x) ⊙ z. Gating makes Mamba context-dependent (selective)",
+      "inputs": [
+        "ssm_proj",
+        "z_gate"
+      ],
+      "outputs": [
+        "out_proj"
+      ]
+    },
+    {
+      "id": "out_proj",
+      "type": "linear",
+      "name": "out_proj",
+      "scope": "layer.0.ssm",
+      "params": {
+        "outFeatures": 1024
+      },
+      "position": {
+        "x": 400,
+        "y": 760
+      },
+      "notes": "Project back to model dim D=1024",
+      "inputs": [
+        "gate_multiply"
+      ],
+      "outputs": [
+        "residual1"
+      ]
+    },
+    {
+      "id": "residual1",
+      "type": "add",
+      "name": "residual_1",
+      "scope": "layer.0.ssm",
+      "params": {},
+      "position": {
+        "x": 400,
+        "y": 840
+      },
+      "notes": "SSM block residual connection (same as transformer blocks)",
+      "inputs": [
+        "out_proj",
+        "embed"
+      ],
+      "outputs": [
+        "norm2",
+        "residual2"
+      ]
+    },
+    {
+      "id": "norm2",
+      "type": "rmsNorm",
+      "name": "norm_ffn",
+      "scope": "layer.0.ffn",
+      "params": {
+        "normalizedShape": 1024
+      },
+      "position": {
+        "x": 400,
+        "y": 920
+      },
+      "notes": "Pre-FFN RMSNorm",
+      "inputs": [
+        "residual1"
+      ],
+      "outputs": [
+        "ffn"
+      ]
+    },
+    {
+      "id": "ffn",
+      "type": "swiglu",
+      "name": "ffn",
+      "scope": "layer.0.ffn",
+      "params": {
+        "embedDim": 1024,
+        "intermediateSize": 2048
+      },
+      "position": {
+        "x": 400,
+        "y": 1000
+      },
+      "notes": "Some Mamba variants include an FFN block; pure Mamba-1 does not. Here included for hybrid use.",
+      "inputs": [
+        "norm2"
+      ],
+      "outputs": [
+        "residual2"
+      ]
+    },
+    {
+      "id": "residual2",
+      "type": "add",
+      "name": "residual_2",
+      "scope": "layer.0.ffn",
+      "params": {},
+      "position": {
+        "x": 400,
+        "y": 1080
+      },
+      "inputs": [
+        "ffn",
+        "residual1"
+      ],
+      "outputs": [
+        "lm_head"
+      ]
+    },
+    {
+      "id": "lm_head",
+      "type": "linear",
+      "name": "lm_head",
+      "scope": "head",
+      "params": {
+        "outFeatures": 50280
+      },
+      "position": {
+        "x": 400,
+        "y": 1160
+      },
+      "inputs": [
+        "residual2"
+      ],
+      "outputs": [
+        "output"
+      ]
+    },
+    {
+      "id": "output",
+      "type": "output",
+      "name": "output",
+      "params": {},
+      "position": {
+        "x": 400,
+        "y": 1240
+      },
+      "inputs": [
+        "lm_head"
+      ],
+      "outputs": []
+    }
+  ],
+  "connections": [
+    {
+      "id": "c1",
+      "from": "input_tokens",
+      "to": "embed"
+    },
+    {
+      "id": "c2",
+      "from": "embed",
+      "to": "norm1"
+    },
+    {
+      "id": "c3",
+      "from": "norm1",
+      "to": "in_proj"
+    },
+    {
+      "id": "c4",
+      "from": "in_proj",
+      "to": "causal_conv"
+    },
+    {
+      "id": "c5",
+      "from": "causal_conv",
+      "to": "silu_x"
+    },
+    {
+      "id": "c6",
+      "from": "silu_x",
+      "to": "ssm_proj"
+    },
+    {
+      "id": "c7",
+      "from": "in_proj",
+      "to": "z_gate"
+    },
+    {
+      "id": "c8",
+      "from": "ssm_proj",
+      "to": "gate_multiply"
+    },
+    {
+      "id": "c9",
+      "from": "z_gate",
+      "to": "gate_multiply"
+    },
+    {
+      "id": "c10",
+      "from": "gate_multiply",
+      "to": "out_proj"
+    },
+    {
+      "id": "c11",
+      "from": "out_proj",
+      "to": "residual1"
+    },
+    {
+      "id": "c12",
+      "from": "embed",
+      "to": "residual1"
+    },
+    {
+      "id": "c13",
+      "from": "residual1",
+      "to": "norm2"
+    },
+    {
+      "id": "c14",
+      "from": "norm2",
+      "to": "ffn"
+    },
+    {
+      "id": "c15",
+      "from": "ffn",
+      "to": "residual2"
+    },
+    {
+      "id": "c16",
+      "from": "residual1",
+      "to": "residual2"
+    },
+    {
+      "id": "c17",
+      "from": "residual2",
+      "to": "lm_head"
+    },
+    {
+      "id": "c18",
+      "from": "lm_head",
+      "to": "output"
+    }
+  ]
+}

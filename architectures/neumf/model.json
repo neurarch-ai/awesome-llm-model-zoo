@@ -1,0 +1,431 @@
+{
+  "id": "neumf",
+  "name": "Neural Collaborative Filtering (NeuMF)",
+  "description": "He et al. 2017 — Generalized Matrix Factorization + MLP fused. User+Item embeddings → element-wise MF + concatenated MLP → fused output",
+  "icon": "🤝",
+  "category": "Recommendation",
+  "components": [
+    {
+      "id": "input-u",
+      "type": "input",
+      "name": "User ID",
+      "position": {
+        "x": 80,
+        "y": 60
+      },
+      "params": {
+        "shape": [
+          1
+        ]
+      },
+      "inputs": [],
+      "outputs": [
+        "u-mf-emb",
+        "u-mlp-emb"
+      ]
+    },
+    {
+      "id": "input-i",
+      "type": "input",
+      "name": "Item ID",
+      "position": {
+        "x": 380,
+        "y": 60
+      },
+      "params": {
+        "shape": [
+          1
+        ]
+      },
+      "inputs": [],
+      "outputs": [
+        "i-mf-emb",
+        "i-mlp-emb"
+      ]
+    },
+    {
+      "id": "u-mf-emb",
+      "type": "embedding",
+      "name": "User MF Emb",
+      "scope": "gmf",
+      "position": {
+        "x": 0,
+        "y": 200
+      },
+      "params": {
+        "vocabSize": 100000,
+        "embeddingDim": 32
+      },
+      "inputs": [
+        "input-u"
+      ],
+      "outputs": [
+        "mf-mul"
+      ]
+    },
+    {
+      "id": "i-mf-emb",
+      "type": "embedding",
+      "name": "Item MF Emb",
+      "scope": "gmf",
+      "position": {
+        "x": 200,
+        "y": 200
+      },
+      "params": {
+        "vocabSize": 1000000,
+        "embeddingDim": 32
+      },
+      "inputs": [
+        "input-i"
+      ],
+      "outputs": [
+        "mf-mul"
+      ]
+    },
+    {
+      "id": "u-mlp-emb",
+      "type": "embedding",
+      "name": "User MLP Emb",
+      "scope": "mlp",
+      "position": {
+        "x": 380,
+        "y": 200
+      },
+      "params": {
+        "vocabSize": 100000,
+        "embeddingDim": 64
+      },
+      "inputs": [
+        "input-u"
+      ],
+      "outputs": [
+        "mlp-cat"
+      ]
+    },
+    {
+      "id": "i-mlp-emb",
+      "type": "embedding",
+      "name": "Item MLP Emb",
+      "scope": "mlp",
+      "position": {
+        "x": 580,
+        "y": 200
+      },
+      "params": {
+        "vocabSize": 1000000,
+        "embeddingDim": 64
+      },
+      "inputs": [
+        "input-i"
+      ],
+      "outputs": [
+        "mlp-cat"
+      ]
+    },
+    {
+      "id": "mf-mul",
+      "type": "multiply",
+      "name": "GMF (⊙)",
+      "scope": "gmf",
+      "position": {
+        "x": 80,
+        "y": 360
+      },
+      "params": {},
+      "inputs": [
+        "u-mf-emb",
+        "i-mf-emb"
+      ],
+      "outputs": [
+        "fuse"
+      ]
+    },
+    {
+      "id": "mlp-cat",
+      "type": "concatenate",
+      "name": "Concat",
+      "scope": "mlp",
+      "position": {
+        "x": 460,
+        "y": 360
+      },
+      "params": {
+        "axis": -1
+      },
+      "inputs": [
+        "u-mlp-emb",
+        "i-mlp-emb"
+      ],
+      "outputs": [
+        "mlp-fc1"
+      ]
+    },
+    {
+      "id": "mlp-fc1",
+      "type": "linear",
+      "name": "MLP FC 1",
+      "scope": "mlp",
+      "position": {
+        "x": 460,
+        "y": 500
+      },
+      "params": {
+        "inFeatures": 128,
+        "outFeatures": 64
+      },
+      "inputs": [
+        "mlp-cat"
+      ],
+      "outputs": [
+        "mlp-relu1"
+      ]
+    },
+    {
+      "id": "mlp-relu1",
+      "type": "relu",
+      "name": "ReLU",
+      "scope": "mlp",
+      "position": {
+        "x": 460,
+        "y": 620
+      },
+      "params": {},
+      "inputs": [
+        "mlp-fc1"
+      ],
+      "outputs": [
+        "mlp-fc2"
+      ]
+    },
+    {
+      "id": "mlp-fc2",
+      "type": "linear",
+      "name": "MLP FC 2",
+      "scope": "mlp",
+      "position": {
+        "x": 460,
+        "y": 740
+      },
+      "params": {
+        "inFeatures": 64,
+        "outFeatures": 32
+      },
+      "inputs": [
+        "mlp-relu1"
+      ],
+      "outputs": [
+        "mlp-relu2"
+      ]
+    },
+    {
+      "id": "mlp-relu2",
+      "type": "relu",
+      "name": "ReLU",
+      "scope": "mlp",
+      "position": {
+        "x": 460,
+        "y": 860
+      },
+      "params": {},
+      "inputs": [
+        "mlp-fc2"
+      ],
+      "outputs": [
+        "fuse"
+      ]
+    },
+    {
+      "id": "fuse",
+      "type": "concatenate",
+      "name": "Fuse GMF+MLP",
+      "scope": "head",
+      "position": {
+        "x": 270,
+        "y": 1000
+      },
+      "params": {
+        "axis": -1
+      },
+      "inputs": [
+        "mf-mul",
+        "mlp-relu2"
+      ],
+      "outputs": [
+        "head"
+      ]
+    },
+    {
+      "id": "head",
+      "type": "linear",
+      "name": "Predict",
+      "scope": "head",
+      "position": {
+        "x": 270,
+        "y": 1140
+      },
+      "params": {
+        "inFeatures": 64,
+        "outFeatures": 1
+      },
+      "inputs": [
+        "fuse"
+      ],
+      "outputs": [
+        "sig"
+      ]
+    },
+    {
+      "id": "sig",
+      "type": "sigmoid",
+      "name": "Sigmoid",
+      "scope": "head",
+      "position": {
+        "x": 270,
+        "y": 1280
+      },
+      "params": {},
+      "inputs": [
+        "head"
+      ],
+      "outputs": [
+        "output"
+      ]
+    },
+    {
+      "id": "output",
+      "type": "output",
+      "name": "P(rating)",
+      "position": {
+        "x": 270,
+        "y": 1400
+      },
+      "params": {},
+      "inputs": [
+        "sig"
+      ],
+      "outputs": []
+    }
+  ],
+  "connections": [
+    {
+      "id": "c1",
+      "from": "input-u",
+      "to": "u-mf-emb",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c2",
+      "from": "input-u",
+      "to": "u-mlp-emb",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c3",
+      "from": "input-i",
+      "to": "i-mf-emb",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c4",
+      "from": "input-i",
+      "to": "i-mlp-emb",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c5",
+      "from": "u-mf-emb",
+      "to": "mf-mul",
+      "fromPort": "bottom",
+      "toPort": "left"
+    },
+    {
+      "id": "c6",
+      "from": "i-mf-emb",
+      "to": "mf-mul",
+      "fromPort": "bottom",
+      "toPort": "right"
+    },
+    {
+      "id": "c7",
+      "from": "u-mlp-emb",
+      "to": "mlp-cat",
+      "fromPort": "bottom",
+      "toPort": "left"
+    },
+    {
+      "id": "c8",
+      "from": "i-mlp-emb",
+      "to": "mlp-cat",
+      "fromPort": "bottom",
+      "toPort": "right"
+    },
+    {
+      "id": "c9",
+      "from": "mlp-cat",
+      "to": "mlp-fc1",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c10",
+      "from": "mlp-fc1",
+      "to": "mlp-relu1",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c11",
+      "from": "mlp-relu1",
+      "to": "mlp-fc2",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c12",
+      "from": "mlp-fc2",
+      "to": "mlp-relu2",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c13",
+      "from": "mf-mul",
+      "to": "fuse",
+      "fromPort": "bottom",
+      "toPort": "left"
+    },
+    {
+      "id": "c14",
+      "from": "mlp-relu2",
+      "to": "fuse",
+      "fromPort": "bottom",
+      "toPort": "right"
+    },
+    {
+      "id": "c15",
+      "from": "fuse",
+      "to": "head",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c16",
+      "from": "head",
+      "to": "sig",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c17",
+      "from": "sig",
+      "to": "output",
+      "fromPort": "bottom",
+      "toPort": "top"
+    }
+  ]
+}

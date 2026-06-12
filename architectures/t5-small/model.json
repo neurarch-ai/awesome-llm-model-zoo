@@ -1,0 +1,548 @@
+{
+  "id": "t5-small",
+  "name": "T5 Small",
+  "components": [
+    {
+      "id": "input-enc",
+      "type": "input",
+      "name": "encoder_ids",
+      "position": {
+        "x": 120,
+        "y": 50
+      },
+      "params": {
+        "shape": [
+          1,
+          512
+        ]
+      },
+      "inputs": [],
+      "outputs": [
+        "embedding-enc"
+      ]
+    },
+    {
+      "id": "embedding-enc",
+      "type": "embedding",
+      "name": "shared_embed",
+      "scope": "embeddings",
+      "position": {
+        "x": 120,
+        "y": 220
+      },
+      "params": {
+        "numEmbeddings": 32128,
+        "embeddingDim": 512
+      },
+      "inputs": [
+        "input-enc"
+      ],
+      "outputs": [
+        "rmsNorm-enc"
+      ]
+    },
+    {
+      "id": "rmsNorm-enc",
+      "type": "rmsNorm",
+      "name": "enc_norm",
+      "scope": "encoder.layer.0.attention",
+      "position": {
+        "x": 120,
+        "y": 390
+      },
+      "params": {
+        "normalizedShape": 512
+      },
+      "inputs": [
+        "embedding-enc"
+      ],
+      "outputs": [
+        "mha-enc"
+      ]
+    },
+    {
+      "id": "mha-enc",
+      "type": "multiHeadAttention",
+      "name": "enc_self_attn",
+      "scope": "encoder.layer.0.attention",
+      "position": {
+        "x": 120,
+        "y": 560
+      },
+      "params": {
+        "embedDim": 512,
+        "numHeads": 8
+      },
+      "inputs": [
+        "rmsNorm-enc"
+      ],
+      "outputs": [
+        "add-enc"
+      ]
+    },
+    {
+      "id": "add-enc",
+      "type": "add",
+      "name": "enc_residual",
+      "scope": "encoder.layer.0.attention",
+      "position": {
+        "x": 120,
+        "y": 730
+      },
+      "params": {},
+      "inputs": [
+        "mha-enc"
+      ],
+      "outputs": [
+        "rmsNorm-enc2"
+      ]
+    },
+    {
+      "id": "rmsNorm-enc2",
+      "type": "rmsNorm",
+      "name": "enc_ffn_norm",
+      "scope": "encoder.layer.0.ffn",
+      "position": {
+        "x": 120,
+        "y": 900
+      },
+      "params": {
+        "normalizedShape": 512
+      },
+      "inputs": [
+        "add-enc"
+      ],
+      "outputs": [
+        "feedForward-enc"
+      ]
+    },
+    {
+      "id": "feedForward-enc",
+      "type": "feedForward",
+      "name": "enc_ffn",
+      "scope": "encoder.layer.0.ffn",
+      "position": {
+        "x": 120,
+        "y": 1070
+      },
+      "params": {
+        "embedDim": 512,
+        "ffDim": 2048
+      },
+      "inputs": [
+        "rmsNorm-enc2"
+      ],
+      "outputs": [
+        "add-enc2"
+      ]
+    },
+    {
+      "id": "add-enc2",
+      "type": "add",
+      "name": "enc_ffn_residual",
+      "scope": "encoder.layer.0.ffn",
+      "position": {
+        "x": 120,
+        "y": 1240
+      },
+      "params": {},
+      "inputs": [
+        "feedForward-enc"
+      ],
+      "outputs": [
+        "layerNorm-enc-out"
+      ]
+    },
+    {
+      "id": "layerNorm-enc-out",
+      "type": "layerNorm",
+      "name": "enc_out_norm",
+      "scope": "encoder",
+      "position": {
+        "x": 120,
+        "y": 1410
+      },
+      "params": {
+        "normalizedShape": 512
+      },
+      "inputs": [
+        "add-enc2"
+      ],
+      "outputs": [
+        "mha-cross"
+      ]
+    },
+    {
+      "id": "input-dec",
+      "type": "input",
+      "name": "decoder_ids",
+      "position": {
+        "x": 420,
+        "y": 50
+      },
+      "params": {
+        "shape": [
+          1,
+          128
+        ]
+      },
+      "inputs": [],
+      "outputs": [
+        "embedding-dec"
+      ]
+    },
+    {
+      "id": "embedding-dec",
+      "type": "embedding",
+      "name": "dec_embed",
+      "scope": "embeddings",
+      "position": {
+        "x": 420,
+        "y": 220
+      },
+      "params": {
+        "numEmbeddings": 32128,
+        "embeddingDim": 512
+      },
+      "inputs": [
+        "input-dec"
+      ],
+      "outputs": [
+        "rmsNorm-dec"
+      ]
+    },
+    {
+      "id": "rmsNorm-dec",
+      "type": "rmsNorm",
+      "name": "dec_sa_norm",
+      "scope": "decoder.layer.0.self_attn",
+      "position": {
+        "x": 420,
+        "y": 390
+      },
+      "params": {
+        "normalizedShape": 512
+      },
+      "inputs": [
+        "embedding-dec"
+      ],
+      "outputs": [
+        "causalAttn-dec"
+      ]
+    },
+    {
+      "id": "causalAttn-dec",
+      "type": "causalAttention",
+      "name": "dec_self_attn",
+      "scope": "decoder.layer.0.self_attn",
+      "position": {
+        "x": 420,
+        "y": 560
+      },
+      "params": {
+        "embedDim": 512,
+        "numHeads": 8
+      },
+      "inputs": [
+        "rmsNorm-dec"
+      ],
+      "outputs": [
+        "add-dec"
+      ]
+    },
+    {
+      "id": "add-dec",
+      "type": "add",
+      "name": "dec_sa_residual",
+      "scope": "decoder.layer.0.self_attn",
+      "position": {
+        "x": 420,
+        "y": 730
+      },
+      "params": {},
+      "inputs": [
+        "causalAttn-dec"
+      ],
+      "outputs": [
+        "rmsNorm-dec2"
+      ]
+    },
+    {
+      "id": "rmsNorm-dec2",
+      "type": "rmsNorm",
+      "name": "dec_ca_norm",
+      "scope": "decoder.layer.0.cross_attn",
+      "position": {
+        "x": 420,
+        "y": 900
+      },
+      "params": {
+        "normalizedShape": 512
+      },
+      "inputs": [
+        "add-dec"
+      ],
+      "outputs": [
+        "mha-cross"
+      ]
+    },
+    {
+      "id": "mha-cross",
+      "type": "multiHeadAttention",
+      "name": "cross_attn",
+      "scope": "decoder.layer.0.cross_attn",
+      "position": {
+        "x": 420,
+        "y": 1070
+      },
+      "params": {
+        "embedDim": 512,
+        "numHeads": 8
+      },
+      "inputs": [
+        "rmsNorm-dec2",
+        "layerNorm-enc-out"
+      ],
+      "outputs": [
+        "add-dec2"
+      ]
+    },
+    {
+      "id": "add-dec2",
+      "type": "add",
+      "name": "dec_ca_residual",
+      "scope": "decoder.layer.0.cross_attn",
+      "position": {
+        "x": 420,
+        "y": 1240
+      },
+      "params": {},
+      "inputs": [
+        "mha-cross"
+      ],
+      "outputs": [
+        "rmsNorm-dec3"
+      ]
+    },
+    {
+      "id": "rmsNorm-dec3",
+      "type": "rmsNorm",
+      "name": "dec_ffn_norm",
+      "scope": "decoder.layer.0.ffn",
+      "position": {
+        "x": 420,
+        "y": 1410
+      },
+      "params": {
+        "normalizedShape": 512
+      },
+      "inputs": [
+        "add-dec2"
+      ],
+      "outputs": [
+        "feedForward-dec"
+      ]
+    },
+    {
+      "id": "feedForward-dec",
+      "type": "feedForward",
+      "name": "dec_ffn",
+      "scope": "decoder.layer.0.ffn",
+      "position": {
+        "x": 420,
+        "y": 1580
+      },
+      "params": {
+        "embedDim": 512,
+        "ffDim": 2048
+      },
+      "inputs": [
+        "rmsNorm-dec3"
+      ],
+      "outputs": [
+        "add-dec3"
+      ]
+    },
+    {
+      "id": "add-dec3",
+      "type": "add",
+      "name": "dec_ffn_residual",
+      "scope": "decoder.layer.0.ffn",
+      "position": {
+        "x": 420,
+        "y": 1750
+      },
+      "params": {},
+      "inputs": [
+        "feedForward-dec"
+      ],
+      "outputs": [
+        "layerNorm-dec-out"
+      ]
+    },
+    {
+      "id": "layerNorm-dec-out",
+      "type": "layerNorm",
+      "name": "dec_out_norm",
+      "scope": "decoder",
+      "position": {
+        "x": 420,
+        "y": 1920
+      },
+      "params": {
+        "normalizedShape": 512
+      },
+      "inputs": [
+        "add-dec3"
+      ],
+      "outputs": [
+        "linear-lm"
+      ]
+    },
+    {
+      "id": "linear-lm",
+      "type": "linear",
+      "name": "lm_head",
+      "scope": "head",
+      "position": {
+        "x": 420,
+        "y": 2090
+      },
+      "params": {
+        "outFeatures": 32128
+      },
+      "inputs": [
+        "layerNorm-dec-out"
+      ],
+      "outputs": [
+        "output-1"
+      ]
+    },
+    {
+      "id": "output-1",
+      "type": "output",
+      "name": "logits",
+      "position": {
+        "x": 420,
+        "y": 2260
+      },
+      "params": {},
+      "inputs": [
+        "linear-lm"
+      ],
+      "outputs": []
+    }
+  ],
+  "connections": [
+    {
+      "id": "c1",
+      "from": "input-enc",
+      "to": "embedding-enc"
+    },
+    {
+      "id": "c2",
+      "from": "embedding-enc",
+      "to": "rmsNorm-enc"
+    },
+    {
+      "id": "c3",
+      "from": "rmsNorm-enc",
+      "to": "mha-enc"
+    },
+    {
+      "id": "c4",
+      "from": "mha-enc",
+      "to": "add-enc"
+    },
+    {
+      "id": "c5",
+      "from": "add-enc",
+      "to": "rmsNorm-enc2"
+    },
+    {
+      "id": "c6",
+      "from": "rmsNorm-enc2",
+      "to": "feedForward-enc"
+    },
+    {
+      "id": "c7",
+      "from": "feedForward-enc",
+      "to": "add-enc2"
+    },
+    {
+      "id": "c8",
+      "from": "add-enc2",
+      "to": "layerNorm-enc-out"
+    },
+    {
+      "id": "c9",
+      "from": "input-dec",
+      "to": "embedding-dec"
+    },
+    {
+      "id": "c10",
+      "from": "embedding-dec",
+      "to": "rmsNorm-dec"
+    },
+    {
+      "id": "c11",
+      "from": "rmsNorm-dec",
+      "to": "causalAttn-dec"
+    },
+    {
+      "id": "c12",
+      "from": "causalAttn-dec",
+      "to": "add-dec"
+    },
+    {
+      "id": "c13",
+      "from": "add-dec",
+      "to": "rmsNorm-dec2"
+    },
+    {
+      "id": "c14",
+      "from": "rmsNorm-dec2",
+      "to": "mha-cross"
+    },
+    {
+      "id": "c15",
+      "from": "layerNorm-enc-out",
+      "to": "mha-cross"
+    },
+    {
+      "id": "c16",
+      "from": "mha-cross",
+      "to": "add-dec2"
+    },
+    {
+      "id": "c17",
+      "from": "add-dec2",
+      "to": "rmsNorm-dec3"
+    },
+    {
+      "id": "c18",
+      "from": "rmsNorm-dec3",
+      "to": "feedForward-dec"
+    },
+    {
+      "id": "c19",
+      "from": "feedForward-dec",
+      "to": "add-dec3"
+    },
+    {
+      "id": "c20",
+      "from": "add-dec3",
+      "to": "layerNorm-dec-out"
+    },
+    {
+      "id": "c21",
+      "from": "layerNorm-dec-out",
+      "to": "linear-lm"
+    },
+    {
+      "id": "c22",
+      "from": "linear-lm",
+      "to": "output-1"
+    }
+  ]
+}

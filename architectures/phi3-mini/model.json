@@ -1,0 +1,309 @@
+{
+  "id": "phi3-mini",
+  "name": "Phi-3 Mini Block",
+  "description": "Phi-3 Mini 3.8B decoder block — RMSNorm, full MHA (32 heads, 3072D), SwiGLU FFN (8192), RoPE",
+  "components": [
+    {
+      "id": "input_tokens",
+      "type": "input",
+      "name": "tokens",
+      "params": {
+        "shape": [
+          1,
+          2048
+        ]
+      },
+      "position": {
+        "x": 400,
+        "y": 40
+      },
+      "inputs": [],
+      "outputs": [
+        "embed"
+      ]
+    },
+    {
+      "id": "embed",
+      "type": "embedding",
+      "name": "embed",
+      "scope": "embeddings",
+      "params": {
+        "numEmbeddings": 32064,
+        "embeddingDim": 3072
+      },
+      "position": {
+        "x": 400,
+        "y": 140
+      },
+      "notes": "Phi-3 Mini: vocab_size=32064, hidden_size=3072",
+      "inputs": [
+        "input_tokens"
+      ],
+      "outputs": [
+        "norm_attn",
+        "residual1"
+      ]
+    },
+    {
+      "id": "rope",
+      "type": "rope",
+      "name": "rope",
+      "scope": "layer.0.attention",
+      "params": {
+        "headDim": 96
+      },
+      "position": {
+        "x": 600,
+        "y": 240
+      },
+      "notes": "RoPE positional encoding — head_dim=96 (3072/32). Phi-3 uses rope_theta=10000",
+      "inputs": [],
+      "outputs": [
+        "attn"
+      ]
+    },
+    {
+      "id": "norm_attn",
+      "type": "rmsNorm",
+      "name": "norm_attn",
+      "scope": "layer.0.attention",
+      "params": {
+        "normalizedShape": 3072
+      },
+      "position": {
+        "x": 400,
+        "y": 240
+      },
+      "notes": "Pre-attention RMSNorm. Phi-3 uses RMSNorm throughout (no bias)",
+      "inputs": [
+        "embed"
+      ],
+      "outputs": [
+        "attn"
+      ]
+    },
+    {
+      "id": "attn",
+      "type": "groupedQueryAttention",
+      "name": "attn",
+      "scope": "layer.0.attention",
+      "params": {
+        "embedDim": 3072,
+        "numHeads": 32,
+        "numKVHeads": 32
+      },
+      "position": {
+        "x": 400,
+        "y": 340
+      },
+      "notes": "Phi-3 Mini uses full MHA (32H/32KV = no GQA). causal attention with RoPE.",
+      "inputs": [
+        "norm_attn",
+        "rope"
+      ],
+      "outputs": [
+        "residual1"
+      ]
+    },
+    {
+      "id": "residual1",
+      "type": "add",
+      "name": "residual_1",
+      "scope": "layer.0.attention",
+      "params": {},
+      "position": {
+        "x": 400,
+        "y": 460
+      },
+      "notes": "Post-attention residual stream",
+      "inputs": [
+        "attn",
+        "embed"
+      ],
+      "outputs": [
+        "norm_ffn",
+        "residual2"
+      ]
+    },
+    {
+      "id": "norm_ffn",
+      "type": "rmsNorm",
+      "name": "norm_ffn",
+      "scope": "layer.0.ffn",
+      "params": {
+        "normalizedShape": 3072
+      },
+      "position": {
+        "x": 400,
+        "y": 560
+      },
+      "notes": "Pre-FFN RMSNorm",
+      "inputs": [
+        "residual1"
+      ],
+      "outputs": [
+        "ffn"
+      ]
+    },
+    {
+      "id": "ffn",
+      "type": "swiglu",
+      "name": "ffn",
+      "scope": "layer.0.ffn",
+      "params": {
+        "embedDim": 3072,
+        "intermediateSize": 8192
+      },
+      "position": {
+        "x": 400,
+        "y": 660
+      },
+      "notes": "SwiGLU FFN — intermediate=8192 (~2.67× hidden). Phi-3's key efficiency: smaller model with large FFN ratio.",
+      "inputs": [
+        "norm_ffn"
+      ],
+      "outputs": [
+        "residual2"
+      ]
+    },
+    {
+      "id": "residual2",
+      "type": "add",
+      "name": "residual_2",
+      "scope": "layer.0.ffn",
+      "params": {},
+      "position": {
+        "x": 400,
+        "y": 780
+      },
+      "inputs": [
+        "ffn",
+        "residual1"
+      ],
+      "outputs": [
+        "norm_out"
+      ]
+    },
+    {
+      "id": "norm_out",
+      "type": "rmsNorm",
+      "name": "norm_out",
+      "scope": "head",
+      "params": {
+        "normalizedShape": 3072
+      },
+      "position": {
+        "x": 400,
+        "y": 880
+      },
+      "notes": "Final RMSNorm before lm_head",
+      "inputs": [
+        "residual2"
+      ],
+      "outputs": [
+        "lm_head"
+      ]
+    },
+    {
+      "id": "lm_head",
+      "type": "linear",
+      "name": "lm_head",
+      "scope": "head",
+      "params": {
+        "outFeatures": 32064
+      },
+      "position": {
+        "x": 400,
+        "y": 980
+      },
+      "notes": "Language model head. Phi-3 Mini: 32 layers × (attn ~9.5M + ffn ~50M) ≈ 3.8B total",
+      "inputs": [
+        "norm_out"
+      ],
+      "outputs": [
+        "output"
+      ]
+    },
+    {
+      "id": "output",
+      "type": "output",
+      "name": "output",
+      "params": {},
+      "position": {
+        "x": 400,
+        "y": 1060
+      },
+      "inputs": [
+        "lm_head"
+      ],
+      "outputs": []
+    }
+  ],
+  "connections": [
+    {
+      "id": "c1",
+      "from": "input_tokens",
+      "to": "embed"
+    },
+    {
+      "id": "c2",
+      "from": "embed",
+      "to": "norm_attn"
+    },
+    {
+      "id": "c3",
+      "from": "norm_attn",
+      "to": "attn"
+    },
+    {
+      "id": "c4",
+      "from": "rope",
+      "to": "attn"
+    },
+    {
+      "id": "c5",
+      "from": "attn",
+      "to": "residual1"
+    },
+    {
+      "id": "c6",
+      "from": "embed",
+      "to": "residual1"
+    },
+    {
+      "id": "c7",
+      "from": "residual1",
+      "to": "norm_ffn"
+    },
+    {
+      "id": "c8",
+      "from": "norm_ffn",
+      "to": "ffn"
+    },
+    {
+      "id": "c9",
+      "from": "ffn",
+      "to": "residual2"
+    },
+    {
+      "id": "c10",
+      "from": "residual1",
+      "to": "residual2"
+    },
+    {
+      "id": "c11",
+      "from": "residual2",
+      "to": "norm_out"
+    },
+    {
+      "id": "c12",
+      "from": "norm_out",
+      "to": "lm_head"
+    },
+    {
+      "id": "c13",
+      "from": "lm_head",
+      "to": "output"
+    }
+  ]
+}

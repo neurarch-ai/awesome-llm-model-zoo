@@ -1,0 +1,359 @@
+{
+  "id": "dlrm",
+  "name": "DLRM",
+  "description": "Meta's Deep Learning Recommendation Model — bottom MLP for dense, embedding for sparse, feature interaction, top MLP",
+  "icon": "🛒",
+  "category": "Recommendation",
+  "components": [
+    {
+      "id": "input-dense",
+      "type": "input",
+      "name": "Dense Features",
+      "position": {
+        "x": 80,
+        "y": 60
+      },
+      "params": {
+        "shape": [
+          13
+        ]
+      },
+      "inputs": [],
+      "outputs": [
+        "bot-fc1"
+      ]
+    },
+    {
+      "id": "bot-fc1",
+      "type": "linear",
+      "name": "Bottom MLP 1",
+      "scope": "bot_mlp",
+      "position": {
+        "x": 80,
+        "y": 200
+      },
+      "params": {
+        "inFeatures": 13,
+        "outFeatures": 64
+      },
+      "inputs": [
+        "input-dense"
+      ],
+      "outputs": [
+        "bot-relu1"
+      ]
+    },
+    {
+      "id": "bot-relu1",
+      "type": "relu",
+      "name": "ReLU",
+      "scope": "bot_mlp",
+      "position": {
+        "x": 80,
+        "y": 320
+      },
+      "params": {},
+      "inputs": [
+        "bot-fc1"
+      ],
+      "outputs": [
+        "bot-fc2"
+      ]
+    },
+    {
+      "id": "bot-fc2",
+      "type": "linear",
+      "name": "Bottom MLP 2",
+      "scope": "bot_mlp",
+      "position": {
+        "x": 80,
+        "y": 440
+      },
+      "params": {
+        "inFeatures": 64,
+        "outFeatures": 32
+      },
+      "inputs": [
+        "bot-relu1"
+      ],
+      "outputs": [
+        "interact"
+      ]
+    },
+    {
+      "id": "input-sparse",
+      "type": "input",
+      "name": "Sparse Features",
+      "position": {
+        "x": 380,
+        "y": 60
+      },
+      "params": {
+        "shape": [
+          26
+        ]
+      },
+      "inputs": [],
+      "outputs": [
+        "embed-bag"
+      ]
+    },
+    {
+      "id": "embed-bag",
+      "type": "embeddingBag",
+      "name": "EmbeddingBag",
+      "scope": "sparse",
+      "position": {
+        "x": 380,
+        "y": 200
+      },
+      "params": {
+        "vocabSize": 1000000,
+        "embeddingDim": 32
+      },
+      "inputs": [
+        "input-sparse"
+      ],
+      "outputs": [
+        "interact"
+      ]
+    },
+    {
+      "id": "interact",
+      "type": "featureInteraction",
+      "name": "Feature Interaction",
+      "position": {
+        "x": 230,
+        "y": 580
+      },
+      "params": {
+        "method": "dot"
+      },
+      "inputs": [
+        "bot-fc2",
+        "embed-bag"
+      ],
+      "outputs": [
+        "top-fc1"
+      ]
+    },
+    {
+      "id": "top-fc1",
+      "type": "linear",
+      "name": "Top MLP 1",
+      "scope": "top_mlp",
+      "position": {
+        "x": 230,
+        "y": 720
+      },
+      "params": {
+        "inFeatures": 415,
+        "outFeatures": 512
+      },
+      "inputs": [
+        "interact"
+      ],
+      "outputs": [
+        "top-relu1"
+      ]
+    },
+    {
+      "id": "top-relu1",
+      "type": "relu",
+      "name": "ReLU",
+      "scope": "top_mlp",
+      "position": {
+        "x": 230,
+        "y": 840
+      },
+      "params": {},
+      "inputs": [
+        "top-fc1"
+      ],
+      "outputs": [
+        "top-fc2"
+      ]
+    },
+    {
+      "id": "top-fc2",
+      "type": "linear",
+      "name": "Top MLP 2",
+      "scope": "top_mlp",
+      "position": {
+        "x": 230,
+        "y": 960
+      },
+      "params": {
+        "inFeatures": 512,
+        "outFeatures": 256
+      },
+      "inputs": [
+        "top-relu1"
+      ],
+      "outputs": [
+        "top-relu2"
+      ]
+    },
+    {
+      "id": "top-relu2",
+      "type": "relu",
+      "name": "ReLU",
+      "scope": "top_mlp",
+      "position": {
+        "x": 230,
+        "y": 1080
+      },
+      "params": {},
+      "inputs": [
+        "top-fc2"
+      ],
+      "outputs": [
+        "top-out"
+      ]
+    },
+    {
+      "id": "top-out",
+      "type": "linear",
+      "name": "CTR Head",
+      "scope": "top_mlp",
+      "position": {
+        "x": 230,
+        "y": 1200
+      },
+      "params": {
+        "inFeatures": 256,
+        "outFeatures": 1
+      },
+      "inputs": [
+        "top-relu2"
+      ],
+      "outputs": [
+        "sig"
+      ]
+    },
+    {
+      "id": "sig",
+      "type": "sigmoid",
+      "name": "Sigmoid",
+      "scope": "top_mlp",
+      "position": {
+        "x": 230,
+        "y": 1320
+      },
+      "params": {},
+      "inputs": [
+        "top-out"
+      ],
+      "outputs": [
+        "output"
+      ]
+    },
+    {
+      "id": "output",
+      "type": "output",
+      "name": "P(click)",
+      "position": {
+        "x": 230,
+        "y": 1440
+      },
+      "params": {},
+      "inputs": [
+        "sig"
+      ],
+      "outputs": []
+    }
+  ],
+  "connections": [
+    {
+      "id": "c1",
+      "from": "input-dense",
+      "to": "bot-fc1",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c2",
+      "from": "bot-fc1",
+      "to": "bot-relu1",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c3",
+      "from": "bot-relu1",
+      "to": "bot-fc2",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c4",
+      "from": "input-sparse",
+      "to": "embed-bag",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c5",
+      "from": "bot-fc2",
+      "to": "interact",
+      "fromPort": "bottom",
+      "toPort": "left"
+    },
+    {
+      "id": "c6",
+      "from": "embed-bag",
+      "to": "interact",
+      "fromPort": "bottom",
+      "toPort": "right"
+    },
+    {
+      "id": "c7",
+      "from": "interact",
+      "to": "top-fc1",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c8",
+      "from": "top-fc1",
+      "to": "top-relu1",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c9",
+      "from": "top-relu1",
+      "to": "top-fc2",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c10",
+      "from": "top-fc2",
+      "to": "top-relu2",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c11",
+      "from": "top-relu2",
+      "to": "top-out",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c12",
+      "from": "top-out",
+      "to": "sig",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c13",
+      "from": "sig",
+      "to": "output",
+      "fromPort": "bottom",
+      "toPort": "top"
+    }
+  ]
+}

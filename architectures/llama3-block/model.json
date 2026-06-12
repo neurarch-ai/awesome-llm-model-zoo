@@ -1,0 +1,252 @@
+{
+  "id": "llama3-block",
+  "name": "LLaMA-3 Decoder Block",
+  "components": [
+    {
+      "id": "input-1",
+      "type": "input",
+      "name": "tokens",
+      "position": {
+        "x": 300,
+        "y": 50
+      },
+      "params": {
+        "shape": [
+          1,
+          2048
+        ]
+      },
+      "inputs": [],
+      "outputs": [
+        "embedding-1"
+      ]
+    },
+    {
+      "id": "embedding-1",
+      "type": "embedding",
+      "name": "embed",
+      "scope": "embeddings",
+      "position": {
+        "x": 300,
+        "y": 230
+      },
+      "params": {
+        "numEmbeddings": 128256,
+        "embeddingDim": 4096
+      },
+      "inputs": [
+        "input-1"
+      ],
+      "outputs": [
+        "rmsNorm-1",
+        "add-1"
+      ]
+    },
+    {
+      "id": "rmsNorm-1",
+      "type": "rmsNorm",
+      "name": "attn_norm",
+      "scope": "layer.0.attention",
+      "position": {
+        "x": 300,
+        "y": 410
+      },
+      "params": {
+        "normalizedShape": 4096
+      },
+      "inputs": [
+        "embedding-1"
+      ],
+      "outputs": [
+        "groupedQueryAttention-1"
+      ]
+    },
+    {
+      "id": "groupedQueryAttention-1",
+      "type": "groupedQueryAttention",
+      "name": "gqa",
+      "scope": "layer.0.attention",
+      "position": {
+        "x": 300,
+        "y": 590
+      },
+      "params": {
+        "embedDim": 4096,
+        "numHeads": 32,
+        "numKVHeads": 8
+      },
+      "inputs": [
+        "rmsNorm-1",
+        "rope-1"
+      ],
+      "outputs": [
+        "add-1"
+      ]
+    },
+    {
+      "id": "rope-1",
+      "type": "rope",
+      "name": "rope",
+      "scope": "layer.0.attention",
+      "position": {
+        "x": 580,
+        "y": 590
+      },
+      "params": {
+        "dim": 128,
+        "maxSeqLen": 8192
+      },
+      "inputs": [],
+      "outputs": [
+        "groupedQueryAttention-1"
+      ]
+    },
+    {
+      "id": "add-1",
+      "type": "add",
+      "name": "residual_1",
+      "scope": "layer.0.attention",
+      "position": {
+        "x": 300,
+        "y": 770
+      },
+      "params": {},
+      "inputs": [
+        "groupedQueryAttention-1",
+        "embedding-1"
+      ],
+      "outputs": [
+        "rmsNorm-2",
+        "add-2"
+      ]
+    },
+    {
+      "id": "rmsNorm-2",
+      "type": "rmsNorm",
+      "name": "ffn_norm",
+      "scope": "layer.0.ffn",
+      "position": {
+        "x": 300,
+        "y": 950
+      },
+      "params": {
+        "normalizedShape": 4096
+      },
+      "inputs": [
+        "add-1"
+      ],
+      "outputs": [
+        "swiglu-1"
+      ]
+    },
+    {
+      "id": "swiglu-1",
+      "type": "swiglu",
+      "name": "swiglu_ffn",
+      "scope": "layer.0.ffn",
+      "position": {
+        "x": 300,
+        "y": 1130
+      },
+      "params": {
+        "embedDim": 4096,
+        "intermediateSize": 14336
+      },
+      "inputs": [
+        "rmsNorm-2"
+      ],
+      "outputs": [
+        "add-2"
+      ]
+    },
+    {
+      "id": "add-2",
+      "type": "add",
+      "name": "residual_2",
+      "scope": "layer.0.ffn",
+      "position": {
+        "x": 300,
+        "y": 1310
+      },
+      "params": {},
+      "inputs": [
+        "swiglu-1",
+        "add-1"
+      ],
+      "outputs": [
+        "output-1"
+      ]
+    },
+    {
+      "id": "output-1",
+      "type": "output",
+      "name": "hidden_state",
+      "position": {
+        "x": 300,
+        "y": 1490
+      },
+      "params": {},
+      "inputs": [
+        "add-2"
+      ],
+      "outputs": []
+    }
+  ],
+  "connections": [
+    {
+      "id": "c1",
+      "from": "input-1",
+      "to": "embedding-1"
+    },
+    {
+      "id": "c2",
+      "from": "embedding-1",
+      "to": "rmsNorm-1"
+    },
+    {
+      "id": "c3",
+      "from": "rmsNorm-1",
+      "to": "groupedQueryAttention-1"
+    },
+    {
+      "id": "c4",
+      "from": "rope-1",
+      "to": "groupedQueryAttention-1"
+    },
+    {
+      "id": "c5",
+      "from": "groupedQueryAttention-1",
+      "to": "add-1"
+    },
+    {
+      "id": "c6",
+      "from": "embedding-1",
+      "to": "add-1"
+    },
+    {
+      "id": "c7",
+      "from": "add-1",
+      "to": "rmsNorm-2"
+    },
+    {
+      "id": "c8",
+      "from": "rmsNorm-2",
+      "to": "swiglu-1"
+    },
+    {
+      "id": "c9",
+      "from": "swiglu-1",
+      "to": "add-2"
+    },
+    {
+      "id": "c10",
+      "from": "add-1",
+      "to": "add-2"
+    },
+    {
+      "id": "c11",
+      "from": "add-2",
+      "to": "output-1"
+    }
+  ]
+}

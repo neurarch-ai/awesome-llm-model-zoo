@@ -1,0 +1,305 @@
+{
+  "id": "wide-and-deep",
+  "name": "Wide & Deep",
+  "description": "Memorization (wide linear) + generalization (deep MLP) joint trained — Cheng et al. 2016",
+  "icon": "📐",
+  "category": "Recommendation",
+  "components": [
+    {
+      "id": "input-wide",
+      "type": "input",
+      "name": "Wide Input (cross feats)",
+      "position": {
+        "x": 80,
+        "y": 60
+      },
+      "params": {
+        "shape": [
+          10000
+        ]
+      },
+      "inputs": [],
+      "outputs": [
+        "wide-fc"
+      ]
+    },
+    {
+      "id": "wide-fc",
+      "type": "linear",
+      "name": "Wide Linear",
+      "scope": "wide",
+      "position": {
+        "x": 80,
+        "y": 240
+      },
+      "params": {
+        "inFeatures": 10000,
+        "outFeatures": 1
+      },
+      "inputs": [
+        "input-wide"
+      ],
+      "outputs": [
+        "merge"
+      ]
+    },
+    {
+      "id": "input-deep",
+      "type": "input",
+      "name": "Deep Input (sparse cat)",
+      "position": {
+        "x": 380,
+        "y": 60
+      },
+      "params": {
+        "shape": [
+          50
+        ]
+      },
+      "inputs": [],
+      "outputs": [
+        "deep-emb"
+      ]
+    },
+    {
+      "id": "deep-emb",
+      "type": "embedding",
+      "name": "Embeddings",
+      "scope": "deep",
+      "position": {
+        "x": 380,
+        "y": 200
+      },
+      "params": {
+        "vocabSize": 100000,
+        "embeddingDim": 32
+      },
+      "inputs": [
+        "input-deep"
+      ],
+      "outputs": [
+        "deep-fc1"
+      ]
+    },
+    {
+      "id": "deep-fc1",
+      "type": "linear",
+      "name": "Deep FC 1",
+      "scope": "deep",
+      "position": {
+        "x": 380,
+        "y": 340
+      },
+      "params": {
+        "inFeatures": 1600,
+        "outFeatures": 256
+      },
+      "inputs": [
+        "deep-emb"
+      ],
+      "outputs": [
+        "deep-relu1"
+      ]
+    },
+    {
+      "id": "deep-relu1",
+      "type": "relu",
+      "name": "ReLU 1",
+      "scope": "deep",
+      "position": {
+        "x": 380,
+        "y": 480
+      },
+      "params": {},
+      "inputs": [
+        "deep-fc1"
+      ],
+      "outputs": [
+        "deep-fc2"
+      ]
+    },
+    {
+      "id": "deep-fc2",
+      "type": "linear",
+      "name": "Deep FC 2",
+      "scope": "deep",
+      "position": {
+        "x": 380,
+        "y": 620
+      },
+      "params": {
+        "inFeatures": 256,
+        "outFeatures": 128
+      },
+      "inputs": [
+        "deep-relu1"
+      ],
+      "outputs": [
+        "deep-relu2"
+      ]
+    },
+    {
+      "id": "deep-relu2",
+      "type": "relu",
+      "name": "ReLU 2",
+      "scope": "deep",
+      "position": {
+        "x": 380,
+        "y": 760
+      },
+      "params": {},
+      "inputs": [
+        "deep-fc2"
+      ],
+      "outputs": [
+        "deep-out"
+      ]
+    },
+    {
+      "id": "deep-out",
+      "type": "linear",
+      "name": "Deep Out",
+      "scope": "deep",
+      "position": {
+        "x": 380,
+        "y": 900
+      },
+      "params": {
+        "inFeatures": 128,
+        "outFeatures": 1
+      },
+      "inputs": [
+        "deep-relu2"
+      ],
+      "outputs": [
+        "merge"
+      ]
+    },
+    {
+      "id": "merge",
+      "type": "add",
+      "name": "Wide + Deep",
+      "position": {
+        "x": 230,
+        "y": 1040
+      },
+      "params": {},
+      "inputs": [
+        "wide-fc",
+        "deep-out"
+      ],
+      "outputs": [
+        "sigmoid"
+      ]
+    },
+    {
+      "id": "sigmoid",
+      "type": "sigmoid",
+      "name": "Sigmoid CTR",
+      "position": {
+        "x": 230,
+        "y": 1180
+      },
+      "params": {},
+      "inputs": [
+        "merge"
+      ],
+      "outputs": [
+        "output"
+      ]
+    },
+    {
+      "id": "output",
+      "type": "output",
+      "name": "P(click)",
+      "position": {
+        "x": 230,
+        "y": 1320
+      },
+      "params": {},
+      "inputs": [
+        "sigmoid"
+      ],
+      "outputs": []
+    }
+  ],
+  "connections": [
+    {
+      "id": "c1",
+      "from": "input-wide",
+      "to": "wide-fc",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c2",
+      "from": "input-deep",
+      "to": "deep-emb",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c3",
+      "from": "deep-emb",
+      "to": "deep-fc1",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c4",
+      "from": "deep-fc1",
+      "to": "deep-relu1",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c5",
+      "from": "deep-relu1",
+      "to": "deep-fc2",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c6",
+      "from": "deep-fc2",
+      "to": "deep-relu2",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c7",
+      "from": "deep-relu2",
+      "to": "deep-out",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c8",
+      "from": "wide-fc",
+      "to": "merge",
+      "fromPort": "bottom",
+      "toPort": "left"
+    },
+    {
+      "id": "c9",
+      "from": "deep-out",
+      "to": "merge",
+      "fromPort": "bottom",
+      "toPort": "right"
+    },
+    {
+      "id": "c10",
+      "from": "merge",
+      "to": "sigmoid",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c11",
+      "from": "sigmoid",
+      "to": "output",
+      "fromPort": "bottom",
+      "toPort": "top"
+    }
+  ]
+}

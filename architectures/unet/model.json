@@ -1,0 +1,656 @@
+{
+  "id": "unet",
+  "name": "U-Net (image segmentation)",
+  "description": "Classic encoder-decoder for image segmentation (Ronneberger et al. 2015). Encoder downsamples while doubling channels; decoder upsamples while concatenating skip connections from the matching encoder level so fine spatial detail isn't lost. Compressed for canvas legibility — real U-Net has 4 encoder stages, this one has 2.",
+  "icon": "🩻",
+  "category": "Computer Vision",
+  "components": [
+    {
+      "id": "input-1",
+      "type": "input",
+      "name": "image",
+      "position": {
+        "x": 200,
+        "y": 50
+      },
+      "params": {
+        "shape": [
+          3,
+          256,
+          256
+        ]
+      },
+      "inputs": [],
+      "outputs": [
+        "enc1-conv"
+      ]
+    },
+    {
+      "id": "enc1-conv",
+      "type": "conv2d",
+      "name": "enc1_conv",
+      "scope": "encoder.block1",
+      "position": {
+        "x": 200,
+        "y": 220
+      },
+      "params": {
+        "outChannels": 64,
+        "kernelSize": 3,
+        "stride": 1,
+        "padding": 1
+      },
+      "inputs": [
+        "input-1"
+      ],
+      "outputs": [
+        "enc1-bn"
+      ]
+    },
+    {
+      "id": "enc1-bn",
+      "type": "batchNorm",
+      "name": "enc1_bn",
+      "scope": "encoder.block1",
+      "position": {
+        "x": 200,
+        "y": 380
+      },
+      "params": {
+        "numFeatures": 64
+      },
+      "inputs": [
+        "enc1-conv"
+      ],
+      "outputs": [
+        "enc1-relu"
+      ]
+    },
+    {
+      "id": "enc1-relu",
+      "type": "relu",
+      "name": "enc1_relu",
+      "scope": "encoder.block1",
+      "position": {
+        "x": 200,
+        "y": 540
+      },
+      "params": {},
+      "inputs": [
+        "enc1-bn"
+      ],
+      "outputs": [
+        "enc1-pool",
+        "dec1-concat"
+      ]
+    },
+    {
+      "id": "enc1-pool",
+      "type": "maxpool2d",
+      "name": "enc1_pool",
+      "scope": "encoder.block1",
+      "position": {
+        "x": 200,
+        "y": 700
+      },
+      "params": {
+        "kernelSize": 2,
+        "stride": 2
+      },
+      "inputs": [
+        "enc1-relu"
+      ],
+      "outputs": [
+        "enc2-conv"
+      ]
+    },
+    {
+      "id": "enc2-conv",
+      "type": "conv2d",
+      "name": "enc2_conv",
+      "scope": "encoder.block2",
+      "position": {
+        "x": 200,
+        "y": 880
+      },
+      "params": {
+        "outChannels": 128,
+        "kernelSize": 3,
+        "stride": 1,
+        "padding": 1
+      },
+      "inputs": [
+        "enc1-pool"
+      ],
+      "outputs": [
+        "enc2-bn"
+      ]
+    },
+    {
+      "id": "enc2-bn",
+      "type": "batchNorm",
+      "name": "enc2_bn",
+      "scope": "encoder.block2",
+      "position": {
+        "x": 200,
+        "y": 1040
+      },
+      "params": {
+        "numFeatures": 128
+      },
+      "inputs": [
+        "enc2-conv"
+      ],
+      "outputs": [
+        "enc2-relu"
+      ]
+    },
+    {
+      "id": "enc2-relu",
+      "type": "relu",
+      "name": "enc2_relu",
+      "scope": "encoder.block2",
+      "position": {
+        "x": 200,
+        "y": 1200
+      },
+      "params": {},
+      "inputs": [
+        "enc2-bn"
+      ],
+      "outputs": [
+        "enc2-pool",
+        "dec2-concat"
+      ]
+    },
+    {
+      "id": "enc2-pool",
+      "type": "maxpool2d",
+      "name": "enc2_pool",
+      "scope": "encoder.block2",
+      "position": {
+        "x": 200,
+        "y": 1360
+      },
+      "params": {
+        "kernelSize": 2,
+        "stride": 2
+      },
+      "inputs": [
+        "enc2-relu"
+      ],
+      "outputs": [
+        "bottleneck-conv"
+      ]
+    },
+    {
+      "id": "bottleneck-conv",
+      "type": "conv2d",
+      "name": "bottleneck_conv",
+      "scope": "bottleneck",
+      "position": {
+        "x": 200,
+        "y": 1540
+      },
+      "params": {
+        "outChannels": 256,
+        "kernelSize": 3,
+        "stride": 1,
+        "padding": 1
+      },
+      "inputs": [
+        "enc2-pool"
+      ],
+      "outputs": [
+        "bottleneck-bn"
+      ]
+    },
+    {
+      "id": "bottleneck-bn",
+      "type": "batchNorm",
+      "name": "bottleneck_bn",
+      "scope": "bottleneck",
+      "position": {
+        "x": 200,
+        "y": 1700
+      },
+      "params": {
+        "numFeatures": 256
+      },
+      "inputs": [
+        "bottleneck-conv"
+      ],
+      "outputs": [
+        "bottleneck-relu"
+      ]
+    },
+    {
+      "id": "bottleneck-relu",
+      "type": "relu",
+      "name": "bottleneck_relu",
+      "scope": "bottleneck",
+      "position": {
+        "x": 200,
+        "y": 1860
+      },
+      "params": {},
+      "inputs": [
+        "bottleneck-bn"
+      ],
+      "outputs": [
+        "up2"
+      ]
+    },
+    {
+      "id": "up2",
+      "type": "transposeConv2d",
+      "name": "up2",
+      "scope": "decoder.block2",
+      "position": {
+        "x": 200,
+        "y": 2040
+      },
+      "params": {
+        "outChannels": 128,
+        "kernelSize": 2,
+        "stride": 2
+      },
+      "inputs": [
+        "bottleneck-relu"
+      ],
+      "outputs": [
+        "dec2-concat"
+      ]
+    },
+    {
+      "id": "dec2-concat",
+      "type": "concatenate",
+      "name": "dec2_skip",
+      "scope": "decoder.block2",
+      "position": {
+        "x": 200,
+        "y": 2200
+      },
+      "params": {
+        "axis": 1
+      },
+      "inputs": [
+        "up2",
+        "enc2-relu"
+      ],
+      "outputs": [
+        "dec2-conv"
+      ]
+    },
+    {
+      "id": "dec2-conv",
+      "type": "conv2d",
+      "name": "dec2_conv",
+      "scope": "decoder.block2",
+      "position": {
+        "x": 200,
+        "y": 2360
+      },
+      "params": {
+        "outChannels": 128,
+        "kernelSize": 3,
+        "stride": 1,
+        "padding": 1
+      },
+      "inputs": [
+        "dec2-concat"
+      ],
+      "outputs": [
+        "dec2-bn"
+      ]
+    },
+    {
+      "id": "dec2-bn",
+      "type": "batchNorm",
+      "name": "dec2_bn",
+      "scope": "decoder.block2",
+      "position": {
+        "x": 200,
+        "y": 2520
+      },
+      "params": {
+        "numFeatures": 128
+      },
+      "inputs": [
+        "dec2-conv"
+      ],
+      "outputs": [
+        "dec2-relu"
+      ]
+    },
+    {
+      "id": "dec2-relu",
+      "type": "relu",
+      "name": "dec2_relu",
+      "scope": "decoder.block2",
+      "position": {
+        "x": 200,
+        "y": 2680
+      },
+      "params": {},
+      "inputs": [
+        "dec2-bn"
+      ],
+      "outputs": [
+        "up1"
+      ]
+    },
+    {
+      "id": "up1",
+      "type": "transposeConv2d",
+      "name": "up1",
+      "scope": "decoder.block1",
+      "position": {
+        "x": 200,
+        "y": 2860
+      },
+      "params": {
+        "outChannels": 64,
+        "kernelSize": 2,
+        "stride": 2
+      },
+      "inputs": [
+        "dec2-relu"
+      ],
+      "outputs": [
+        "dec1-concat"
+      ]
+    },
+    {
+      "id": "dec1-concat",
+      "type": "concatenate",
+      "name": "dec1_skip",
+      "scope": "decoder.block1",
+      "position": {
+        "x": 200,
+        "y": 3020
+      },
+      "params": {
+        "axis": 1
+      },
+      "inputs": [
+        "up1",
+        "enc1-relu"
+      ],
+      "outputs": [
+        "dec1-conv"
+      ]
+    },
+    {
+      "id": "dec1-conv",
+      "type": "conv2d",
+      "name": "dec1_conv",
+      "scope": "decoder.block1",
+      "position": {
+        "x": 200,
+        "y": 3180
+      },
+      "params": {
+        "outChannels": 64,
+        "kernelSize": 3,
+        "stride": 1,
+        "padding": 1
+      },
+      "inputs": [
+        "dec1-concat"
+      ],
+      "outputs": [
+        "dec1-bn"
+      ]
+    },
+    {
+      "id": "dec1-bn",
+      "type": "batchNorm",
+      "name": "dec1_bn",
+      "scope": "decoder.block1",
+      "position": {
+        "x": 200,
+        "y": 3340
+      },
+      "params": {
+        "numFeatures": 64
+      },
+      "inputs": [
+        "dec1-conv"
+      ],
+      "outputs": [
+        "dec1-relu"
+      ]
+    },
+    {
+      "id": "dec1-relu",
+      "type": "relu",
+      "name": "dec1_relu",
+      "scope": "decoder.block1",
+      "position": {
+        "x": 200,
+        "y": 3500
+      },
+      "params": {},
+      "inputs": [
+        "dec1-bn"
+      ],
+      "outputs": [
+        "output-conv"
+      ]
+    },
+    {
+      "id": "output-conv",
+      "type": "conv2d",
+      "name": "output_conv",
+      "scope": "head",
+      "position": {
+        "x": 200,
+        "y": 3680
+      },
+      "params": {
+        "outChannels": 1,
+        "kernelSize": 1,
+        "stride": 1,
+        "padding": 0
+      },
+      "inputs": [
+        "dec1-relu"
+      ],
+      "outputs": [
+        "output-1"
+      ]
+    },
+    {
+      "id": "output-1",
+      "type": "output",
+      "name": "segmentation_mask",
+      "position": {
+        "x": 200,
+        "y": 3840
+      },
+      "params": {},
+      "inputs": [
+        "output-conv"
+      ],
+      "outputs": []
+    }
+  ],
+  "connections": [
+    {
+      "id": "c1",
+      "from": "input-1",
+      "to": "enc1-conv",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c2",
+      "from": "enc1-conv",
+      "to": "enc1-bn",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c3",
+      "from": "enc1-bn",
+      "to": "enc1-relu",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c4",
+      "from": "enc1-relu",
+      "to": "enc1-pool",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c5",
+      "from": "enc1-pool",
+      "to": "enc2-conv",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c6",
+      "from": "enc2-conv",
+      "to": "enc2-bn",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c7",
+      "from": "enc2-bn",
+      "to": "enc2-relu",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c8",
+      "from": "enc2-relu",
+      "to": "enc2-pool",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c9",
+      "from": "enc2-pool",
+      "to": "bottleneck-conv",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c10",
+      "from": "bottleneck-conv",
+      "to": "bottleneck-bn",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c11",
+      "from": "bottleneck-bn",
+      "to": "bottleneck-relu",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c12",
+      "from": "bottleneck-relu",
+      "to": "up2",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c13",
+      "from": "up2",
+      "to": "dec2-concat",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c14",
+      "from": "enc2-relu",
+      "to": "dec2-concat",
+      "fromPort": "right",
+      "toPort": "left"
+    },
+    {
+      "id": "c15",
+      "from": "dec2-concat",
+      "to": "dec2-conv",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c16",
+      "from": "dec2-conv",
+      "to": "dec2-bn",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c17",
+      "from": "dec2-bn",
+      "to": "dec2-relu",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c18",
+      "from": "dec2-relu",
+      "to": "up1",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c19",
+      "from": "up1",
+      "to": "dec1-concat",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c20",
+      "from": "enc1-relu",
+      "to": "dec1-concat",
+      "fromPort": "right",
+      "toPort": "left"
+    },
+    {
+      "id": "c21",
+      "from": "dec1-concat",
+      "to": "dec1-conv",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c22",
+      "from": "dec1-conv",
+      "to": "dec1-bn",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c23",
+      "from": "dec1-bn",
+      "to": "dec1-relu",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c24",
+      "from": "dec1-relu",
+      "to": "output-conv",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c25",
+      "from": "output-conv",
+      "to": "output-1",
+      "fromPort": "bottom",
+      "toPort": "top"
+    }
+  ]
+}

@@ -1,0 +1,67 @@
+{
+  "id": "simple-rnn",
+  "name": "Simple RNN",
+  "components": [
+    {
+      "id": "input-1",
+      "type": "input",
+      "name": "Input",
+      "position": {
+        "x": 200,
+        "y": 50
+      },
+      "params": {
+        "shape": [
+          128,
+          300
+        ]
+      },
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "id": "lstm-1",
+      "type": "lstm",
+      "name": "LSTM",
+      "scope": "model",
+      "position": {
+        "x": 200,
+        "y": 250
+      },
+      "params": {
+        "hiddenSize": 256,
+        "numLayers": 2
+      },
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "id": "linear-1",
+      "type": "linear",
+      "name": "Linear",
+      "scope": "model",
+      "position": {
+        "x": 200,
+        "y": 450
+      },
+      "params": {
+        "outFeatures": 10
+      },
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "id": "output-1",
+      "type": "output",
+      "name": "Output",
+      "position": {
+        "x": 200,
+        "y": 650
+      },
+      "params": {},
+      "inputs": [],
+      "outputs": []
+    }
+  ],
+  "connections": []
+}

@@ -1,0 +1,506 @@
+{
+  "id": "sli-rec",
+  "name": "SLi-Rec",
+  "description": "Yu et al. 2019 — Short and Long-term Interest Recommender. Time-aware LSTM for short-term + asymmetric SVD attention for long-term, fused via attention gate",
+  "icon": "🕒",
+  "category": "Recommendation",
+  "components": [
+    {
+      "id": "in-hist",
+      "type": "input",
+      "name": "User History (T items)",
+      "position": {
+        "x": 80,
+        "y": 60
+      },
+      "params": {
+        "shape": [
+          50
+        ]
+      },
+      "inputs": [],
+      "outputs": [
+        "hist-emb"
+      ]
+    },
+    {
+      "id": "hist-emb",
+      "type": "embedding",
+      "name": "Item Embed",
+      "scope": "short_tower",
+      "position": {
+        "x": 80,
+        "y": 200
+      },
+      "params": {
+        "vocabSize": 1000000,
+        "embeddingDim": 32
+      },
+      "inputs": [
+        "in-hist"
+      ],
+      "outputs": [
+        "lstm",
+        "long-attn"
+      ]
+    },
+    {
+      "id": "lstm",
+      "type": "lstm",
+      "name": "Time-LSTM (short)",
+      "scope": "short_tower",
+      "position": {
+        "x": 80,
+        "y": 340
+      },
+      "params": {
+        "inFeatures": 32,
+        "hiddenSize": 64,
+        "numLayers": 1,
+        "returnSequences": false
+      },
+      "inputs": [
+        "hist-emb"
+      ],
+      "outputs": [
+        "gate",
+        "fused"
+      ]
+    },
+    {
+      "id": "long-attn",
+      "type": "selfAttention",
+      "name": "ASVD Attn (long)",
+      "scope": "long_tower",
+      "position": {
+        "x": 380,
+        "y": 340
+      },
+      "params": {
+        "dModel": 32,
+        "numHeads": 4
+      },
+      "inputs": [
+        "hist-emb"
+      ],
+      "outputs": [
+        "long-pool"
+      ]
+    },
+    {
+      "id": "long-pool",
+      "type": "globalAvgPool1d",
+      "name": "Pool Long",
+      "scope": "long_tower",
+      "position": {
+        "x": 380,
+        "y": 460
+      },
+      "params": {},
+      "inputs": [
+        "long-attn"
+      ],
+      "outputs": [
+        "long-fc"
+      ]
+    },
+    {
+      "id": "long-fc",
+      "type": "linear",
+      "name": "Long Proj",
+      "scope": "long_tower",
+      "position": {
+        "x": 380,
+        "y": 580
+      },
+      "params": {
+        "inFeatures": 32,
+        "outFeatures": 64
+      },
+      "inputs": [
+        "long-pool"
+      ],
+      "outputs": [
+        "gate",
+        "fused"
+      ]
+    },
+    {
+      "id": "in-tgt",
+      "type": "input",
+      "name": "Target Item",
+      "position": {
+        "x": 680,
+        "y": 60
+      },
+      "params": {
+        "shape": [
+          1
+        ]
+      },
+      "inputs": [],
+      "outputs": [
+        "tgt-emb"
+      ]
+    },
+    {
+      "id": "tgt-emb",
+      "type": "embedding",
+      "name": "Target Embed",
+      "scope": "target_tower",
+      "position": {
+        "x": 680,
+        "y": 200
+      },
+      "params": {
+        "vocabSize": 1000000,
+        "embeddingDim": 32
+      },
+      "inputs": [
+        "in-tgt"
+      ],
+      "outputs": [
+        "tgt-fc"
+      ]
+    },
+    {
+      "id": "tgt-fc",
+      "type": "linear",
+      "name": "Target Proj",
+      "scope": "target_tower",
+      "position": {
+        "x": 680,
+        "y": 340
+      },
+      "params": {
+        "inFeatures": 32,
+        "outFeatures": 64
+      },
+      "inputs": [
+        "tgt-emb"
+      ],
+      "outputs": [
+        "gate",
+        "concat-final"
+      ]
+    },
+    {
+      "id": "gate",
+      "type": "linear",
+      "name": "Fusion Gate σ(W·[s;l;t])",
+      "scope": "fusion",
+      "position": {
+        "x": 230,
+        "y": 720
+      },
+      "params": {
+        "inFeatures": 192,
+        "outFeatures": 64
+      },
+      "inputs": [
+        "lstm",
+        "long-fc",
+        "tgt-fc"
+      ],
+      "outputs": [
+        "gate-sig"
+      ]
+    },
+    {
+      "id": "gate-sig",
+      "type": "sigmoid",
+      "name": "Gate σ",
+      "scope": "fusion",
+      "position": {
+        "x": 230,
+        "y": 820
+      },
+      "params": {},
+      "inputs": [
+        "gate"
+      ],
+      "outputs": [
+        "fused"
+      ]
+    },
+    {
+      "id": "fused",
+      "type": "add",
+      "name": "α·short + (1−α)·long",
+      "scope": "fusion",
+      "position": {
+        "x": 230,
+        "y": 940
+      },
+      "params": {
+        "numInputs": 2
+      },
+      "inputs": [
+        "gate-sig",
+        "lstm",
+        "long-fc"
+      ],
+      "outputs": [
+        "concat-final"
+      ]
+    },
+    {
+      "id": "concat-final",
+      "type": "concatenate",
+      "name": "Concat [user, target]",
+      "scope": "mlp",
+      "position": {
+        "x": 380,
+        "y": 1060
+      },
+      "params": {
+        "dim": -1,
+        "numInputs": 2
+      },
+      "inputs": [
+        "fused",
+        "tgt-fc"
+      ],
+      "outputs": [
+        "fc1"
+      ]
+    },
+    {
+      "id": "fc1",
+      "type": "linear",
+      "name": "MLP 1",
+      "scope": "mlp",
+      "position": {
+        "x": 380,
+        "y": 1180
+      },
+      "params": {
+        "inFeatures": 128,
+        "outFeatures": 64
+      },
+      "inputs": [
+        "concat-final"
+      ],
+      "outputs": [
+        "act1"
+      ]
+    },
+    {
+      "id": "act1",
+      "type": "prelu",
+      "name": "PReLU",
+      "scope": "mlp",
+      "position": {
+        "x": 380,
+        "y": 1280
+      },
+      "params": {},
+      "inputs": [
+        "fc1"
+      ],
+      "outputs": [
+        "fc2"
+      ]
+    },
+    {
+      "id": "fc2",
+      "type": "linear",
+      "name": "Score Head",
+      "scope": "mlp",
+      "position": {
+        "x": 380,
+        "y": 1380
+      },
+      "params": {
+        "inFeatures": 64,
+        "outFeatures": 1
+      },
+      "inputs": [
+        "act1"
+      ],
+      "outputs": [
+        "sig"
+      ]
+    },
+    {
+      "id": "sig",
+      "type": "sigmoid",
+      "name": "Sigmoid",
+      "scope": "mlp",
+      "position": {
+        "x": 380,
+        "y": 1480
+      },
+      "params": {},
+      "inputs": [
+        "fc2"
+      ],
+      "outputs": [
+        "out"
+      ]
+    },
+    {
+      "id": "out",
+      "type": "output",
+      "name": "P(click)",
+      "position": {
+        "x": 380,
+        "y": 1600
+      },
+      "params": {},
+      "inputs": [
+        "sig"
+      ],
+      "outputs": []
+    }
+  ],
+  "connections": [
+    {
+      "id": "c1",
+      "from": "in-hist",
+      "to": "hist-emb",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c2",
+      "from": "hist-emb",
+      "to": "lstm",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c3",
+      "from": "hist-emb",
+      "to": "long-attn",
+      "fromPort": "right",
+      "toPort": "left"
+    },
+    {
+      "id": "c4",
+      "from": "long-attn",
+      "to": "long-pool",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c5",
+      "from": "long-pool",
+      "to": "long-fc",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "t1",
+      "from": "in-tgt",
+      "to": "tgt-emb",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "t2",
+      "from": "tgt-emb",
+      "to": "tgt-fc",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "g1",
+      "from": "lstm",
+      "to": "gate",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "g2",
+      "from": "long-fc",
+      "to": "gate",
+      "fromPort": "left",
+      "toPort": "right"
+    },
+    {
+      "id": "g3",
+      "from": "tgt-fc",
+      "to": "gate",
+      "fromPort": "bottom",
+      "toPort": "right"
+    },
+    {
+      "id": "g4",
+      "from": "gate",
+      "to": "gate-sig",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "g5",
+      "from": "gate-sig",
+      "to": "fused",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "g6",
+      "from": "lstm",
+      "to": "fused",
+      "fromPort": "right",
+      "toPort": "left"
+    },
+    {
+      "id": "g7",
+      "from": "long-fc",
+      "to": "fused",
+      "fromPort": "left",
+      "toPort": "right"
+    },
+    {
+      "id": "f1",
+      "from": "fused",
+      "to": "concat-final",
+      "fromPort": "bottom",
+      "toPort": "left"
+    },
+    {
+      "id": "f2",
+      "from": "tgt-fc",
+      "to": "concat-final",
+      "fromPort": "bottom",
+      "toPort": "right"
+    },
+    {
+      "id": "f3",
+      "from": "concat-final",
+      "to": "fc1",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "f4",
+      "from": "fc1",
+      "to": "act1",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "f5",
+      "from": "act1",
+      "to": "fc2",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "f6",
+      "from": "fc2",
+      "to": "sig",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "f7",
+      "from": "sig",
+      "to": "out",
+      "fromPort": "bottom",
+      "toPort": "top"
+    }
+  ]
+}

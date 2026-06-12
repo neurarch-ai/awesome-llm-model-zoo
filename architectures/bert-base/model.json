@@ -1,0 +1,307 @@
+{
+  "id": "bert-base",
+  "name": "BERT-Base",
+  "description": "BERT-Base (Google): BERT-style bidirectional encoder, 12 layers x 768 hidden, 12 heads, post-LayerNorm, GeLU FFN. One encoder block expanded; repeats x12. Verified against the official config.json.",
+  "components": [
+    {
+      "id": "input-1",
+      "type": "input",
+      "name": "input_ids",
+      "position": {
+        "x": 300,
+        "y": 50
+      },
+      "params": {
+        "shape": [
+          1,
+          512
+        ]
+      },
+      "inputs": [],
+      "outputs": [
+        "embedding-2"
+      ]
+    },
+    {
+      "id": "embedding-2",
+      "type": "embedding",
+      "name": "word_embed",
+      "position": {
+        "x": 300,
+        "y": 200
+      },
+      "params": {
+        "numEmbeddings": 30522,
+        "embeddingDim": 768
+      },
+      "inputs": [
+        "input-1"
+      ],
+      "outputs": [
+        "positionalEncoding-3"
+      ],
+      "scope": "embeddings",
+      "notes": "30,522-token vocabulary."
+    },
+    {
+      "id": "positionalEncoding-3",
+      "type": "positionalEncoding",
+      "name": "pos_embed",
+      "position": {
+        "x": 300,
+        "y": 350
+      },
+      "params": {
+        "maxLen": 512,
+        "embedDim": 768
+      },
+      "inputs": [
+        "embedding-2"
+      ],
+      "outputs": [
+        "layerNorm-4"
+      ],
+      "scope": "embeddings",
+      "notes": "Absolute learned position embeddings, max 512 positions."
+    },
+    {
+      "id": "layerNorm-4",
+      "type": "layerNorm",
+      "name": "embed_norm",
+      "position": {
+        "x": 300,
+        "y": 500
+      },
+      "params": {
+        "normalizedShape": 768
+      },
+      "inputs": [
+        "positionalEncoding-3"
+      ],
+      "outputs": [
+        "dropout-5"
+      ],
+      "scope": "embeddings"
+    },
+    {
+      "id": "dropout-5",
+      "type": "dropout",
+      "name": "embed_drop",
+      "position": {
+        "x": 300,
+        "y": 650
+      },
+      "params": {
+        "p": 0.1
+      },
+      "inputs": [
+        "layerNorm-4"
+      ],
+      "outputs": [
+        "multiHeadAttention-6",
+        "add-7"
+      ],
+      "scope": "embeddings"
+    },
+    {
+      "id": "multiHeadAttention-6",
+      "type": "multiHeadAttention",
+      "name": "self_attn",
+      "position": {
+        "x": 300,
+        "y": 800
+      },
+      "params": {
+        "embedDim": 768,
+        "numHeads": 12
+      },
+      "inputs": [
+        "dropout-5"
+      ],
+      "outputs": [
+        "add-7"
+      ],
+      "scope": "layer.0.attention",
+      "notes": "Bidirectional self-attention, 12 heads. One of 12 identical encoder blocks is expanded; the stack repeats x12."
+    },
+    {
+      "id": "add-7",
+      "type": "add",
+      "name": "residual_1",
+      "position": {
+        "x": 300,
+        "y": 950
+      },
+      "params": {},
+      "inputs": [
+        "multiHeadAttention-6",
+        "dropout-5"
+      ],
+      "outputs": [
+        "layerNorm-8"
+      ],
+      "scope": "layer.0.attention"
+    },
+    {
+      "id": "layerNorm-8",
+      "type": "layerNorm",
+      "name": "attn_norm",
+      "position": {
+        "x": 300,
+        "y": 1100
+      },
+      "params": {
+        "normalizedShape": 768
+      },
+      "inputs": [
+        "add-7"
+      ],
+      "outputs": [
+        "feedForward-9",
+        "add-10"
+      ],
+      "scope": "layer.0.attention",
+      "notes": "Post-norm: LayerNorm applied after the residual add (original BERT placement)."
+    },
+    {
+      "id": "feedForward-9",
+      "type": "feedForward",
+      "name": "ffn",
+      "position": {
+        "x": 300,
+        "y": 1250
+      },
+      "params": {
+        "embedDim": 768,
+        "ffDim": 3072
+      },
+      "inputs": [
+        "layerNorm-8"
+      ],
+      "outputs": [
+        "add-10"
+      ],
+      "scope": "layer.0.ffn",
+      "notes": "Dense FFN 768 -> 3072 -> 768, GeLU activation."
+    },
+    {
+      "id": "add-10",
+      "type": "add",
+      "name": "residual_2",
+      "position": {
+        "x": 300,
+        "y": 1400
+      },
+      "params": {},
+      "inputs": [
+        "feedForward-9",
+        "layerNorm-8"
+      ],
+      "outputs": [
+        "layerNorm-11"
+      ],
+      "scope": "layer.0.ffn"
+    },
+    {
+      "id": "layerNorm-11",
+      "type": "layerNorm",
+      "name": "ffn_norm",
+      "position": {
+        "x": 300,
+        "y": 1550
+      },
+      "params": {
+        "normalizedShape": 768
+      },
+      "inputs": [
+        "add-10"
+      ],
+      "outputs": [
+        "output-12"
+      ],
+      "scope": "layer.0.ffn"
+    },
+    {
+      "id": "output-12",
+      "type": "output",
+      "name": "hidden_states",
+      "position": {
+        "x": 300,
+        "y": 1700
+      },
+      "params": {},
+      "inputs": [
+        "layerNorm-11"
+      ],
+      "outputs": [],
+      "notes": "Sequence of contextual embeddings; [CLS] position is used for classification heads."
+    }
+  ],
+  "connections": [
+    {
+      "id": "c1",
+      "from": "input-1",
+      "to": "embedding-2"
+    },
+    {
+      "id": "c2",
+      "from": "embedding-2",
+      "to": "positionalEncoding-3"
+    },
+    {
+      "id": "c3",
+      "from": "positionalEncoding-3",
+      "to": "layerNorm-4"
+    },
+    {
+      "id": "c4",
+      "from": "layerNorm-4",
+      "to": "dropout-5"
+    },
+    {
+      "id": "c5",
+      "from": "dropout-5",
+      "to": "multiHeadAttention-6"
+    },
+    {
+      "id": "c6",
+      "from": "multiHeadAttention-6",
+      "to": "add-7"
+    },
+    {
+      "id": "c7",
+      "from": "dropout-5",
+      "to": "add-7"
+    },
+    {
+      "id": "c8",
+      "from": "add-7",
+      "to": "layerNorm-8"
+    },
+    {
+      "id": "c9",
+      "from": "layerNorm-8",
+      "to": "feedForward-9"
+    },
+    {
+      "id": "c10",
+      "from": "feedForward-9",
+      "to": "add-10"
+    },
+    {
+      "id": "c11",
+      "from": "layerNorm-8",
+      "to": "add-10"
+    },
+    {
+      "id": "c12",
+      "from": "add-10",
+      "to": "layerNorm-11"
+    },
+    {
+      "id": "c13",
+      "from": "layerNorm-11",
+      "to": "output-12"
+    }
+  ]
+}

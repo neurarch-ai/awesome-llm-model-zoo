@@ -1,0 +1,262 @@
+{
+  "id": "graph-sage-rec",
+  "name": "GraphSAGE Recommender",
+  "description": "Inductive node embeddings via neighbor sampling + aggregation — for graph-based recommenders (PinSage style)",
+  "icon": "🕸",
+  "category": "Recommendation",
+  "components": [
+    {
+      "id": "input",
+      "type": "input",
+      "name": "Node Features",
+      "position": {
+        "x": 230,
+        "y": 60
+      },
+      "params": {
+        "shape": [
+          128
+        ]
+      },
+      "inputs": [],
+      "outputs": [
+        "sage1"
+      ]
+    },
+    {
+      "id": "sage1",
+      "type": "graphSAGE",
+      "name": "SAGE Layer 1",
+      "scope": "gnn.layer.0",
+      "position": {
+        "x": 230,
+        "y": 220
+      },
+      "params": {
+        "inChannels": 128,
+        "outChannels": 256,
+        "aggregator": "mean"
+      },
+      "inputs": [
+        "input"
+      ],
+      "outputs": [
+        "relu1"
+      ]
+    },
+    {
+      "id": "relu1",
+      "type": "relu",
+      "name": "ReLU",
+      "scope": "gnn.layer.0",
+      "position": {
+        "x": 230,
+        "y": 360
+      },
+      "params": {},
+      "inputs": [
+        "sage1"
+      ],
+      "outputs": [
+        "drop1"
+      ]
+    },
+    {
+      "id": "drop1",
+      "type": "dropout",
+      "name": "Dropout",
+      "scope": "gnn.layer.0",
+      "position": {
+        "x": 230,
+        "y": 480
+      },
+      "params": {
+        "p": 0.2
+      },
+      "inputs": [
+        "relu1"
+      ],
+      "outputs": [
+        "sage2"
+      ]
+    },
+    {
+      "id": "sage2",
+      "type": "graphSAGE",
+      "name": "SAGE Layer 2",
+      "scope": "gnn.layer.1",
+      "position": {
+        "x": 230,
+        "y": 600
+      },
+      "params": {
+        "inChannels": 256,
+        "outChannels": 256,
+        "aggregator": "mean"
+      },
+      "inputs": [
+        "drop1"
+      ],
+      "outputs": [
+        "relu2"
+      ]
+    },
+    {
+      "id": "relu2",
+      "type": "relu",
+      "name": "ReLU",
+      "scope": "gnn.layer.1",
+      "position": {
+        "x": 230,
+        "y": 740
+      },
+      "params": {},
+      "inputs": [
+        "sage2"
+      ],
+      "outputs": [
+        "drop2"
+      ]
+    },
+    {
+      "id": "drop2",
+      "type": "dropout",
+      "name": "Dropout",
+      "scope": "gnn.layer.1",
+      "position": {
+        "x": 230,
+        "y": 860
+      },
+      "params": {
+        "p": 0.2
+      },
+      "inputs": [
+        "relu2"
+      ],
+      "outputs": [
+        "sage3"
+      ]
+    },
+    {
+      "id": "sage3",
+      "type": "graphSAGE",
+      "name": "SAGE Layer 3",
+      "scope": "gnn.layer.2",
+      "position": {
+        "x": 230,
+        "y": 980
+      },
+      "params": {
+        "inChannels": 256,
+        "outChannels": 128,
+        "aggregator": "mean"
+      },
+      "inputs": [
+        "drop2"
+      ],
+      "outputs": [
+        "norm"
+      ]
+    },
+    {
+      "id": "norm",
+      "type": "layerNorm",
+      "name": "LayerNorm",
+      "scope": "gnn",
+      "position": {
+        "x": 230,
+        "y": 1100
+      },
+      "params": {
+        "normalizedShape": [
+          128
+        ]
+      },
+      "inputs": [
+        "sage3"
+      ],
+      "outputs": [
+        "output"
+      ]
+    },
+    {
+      "id": "output",
+      "type": "output",
+      "name": "Node Embedding",
+      "position": {
+        "x": 230,
+        "y": 1220
+      },
+      "params": {},
+      "inputs": [
+        "norm"
+      ],
+      "outputs": []
+    }
+  ],
+  "connections": [
+    {
+      "id": "c1",
+      "from": "input",
+      "to": "sage1",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c2",
+      "from": "sage1",
+      "to": "relu1",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c3",
+      "from": "relu1",
+      "to": "drop1",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c4",
+      "from": "drop1",
+      "to": "sage2",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c5",
+      "from": "sage2",
+      "to": "relu2",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c6",
+      "from": "relu2",
+      "to": "drop2",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c7",
+      "from": "drop2",
+      "to": "sage3",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c8",
+      "from": "sage3",
+      "to": "norm",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c9",
+      "from": "norm",
+      "to": "output",
+      "fromPort": "bottom",
+      "toPort": "top"
+    }
+  ]
+}

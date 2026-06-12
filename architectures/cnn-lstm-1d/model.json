@@ -1,0 +1,319 @@
+{
+  "id": "cnn-lstm-1d",
+  "name": "1D CNN + LSTM",
+  "description": "Conv1D extracts local morphology, LSTM captures temporal context — strong baseline for ECG, PPG, IMU and other long-form physio signals.",
+  "components": [
+    {
+      "id": "input-1",
+      "type": "input",
+      "name": "ts_window",
+      "position": {
+        "x": 220,
+        "y": 50
+      },
+      "params": {
+        "shape": [
+          1,
+          12,
+          5000
+        ]
+      },
+      "inputs": [],
+      "outputs": [
+        "conv-1"
+      ]
+    },
+    {
+      "id": "conv-1",
+      "type": "conv1d",
+      "name": "conv1",
+      "scope": "encoder.block.0",
+      "position": {
+        "x": 220,
+        "y": 220
+      },
+      "params": {
+        "outChannels": 64,
+        "kernelSize": 7,
+        "stride": 1,
+        "padding": 3
+      },
+      "inputs": [
+        "input-1"
+      ],
+      "outputs": [
+        "bn-1"
+      ]
+    },
+    {
+      "id": "bn-1",
+      "type": "batchNorm",
+      "name": "bn",
+      "scope": "encoder.block.0",
+      "position": {
+        "x": 220,
+        "y": 390
+      },
+      "params": {
+        "normalizedShape": 64
+      },
+      "inputs": [
+        "conv-1"
+      ],
+      "outputs": [
+        "relu-1"
+      ]
+    },
+    {
+      "id": "relu-1",
+      "type": "relu",
+      "name": "act",
+      "scope": "encoder.block.0",
+      "position": {
+        "x": 220,
+        "y": 560
+      },
+      "params": {},
+      "inputs": [
+        "bn-1"
+      ],
+      "outputs": [
+        "pool-1"
+      ]
+    },
+    {
+      "id": "pool-1",
+      "type": "maxpool1d",
+      "name": "pool",
+      "scope": "encoder.block.0",
+      "position": {
+        "x": 220,
+        "y": 730
+      },
+      "params": {
+        "kernelSize": 2,
+        "stride": 2
+      },
+      "inputs": [
+        "relu-1"
+      ],
+      "outputs": [
+        "conv-2"
+      ]
+    },
+    {
+      "id": "conv-2",
+      "type": "conv1d",
+      "name": "conv2",
+      "scope": "encoder.block.1",
+      "position": {
+        "x": 220,
+        "y": 900
+      },
+      "params": {
+        "outChannels": 128,
+        "kernelSize": 5,
+        "stride": 1,
+        "padding": 2
+      },
+      "inputs": [
+        "pool-1"
+      ],
+      "outputs": [
+        "bn-2"
+      ]
+    },
+    {
+      "id": "bn-2",
+      "type": "batchNorm",
+      "name": "bn",
+      "scope": "encoder.block.1",
+      "position": {
+        "x": 220,
+        "y": 1070
+      },
+      "params": {
+        "normalizedShape": 128
+      },
+      "inputs": [
+        "conv-2"
+      ],
+      "outputs": [
+        "relu-2"
+      ]
+    },
+    {
+      "id": "relu-2",
+      "type": "relu",
+      "name": "act",
+      "scope": "encoder.block.1",
+      "position": {
+        "x": 220,
+        "y": 1240
+      },
+      "params": {},
+      "inputs": [
+        "bn-2"
+      ],
+      "outputs": [
+        "pool-2"
+      ]
+    },
+    {
+      "id": "pool-2",
+      "type": "maxpool1d",
+      "name": "pool",
+      "scope": "encoder.block.1",
+      "position": {
+        "x": 220,
+        "y": 1410
+      },
+      "params": {
+        "kernelSize": 2,
+        "stride": 2
+      },
+      "inputs": [
+        "relu-2"
+      ],
+      "outputs": [
+        "lstm-1"
+      ]
+    },
+    {
+      "id": "lstm-1",
+      "type": "lstm",
+      "name": "lstm",
+      "scope": "temporal",
+      "position": {
+        "x": 220,
+        "y": 1580
+      },
+      "params": {
+        "inFeatures": 128,
+        "hiddenSize": 128,
+        "numLayers": 2,
+        "returnSequences": false
+      },
+      "inputs": [
+        "pool-2"
+      ],
+      "outputs": [
+        "drop-1"
+      ]
+    },
+    {
+      "id": "drop-1",
+      "type": "dropout",
+      "name": "drop",
+      "scope": "head",
+      "position": {
+        "x": 220,
+        "y": 1750
+      },
+      "params": {
+        "p": 0.3
+      },
+      "inputs": [
+        "lstm-1"
+      ],
+      "outputs": [
+        "linear-1"
+      ]
+    },
+    {
+      "id": "linear-1",
+      "type": "linear",
+      "name": "classifier",
+      "scope": "head",
+      "position": {
+        "x": 220,
+        "y": 1920
+      },
+      "params": {
+        "outFeatures": 5
+      },
+      "inputs": [
+        "drop-1"
+      ],
+      "outputs": [
+        "output-1"
+      ]
+    },
+    {
+      "id": "output-1",
+      "type": "output",
+      "name": "logits",
+      "position": {
+        "x": 220,
+        "y": 2090
+      },
+      "params": {},
+      "inputs": [
+        "linear-1"
+      ],
+      "outputs": []
+    }
+  ],
+  "connections": [
+    {
+      "id": "c1",
+      "from": "input-1",
+      "to": "conv-1"
+    },
+    {
+      "id": "c2",
+      "from": "conv-1",
+      "to": "bn-1"
+    },
+    {
+      "id": "c3",
+      "from": "bn-1",
+      "to": "relu-1"
+    },
+    {
+      "id": "c4",
+      "from": "relu-1",
+      "to": "pool-1"
+    },
+    {
+      "id": "c5",
+      "from": "pool-1",
+      "to": "conv-2"
+    },
+    {
+      "id": "c6",
+      "from": "conv-2",
+      "to": "bn-2"
+    },
+    {
+      "id": "c7",
+      "from": "bn-2",
+      "to": "relu-2"
+    },
+    {
+      "id": "c8",
+      "from": "relu-2",
+      "to": "pool-2"
+    },
+    {
+      "id": "c9",
+      "from": "pool-2",
+      "to": "lstm-1"
+    },
+    {
+      "id": "c10",
+      "from": "lstm-1",
+      "to": "drop-1"
+    },
+    {
+      "id": "c11",
+      "from": "drop-1",
+      "to": "linear-1"
+    },
+    {
+      "id": "c12",
+      "from": "linear-1",
+      "to": "output-1"
+    }
+  ]
+}

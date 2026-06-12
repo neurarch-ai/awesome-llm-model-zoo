@@ -1,0 +1,310 @@
+{
+  "id": "ncf",
+  "name": "Neural Collaborative Filtering",
+  "description": "He et al. 2017 NCF — user/item embeddings → concat → MLP → score (concat-then-MLP variant, distinct from NeuMF fusion)",
+  "icon": "🧮",
+  "category": "Recommendation",
+  "components": [
+    {
+      "id": "in-user",
+      "type": "input",
+      "name": "User ID",
+      "position": {
+        "x": 80,
+        "y": 60
+      },
+      "params": {
+        "shape": [
+          1
+        ]
+      },
+      "inputs": [],
+      "outputs": [
+        "user-emb"
+      ]
+    },
+    {
+      "id": "user-emb",
+      "type": "embedding",
+      "name": "User Embedding",
+      "scope": "user_tower",
+      "position": {
+        "x": 80,
+        "y": 200
+      },
+      "params": {
+        "vocabSize": 100000,
+        "embeddingDim": 32
+      },
+      "inputs": [
+        "in-user"
+      ],
+      "outputs": [
+        "concat"
+      ]
+    },
+    {
+      "id": "in-item",
+      "type": "input",
+      "name": "Item ID",
+      "position": {
+        "x": 360,
+        "y": 60
+      },
+      "params": {
+        "shape": [
+          1
+        ]
+      },
+      "inputs": [],
+      "outputs": [
+        "item-emb"
+      ]
+    },
+    {
+      "id": "item-emb",
+      "type": "embedding",
+      "name": "Item Embedding",
+      "scope": "item_tower",
+      "position": {
+        "x": 360,
+        "y": 200
+      },
+      "params": {
+        "vocabSize": 1000000,
+        "embeddingDim": 32
+      },
+      "inputs": [
+        "in-item"
+      ],
+      "outputs": [
+        "concat"
+      ]
+    },
+    {
+      "id": "concat",
+      "type": "concatenate",
+      "name": "Concat [u; i]",
+      "scope": "mlp",
+      "position": {
+        "x": 220,
+        "y": 340
+      },
+      "params": {
+        "dim": -1,
+        "numInputs": 2
+      },
+      "inputs": [
+        "user-emb",
+        "item-emb"
+      ],
+      "outputs": [
+        "fc1"
+      ]
+    },
+    {
+      "id": "fc1",
+      "type": "linear",
+      "name": "MLP 1",
+      "scope": "mlp",
+      "position": {
+        "x": 220,
+        "y": 460
+      },
+      "params": {
+        "inFeatures": 64,
+        "outFeatures": 64
+      },
+      "inputs": [
+        "concat"
+      ],
+      "outputs": [
+        "act1"
+      ]
+    },
+    {
+      "id": "act1",
+      "type": "relu",
+      "name": "ReLU 1",
+      "scope": "mlp",
+      "position": {
+        "x": 220,
+        "y": 560
+      },
+      "params": {},
+      "inputs": [
+        "fc1"
+      ],
+      "outputs": [
+        "fc2"
+      ]
+    },
+    {
+      "id": "fc2",
+      "type": "linear",
+      "name": "MLP 2",
+      "scope": "mlp",
+      "position": {
+        "x": 220,
+        "y": 660
+      },
+      "params": {
+        "inFeatures": 64,
+        "outFeatures": 32
+      },
+      "inputs": [
+        "act1"
+      ],
+      "outputs": [
+        "act2"
+      ]
+    },
+    {
+      "id": "act2",
+      "type": "relu",
+      "name": "ReLU 2",
+      "scope": "mlp",
+      "position": {
+        "x": 220,
+        "y": 760
+      },
+      "params": {},
+      "inputs": [
+        "fc2"
+      ],
+      "outputs": [
+        "fc3"
+      ]
+    },
+    {
+      "id": "fc3",
+      "type": "linear",
+      "name": "Score Head",
+      "scope": "mlp",
+      "position": {
+        "x": 220,
+        "y": 860
+      },
+      "params": {
+        "inFeatures": 32,
+        "outFeatures": 1
+      },
+      "inputs": [
+        "act2"
+      ],
+      "outputs": [
+        "sig"
+      ]
+    },
+    {
+      "id": "sig",
+      "type": "sigmoid",
+      "name": "Sigmoid",
+      "scope": "mlp",
+      "position": {
+        "x": 220,
+        "y": 960
+      },
+      "params": {},
+      "inputs": [
+        "fc3"
+      ],
+      "outputs": [
+        "out"
+      ]
+    },
+    {
+      "id": "out",
+      "type": "output",
+      "name": "P(click)",
+      "position": {
+        "x": 220,
+        "y": 1080
+      },
+      "params": {},
+      "inputs": [
+        "sig"
+      ],
+      "outputs": []
+    }
+  ],
+  "connections": [
+    {
+      "id": "c1",
+      "from": "in-user",
+      "to": "user-emb",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c2",
+      "from": "in-item",
+      "to": "item-emb",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c3",
+      "from": "user-emb",
+      "to": "concat",
+      "fromPort": "bottom",
+      "toPort": "left"
+    },
+    {
+      "id": "c4",
+      "from": "item-emb",
+      "to": "concat",
+      "fromPort": "bottom",
+      "toPort": "right"
+    },
+    {
+      "id": "c5",
+      "from": "concat",
+      "to": "fc1",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c6",
+      "from": "fc1",
+      "to": "act1",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c7",
+      "from": "act1",
+      "to": "fc2",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c8",
+      "from": "fc2",
+      "to": "act2",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c9",
+      "from": "act2",
+      "to": "fc3",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c10",
+      "from": "fc3",
+      "to": "sig",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c11",
+      "from": "sig",
+      "to": "out",
+      "fromPort": "bottom",
+      "toPort": "top"
+    }
+  ]
+}

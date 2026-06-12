@@ -1,0 +1,120 @@
+{
+  "id": "transformer-block",
+  "name": "Transformer Block",
+  "components": [
+    {
+      "id": "input-1",
+      "type": "input",
+      "name": "Input",
+      "position": {
+        "x": 200,
+        "y": 50
+      },
+      "params": {
+        "shape": [
+          512,
+          768
+        ]
+      },
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "id": "multiHeadAttention-1",
+      "type": "multiHeadAttention",
+      "name": "MultiHeadAttention",
+      "scope": "block.0.attention",
+      "position": {
+        "x": 200,
+        "y": 250
+      },
+      "params": {
+        "numHeads": 8,
+        "hiddenDim": 768
+      },
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "id": "add-1",
+      "type": "add",
+      "name": "Add_1",
+      "scope": "block.0.attention",
+      "position": {
+        "x": 200,
+        "y": 450
+      },
+      "params": {},
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "id": "layerNorm-1",
+      "type": "layerNorm",
+      "name": "LayerNorm_1",
+      "scope": "block.0.attention",
+      "position": {
+        "x": 200,
+        "y": 650
+      },
+      "params": {},
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "id": "feedForward-1",
+      "type": "feedForward",
+      "name": "FeedForward",
+      "scope": "block.0.ffn",
+      "position": {
+        "x": 200,
+        "y": 850
+      },
+      "params": {
+        "hiddenDim": 768,
+        "ffDim": 3072
+      },
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "id": "add-2",
+      "type": "add",
+      "name": "Add_2",
+      "scope": "block.0.ffn",
+      "position": {
+        "x": 200,
+        "y": 1050
+      },
+      "params": {},
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "id": "layerNorm-2",
+      "type": "layerNorm",
+      "name": "LayerNorm_2",
+      "scope": "block.0.ffn",
+      "position": {
+        "x": 200,
+        "y": 1250
+      },
+      "params": {},
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "id": "output-1",
+      "type": "output",
+      "name": "Output",
+      "position": {
+        "x": 200,
+        "y": 1450
+      },
+      "params": {},
+      "inputs": [],
+      "outputs": []
+    }
+  ],
+  "connections": []
+}

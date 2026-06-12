@@ -1,0 +1,309 @@
+{
+  "id": "two-tower",
+  "name": "Two-Tower",
+  "description": "User+Item dual encoder for retrieval — embeddings → MLP per side → dot product score",
+  "icon": "🗼",
+  "category": "Recommendation",
+  "components": [
+    {
+      "id": "input-user",
+      "type": "input",
+      "name": "User Input",
+      "position": {
+        "x": 80,
+        "y": 60
+      },
+      "params": {
+        "shape": [
+          1
+        ]
+      },
+      "inputs": [],
+      "outputs": [
+        "user-emb"
+      ]
+    },
+    {
+      "id": "user-emb",
+      "type": "embedding",
+      "name": "User Embed",
+      "scope": "user_tower",
+      "position": {
+        "x": 80,
+        "y": 200
+      },
+      "params": {
+        "vocabSize": 100000,
+        "embeddingDim": 64
+      },
+      "inputs": [
+        "input-user"
+      ],
+      "outputs": [
+        "user-fc1"
+      ]
+    },
+    {
+      "id": "user-fc1",
+      "type": "linear",
+      "name": "User FC 1",
+      "scope": "user_tower",
+      "position": {
+        "x": 80,
+        "y": 340
+      },
+      "params": {
+        "inFeatures": 64,
+        "outFeatures": 128
+      },
+      "inputs": [
+        "user-emb"
+      ],
+      "outputs": [
+        "user-relu"
+      ]
+    },
+    {
+      "id": "user-relu",
+      "type": "relu",
+      "name": "User ReLU",
+      "scope": "user_tower",
+      "position": {
+        "x": 80,
+        "y": 480
+      },
+      "params": {},
+      "inputs": [
+        "user-fc1"
+      ],
+      "outputs": [
+        "user-fc2"
+      ]
+    },
+    {
+      "id": "user-fc2",
+      "type": "linear",
+      "name": "User Tower Out",
+      "scope": "user_tower",
+      "position": {
+        "x": 80,
+        "y": 620
+      },
+      "params": {
+        "inFeatures": 128,
+        "outFeatures": 64
+      },
+      "inputs": [
+        "user-relu"
+      ],
+      "outputs": [
+        "dot"
+      ]
+    },
+    {
+      "id": "input-item",
+      "type": "input",
+      "name": "Item Input",
+      "position": {
+        "x": 380,
+        "y": 60
+      },
+      "params": {
+        "shape": [
+          1
+        ]
+      },
+      "inputs": [],
+      "outputs": [
+        "item-emb"
+      ]
+    },
+    {
+      "id": "item-emb",
+      "type": "embedding",
+      "name": "Item Embed",
+      "scope": "item_tower",
+      "position": {
+        "x": 380,
+        "y": 200
+      },
+      "params": {
+        "vocabSize": 1000000,
+        "embeddingDim": 64
+      },
+      "inputs": [
+        "input-item"
+      ],
+      "outputs": [
+        "item-fc1"
+      ]
+    },
+    {
+      "id": "item-fc1",
+      "type": "linear",
+      "name": "Item FC 1",
+      "scope": "item_tower",
+      "position": {
+        "x": 380,
+        "y": 340
+      },
+      "params": {
+        "inFeatures": 64,
+        "outFeatures": 128
+      },
+      "inputs": [
+        "item-emb"
+      ],
+      "outputs": [
+        "item-relu"
+      ]
+    },
+    {
+      "id": "item-relu",
+      "type": "relu",
+      "name": "Item ReLU",
+      "scope": "item_tower",
+      "position": {
+        "x": 380,
+        "y": 480
+      },
+      "params": {},
+      "inputs": [
+        "item-fc1"
+      ],
+      "outputs": [
+        "item-fc2"
+      ]
+    },
+    {
+      "id": "item-fc2",
+      "type": "linear",
+      "name": "Item Tower Out",
+      "scope": "item_tower",
+      "position": {
+        "x": 380,
+        "y": 620
+      },
+      "params": {
+        "inFeatures": 128,
+        "outFeatures": 64
+      },
+      "inputs": [
+        "item-relu"
+      ],
+      "outputs": [
+        "dot"
+      ]
+    },
+    {
+      "id": "dot",
+      "type": "matmul",
+      "name": "Dot Score",
+      "position": {
+        "x": 230,
+        "y": 760
+      },
+      "params": {},
+      "inputs": [
+        "user-fc2",
+        "item-fc2"
+      ],
+      "outputs": [
+        "output"
+      ]
+    },
+    {
+      "id": "output",
+      "type": "output",
+      "name": "Score",
+      "position": {
+        "x": 230,
+        "y": 880
+      },
+      "params": {},
+      "inputs": [
+        "dot"
+      ],
+      "outputs": []
+    }
+  ],
+  "connections": [
+    {
+      "id": "c1",
+      "from": "input-user",
+      "to": "user-emb",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c2",
+      "from": "user-emb",
+      "to": "user-fc1",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c3",
+      "from": "user-fc1",
+      "to": "user-relu",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c4",
+      "from": "user-relu",
+      "to": "user-fc2",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c5",
+      "from": "input-item",
+      "to": "item-emb",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c6",
+      "from": "item-emb",
+      "to": "item-fc1",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c7",
+      "from": "item-fc1",
+      "to": "item-relu",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c8",
+      "from": "item-relu",
+      "to": "item-fc2",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c9",
+      "from": "user-fc2",
+      "to": "dot",
+      "fromPort": "bottom",
+      "toPort": "left"
+    },
+    {
+      "id": "c10",
+      "from": "item-fc2",
+      "to": "dot",
+      "fromPort": "bottom",
+      "toPort": "right"
+    },
+    {
+      "id": "c11",
+      "from": "dot",
+      "to": "output",
+      "fromPort": "bottom",
+      "toPort": "top"
+    }
+  ]
+}

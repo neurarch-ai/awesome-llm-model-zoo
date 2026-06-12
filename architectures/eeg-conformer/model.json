@@ -1,0 +1,573 @@
+{
+  "id": "eeg-conformer",
+  "name": "EEG Conformer",
+  "description": "Conv stem (local morphology) + Transformer encoder (cross-channel + long-range) — SOTA for high-channel motor imagery EEG (Song et al. 2023).",
+  "components": [
+    {
+      "id": "input-1",
+      "type": "input",
+      "name": "eeg_window",
+      "position": {
+        "x": 220,
+        "y": 50
+      },
+      "params": {
+        "shape": [
+          1,
+          22,
+          1000
+        ]
+      },
+      "inputs": [],
+      "outputs": [
+        "conv-temporal"
+      ]
+    },
+    {
+      "id": "conv-temporal",
+      "type": "conv2d",
+      "name": "temporal_conv",
+      "scope": "stem",
+      "position": {
+        "x": 220,
+        "y": 220
+      },
+      "params": {
+        "outChannels": 40,
+        "kernelSize": [
+          1,
+          25
+        ],
+        "stride": 1,
+        "padding": 0
+      },
+      "inputs": [
+        "input-1"
+      ],
+      "outputs": [
+        "conv-spatial"
+      ]
+    },
+    {
+      "id": "conv-spatial",
+      "type": "conv2d",
+      "name": "spatial_conv",
+      "scope": "stem",
+      "position": {
+        "x": 220,
+        "y": 390
+      },
+      "params": {
+        "outChannels": 40,
+        "kernelSize": [
+          22,
+          1
+        ],
+        "stride": 1,
+        "padding": 0
+      },
+      "inputs": [
+        "conv-temporal"
+      ],
+      "outputs": [
+        "bn-1"
+      ]
+    },
+    {
+      "id": "bn-1",
+      "type": "batchNorm",
+      "name": "norm",
+      "scope": "stem",
+      "position": {
+        "x": 220,
+        "y": 560
+      },
+      "params": {
+        "normalizedShape": 40
+      },
+      "inputs": [
+        "conv-spatial"
+      ],
+      "outputs": [
+        "elu-1"
+      ]
+    },
+    {
+      "id": "elu-1",
+      "type": "elu",
+      "name": "act",
+      "scope": "stem",
+      "position": {
+        "x": 220,
+        "y": 730
+      },
+      "params": {},
+      "inputs": [
+        "bn-1"
+      ],
+      "outputs": [
+        "pool-1"
+      ]
+    },
+    {
+      "id": "pool-1",
+      "type": "avgpool2d",
+      "name": "pool",
+      "scope": "stem",
+      "position": {
+        "x": 220,
+        "y": 900
+      },
+      "params": {
+        "kernelSize": [
+          1,
+          75
+        ],
+        "stride": [
+          1,
+          15
+        ]
+      },
+      "inputs": [
+        "elu-1"
+      ],
+      "outputs": [
+        "proj-1"
+      ]
+    },
+    {
+      "id": "proj-1",
+      "type": "conv2d",
+      "name": "patch_proj",
+      "scope": "stem",
+      "position": {
+        "x": 220,
+        "y": 1070
+      },
+      "params": {
+        "outChannels": 40,
+        "kernelSize": [
+          1,
+          1
+        ],
+        "stride": 1,
+        "padding": 0
+      },
+      "inputs": [
+        "pool-1"
+      ],
+      "outputs": [
+        "norm-attn-1",
+        "res-attn-1"
+      ]
+    },
+    {
+      "id": "norm-attn-1",
+      "type": "layerNorm",
+      "name": "norm",
+      "scope": "encoder.layer.0.attention",
+      "position": {
+        "x": 220,
+        "y": 1240
+      },
+      "params": {
+        "normalizedShape": 40
+      },
+      "inputs": [
+        "proj-1"
+      ],
+      "outputs": [
+        "mha-1"
+      ]
+    },
+    {
+      "id": "mha-1",
+      "type": "multiHeadAttention",
+      "name": "self_attn",
+      "scope": "encoder.layer.0.attention",
+      "position": {
+        "x": 220,
+        "y": 1410
+      },
+      "params": {
+        "embedDim": 40,
+        "numHeads": 10
+      },
+      "inputs": [
+        "norm-attn-1"
+      ],
+      "outputs": [
+        "res-attn-1"
+      ]
+    },
+    {
+      "id": "res-attn-1",
+      "type": "add",
+      "name": "residual",
+      "scope": "encoder.layer.0.attention",
+      "position": {
+        "x": 220,
+        "y": 1580
+      },
+      "params": {},
+      "inputs": [
+        "mha-1",
+        "proj-1"
+      ],
+      "outputs": [
+        "norm-ffn-1",
+        "res-ffn-1"
+      ]
+    },
+    {
+      "id": "norm-ffn-1",
+      "type": "layerNorm",
+      "name": "norm",
+      "scope": "encoder.layer.0.ffn",
+      "position": {
+        "x": 220,
+        "y": 1750
+      },
+      "params": {
+        "normalizedShape": 40
+      },
+      "inputs": [
+        "res-attn-1"
+      ],
+      "outputs": [
+        "ffn-1"
+      ]
+    },
+    {
+      "id": "ffn-1",
+      "type": "feedForward",
+      "name": "dense",
+      "scope": "encoder.layer.0.ffn",
+      "position": {
+        "x": 220,
+        "y": 1920
+      },
+      "params": {
+        "embedDim": 40,
+        "ffDim": 160
+      },
+      "inputs": [
+        "norm-ffn-1"
+      ],
+      "outputs": [
+        "res-ffn-1"
+      ]
+    },
+    {
+      "id": "res-ffn-1",
+      "type": "add",
+      "name": "residual",
+      "scope": "encoder.layer.0.ffn",
+      "position": {
+        "x": 220,
+        "y": 2090
+      },
+      "params": {},
+      "inputs": [
+        "ffn-1",
+        "res-attn-1"
+      ],
+      "outputs": [
+        "norm-attn-2",
+        "res-attn-2"
+      ]
+    },
+    {
+      "id": "norm-attn-2",
+      "type": "layerNorm",
+      "name": "norm",
+      "scope": "encoder.layer.1.attention",
+      "position": {
+        "x": 220,
+        "y": 2260
+      },
+      "params": {
+        "normalizedShape": 40
+      },
+      "inputs": [
+        "res-ffn-1"
+      ],
+      "outputs": [
+        "mha-2"
+      ]
+    },
+    {
+      "id": "mha-2",
+      "type": "multiHeadAttention",
+      "name": "self_attn",
+      "scope": "encoder.layer.1.attention",
+      "position": {
+        "x": 220,
+        "y": 2430
+      },
+      "params": {
+        "embedDim": 40,
+        "numHeads": 10
+      },
+      "inputs": [
+        "norm-attn-2"
+      ],
+      "outputs": [
+        "res-attn-2"
+      ]
+    },
+    {
+      "id": "res-attn-2",
+      "type": "add",
+      "name": "residual",
+      "scope": "encoder.layer.1.attention",
+      "position": {
+        "x": 220,
+        "y": 2600
+      },
+      "params": {},
+      "inputs": [
+        "mha-2",
+        "res-ffn-1"
+      ],
+      "outputs": [
+        "norm-ffn-2",
+        "res-ffn-2"
+      ]
+    },
+    {
+      "id": "norm-ffn-2",
+      "type": "layerNorm",
+      "name": "norm",
+      "scope": "encoder.layer.1.ffn",
+      "position": {
+        "x": 220,
+        "y": 2770
+      },
+      "params": {
+        "normalizedShape": 40
+      },
+      "inputs": [
+        "res-attn-2"
+      ],
+      "outputs": [
+        "ffn-2"
+      ]
+    },
+    {
+      "id": "ffn-2",
+      "type": "feedForward",
+      "name": "dense",
+      "scope": "encoder.layer.1.ffn",
+      "position": {
+        "x": 220,
+        "y": 2940
+      },
+      "params": {
+        "embedDim": 40,
+        "ffDim": 160
+      },
+      "inputs": [
+        "norm-ffn-2"
+      ],
+      "outputs": [
+        "res-ffn-2"
+      ]
+    },
+    {
+      "id": "res-ffn-2",
+      "type": "add",
+      "name": "residual",
+      "scope": "encoder.layer.1.ffn",
+      "position": {
+        "x": 220,
+        "y": 3110
+      },
+      "params": {},
+      "inputs": [
+        "ffn-2",
+        "res-attn-2"
+      ],
+      "outputs": [
+        "flatten-1"
+      ]
+    },
+    {
+      "id": "flatten-1",
+      "type": "flatten",
+      "name": "flatten",
+      "scope": "head",
+      "position": {
+        "x": 220,
+        "y": 3280
+      },
+      "params": {},
+      "inputs": [
+        "res-ffn-2"
+      ],
+      "outputs": [
+        "linear-1"
+      ]
+    },
+    {
+      "id": "linear-1",
+      "type": "linear",
+      "name": "classifier",
+      "scope": "head",
+      "position": {
+        "x": 220,
+        "y": 3450
+      },
+      "params": {
+        "outFeatures": 4
+      },
+      "inputs": [
+        "flatten-1"
+      ],
+      "outputs": [
+        "output-1"
+      ]
+    },
+    {
+      "id": "output-1",
+      "type": "output",
+      "name": "logits",
+      "position": {
+        "x": 220,
+        "y": 3620
+      },
+      "params": {},
+      "inputs": [
+        "linear-1"
+      ],
+      "outputs": []
+    }
+  ],
+  "connections": [
+    {
+      "id": "c1",
+      "from": "input-1",
+      "to": "conv-temporal"
+    },
+    {
+      "id": "c2",
+      "from": "conv-temporal",
+      "to": "conv-spatial"
+    },
+    {
+      "id": "c3",
+      "from": "conv-spatial",
+      "to": "bn-1"
+    },
+    {
+      "id": "c4",
+      "from": "bn-1",
+      "to": "elu-1"
+    },
+    {
+      "id": "c5",
+      "from": "elu-1",
+      "to": "pool-1"
+    },
+    {
+      "id": "c6",
+      "from": "pool-1",
+      "to": "proj-1"
+    },
+    {
+      "id": "c7",
+      "from": "proj-1",
+      "to": "norm-attn-1"
+    },
+    {
+      "id": "c8",
+      "from": "norm-attn-1",
+      "to": "mha-1"
+    },
+    {
+      "id": "c9",
+      "from": "mha-1",
+      "to": "res-attn-1"
+    },
+    {
+      "id": "c10",
+      "from": "proj-1",
+      "to": "res-attn-1"
+    },
+    {
+      "id": "c11",
+      "from": "res-attn-1",
+      "to": "norm-ffn-1"
+    },
+    {
+      "id": "c12",
+      "from": "norm-ffn-1",
+      "to": "ffn-1"
+    },
+    {
+      "id": "c13",
+      "from": "ffn-1",
+      "to": "res-ffn-1"
+    },
+    {
+      "id": "c14",
+      "from": "res-attn-1",
+      "to": "res-ffn-1"
+    },
+    {
+      "id": "c15",
+      "from": "res-ffn-1",
+      "to": "norm-attn-2"
+    },
+    {
+      "id": "c16",
+      "from": "norm-attn-2",
+      "to": "mha-2"
+    },
+    {
+      "id": "c17",
+      "from": "mha-2",
+      "to": "res-attn-2"
+    },
+    {
+      "id": "c18",
+      "from": "res-ffn-1",
+      "to": "res-attn-2"
+    },
+    {
+      "id": "c19",
+      "from": "res-attn-2",
+      "to": "norm-ffn-2"
+    },
+    {
+      "id": "c20",
+      "from": "norm-ffn-2",
+      "to": "ffn-2"
+    },
+    {
+      "id": "c21",
+      "from": "ffn-2",
+      "to": "res-ffn-2"
+    },
+    {
+      "id": "c22",
+      "from": "res-attn-2",
+      "to": "res-ffn-2"
+    },
+    {
+      "id": "c23",
+      "from": "res-ffn-2",
+      "to": "flatten-1"
+    },
+    {
+      "id": "c24",
+      "from": "flatten-1",
+      "to": "linear-1"
+    },
+    {
+      "id": "c25",
+      "from": "linear-1",
+      "to": "output-1"
+    }
+  ]
+}

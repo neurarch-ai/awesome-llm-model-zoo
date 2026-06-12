@@ -1,0 +1,254 @@
+{
+  "id": "diffusion-unet",
+  "name": "Diffusion UNet (Stable-Diffusion-style)",
+  "description": "Image generator backbone — predicts the noise to subtract at each denoising step, conditioned on a text embedding via cross-attention. Latent-space UNet (4 channels at 64×64 = 512×512 RGB after VAE decode). Compressed for legibility; real SD has 4 down + 1 mid + 4 up stacks.",
+  "icon": "🎨",
+  "category": "Generative",
+  "components": [
+    {
+      "id": "input-1",
+      "type": "input",
+      "name": "noisy_latent",
+      "position": {
+        "x": 200,
+        "y": 50
+      },
+      "params": {
+        "shape": [
+          4,
+          64,
+          64
+        ]
+      },
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "id": "conv-in",
+      "type": "conv2d",
+      "name": "conv_in",
+      "scope": "stem",
+      "position": {
+        "x": 200,
+        "y": 220
+      },
+      "params": {
+        "outChannels": 320,
+        "kernelSize": 3,
+        "stride": 1,
+        "padding": 1
+      },
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "id": "down1-norm",
+      "type": "groupNorm",
+      "name": "down1_norm",
+      "scope": "down_blocks.0",
+      "position": {
+        "x": 200,
+        "y": 390
+      },
+      "params": {
+        "numGroups": 32,
+        "numChannels": 320
+      },
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "id": "down1-conv",
+      "type": "conv2d",
+      "name": "down1_conv",
+      "scope": "down_blocks.0",
+      "position": {
+        "x": 200,
+        "y": 560
+      },
+      "params": {
+        "outChannels": 320,
+        "kernelSize": 3,
+        "stride": 1,
+        "padding": 1
+      },
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "id": "down1-silu",
+      "type": "swish",
+      "name": "down1_silu",
+      "scope": "down_blocks.0",
+      "position": {
+        "x": 200,
+        "y": 730
+      },
+      "params": {},
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "id": "down1-xattn",
+      "type": "crossAttention",
+      "name": "down1_text_attn",
+      "scope": "down_blocks.0",
+      "position": {
+        "x": 200,
+        "y": 900
+      },
+      "params": {
+        "embedDim": 320,
+        "numHeads": 8,
+        "kvDim": 768
+      },
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "id": "downsample-1",
+      "type": "conv2d",
+      "name": "downsample_1",
+      "scope": "down_blocks.0",
+      "position": {
+        "x": 200,
+        "y": 1080
+      },
+      "params": {
+        "outChannels": 640,
+        "kernelSize": 3,
+        "stride": 2,
+        "padding": 1
+      },
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "id": "mid-norm",
+      "type": "groupNorm",
+      "name": "mid_norm",
+      "scope": "mid_block",
+      "position": {
+        "x": 200,
+        "y": 1260
+      },
+      "params": {
+        "numGroups": 32,
+        "numChannels": 640
+      },
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "id": "mid-xattn",
+      "type": "crossAttention",
+      "name": "mid_text_attn",
+      "scope": "mid_block",
+      "position": {
+        "x": 200,
+        "y": 1430
+      },
+      "params": {
+        "embedDim": 640,
+        "numHeads": 8,
+        "kvDim": 768
+      },
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "id": "upsample-1",
+      "type": "upsample",
+      "name": "upsample_1",
+      "scope": "up_blocks.0",
+      "position": {
+        "x": 200,
+        "y": 1610
+      },
+      "params": {
+        "scaleFactor": 2,
+        "mode": "nearest"
+      },
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "id": "up1-conv",
+      "type": "conv2d",
+      "name": "up1_conv",
+      "scope": "up_blocks.0",
+      "position": {
+        "x": 200,
+        "y": 1790
+      },
+      "params": {
+        "outChannels": 320,
+        "kernelSize": 3,
+        "stride": 1,
+        "padding": 1
+      },
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "id": "up1-silu",
+      "type": "swish",
+      "name": "up1_silu",
+      "scope": "up_blocks.0",
+      "position": {
+        "x": 200,
+        "y": 1960
+      },
+      "params": {},
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "id": "conv-out-norm",
+      "type": "groupNorm",
+      "name": "conv_out_norm",
+      "scope": "head",
+      "position": {
+        "x": 200,
+        "y": 2130
+      },
+      "params": {
+        "numGroups": 32,
+        "numChannels": 320
+      },
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "id": "conv-out",
+      "type": "conv2d",
+      "name": "conv_out",
+      "scope": "head",
+      "position": {
+        "x": 200,
+        "y": 2300
+      },
+      "params": {
+        "outChannels": 4,
+        "kernelSize": 3,
+        "stride": 1,
+        "padding": 1
+      },
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "id": "output-1",
+      "type": "output",
+      "name": "predicted_noise",
+      "position": {
+        "x": 200,
+        "y": 2470
+      },
+      "params": {},
+      "inputs": [],
+      "outputs": []
+    }
+  ],
+  "connections": []
+}

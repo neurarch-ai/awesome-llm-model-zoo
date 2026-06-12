@@ -1,0 +1,428 @@
+{
+  "id": "whisper-small",
+  "name": "Whisper Small",
+  "components": [
+    {
+      "id": "input-enc",
+      "type": "input",
+      "name": "mel_features",
+      "position": {
+        "x": 140,
+        "y": 50
+      },
+      "params": {
+        "shape": [
+          1,
+          80,
+          3000
+        ]
+      },
+      "inputs": [],
+      "outputs": [
+        "audioConv-1"
+      ]
+    },
+    {
+      "id": "audioConv-1",
+      "type": "audioConv",
+      "name": "conv1",
+      "scope": "encoder.stem",
+      "position": {
+        "x": 140,
+        "y": 220
+      },
+      "params": {
+        "outChannels": 384,
+        "kernelSize": 3,
+        "stride": 1,
+        "padding": 1
+      },
+      "inputs": [
+        "input-enc"
+      ],
+      "outputs": [
+        "gelu-1"
+      ]
+    },
+    {
+      "id": "gelu-1",
+      "type": "gelu",
+      "name": "gelu_1",
+      "scope": "encoder.stem",
+      "position": {
+        "x": 140,
+        "y": 390
+      },
+      "params": {},
+      "inputs": [
+        "audioConv-1"
+      ],
+      "outputs": [
+        "audioConv-2"
+      ]
+    },
+    {
+      "id": "audioConv-2",
+      "type": "audioConv",
+      "name": "conv2",
+      "scope": "encoder.stem",
+      "position": {
+        "x": 140,
+        "y": 560
+      },
+      "params": {
+        "outChannels": 384,
+        "kernelSize": 3,
+        "stride": 2,
+        "padding": 1
+      },
+      "inputs": [
+        "gelu-1"
+      ],
+      "outputs": [
+        "gelu-2"
+      ]
+    },
+    {
+      "id": "gelu-2",
+      "type": "gelu",
+      "name": "gelu_2",
+      "scope": "encoder.stem",
+      "position": {
+        "x": 140,
+        "y": 730
+      },
+      "params": {},
+      "inputs": [
+        "audioConv-2"
+      ],
+      "outputs": [
+        "positionalEncoding-enc"
+      ]
+    },
+    {
+      "id": "positionalEncoding-enc",
+      "type": "positionalEncoding",
+      "name": "enc_pos_emb",
+      "scope": "encoder.embeddings",
+      "position": {
+        "x": 140,
+        "y": 900
+      },
+      "params": {
+        "maxLen": 1500,
+        "embedDim": 384
+      },
+      "inputs": [
+        "gelu-2"
+      ],
+      "outputs": [
+        "transformerBlock-enc-1"
+      ]
+    },
+    {
+      "id": "transformerBlock-enc-1",
+      "type": "transformerBlock",
+      "name": "enc_block_1",
+      "scope": "encoder.layer.0",
+      "position": {
+        "x": 140,
+        "y": 1070
+      },
+      "params": {
+        "embedDim": 384,
+        "numHeads": 6,
+        "ffDim": 1536
+      },
+      "inputs": [
+        "positionalEncoding-enc"
+      ],
+      "outputs": [
+        "transformerBlock-enc-2"
+      ]
+    },
+    {
+      "id": "transformerBlock-enc-2",
+      "type": "transformerBlock",
+      "name": "enc_block_2",
+      "scope": "encoder.layer.1",
+      "position": {
+        "x": 140,
+        "y": 1240
+      },
+      "params": {
+        "embedDim": 384,
+        "numHeads": 6,
+        "ffDim": 1536
+      },
+      "inputs": [
+        "transformerBlock-enc-1"
+      ],
+      "outputs": [
+        "layerNorm-enc"
+      ]
+    },
+    {
+      "id": "layerNorm-enc",
+      "type": "layerNorm",
+      "name": "enc_norm",
+      "scope": "encoder",
+      "position": {
+        "x": 140,
+        "y": 1410
+      },
+      "params": {
+        "normalizedShape": 384
+      },
+      "inputs": [
+        "transformerBlock-enc-2"
+      ],
+      "outputs": [
+        "transformerBlock-dec-1",
+        "transformerBlock-dec-2"
+      ]
+    },
+    {
+      "id": "input-dec",
+      "type": "input",
+      "name": "decoder_tokens",
+      "position": {
+        "x": 460,
+        "y": 50
+      },
+      "params": {
+        "shape": [
+          1,
+          448
+        ]
+      },
+      "inputs": [],
+      "outputs": [
+        "embedding-dec"
+      ]
+    },
+    {
+      "id": "embedding-dec",
+      "type": "embedding",
+      "name": "token_embed",
+      "scope": "decoder.embeddings",
+      "position": {
+        "x": 460,
+        "y": 220
+      },
+      "params": {
+        "numEmbeddings": 51865,
+        "embeddingDim": 384
+      },
+      "inputs": [
+        "input-dec"
+      ],
+      "outputs": [
+        "positionalEncoding-dec"
+      ]
+    },
+    {
+      "id": "positionalEncoding-dec",
+      "type": "positionalEncoding",
+      "name": "dec_pos_emb",
+      "scope": "decoder.embeddings",
+      "position": {
+        "x": 460,
+        "y": 390
+      },
+      "params": {
+        "maxLen": 448,
+        "embedDim": 384
+      },
+      "inputs": [
+        "embedding-dec"
+      ],
+      "outputs": [
+        "transformerBlock-dec-1"
+      ]
+    },
+    {
+      "id": "transformerBlock-dec-1",
+      "type": "transformerBlock",
+      "name": "dec_block_1",
+      "scope": "decoder.layer.0",
+      "position": {
+        "x": 460,
+        "y": 730
+      },
+      "params": {
+        "embedDim": 384,
+        "numHeads": 6,
+        "ffDim": 1536
+      },
+      "inputs": [
+        "positionalEncoding-dec",
+        "layerNorm-enc"
+      ],
+      "outputs": [
+        "transformerBlock-dec-2"
+      ]
+    },
+    {
+      "id": "transformerBlock-dec-2",
+      "type": "transformerBlock",
+      "name": "dec_block_2",
+      "scope": "decoder.layer.1",
+      "position": {
+        "x": 460,
+        "y": 900
+      },
+      "params": {
+        "embedDim": 384,
+        "numHeads": 6,
+        "ffDim": 1536
+      },
+      "inputs": [
+        "transformerBlock-dec-1",
+        "layerNorm-enc"
+      ],
+      "outputs": [
+        "layerNorm-dec"
+      ]
+    },
+    {
+      "id": "layerNorm-dec",
+      "type": "layerNorm",
+      "name": "dec_norm",
+      "scope": "decoder",
+      "position": {
+        "x": 460,
+        "y": 1070
+      },
+      "params": {
+        "normalizedShape": 384
+      },
+      "inputs": [
+        "transformerBlock-dec-2"
+      ],
+      "outputs": [
+        "linear-out"
+      ]
+    },
+    {
+      "id": "linear-out",
+      "type": "linear",
+      "name": "lm_head",
+      "scope": "head",
+      "position": {
+        "x": 460,
+        "y": 1240
+      },
+      "params": {
+        "outFeatures": 51865
+      },
+      "inputs": [
+        "layerNorm-dec"
+      ],
+      "outputs": [
+        "output-1"
+      ]
+    },
+    {
+      "id": "output-1",
+      "type": "output",
+      "name": "token_logits",
+      "position": {
+        "x": 460,
+        "y": 1410
+      },
+      "params": {},
+      "inputs": [
+        "linear-out"
+      ],
+      "outputs": []
+    }
+  ],
+  "connections": [
+    {
+      "id": "c1",
+      "from": "input-enc",
+      "to": "audioConv-1"
+    },
+    {
+      "id": "c2",
+      "from": "audioConv-1",
+      "to": "gelu-1"
+    },
+    {
+      "id": "c3",
+      "from": "gelu-1",
+      "to": "audioConv-2"
+    },
+    {
+      "id": "c4",
+      "from": "audioConv-2",
+      "to": "gelu-2"
+    },
+    {
+      "id": "c5",
+      "from": "gelu-2",
+      "to": "positionalEncoding-enc"
+    },
+    {
+      "id": "c6",
+      "from": "positionalEncoding-enc",
+      "to": "transformerBlock-enc-1"
+    },
+    {
+      "id": "c7",
+      "from": "transformerBlock-enc-1",
+      "to": "transformerBlock-enc-2"
+    },
+    {
+      "id": "c8",
+      "from": "transformerBlock-enc-2",
+      "to": "layerNorm-enc"
+    },
+    {
+      "id": "c9",
+      "from": "input-dec",
+      "to": "embedding-dec"
+    },
+    {
+      "id": "c10",
+      "from": "embedding-dec",
+      "to": "positionalEncoding-dec"
+    },
+    {
+      "id": "c11",
+      "from": "positionalEncoding-dec",
+      "to": "transformerBlock-dec-1"
+    },
+    {
+      "id": "c12",
+      "from": "layerNorm-enc",
+      "to": "transformerBlock-dec-1"
+    },
+    {
+      "id": "c13",
+      "from": "transformerBlock-dec-1",
+      "to": "transformerBlock-dec-2"
+    },
+    {
+      "id": "c14",
+      "from": "layerNorm-enc",
+      "to": "transformerBlock-dec-2"
+    },
+    {
+      "id": "c15",
+      "from": "transformerBlock-dec-2",
+      "to": "layerNorm-dec"
+    },
+    {
+      "id": "c16",
+      "from": "layerNorm-dec",
+      "to": "linear-out"
+    },
+    {
+      "id": "c17",
+      "from": "linear-out",
+      "to": "output-1"
+    }
+  ]
+}

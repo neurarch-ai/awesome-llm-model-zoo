@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="3512" height="168" viewBox="0 0 3512 168" font-family="-apple-system, 'Segoe UI', Inter, Helvetica, Arial, sans-serif">
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#94a3b8"/></marker></defs>
+<rect x="0" y="0" width="3512" height="168" fill="#ffffff"/>
+<rect x="48.0" y="48.0" width="168" height="48" rx="10" fill="rgb(224, 247, 232)" stroke="#22c55e" stroke-width="1.5"/>
+<text x="132.0" y="76.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">noisy_latent</text>
+<rect x="280.0" y="48.0" width="168" height="48" rx="10" fill="rgb(228, 238, 254)" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="364.0" y="76.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">conv_in</text>
+<rect x="512.0" y="48.0" width="168" height="48" rx="10" fill="rgb(233, 236, 239)" stroke="#64748b" stroke-width="1.5"/>
+<text x="596.0" y="76.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">down1_norm</text>
+<rect x="744.0" y="48.0" width="168" height="48" rx="10" fill="rgb(228, 238, 254)" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="828.0" y="76.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">down1_conv</text>
+<rect x="976.0" y="48.0" width="168" height="48" rx="10" fill="rgb(222, 245, 237)" stroke="#10b981" stroke-width="1.5"/>
+<text x="1060.0" y="76.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">down1_silu</text>
+<rect x="1208.0" y="48.0" width="168" height="48" rx="10" fill="rgb(243, 231, 254)" stroke="#a855f7" stroke-width="1.5"/>
+<text x="1292.0" y="76.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">down1_text_attn</text>
+<rect x="1440.0" y="48.0" width="168" height="48" rx="10" fill="rgb(228, 238, 254)" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="1524.0" y="76.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">downsample_1</text>
+<rect x="1672.0" y="48.0" width="168" height="48" rx="10" fill="rgb(233, 236, 239)" stroke="#64748b" stroke-width="1.5"/>
+<text x="1756.0" y="76.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">mid_norm</text>
+<rect x="1904.0" y="48.0" width="168" height="48" rx="10" fill="rgb(243, 231, 254)" stroke="#a855f7" stroke-width="1.5"/>
+<text x="1988.0" y="76.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">mid_text_attn</text>
+<rect x="2136.0" y="48.0" width="168" height="48" rx="10" fill="rgb(235, 235, 236)" stroke="#71717a" stroke-width="1.5"/>
+<text x="2220.0" y="76.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">upsample_1</text>
+<rect x="2368.0" y="48.0" width="168" height="48" rx="10" fill="rgb(228, 238, 254)" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="2452.0" y="76.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">up1_conv</text>
+<rect x="2600.0" y="48.0" width="168" height="48" rx="10" fill="rgb(222, 245, 237)" stroke="#10b981" stroke-width="1.5"/>
+<text x="2684.0" y="76.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">up1_silu</text>
+<rect x="2832.0" y="48.0" width="168" height="48" rx="10" fill="rgb(233, 236, 239)" stroke="#64748b" stroke-width="1.5"/>
+<text x="2916.0" y="76.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">conv_out_norm</text>
+<rect x="3064.0" y="48.0" width="168" height="48" rx="10" fill="rgb(228, 238, 254)" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="3148.0" y="76.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">conv_out</text>
+<rect x="3296.0" y="48.0" width="168" height="48" rx="10" fill="rgb(253, 229, 229)" stroke="#ef4444" stroke-width="1.5"/>
+<text x="3380.0" y="76.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">predicted_noise</text>
+<text x="3464.0" y="157.0" text-anchor="end" font-size="11" fill="#9aa6b8">Made with Neurarch · neurarch.com</text>
+</svg>

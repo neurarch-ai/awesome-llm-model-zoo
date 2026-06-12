@@ -1,0 +1,498 @@
+{
+  "id": "bst",
+  "name": "Behavior Sequence Transformer",
+  "description": "Alibaba 2019 BST — user behavior sequence + target item → item embeddings + positional encoding → Transformer encoder → concat with user/context → MLP → CTR",
+  "icon": "🧾",
+  "category": "Recommendation",
+  "components": [
+    {
+      "id": "in-seq",
+      "type": "input",
+      "name": "Behavior Seq (T items)",
+      "position": {
+        "x": 80,
+        "y": 60
+      },
+      "params": {
+        "shape": [
+          50
+        ]
+      },
+      "inputs": [],
+      "outputs": [
+        "seq-emb"
+      ]
+    },
+    {
+      "id": "seq-emb",
+      "type": "embedding",
+      "name": "Item Embed",
+      "scope": "seq_tower",
+      "position": {
+        "x": 80,
+        "y": 200
+      },
+      "params": {
+        "vocabSize": 1000000,
+        "embeddingDim": 64
+      },
+      "inputs": [
+        "in-seq"
+      ],
+      "outputs": [
+        "pos"
+      ]
+    },
+    {
+      "id": "pos",
+      "type": "positionalEncoding",
+      "name": "Pos Encoding",
+      "scope": "seq_tower",
+      "position": {
+        "x": 80,
+        "y": 340
+      },
+      "params": {
+        "dModel": 64,
+        "maxLen": 50
+      },
+      "inputs": [
+        "seq-emb"
+      ],
+      "outputs": [
+        "cat-seq"
+      ]
+    },
+    {
+      "id": "in-tgt",
+      "type": "input",
+      "name": "Target Item",
+      "position": {
+        "x": 360,
+        "y": 60
+      },
+      "params": {
+        "shape": [
+          1
+        ]
+      },
+      "inputs": [],
+      "outputs": [
+        "tgt-emb"
+      ]
+    },
+    {
+      "id": "tgt-emb",
+      "type": "embedding",
+      "name": "Target Embed",
+      "scope": "tgt_tower",
+      "position": {
+        "x": 360,
+        "y": 200
+      },
+      "params": {
+        "vocabSize": 1000000,
+        "embeddingDim": 64
+      },
+      "inputs": [
+        "in-tgt"
+      ],
+      "outputs": [
+        "cat-seq"
+      ]
+    },
+    {
+      "id": "cat-seq",
+      "type": "concatenate",
+      "name": "[seq; tgt]",
+      "scope": "seq_tower",
+      "position": {
+        "x": 220,
+        "y": 460
+      },
+      "params": {
+        "dim": 1,
+        "numInputs": 2
+      },
+      "inputs": [
+        "pos",
+        "tgt-emb"
+      ],
+      "outputs": [
+        "trf"
+      ]
+    },
+    {
+      "id": "trf",
+      "type": "transformerBlock",
+      "name": "Transformer Encoder",
+      "scope": "seq_tower",
+      "position": {
+        "x": 220,
+        "y": 580
+      },
+      "params": {
+        "dModel": 64,
+        "numHeads": 8,
+        "dFf": 256,
+        "numLayers": 1,
+        "causal": false
+      },
+      "inputs": [
+        "cat-seq"
+      ],
+      "outputs": [
+        "trf-pool"
+      ]
+    },
+    {
+      "id": "trf-pool",
+      "type": "globalAvgPool1d",
+      "name": "Mean Pool",
+      "scope": "seq_tower",
+      "position": {
+        "x": 220,
+        "y": 700
+      },
+      "params": {},
+      "inputs": [
+        "trf"
+      ],
+      "outputs": [
+        "cat-final"
+      ]
+    },
+    {
+      "id": "in-user",
+      "type": "input",
+      "name": "User Profile",
+      "position": {
+        "x": 540,
+        "y": 60
+      },
+      "params": {
+        "shape": [
+          16
+        ]
+      },
+      "inputs": [],
+      "outputs": [
+        "user-fc"
+      ]
+    },
+    {
+      "id": "user-fc",
+      "type": "linear",
+      "name": "User Tower",
+      "scope": "user_tower",
+      "position": {
+        "x": 540,
+        "y": 200
+      },
+      "params": {
+        "inFeatures": 16,
+        "outFeatures": 32
+      },
+      "inputs": [
+        "in-user"
+      ],
+      "outputs": [
+        "cat-final"
+      ]
+    },
+    {
+      "id": "cat-final",
+      "type": "concatenate",
+      "name": "Concat all",
+      "scope": "mlp",
+      "position": {
+        "x": 320,
+        "y": 820
+      },
+      "params": {
+        "dim": -1,
+        "numInputs": 2
+      },
+      "inputs": [
+        "trf-pool",
+        "user-fc"
+      ],
+      "outputs": [
+        "mlp1"
+      ]
+    },
+    {
+      "id": "mlp1",
+      "type": "linear",
+      "name": "MLP 1024",
+      "scope": "mlp",
+      "position": {
+        "x": 320,
+        "y": 940
+      },
+      "params": {
+        "inFeatures": 96,
+        "outFeatures": 1024
+      },
+      "inputs": [
+        "cat-final"
+      ],
+      "outputs": [
+        "act1"
+      ]
+    },
+    {
+      "id": "act1",
+      "type": "prelu",
+      "name": "PReLU",
+      "scope": "mlp",
+      "position": {
+        "x": 320,
+        "y": 1040
+      },
+      "params": {},
+      "inputs": [
+        "mlp1"
+      ],
+      "outputs": [
+        "mlp2"
+      ]
+    },
+    {
+      "id": "mlp2",
+      "type": "linear",
+      "name": "MLP 512",
+      "scope": "mlp",
+      "position": {
+        "x": 320,
+        "y": 1140
+      },
+      "params": {
+        "inFeatures": 1024,
+        "outFeatures": 512
+      },
+      "inputs": [
+        "act1"
+      ],
+      "outputs": [
+        "act2"
+      ]
+    },
+    {
+      "id": "act2",
+      "type": "prelu",
+      "name": "PReLU",
+      "scope": "mlp",
+      "position": {
+        "x": 320,
+        "y": 1240
+      },
+      "params": {},
+      "inputs": [
+        "mlp2"
+      ],
+      "outputs": [
+        "mlp3"
+      ]
+    },
+    {
+      "id": "mlp3",
+      "type": "linear",
+      "name": "MLP 256",
+      "scope": "mlp",
+      "position": {
+        "x": 320,
+        "y": 1340
+      },
+      "params": {
+        "inFeatures": 512,
+        "outFeatures": 256
+      },
+      "inputs": [
+        "act2"
+      ],
+      "outputs": [
+        "ctr"
+      ]
+    },
+    {
+      "id": "ctr",
+      "type": "linear",
+      "name": "CTR Head",
+      "scope": "mlp",
+      "position": {
+        "x": 320,
+        "y": 1440
+      },
+      "params": {
+        "inFeatures": 256,
+        "outFeatures": 1
+      },
+      "inputs": [
+        "mlp3"
+      ],
+      "outputs": [
+        "sig"
+      ]
+    },
+    {
+      "id": "sig",
+      "type": "sigmoid",
+      "name": "Sigmoid",
+      "scope": "mlp",
+      "position": {
+        "x": 320,
+        "y": 1540
+      },
+      "params": {},
+      "inputs": [
+        "ctr"
+      ],
+      "outputs": [
+        "out"
+      ]
+    },
+    {
+      "id": "out",
+      "type": "output",
+      "name": "P(click)",
+      "position": {
+        "x": 320,
+        "y": 1660
+      },
+      "params": {},
+      "inputs": [
+        "sig"
+      ],
+      "outputs": []
+    }
+  ],
+  "connections": [
+    {
+      "id": "c1",
+      "from": "in-seq",
+      "to": "seq-emb",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c2",
+      "from": "seq-emb",
+      "to": "pos",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c3",
+      "from": "pos",
+      "to": "cat-seq",
+      "fromPort": "bottom",
+      "toPort": "left"
+    },
+    {
+      "id": "c4",
+      "from": "in-tgt",
+      "to": "tgt-emb",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c5",
+      "from": "tgt-emb",
+      "to": "cat-seq",
+      "fromPort": "bottom",
+      "toPort": "right"
+    },
+    {
+      "id": "c6",
+      "from": "cat-seq",
+      "to": "trf",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c7",
+      "from": "trf",
+      "to": "trf-pool",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c8",
+      "from": "trf-pool",
+      "to": "cat-final",
+      "fromPort": "bottom",
+      "toPort": "left"
+    },
+    {
+      "id": "u1",
+      "from": "in-user",
+      "to": "user-fc",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "u2",
+      "from": "user-fc",
+      "to": "cat-final",
+      "fromPort": "bottom",
+      "toPort": "right"
+    },
+    {
+      "id": "m1",
+      "from": "cat-final",
+      "to": "mlp1",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "m2",
+      "from": "mlp1",
+      "to": "act1",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "m3",
+      "from": "act1",
+      "to": "mlp2",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "m4",
+      "from": "mlp2",
+      "to": "act2",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "m5",
+      "from": "act2",
+      "to": "mlp3",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "m6",
+      "from": "mlp3",
+      "to": "ctr",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "m7",
+      "from": "ctr",
+      "to": "sig",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "m8",
+      "from": "sig",
+      "to": "out",
+      "fromPort": "bottom",
+      "toPort": "top"
+    }
+  ]
+}

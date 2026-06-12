@@ -1,0 +1,143 @@
+{
+  "id": "simple-cnn",
+  "name": "Simple CNN",
+  "description": "Simple Convolutional Neural Network for image classification",
+  "icon": "🖼️",
+  "category": "Computer Vision",
+  "components": [
+    {
+      "id": "input-1",
+      "type": "input",
+      "name": "Input",
+      "position": {
+        "x": 200,
+        "y": 50
+      },
+      "params": {
+        "shape": [
+          1,
+          28,
+          28
+        ]
+      },
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "id": "conv2d-1",
+      "type": "conv2d",
+      "name": "Conv2D_1",
+      "scope": "features",
+      "position": {
+        "x": 200,
+        "y": 250
+      },
+      "params": {
+        "outChannels": 32,
+        "kernelSize": 3,
+        "stride": 1,
+        "padding": 1
+      },
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "id": "relu-1",
+      "type": "relu",
+      "name": "ReLU_1",
+      "scope": "features",
+      "position": {
+        "x": 200,
+        "y": 450
+      },
+      "params": {},
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "id": "maxpool2d-1",
+      "type": "maxpool2d",
+      "name": "MaxPool2D_1",
+      "scope": "features",
+      "position": {
+        "x": 200,
+        "y": 650
+      },
+      "params": {
+        "kernelSize": 2,
+        "stride": 2
+      },
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "id": "flatten-1",
+      "type": "flatten",
+      "name": "Flatten",
+      "scope": "classifier",
+      "position": {
+        "x": 200,
+        "y": 850
+      },
+      "params": {},
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "id": "linear-1",
+      "type": "linear",
+      "name": "Linear_1",
+      "scope": "classifier",
+      "position": {
+        "x": 200,
+        "y": 1050
+      },
+      "params": {
+        "outFeatures": 128
+      },
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "id": "relu-2",
+      "type": "relu",
+      "name": "ReLU_2",
+      "scope": "classifier",
+      "position": {
+        "x": 200,
+        "y": 1250
+      },
+      "params": {},
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "id": "linear-2",
+      "type": "linear",
+      "name": "Linear_2",
+      "scope": "classifier",
+      "position": {
+        "x": 200,
+        "y": 1450
+      },
+      "params": {
+        "outFeatures": 10
+      },
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "id": "output-1",
+      "type": "output",
+      "name": "Output",
+      "position": {
+        "x": 200,
+        "y": 1650
+      },
+      "params": {},
+      "inputs": [],
+      "outputs": []
+    }
+  ],
+  "connections": []
+}

@@ -1,0 +1,435 @@
+{
+  "id": "lightgcn",
+  "name": "LightGCN",
+  "description": "He et al. 2020 — user/item embeddings propagated through 3 light graph-conv layers, layer combination via mean, dot-product score (no transforms, no nonlinearities)",
+  "icon": "💡",
+  "category": "Recommendation",
+  "components": [
+    {
+      "id": "in-user",
+      "type": "input",
+      "name": "User ID",
+      "position": {
+        "x": 80,
+        "y": 60
+      },
+      "params": {
+        "shape": [
+          1
+        ]
+      },
+      "inputs": [],
+      "outputs": [
+        "user-e0"
+      ]
+    },
+    {
+      "id": "user-e0",
+      "type": "embedding",
+      "name": "E_user(0)",
+      "scope": "user_tower",
+      "position": {
+        "x": 80,
+        "y": 200
+      },
+      "params": {
+        "vocabSize": 100000,
+        "embeddingDim": 64
+      },
+      "inputs": [
+        "in-user"
+      ],
+      "outputs": [
+        "user-gc1",
+        "user-mean"
+      ]
+    },
+    {
+      "id": "user-gc1",
+      "type": "graphConv",
+      "name": "GraphConv(1)",
+      "scope": "user_tower.gcn",
+      "position": {
+        "x": 80,
+        "y": 340
+      },
+      "params": {
+        "inFeatures": 64,
+        "outFeatures": 64,
+        "useTransform": false,
+        "useNonlinearity": false
+      },
+      "inputs": [
+        "user-e0"
+      ],
+      "outputs": [
+        "user-gc2",
+        "user-mean"
+      ]
+    },
+    {
+      "id": "user-gc2",
+      "type": "graphConv",
+      "name": "GraphConv(2)",
+      "scope": "user_tower.gcn",
+      "position": {
+        "x": 80,
+        "y": 460
+      },
+      "params": {
+        "inFeatures": 64,
+        "outFeatures": 64,
+        "useTransform": false,
+        "useNonlinearity": false
+      },
+      "inputs": [
+        "user-gc1"
+      ],
+      "outputs": [
+        "user-gc3",
+        "user-mean"
+      ]
+    },
+    {
+      "id": "user-gc3",
+      "type": "graphConv",
+      "name": "GraphConv(3)",
+      "scope": "user_tower.gcn",
+      "position": {
+        "x": 80,
+        "y": 580
+      },
+      "params": {
+        "inFeatures": 64,
+        "outFeatures": 64,
+        "useTransform": false,
+        "useNonlinearity": false
+      },
+      "inputs": [
+        "user-gc2"
+      ],
+      "outputs": [
+        "user-mean"
+      ]
+    },
+    {
+      "id": "user-mean",
+      "type": "mean",
+      "name": "Layer Combine (mean)",
+      "scope": "user_tower",
+      "position": {
+        "x": 80,
+        "y": 720
+      },
+      "params": {
+        "dim": 0,
+        "numInputs": 4
+      },
+      "inputs": [
+        "user-e0",
+        "user-gc1",
+        "user-gc2",
+        "user-gc3"
+      ],
+      "outputs": [
+        "dot"
+      ]
+    },
+    {
+      "id": "in-item",
+      "type": "input",
+      "name": "Item ID",
+      "position": {
+        "x": 420,
+        "y": 60
+      },
+      "params": {
+        "shape": [
+          1
+        ]
+      },
+      "inputs": [],
+      "outputs": [
+        "item-e0"
+      ]
+    },
+    {
+      "id": "item-e0",
+      "type": "embedding",
+      "name": "E_item(0)",
+      "scope": "item_tower",
+      "position": {
+        "x": 420,
+        "y": 200
+      },
+      "params": {
+        "vocabSize": 1000000,
+        "embeddingDim": 64
+      },
+      "inputs": [
+        "in-item"
+      ],
+      "outputs": [
+        "item-gc1",
+        "item-mean"
+      ]
+    },
+    {
+      "id": "item-gc1",
+      "type": "graphConv",
+      "name": "GraphConv(1)",
+      "scope": "item_tower.gcn",
+      "position": {
+        "x": 420,
+        "y": 340
+      },
+      "params": {
+        "inFeatures": 64,
+        "outFeatures": 64,
+        "useTransform": false,
+        "useNonlinearity": false
+      },
+      "inputs": [
+        "item-e0"
+      ],
+      "outputs": [
+        "item-gc2",
+        "item-mean"
+      ]
+    },
+    {
+      "id": "item-gc2",
+      "type": "graphConv",
+      "name": "GraphConv(2)",
+      "scope": "item_tower.gcn",
+      "position": {
+        "x": 420,
+        "y": 460
+      },
+      "params": {
+        "inFeatures": 64,
+        "outFeatures": 64,
+        "useTransform": false,
+        "useNonlinearity": false
+      },
+      "inputs": [
+        "item-gc1"
+      ],
+      "outputs": [
+        "item-gc3",
+        "item-mean"
+      ]
+    },
+    {
+      "id": "item-gc3",
+      "type": "graphConv",
+      "name": "GraphConv(3)",
+      "scope": "item_tower.gcn",
+      "position": {
+        "x": 420,
+        "y": 580
+      },
+      "params": {
+        "inFeatures": 64,
+        "outFeatures": 64,
+        "useTransform": false,
+        "useNonlinearity": false
+      },
+      "inputs": [
+        "item-gc2"
+      ],
+      "outputs": [
+        "item-mean"
+      ]
+    },
+    {
+      "id": "item-mean",
+      "type": "mean",
+      "name": "Layer Combine (mean)",
+      "scope": "item_tower",
+      "position": {
+        "x": 420,
+        "y": 720
+      },
+      "params": {
+        "dim": 0,
+        "numInputs": 4
+      },
+      "inputs": [
+        "item-e0",
+        "item-gc1",
+        "item-gc2",
+        "item-gc3"
+      ],
+      "outputs": [
+        "dot"
+      ]
+    },
+    {
+      "id": "dot",
+      "type": "matmul",
+      "name": "Dot Score",
+      "position": {
+        "x": 250,
+        "y": 860
+      },
+      "params": {},
+      "inputs": [
+        "user-mean",
+        "item-mean"
+      ],
+      "outputs": [
+        "out"
+      ]
+    },
+    {
+      "id": "out",
+      "type": "output",
+      "name": "Score",
+      "position": {
+        "x": 250,
+        "y": 980
+      },
+      "params": {},
+      "inputs": [
+        "dot"
+      ],
+      "outputs": []
+    }
+  ],
+  "connections": [
+    {
+      "id": "u1",
+      "from": "in-user",
+      "to": "user-e0",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "u2",
+      "from": "user-e0",
+      "to": "user-gc1",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "u3",
+      "from": "user-gc1",
+      "to": "user-gc2",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "u4",
+      "from": "user-gc2",
+      "to": "user-gc3",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "u5",
+      "from": "user-e0",
+      "to": "user-mean",
+      "fromPort": "right",
+      "toPort": "left"
+    },
+    {
+      "id": "u6",
+      "from": "user-gc1",
+      "to": "user-mean",
+      "fromPort": "right",
+      "toPort": "left"
+    },
+    {
+      "id": "u7",
+      "from": "user-gc2",
+      "to": "user-mean",
+      "fromPort": "right",
+      "toPort": "left"
+    },
+    {
+      "id": "u8",
+      "from": "user-gc3",
+      "to": "user-mean",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "i1",
+      "from": "in-item",
+      "to": "item-e0",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "i2",
+      "from": "item-e0",
+      "to": "item-gc1",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "i3",
+      "from": "item-gc1",
+      "to": "item-gc2",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "i4",
+      "from": "item-gc2",
+      "to": "item-gc3",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "i5",
+      "from": "item-e0",
+      "to": "item-mean",
+      "fromPort": "left",
+      "toPort": "right"
+    },
+    {
+      "id": "i6",
+      "from": "item-gc1",
+      "to": "item-mean",
+      "fromPort": "left",
+      "toPort": "right"
+    },
+    {
+      "id": "i7",
+      "from": "item-gc2",
+      "to": "item-mean",
+      "fromPort": "left",
+      "toPort": "right"
+    },
+    {
+      "id": "i8",
+      "from": "item-gc3",
+      "to": "item-mean",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "s1",
+      "from": "user-mean",
+      "to": "dot",
+      "fromPort": "bottom",
+      "toPort": "left"
+    },
+    {
+      "id": "s2",
+      "from": "item-mean",
+      "to": "dot",
+      "fromPort": "bottom",
+      "toPort": "right"
+    },
+    {
+      "id": "s3",
+      "from": "dot",
+      "to": "out",
+      "fromPort": "bottom",
+      "toPort": "top"
+    }
+  ]
+}
