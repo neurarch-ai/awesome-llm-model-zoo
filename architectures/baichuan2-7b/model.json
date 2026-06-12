@@ -1,7 +1,7 @@
 {
   "id": "baichuan2-7b",
   "name": "Baichuan2-7B",
-  "description": "Baichuan2-7B (Baichuan Inc.): decoder-only transformer, 32 layers x 4096 hidden, MHA 32 heads, RoPE + RMSNorm + SwiGLU. One decoder block expanded; repeats x32. Verified against the official config.json.",
+  "description": "Baichuan2-7B (Baichuan Inc.): decoder-only transformer, 32 layers x 4096 hidden, MHA 32 heads, SwiGLU FFN, RoPE + RMSNorm. One decoder block expanded; repeats x32. Verified against the official config.json.",
   "components": [
     {
       "id": "input-1",
@@ -63,7 +63,7 @@
         "causalAttention-4"
       ],
       "scope": "layer.0.attention",
-      "notes": "Pre-norm RMSNorm. One of 32 identical decoder blocks is expanded below; the stack repeats x32."
+      "notes": "Pre-norm RMSNorm. One of 32 decoder blocks is expanded below; the stack repeats x32."
     },
     {
       "id": "causalAttention-4",

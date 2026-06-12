@@ -1,7 +1,7 @@
 {
   "id": "qwen2.5-7b",
   "name": "Qwen2.5-7B",
-  "description": "Qwen2.5-7B (Alibaba Cloud (Qwen team)): decoder-only transformer, 28 layers x 3584 hidden, GQA 28Q:4KV, RoPE + RMSNorm + SwiGLU. One decoder block expanded; repeats x28. Verified against the official config.json.",
+  "description": "Qwen2.5-7B (Alibaba Cloud (Qwen team)): decoder-only transformer, 28 layers x 3584 hidden, GQA 28Q:4KV, SwiGLU FFN, RoPE + RMSNorm. One decoder block expanded; repeats x28. Verified against the official config.json.",
   "components": [
     {
       "id": "input-1",
@@ -63,7 +63,7 @@
         "groupedQueryAttention-4"
       ],
       "scope": "layer.0.attention",
-      "notes": "Pre-norm RMSNorm. One of 28 identical decoder blocks is expanded below; the stack repeats x28."
+      "notes": "Pre-norm RMSNorm. One of 28 decoder blocks is expanded below; the stack repeats x28."
     },
     {
       "id": "groupedQueryAttention-4",

@@ -38,6 +38,18 @@ interface DecoderSpec {
   github: string; hf: string; license: string;
   hidden: number; layers: number; heads: number; kvHeads: number;
   ffn: number; vocab: number; ctx: number; ropeDim: number;
+  /** explicit head dim when heads * headDim != hidden (Gemma 4, GLM-4.5) */
+  headDim?: number;
+  /** per-head RMSNorm on Q and K before RoPE (Qwen3, Gemma lineage) */
+  qkNorm?: boolean;
+  /** gated-GeLU FFN instead of SwiGLU (Gemma lineage) */
+  ffnKind?: 'swiglu' | 'geglu';
+  /** sparse MoE FFN; `ffn` then describes the dense layers (if any) */
+  moe?: { numExperts: number; topK: number; expertDim: number; sharedExpert?: boolean; denseFirstK?: number };
+  /** multi-head latent attention (DeepSeek V3 lineage); replaces GQA/MHA */
+  mla?: { kvLatentDim: number; qLatentDim?: number; ropeHeadDim: number; nopeHeadDim: number; vHeadDim: number };
+  /** override for the Positions row in the README table (iRoPE, sliding windows, ...) */
+  posLabel?: string;
   notes: string[]; blurb: string;
 }
 
@@ -68,7 +80,15 @@ interface ParserEntry {
   blurb: string; notes: string[];
 }
 
-type Spec = DecoderSpec | EncoderSpec | TemplateEntry | ParserEntry;
+interface CustomEntry {
+  kind: 'custom';
+  id: string; displayName: string; org: string; paramsLabel: string;
+  links: Link[]; license?: string;
+  blurb: string; notes: string[];
+  build: () => { id: string; name: string; description: string; components: Comp[]; connections: Conn[] };
+}
+
+type Spec = DecoderSpec | EncoderSpec | TemplateEntry | ParserEntry | CustomEntry;
 
 // ---------------------------------------------------------------------------
 // Decoder-only LLMs (config.json-verified)
@@ -204,6 +224,118 @@ const DECODERS: DecoderSpec[] = [
       'The dense base that Mixtral 8x7B sparsified: the MoE model reuses this exact block with the FFN swapped for 8 experts.',
     ],
     blurb: 'The 7B model from Mistral AI that beat Llama-2-13B at release, built on grouped-query attention plus sliding-window attention. The direct dense ancestor of Mixtral.',
+  },
+];
+
+// ---------------------------------------------------------------------------
+// Frontier LLMs, 2025-2026 wave (config.json-verified)
+// ---------------------------------------------------------------------------
+
+const FRONTIER: DecoderSpec[] = [
+  {
+    kind: 'decoder', id: 'deepseek-v3', displayName: 'DeepSeek-V3', org: 'DeepSeek',
+    paramsLabel: '671B total, 37B active', github: 'https://github.com/deepseek-ai/DeepSeek-V3', hf: 'https://huggingface.co/deepseek-ai/DeepSeek-V3',
+    license: 'Code MIT; weights under the DeepSeek Model License (V3) and MIT from V3-0324 on',
+    hidden: 7168, layers: 61, heads: 128, kvHeads: 128, ffn: 18432, vocab: 129280, ctx: 163840, ropeDim: 64,
+    mla: { kvLatentDim: 512, qLatentDim: 1536, ropeHeadDim: 64, nopeHeadDim: 128, vHeadDim: 128 },
+    moe: { numExperts: 256, topK: 8, expertDim: 2048, sharedExpert: true, denseFirstK: 3 },
+    notes: [
+      'Multi-head latent attention (MLA): K and V are compressed into a 512-dim latent per token (Q through a 1536-dim latent), cutting the KV cache by an order of magnitude versus GQA at this scale. Each of the 128 heads splits into a 128-dim content (NoPE) part and a shared 64-dim decoupled RoPE part.',
+      'Fine-grained MoE: 256 routed experts (top-8) plus 1 always-on shared expert, each expert a slim 2048-dim SwiGLU; the first 3 layers stay dense (18432).',
+      'Auxiliary-loss-free load balancing via per-expert bias terms, plus a multi-token-prediction head at training time (dropped at inference).',
+      'The base of DeepSeek-R1: the reasoning model is this exact graph post-trained with RL.',
+    ],
+    blurb: 'The 671B-parameter MoE that made frontier-scale open weights real, and the architecture behind DeepSeek-R1. Two signature moves: multi-head latent attention for cheap KV cache, and 256 fine-grained experts with a shared expert.',
+  },
+  {
+    kind: 'decoder', id: 'kimi-k2.6', displayName: 'Kimi K2.6', org: 'Moonshot AI',
+    paramsLabel: '~1T total, ~32B active (K2-family dims)', github: 'https://github.com/MoonshotAI/Kimi-K2', hf: 'https://huggingface.co/moonshotai/Kimi-K2.6',
+    license: 'Modified MIT (K2 family)',
+    hidden: 7168, layers: 61, heads: 64, kvHeads: 64, ffn: 18432, vocab: 163840, ctx: 262144, ropeDim: 64,
+    mla: { kvLatentDim: 512, qLatentDim: 1536, ropeHeadDim: 64, nopeHeadDim: 128, vHeadDim: 128 },
+    moe: { numExperts: 384, topK: 8, expertDim: 2048, sharedExpert: true, denseFirstK: 1 },
+    notes: [
+      'DeepSeek-V3 lineage scaled out: same 61-layer, 7168-hidden MLA backbone, but 384 routed experts (vs 256), half the attention heads (64), and only the first layer dense.',
+      'The K2 tech report puts the family at roughly 1T total / 32B active parameters; K2.6 keeps those dims per its config.json (hyperparameters here are read from the June 2026 config directly).',
+      '262144-token context with rope_theta 50000 on the 64-dim decoupled RoPE part.',
+      'The config carries a vision encoder (patch 14) alongside the text stack: K2.6 is natively multimodal. This entry shows the text decoder.',
+    ],
+    blurb: 'Moonshot AI\'s trillion-parameter-class MoE, the largest architecture in this zoo. A DeepSeek-V3-style MLA + fine-grained-MoE design pushed to 384 experts and 256K context, with a vision encoder bolted on in K2.6.',
+  },
+  {
+    kind: 'decoder', id: 'glm-4.5-air', displayName: 'GLM-4.5-Air', org: 'Zhipu AI (Z.ai)',
+    paramsLabel: '106B total, 12B active', github: 'https://github.com/zai-org/GLM-4.5', hf: 'https://huggingface.co/zai-org/GLM-4.5-Air',
+    license: 'MIT',
+    hidden: 4096, layers: 46, heads: 96, kvHeads: 8, ffn: 10944, vocab: 151552, ctx: 131072, ropeDim: 64,
+    headDim: 128,
+    moe: { numExperts: 128, topK: 8, expertDim: 1408, sharedExpert: true, denseFirstK: 1 },
+    notes: [
+      'Wide attention: 96 query heads of dim 128 give a 12288-dim attention space over a 4096 hidden size (3x), an unusually attention-heavy budget the GLM-4.5 report credits for reasoning performance.',
+      'GQA 96:8 with partial RoPE (half of each head), plus QKV bias (attention_bias = true), a Qwen2-style touch the rest of the 2025 wave dropped.',
+      '128 fine-grained experts, top-8 routing, 1 shared expert, slim 1408-dim experts; first layer dense at 10944.',
+      'The "Air" tier of the GLM-4.5 agentic line: 106B total but only 12B active, sized to run on a single high-end node.',
+    ],
+    blurb: 'Zhipu AI\'s agent-focused MoE in its deployable Air size. Distinctive for spending parameters on attention (96 heads, 3x hidden) while keeping experts slim, the opposite allocation from most 2025 MoEs.',
+  },
+  {
+    kind: 'decoder', id: 'qwen3-8b', displayName: 'Qwen3-8B', org: 'Alibaba Cloud (Qwen team)',
+    paramsLabel: '8.2B', github: 'https://github.com/QwenLM/Qwen3', hf: 'https://huggingface.co/Qwen/Qwen3-8B',
+    license: 'Apache 2.0',
+    hidden: 4096, layers: 36, heads: 32, kvHeads: 8, ffn: 12288, vocab: 151936, ctx: 40960, ropeDim: 128,
+    qkNorm: true,
+    notes: [
+      'QK-Norm replaces the Qwen2.5 QKV bias: per-head RMSNorm on queries and keys before RoPE (attention_bias is false in the config), trading the bias trick for norm-based attention stability.',
+      'Deeper and thinner than Qwen2.5-7B: 36 layers at 4096 hidden versus 28 at 3584, with a narrower 12288 FFN.',
+      'GQA 32:8 with explicit head_dim 128; native 40960-token context at rope_theta 1e6.',
+      'The dense workhorse of the Qwen3 release; the same recipe scales to the 235B-A22B MoE flagship. Hybrid thinking/non-thinking modes are a training-time property, not an architecture change.',
+    ],
+    blurb: 'The dense 8B from the Qwen3 generation, the default open model of 2025 by download count. Architecturally a cleanup: QKV bias out, QK-Norm in, more depth per parameter.',
+  },
+  {
+    kind: 'decoder', id: 'gpt-oss-20b', displayName: 'gpt-oss-20b', org: 'OpenAI',
+    paramsLabel: '21B total, 3.6B active', github: 'https://github.com/openai/gpt-oss', hf: 'https://huggingface.co/openai/gpt-oss-20b',
+    license: 'Apache 2.0',
+    hidden: 2880, layers: 24, heads: 64, kvHeads: 8, ffn: 2880, vocab: 201088, ctx: 131072, ropeDim: 64,
+    headDim: 64,
+    posLabel: 'RoPE + YaRN; layers alternate sliding-window (128) and full attention 1:1',
+    moe: { numExperts: 32, topK: 4, expertDim: 2880 },
+    notes: [
+      'OpenAI\'s first open-weight release since GPT-2: a 24-layer MoE with 32 experts, top-4 routed, no shared expert, 3.6B active of 21B total.',
+      'Alternating attention: odd layers use a 128-token sliding window, even layers full attention (verified from config layer_types, 12 of each), plus learned attention-sink logits per head.',
+      'Attention bias on, 64 small heads of dim 64 over a 2880 hidden size, and a 201088-token o200k_harmony vocabulary.',
+      'Ships MXFP4-quantized so the 20B fits in 16GB; trained with the harmony response format for tool use and CoT.',
+    ],
+    blurb: 'The 20B mixture-of-experts OpenAI released under Apache 2.0 in 2025. Small sliding windows, tiny heads, aggressive MoE sparsity: an inference-economics architecture through and through.',
+  },
+  {
+    kind: 'decoder', id: 'llama-4-scout', displayName: 'Llama 4 Scout', org: 'Meta',
+    paramsLabel: '109B total, 17B active', github: 'https://github.com/meta-llama/llama-models', hf: 'https://huggingface.co/meta-llama/Llama-4-Scout-17B-16E',
+    license: 'Llama 4 Community License',
+    hidden: 5120, layers: 48, heads: 40, kvHeads: 8, ffn: 8192, vocab: 202048, ctx: 10485760, ropeDim: 128,
+    posLabel: 'iRoPE: RoPE on 36 of 48 layers, every 4th layer position-free (NoPE)',
+    moe: { numExperts: 16, topK: 1, expertDim: 8192, sharedExpert: true },
+    notes: [
+      'Coarse MoE, the opposite of DeepSeek\'s recipe: 16 large experts with top-1 routing plus a shared expert, in every layer (interleave step 1).',
+      'iRoPE for the 10M-token context claim: interleaved layers drop positional encoding entirely (12 of 48 are NoPE, verified from config), betting that attention-only layers generalize past the trained length.',
+      'GQA 40:8 at 5120 hidden; 202048-token vocabulary; natively multimodal (a 34-layer vision tower feeds the same decoder; this entry shows the text stack).',
+      'Hyperparameters verified via the unsloth mirror of the config (the meta-llama repo is gated).',
+    ],
+    blurb: 'Meta\'s first MoE and first 10M-context model. Architecturally the interesting bits are top-1 routing over 16 fat experts and iRoPE\'s position-free layers; reception was mixed, but the design choices are worth studying.',
+  },
+  {
+    kind: 'decoder', id: 'gemma-4-12b', displayName: 'Gemma 4 12B', org: 'Google DeepMind',
+    paramsLabel: '12B', github: 'https://github.com/google-deepmind/gemma', hf: 'https://huggingface.co/google/gemma-4-12b',
+    license: 'Gemma Terms of Use',
+    hidden: 3840, layers: 48, heads: 16, kvHeads: 8, ffn: 15360, vocab: 262144, ctx: 262144, ropeDim: 256,
+    headDim: 256, ffnKind: 'geglu',
+    posLabel: 'RoPE; 5:1 local(1024-window):global attention layers (40 sliding, 8 full, verified from config)',
+    notes: [
+      'Hyperparameters read directly from the June 2026 config.json (gemma4_unified_text): this entry tracks the release, not secondhand writeups.',
+      'Oversized heads: 16 heads of dim 256 (4096-dim attention over 3840 hidden), continuing the Gemma trademark of few-but-wide heads.',
+      '5:1 local-to-global attention with a 1024-token window keeps the 262144-token context affordable; only 8 of 48 layers see the full sequence.',
+      'GeGLU FFN at 15360 (4x hidden) and the huge 262144-token SentencePiece vocabulary; "unified" model_type with a built-in vision encoder (text stack shown here).',
+    ],
+    blurb: 'The 12B of Google\'s Gemma 4 generation, the strongest permissively-distributed dense model of the June 2026 wave. Wide 256-dim heads, 5:1 local:global attention, and a 262K vocabulary.',
   },
 ];
 
@@ -645,6 +777,133 @@ const PARSED: ParserEntry[] = [
 ];
 
 // ---------------------------------------------------------------------------
+// Hand-built entries (configs verified, no spec builder fits)
+// ---------------------------------------------------------------------------
+
+const CUSTOM: CustomEntry[] = [
+  {
+    kind: 'custom', id: 'modernbert-base', displayName: 'ModernBERT-Base', org: 'Answer.AI / LightOn',
+    paramsLabel: '149M',
+    links: [
+      ['Paper (Warner et al. 2024)', 'https://arxiv.org/abs/2412.13663'],
+      ['Hugging Face', 'https://huggingface.co/answerdotai/ModernBERT-base'],
+      ['GitHub', 'https://github.com/AnswerDotAI/ModernBERT'],
+    ],
+    license: 'Apache 2.0',
+    blurb: 'The 2024 rebuild of BERT with a decade of decoder-side lessons applied: RoPE, GeGLU, pre-norm, no biases, and 5:1 local:global attention for an 8192-token context. The new default encoder for retrieval and classification.',
+    notes: [
+      'Every modernization is borrowed from the LLM stack: rotary positions replace absolute embeddings, GeGLU replaces the GeLU MLP, pre-norm replaces post-norm, and all bias terms are dropped (verified from config.json).',
+      'Alternating attention: 2 of every 3 layers use a 128-token local window; every 3rd layer is global. That is how 22 layers reach 8192 tokens cheaply.',
+      'Deeper and thinner than BERT-base (22 layers vs 12, FFN 1152 paired for GeGLU) at a comparable 149M parameters.',
+      'Compare with [bert-base](../bert-base/) side by side: same job, nine years of architecture evolution.',
+    ],
+    build: () => {
+      const comps: Comp[] = []; const conns: Conn[] = []; let ci = 0; let y = 50; const X = 300; const STEP = 150;
+      const add = (type: string, name: string, params: Record<string, unknown>, opts: { scope?: string; notes?: string; x?: number; sameRow?: boolean } = {}) => {
+        if (!opts.sameRow) y += STEP;
+        const c: Comp = { id: `${type}-${comps.length + 1}`, type, name, position: { x: opts.x ?? X, y }, params, inputs: [], outputs: [] };
+        if (opts.scope) c.scope = opts.scope; if (opts.notes) c.notes = opts.notes;
+        comps.push(c); return c;
+      };
+      const wire = (a: Comp, b: Comp) => { conns.push({ id: `c${++ci}`, from: a.id, to: b.id }); };
+      y -= STEP;
+      const inp = add('input', 'input_ids', { shape: [1, 8192] }, { notes: 'Native 8192-token context.' });
+      const emb = add('embedding', 'tok_embed', { numEmbeddings: 50368, embeddingDim: 768 }, { scope: 'embeddings', notes: '50368-token BPE vocabulary (GPT-2 lineage, padded to a multiple of 64). No absolute position embeddings: positions come from RoPE inside attention.' });
+      wire(inp, emb);
+      const eNorm = add('layerNorm', 'embed_norm', { normalizedShape: 768 }, { scope: 'embeddings', notes: 'Bias-free LayerNorm.' });
+      wire(emb, eNorm);
+      const aNorm = add('layerNorm', 'attn_norm', { normalizedShape: 768 }, { scope: 'layer.0.attention', notes: 'Pre-norm. One of 22 blocks expanded; the stack repeats x22. Layers alternate 128-token local attention (2 of 3) with global attention (every 3rd layer).' });
+      wire(eNorm, aNorm);
+      const attn = add('multiHeadAttention', 'self_attn', { embedDim: 768, numHeads: 12 }, { scope: 'layer.0.attention', notes: 'Bidirectional, 12 heads, head dim 64, no bias. Local (sliding 128) in 2 of every 3 layers, global otherwise.' });
+      wire(aNorm, attn);
+      const rope = add('rope', 'rope', { dim: 64 }, { scope: 'layer.0.attention', x: X + 280, sameRow: true, notes: 'RoPE in an encoder: theta 10000 for local layers, 160000 for global layers.' });
+      wire(rope, attn);
+      const res1 = add('add', 'residual_1', {}, { scope: 'layer.0.attention' });
+      wire(attn, res1); wire(eNorm, res1);
+      const fNorm = add('layerNorm', 'ffn_norm', { normalizedShape: 768 }, { scope: 'layer.0.ffn' });
+      wire(res1, fNorm);
+      const ffn = add('geglu', 'geglu_ffn', { dim: 768, hiddenDim: 1152 }, { scope: 'layer.0.ffn', notes: 'GeGLU: the 2304-dim up-projection splits into two 1152-dim halves (gate and value).' });
+      wire(fNorm, ffn);
+      const res2 = add('add', 'residual_2', {}, { scope: 'layer.0.ffn' });
+      wire(ffn, res2); wire(res1, res2);
+      const oNorm = add('layerNorm', 'final_norm', { normalizedShape: 768 }, { scope: 'norm' });
+      wire(res2, oNorm);
+      const out = add('output', 'hidden_states', {}, { notes: 'Contextual embeddings for retrieval, classification, or masked-LM heads.' });
+      wire(oNorm, out);
+      return {
+        id: 'modernbert-base', name: 'ModernBERT-Base',
+        description: 'ModernBERT-Base (Answer.AI / LightOn): bidirectional encoder, 22 layers x 768 hidden, RoPE + GeGLU + pre-norm, 5:1 local:global attention, 8192-token context. One block expanded; repeats x22. Verified against the official config.json.',
+        components: comps, connections: conns,
+      };
+    },
+  },
+  {
+    kind: 'custom', id: 'clip-vit-b32', displayName: 'CLIP ViT-B/32', org: 'OpenAI',
+    paramsLabel: '151M',
+    links: [
+      ['Paper (Radford et al. 2021)', 'https://arxiv.org/abs/2103.00020'],
+      ['GitHub', 'https://github.com/openai/CLIP'],
+      ['Hugging Face', 'https://huggingface.co/openai/clip-vit-base-patch32'],
+    ],
+    license: 'MIT',
+    blurb: 'The contrastive image-text model that underpins modern multimodality: a ViT image tower and a Transformer text tower projected into one 512-dim space, trained so matching pairs score high by dot product. Stable Diffusion\'s text encoder is the text half of this design.',
+    notes: [
+      'Two towers, one space: image (12-layer ViT, 768 hidden, patch 32) and text (12-layer Transformer, 512 hidden, 77-token context) each end in a linear projection to 512 dims.',
+      'The similarity logit is just a scaled dot product between the two embeddings; in training, a batch of N pairs gives an NxN contrastive matrix.',
+      'The graph pools each tower with an average-pool node as a stand-in for CLIP\'s token selection (class token for the image tower, EOT token for text).',
+      'Tower dims verified from the official config.json; the text tower is causal, a quirk inherited from GPT-style pretraining.',
+    ],
+    build: () => {
+      const comps: Comp[] = []; const conns: Conn[] = []; let ci = 0;
+      const add = (type: string, name: string, params: Record<string, unknown>, x: number, y: number, opts: { scope?: string; notes?: string } = {}) => {
+        const c: Comp = { id: `${type}-${comps.length + 1}`, type, name, position: { x, y }, params, inputs: [], outputs: [] };
+        if (opts.scope) c.scope = opts.scope; if (opts.notes) c.notes = opts.notes;
+        comps.push(c); return c;
+      };
+      const wire = (a: Comp, b: Comp) => { conns.push({ id: `c${++ci}`, from: a.id, to: b.id }); };
+      // image tower
+      const iIn = add('input', 'image', { shape: [3, 224, 224] }, 150, 50);
+      const patch = add('patchEmbed', 'patch_embed', { imgSize: 224, patchSize: 32, embedDim: 768 }, 150, 200, { scope: 'vision', notes: '32x32 patches: 224x224 image becomes 49 tokens of 768 dims (plus a class token).' });
+      wire(iIn, patch);
+      const iPos = add('positionalEncoding', 'vis_pos', { maxLen: 50, embedDim: 768 }, 150, 350, { scope: 'vision' });
+      wire(patch, iPos);
+      const iBlock = add('transformerBlock', 'vis_encoder', { embedDim: 768, numHeads: 12, ffDim: 3072 }, 150, 500, { scope: 'vision', notes: 'One of 12 identical pre-norm ViT blocks (12 heads, MLP 3072, QuickGELU); repeats x12.' });
+      wire(iPos, iBlock);
+      const iNorm = add('layerNorm', 'vis_norm', { normalizedShape: 768 }, 150, 650, { scope: 'vision' });
+      wire(iBlock, iNorm);
+      const iPool = add('globalAvgPool1d', 'vis_pool', {}, 150, 800, { scope: 'vision', notes: 'Stand-in for class-token selection.' });
+      wire(iNorm, iPool);
+      const iProj = add('linear', 'img_proj', { inFeatures: 768, outFeatures: 512 }, 150, 950, { scope: 'vision', notes: 'Projection into the shared 512-dim embedding space.' });
+      wire(iPool, iProj);
+      // text tower
+      const tIn = add('input', 'tokens', { shape: [1, 77] }, 600, 50, { notes: '77-token max context.' });
+      const tEmb = add('embedding', 'tok_embed', { numEmbeddings: 49408, embeddingDim: 512 }, 600, 200, { scope: 'text', notes: '49408-token BPE vocabulary.' });
+      wire(tIn, tEmb);
+      const tPos = add('positionalEncoding', 'txt_pos', { maxLen: 77, embedDim: 512 }, 600, 350, { scope: 'text' });
+      wire(tEmb, tPos);
+      const tBlock = add('transformerBlock', 'txt_encoder', { embedDim: 512, numHeads: 8, ffDim: 2048 }, 600, 500, { scope: 'text', notes: 'One of 12 identical causal text blocks (8 heads, MLP 2048, QuickGELU); repeats x12.' });
+      wire(tPos, tBlock);
+      const tNorm = add('layerNorm', 'txt_norm', { normalizedShape: 512 }, 600, 650, { scope: 'text' });
+      wire(tBlock, tNorm);
+      const tPool = add('globalAvgPool1d', 'txt_pool', {}, 600, 800, { scope: 'text', notes: 'Stand-in for EOT-token selection.' });
+      wire(tNorm, tPool);
+      const tProj = add('linear', 'txt_proj', { inFeatures: 512, outFeatures: 512 }, 600, 950, { scope: 'text', notes: 'Projection into the shared 512-dim embedding space.' });
+      wire(tPool, tProj);
+      // joint space
+      const sim = add('matmul', 'similarity', {}, 375, 1100, { notes: 'Scaled dot product between L2-normalized image and text embeddings (learned temperature). Over a batch this is the NxN contrastive logit matrix.' });
+      wire(iProj, sim); wire(tProj, sim);
+      const out = add('output', 'logits', {}, 375, 1250);
+      wire(sim, out);
+      return {
+        id: 'clip-vit-b32', name: 'CLIP ViT-B/32',
+        description: 'CLIP ViT-B/32 (OpenAI): contrastive image-text dual encoder. ViT-B/32 image tower and 12-layer text tower projected to a shared 512-dim space, scored by scaled dot product. Tower dims verified against the official config.json.',
+        components: comps, connections: conns,
+      };
+    },
+  },
+];
+
+// ---------------------------------------------------------------------------
 // Graph builders (template-style model.json, matching public/templates/*)
 // ---------------------------------------------------------------------------
 
@@ -672,28 +931,58 @@ function buildDecoder(s: DecoderSpec) {
   const wire = (from: Comp, to: Comp) => { conns.push({ id: `c${++ci}`, from: from.id, to: to.id }); };
 
   const seqLen = Math.min(s.ctx, 4096);
-  const attnLabel = s.kvHeads < s.heads ? `GQA ${s.heads}Q:${s.kvHeads}KV` : `MHA ${s.heads} heads`;
+  const headDim = s.headDim ?? s.hidden / s.heads;
+  const attnLabel = s.mla
+    ? `MLA ${s.heads} heads (KV latent ${s.mla.kvLatentDim})`
+    : s.kvHeads < s.heads ? `GQA ${s.heads}Q:${s.kvHeads}KV` : `MHA ${s.heads} heads`;
+  const ffnLabel = s.moe
+    ? `MoE ${s.moe.numExperts}x top-${s.moe.topK}${s.moe.sharedExpert ? ' + shared' : ''}`
+    : s.ffnKind === 'geglu' ? 'GeGLU' : 'SwiGLU';
 
   y -= STEP;
   const inp = add('input', 'tokens', { shape: [1, seqLen] }, { notes: `Token ids. Max context ${s.ctx.toLocaleString()} tokens; shown at ${seqLen.toLocaleString()} for shape preview.` });
   const emb = add('embedding', 'token_embed', { numEmbeddings: s.vocab, embeddingDim: s.hidden }, { scope: 'embeddings', notes: `${s.vocab.toLocaleString()}-token vocabulary, ${s.hidden}-dim embeddings.` });
   wire(inp, emb);
-  const normA = add('rmsNorm', 'attn_norm', { normalizedShape: s.hidden }, { scope: 'layer.0.attention', notes: `Pre-norm RMSNorm. One of ${s.layers} identical decoder blocks is expanded below; the stack repeats x${s.layers}.` });
+  const normA = add('rmsNorm', 'attn_norm', { normalizedShape: s.hidden }, { scope: 'layer.0.attention', notes: `Pre-norm RMSNorm. One of ${s.layers} decoder blocks is expanded below; the stack repeats x${s.layers}.` });
   wire(emb, normA);
-  const attn = s.kvHeads < s.heads
-    ? add('groupedQueryAttention', 'self_attn', { embedDim: s.hidden, numHeads: s.heads, numKVHeads: s.kvHeads }, { scope: 'layer.0.attention', notes: `${attnLabel}, head dim ${s.hidden / s.heads}.` })
-    : add('causalAttention', 'self_attn', { embedDim: s.hidden, numHeads: s.heads }, { scope: 'layer.0.attention', notes: `${attnLabel}, head dim ${s.hidden / s.heads}, causal mask.` });
+  const attn = s.mla
+    ? add('mla', 'self_attn', { embedDim: s.hidden, numHeads: s.heads, kvLatentDim: s.mla.kvLatentDim, ropeHeadDim: s.mla.ropeHeadDim }, { scope: 'layer.0.attention', notes: `Multi-head latent attention: KV compressed to a ${s.mla.kvLatentDim}-dim latent${s.mla.qLatentDim ? `, Q to ${s.mla.qLatentDim}` : ''}; per head ${s.mla.nopeHeadDim}-dim NoPE content + ${s.mla.ropeHeadDim}-dim decoupled RoPE, V dim ${s.mla.vHeadDim}.` })
+    : s.kvHeads < s.heads
+      ? add('groupedQueryAttention', 'self_attn', { embedDim: s.hidden, numHeads: s.heads, numKVHeads: s.kvHeads }, { scope: 'layer.0.attention', notes: `${attnLabel}, head dim ${headDim}.` })
+      : add('causalAttention', 'self_attn', { embedDim: s.hidden, numHeads: s.heads }, { scope: 'layer.0.attention', notes: `${attnLabel}, head dim ${headDim}, causal mask.` });
   wire(normA, attn);
-  const rope = add('rope', 'rope', { dim: s.ropeDim }, { scope: 'layer.0.attention', x: X + 280, sameRow: true, notes: `Rotary position embedding, rotary dim ${s.ropeDim} per head.` });
+  const rope = add('rope', 'rope', { dim: s.ropeDim }, { scope: 'layer.0.attention', x: X + 280, sameRow: true, notes: `Rotary position embedding, rotary dim ${s.ropeDim} per head.${s.posLabel ? ` ${s.posLabel}.` : ''}` });
   wire(rope, attn);
+  if (s.qkNorm) {
+    const qk = add('qkNorm', 'qk_norm', { dim: headDim }, { scope: 'layer.0.attention', x: X + 280, notes: `Per-head RMSNorm on Q and K before RoPE (head dim ${headDim}).` });
+    wire(qk, attn);
+  }
   const res1 = add('add', 'residual_1', {}, { scope: 'layer.0.attention' });
   wire(attn, res1); wire(emb, res1);
   const normF = add('rmsNorm', 'ffn_norm', { normalizedShape: s.hidden }, { scope: 'layer.0.ffn' });
   wire(res1, normF);
-  const ffn = add('swiglu', 'swiglu_ffn', { embedDim: s.hidden, intermediateSize: s.ffn }, { scope: 'layer.0.ffn', notes: `SwiGLU gated FFN, intermediate size ${s.ffn.toLocaleString()} (${(s.ffn / s.hidden).toFixed(2)}x hidden).` });
-  wire(normF, ffn);
+  let ffnOut: Comp;
+  if (s.moe) {
+    const moe = add('moeLayer', 'routed_experts', { embedDim: s.hidden, numExperts: s.moe.numExperts, topK: s.moe.topK, expertDim: s.moe.expertDim }, { scope: 'layer.0.ffn', notes: `${s.moe.numExperts} routed experts, top-${s.moe.topK} per token, each a ${s.moe.expertDim}-dim SwiGLU.${s.moe.denseFirstK ? ` First ${s.moe.denseFirstK} layer${s.moe.denseFirstK > 1 ? 's' : ''} use a dense ${s.ffn.toLocaleString()}-dim FFN instead.` : ''}` });
+    wire(normF, moe);
+    if (s.moe.sharedExpert) {
+      const shared = add('swiglu', 'shared_expert', { embedDim: s.hidden, intermediateSize: s.moe.expertDim }, { scope: 'layer.0.ffn', x: X + 280, notes: 'Always-on shared expert, summed with the routed experts\' output.' });
+      wire(normF, shared);
+      const sum = add('add', 'expert_sum', {}, { scope: 'layer.0.ffn' });
+      wire(moe, sum); wire(shared, sum);
+      ffnOut = sum;
+    } else {
+      ffnOut = moe;
+    }
+  } else if (s.ffnKind === 'geglu') {
+    ffnOut = add('geglu', 'geglu_ffn', { dim: s.hidden, hiddenDim: s.ffn }, { scope: 'layer.0.ffn', notes: `GeGLU gated FFN, hidden size ${s.ffn.toLocaleString()} (${(s.ffn / s.hidden).toFixed(2)}x hidden).` });
+    wire(normF, ffnOut);
+  } else {
+    ffnOut = add('swiglu', 'swiglu_ffn', { embedDim: s.hidden, intermediateSize: s.ffn }, { scope: 'layer.0.ffn', notes: `SwiGLU gated FFN, intermediate size ${s.ffn.toLocaleString()} (${(s.ffn / s.hidden).toFixed(2)}x hidden).` });
+    wire(normF, ffnOut);
+  }
   const res2 = add('add', 'residual_2', {}, { scope: 'layer.0.ffn' });
-  wire(ffn, res2); wire(res1, res2);
+  wire(ffnOut, res2); wire(res1, res2);
   const normOut = add('rmsNorm', 'final_norm', { normalizedShape: s.hidden }, { scope: 'norm' });
   wire(res2, normOut);
   const head = add('linear', 'lm_head', { inFeatures: s.hidden, outFeatures: s.vocab }, { scope: 'head' });
@@ -704,7 +993,7 @@ function buildDecoder(s: DecoderSpec) {
   return {
     id: s.id,
     name: s.displayName,
-    description: `${s.displayName} (${s.org}): decoder-only transformer, ${s.layers} layers x ${s.hidden} hidden, ${attnLabel}, RoPE + RMSNorm + SwiGLU. One decoder block expanded; repeats x${s.layers}. Verified against the official config.json.`,
+    description: `${s.displayName} (${s.org}): decoder-only transformer, ${s.layers} layers x ${s.hidden} hidden, ${attnLabel}, ${ffnLabel} FFN, RoPE + RMSNorm. One decoder block expanded; repeats x${s.layers}. Verified against the official config.json.`,
     components: comps,
     connections: conns,
   };
@@ -767,15 +1056,19 @@ const openUrl = (id: string) => `https://www.neurarch.com/?import=${RAW_BASE}/${
 function specArchTable(s: DecoderSpec | EncoderSpec): string {
   const rows: Array<[string, string]> = s.kind === 'decoder'
     ? [
-        ['Type', 'Decoder-only transformer (causal LM)'],
+        ['Type', s.moe ? 'Decoder-only transformer, sparse MoE (causal LM)' : 'Decoder-only transformer (causal LM)'],
         ['Parameters', s.paramsLabel],
         ['Layers', String(s.layers)],
         ['Hidden size', String(s.hidden)],
-        ['Attention', s.kvHeads < s.heads ? `Grouped-query: ${s.heads} query heads, ${s.kvHeads} KV heads` : `Multi-head: ${s.heads} heads`],
-        ['Head dim', String(s.hidden / s.heads)],
-        ['FFN', `SwiGLU, intermediate size ${s.ffn.toLocaleString()}`],
+        ['Attention', s.mla
+          ? `Multi-head latent: ${s.heads} heads; KV latent ${s.mla.kvLatentDim}${s.mla.qLatentDim ? `, Q latent ${s.mla.qLatentDim}` : ''}; per head ${s.mla.nopeHeadDim} NoPE + ${s.mla.ropeHeadDim} RoPE, V ${s.mla.vHeadDim}`
+          : s.kvHeads < s.heads ? `Grouped-query: ${s.heads} query heads, ${s.kvHeads} KV heads${s.qkNorm ? ', QK-Norm' : ''}` : `Multi-head: ${s.heads} heads${s.qkNorm ? ', QK-Norm' : ''}`],
+        ...(s.mla ? [] : [['Head dim', String(s.headDim ?? s.hidden / s.heads)] as [string, string]]),
+        ['FFN', s.moe
+          ? `MoE: ${s.moe.numExperts} routed experts, top-${s.moe.topK}${s.moe.sharedExpert ? ' + 1 shared' : ''}, expert dim ${s.moe.expertDim.toLocaleString()}${s.moe.denseFirstK ? `; first ${s.moe.denseFirstK} layer${s.moe.denseFirstK > 1 ? 's' : ''} dense (${s.ffn.toLocaleString()})` : ''}`
+          : s.ffnKind === 'geglu' ? `GeGLU, hidden size ${s.ffn.toLocaleString()}` : `SwiGLU, intermediate size ${s.ffn.toLocaleString()}`],
         ['Normalization', 'RMSNorm, pre-norm'],
-        ['Positions', `RoPE (rotary dim ${s.ropeDim})`],
+        ['Positions', s.posLabel ?? `RoPE (rotary dim ${s.ropeDim})`],
         ['Vocabulary', s.vocab.toLocaleString()],
         ['Max context', s.ctx.toLocaleString()],
       ]
@@ -816,7 +1109,8 @@ function filesSection(): string {
 }
 
 function renderSpecReadme(s: DecoderSpec | EncoderSpec): string {
-  const blocks = s.kind === 'decoder' ? `${s.layers} identical decoder blocks` : `${s.layers} identical encoder blocks`;
+  const uniform = s.kind === 'decoder' && s.moe?.denseFirstK ? '' : 'identical ';
+  const blocks = s.kind === 'decoder' ? `${s.layers} ${uniform}decoder blocks` : `${s.layers} ${uniform}encoder blocks`;
   return `# ${s.displayName}
 
 ${s.blurb}
@@ -848,12 +1142,14 @@ ${filesSection()}
 }
 
 function renderEntryReadme(
-  e: TemplateEntry | ParserEntry,
+  e: TemplateEntry | ParserEntry | CustomEntry,
   model: { components: Array<{ name: string; type: string; params: Record<string, unknown> }> },
 ): string {
   const provenance = e.kind === 'template'
     ? 'This graph ships in Neurarch\'s in-app template library; the copy here passes shape propagation with zero errors.'
-    : 'This graph is generated by Neurarch\'s architecture parser and passes shape propagation with zero errors.';
+    : e.kind === 'parser'
+      ? 'This graph is generated by Neurarch\'s architecture parser and passes shape propagation with zero errors.'
+      : 'This graph is hand-built for the zoo, passes shape propagation with zero errors, and has its key dimensions verified against the official config.json.';
   const links = [
     ['**Open in Neurarch** (live, editable graph)', openUrl(e.id)] as Link,
     ...e.links,
@@ -917,7 +1213,7 @@ function writeEntry(id: string, model: object, readme: string) {
   fs.writeFileSync(path.join(dir, 'README.md'), readme);
 }
 
-const ALL: Spec[] = [...DECODERS, ...ENCODERS, ...TEMPLATES, ...PARSED];
+const ALL: Spec[] = [...DECODERS, ...FRONTIER, ...ENCODERS, ...CUSTOM, ...TEMPLATES, ...PARSED];
 let count = 0;
 for (const s of ALL) {
   if (s.kind === 'decoder' || s.kind === 'encoder') {
@@ -925,6 +1221,11 @@ for (const s of ALL) {
     const warnings = wireAndValidate(model);
     writeEntry(s.id, model, renderSpecReadme(s));
     console.log(`✓ ${s.id} [${s.kind}] (${model.components.length} components, ${warnings} warnings)`);
+  } else if (s.kind === 'custom') {
+    const model = s.build();
+    const warnings = wireAndValidate(model);
+    writeEntry(s.id, model, renderEntryReadme(s, model));
+    console.log(`✓ ${s.id} [custom] (${model.components.length} components, ${warnings} warnings)`);
   } else if (s.kind === 'template') {
     const src = path.join(NEURARCH, 'public/templates', s.tid, 'model.json');
     const model = JSON.parse(fs.readFileSync(src, 'utf8'));

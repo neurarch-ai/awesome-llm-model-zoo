@@ -1,0 +1,307 @@
+{
+  "id": "modernbert-base",
+  "name": "ModernBERT-Base",
+  "description": "ModernBERT-Base (Answer.AI / LightOn): bidirectional encoder, 22 layers x 768 hidden, RoPE + GeGLU + pre-norm, 5:1 local:global attention, 8192-token context. One block expanded; repeats x22. Verified against the official config.json.",
+  "components": [
+    {
+      "id": "input-1",
+      "type": "input",
+      "name": "input_ids",
+      "position": {
+        "x": 300,
+        "y": 50
+      },
+      "params": {
+        "shape": [
+          1,
+          8192
+        ]
+      },
+      "inputs": [],
+      "outputs": [
+        "embedding-2"
+      ],
+      "notes": "Native 8192-token context."
+    },
+    {
+      "id": "embedding-2",
+      "type": "embedding",
+      "name": "tok_embed",
+      "position": {
+        "x": 300,
+        "y": 200
+      },
+      "params": {
+        "numEmbeddings": 50368,
+        "embeddingDim": 768
+      },
+      "inputs": [
+        "input-1"
+      ],
+      "outputs": [
+        "layerNorm-3"
+      ],
+      "scope": "embeddings",
+      "notes": "50368-token BPE vocabulary (GPT-2 lineage, padded to a multiple of 64). No absolute position embeddings: positions come from RoPE inside attention."
+    },
+    {
+      "id": "layerNorm-3",
+      "type": "layerNorm",
+      "name": "embed_norm",
+      "position": {
+        "x": 300,
+        "y": 350
+      },
+      "params": {
+        "normalizedShape": 768
+      },
+      "inputs": [
+        "embedding-2"
+      ],
+      "outputs": [
+        "layerNorm-4",
+        "add-7"
+      ],
+      "scope": "embeddings",
+      "notes": "Bias-free LayerNorm."
+    },
+    {
+      "id": "layerNorm-4",
+      "type": "layerNorm",
+      "name": "attn_norm",
+      "position": {
+        "x": 300,
+        "y": 500
+      },
+      "params": {
+        "normalizedShape": 768
+      },
+      "inputs": [
+        "layerNorm-3"
+      ],
+      "outputs": [
+        "multiHeadAttention-5"
+      ],
+      "scope": "layer.0.attention",
+      "notes": "Pre-norm. One of 22 blocks expanded; the stack repeats x22. Layers alternate 128-token local attention (2 of 3) with global attention (every 3rd layer)."
+    },
+    {
+      "id": "multiHeadAttention-5",
+      "type": "multiHeadAttention",
+      "name": "self_attn",
+      "position": {
+        "x": 300,
+        "y": 650
+      },
+      "params": {
+        "embedDim": 768,
+        "numHeads": 12
+      },
+      "inputs": [
+        "layerNorm-4",
+        "rope-6"
+      ],
+      "outputs": [
+        "add-7"
+      ],
+      "scope": "layer.0.attention",
+      "notes": "Bidirectional, 12 heads, head dim 64, no bias. Local (sliding 128) in 2 of every 3 layers, global otherwise."
+    },
+    {
+      "id": "rope-6",
+      "type": "rope",
+      "name": "rope",
+      "position": {
+        "x": 580,
+        "y": 650
+      },
+      "params": {
+        "dim": 64
+      },
+      "inputs": [],
+      "outputs": [
+        "multiHeadAttention-5"
+      ],
+      "scope": "layer.0.attention",
+      "notes": "RoPE in an encoder: theta 10000 for local layers, 160000 for global layers."
+    },
+    {
+      "id": "add-7",
+      "type": "add",
+      "name": "residual_1",
+      "position": {
+        "x": 300,
+        "y": 800
+      },
+      "params": {},
+      "inputs": [
+        "multiHeadAttention-5",
+        "layerNorm-3"
+      ],
+      "outputs": [
+        "layerNorm-8",
+        "add-10"
+      ],
+      "scope": "layer.0.attention"
+    },
+    {
+      "id": "layerNorm-8",
+      "type": "layerNorm",
+      "name": "ffn_norm",
+      "position": {
+        "x": 300,
+        "y": 950
+      },
+      "params": {
+        "normalizedShape": 768
+      },
+      "inputs": [
+        "add-7"
+      ],
+      "outputs": [
+        "geglu-9"
+      ],
+      "scope": "layer.0.ffn"
+    },
+    {
+      "id": "geglu-9",
+      "type": "geglu",
+      "name": "geglu_ffn",
+      "position": {
+        "x": 300,
+        "y": 1100
+      },
+      "params": {
+        "dim": 768,
+        "hiddenDim": 1152
+      },
+      "inputs": [
+        "layerNorm-8"
+      ],
+      "outputs": [
+        "add-10"
+      ],
+      "scope": "layer.0.ffn",
+      "notes": "GeGLU: the 2304-dim up-projection splits into two 1152-dim halves (gate and value)."
+    },
+    {
+      "id": "add-10",
+      "type": "add",
+      "name": "residual_2",
+      "position": {
+        "x": 300,
+        "y": 1250
+      },
+      "params": {},
+      "inputs": [
+        "geglu-9",
+        "add-7"
+      ],
+      "outputs": [
+        "layerNorm-11"
+      ],
+      "scope": "layer.0.ffn"
+    },
+    {
+      "id": "layerNorm-11",
+      "type": "layerNorm",
+      "name": "final_norm",
+      "position": {
+        "x": 300,
+        "y": 1400
+      },
+      "params": {
+        "normalizedShape": 768
+      },
+      "inputs": [
+        "add-10"
+      ],
+      "outputs": [
+        "output-12"
+      ],
+      "scope": "norm"
+    },
+    {
+      "id": "output-12",
+      "type": "output",
+      "name": "hidden_states",
+      "position": {
+        "x": 300,
+        "y": 1550
+      },
+      "params": {},
+      "inputs": [
+        "layerNorm-11"
+      ],
+      "outputs": [],
+      "notes": "Contextual embeddings for retrieval, classification, or masked-LM heads."
+    }
+  ],
+  "connections": [
+    {
+      "id": "c1",
+      "from": "input-1",
+      "to": "embedding-2"
+    },
+    {
+      "id": "c2",
+      "from": "embedding-2",
+      "to": "layerNorm-3"
+    },
+    {
+      "id": "c3",
+      "from": "layerNorm-3",
+      "to": "layerNorm-4"
+    },
+    {
+      "id": "c4",
+      "from": "layerNorm-4",
+      "to": "multiHeadAttention-5"
+    },
+    {
+      "id": "c5",
+      "from": "rope-6",
+      "to": "multiHeadAttention-5"
+    },
+    {
+      "id": "c6",
+      "from": "multiHeadAttention-5",
+      "to": "add-7"
+    },
+    {
+      "id": "c7",
+      "from": "layerNorm-3",
+      "to": "add-7"
+    },
+    {
+      "id": "c8",
+      "from": "add-7",
+      "to": "layerNorm-8"
+    },
+    {
+      "id": "c9",
+      "from": "layerNorm-8",
+      "to": "geglu-9"
+    },
+    {
+      "id": "c10",
+      "from": "geglu-9",
+      "to": "add-10"
+    },
+    {
+      "id": "c11",
+      "from": "add-7",
+      "to": "add-10"
+    },
+    {
+      "id": "c12",
+      "from": "add-10",
+      "to": "layerNorm-11"
+    },
+    {
+      "id": "c13",
+      "from": "layerNorm-11",
+      "to": "output-12"
+    }
+  ]
+}

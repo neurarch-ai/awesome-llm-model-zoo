@@ -1,7 +1,7 @@
 {
-  "id": "minicpm-2b",
-  "name": "MiniCPM-2B",
-  "description": "MiniCPM-2B (ModelBest / OpenBMB (Tsinghua NLP)): decoder-only transformer, 40 layers x 2304 hidden, MHA 36 heads, SwiGLU FFN, RoPE + RMSNorm. One decoder block expanded; repeats x40. Verified against the official config.json.",
+  "id": "gemma-4-12b",
+  "name": "Gemma 4 12B",
+  "description": "Gemma 4 12B (Google DeepMind): decoder-only transformer, 48 layers x 3840 hidden, GQA 16Q:8KV, GeGLU FFN, RoPE + RMSNorm. One decoder block expanded; repeats x48. Verified against the official config.json.",
   "components": [
     {
       "id": "input-1",
@@ -21,7 +21,7 @@
       "outputs": [
         "embedding-2"
       ],
-      "notes": "Token ids. Max context 4,096 tokens; shown at 4,096 for shape preview."
+      "notes": "Token ids. Max context 262,144 tokens; shown at 4,096 for shape preview."
     },
     {
       "id": "embedding-2",
@@ -32,8 +32,8 @@
         "y": 200
       },
       "params": {
-        "numEmbeddings": 122753,
-        "embeddingDim": 2304
+        "numEmbeddings": 262144,
+        "embeddingDim": 3840
       },
       "inputs": [
         "input-1"
@@ -43,7 +43,7 @@
         "add-6"
       ],
       "scope": "embeddings",
-      "notes": "122,753-token vocabulary, 2304-dim embeddings."
+      "notes": "262,144-token vocabulary, 3840-dim embeddings."
     },
     {
       "id": "rmsNorm-3",
@@ -54,28 +54,29 @@
         "y": 350
       },
       "params": {
-        "normalizedShape": 2304
+        "normalizedShape": 3840
       },
       "inputs": [
         "embedding-2"
       ],
       "outputs": [
-        "causalAttention-4"
+        "groupedQueryAttention-4"
       ],
       "scope": "layer.0.attention",
-      "notes": "Pre-norm RMSNorm. One of 40 decoder blocks is expanded below; the stack repeats x40."
+      "notes": "Pre-norm RMSNorm. One of 48 decoder blocks is expanded below; the stack repeats x48."
     },
     {
-      "id": "causalAttention-4",
-      "type": "causalAttention",
+      "id": "groupedQueryAttention-4",
+      "type": "groupedQueryAttention",
       "name": "self_attn",
       "position": {
         "x": 300,
         "y": 500
       },
       "params": {
-        "embedDim": 2304,
-        "numHeads": 36
+        "embedDim": 3840,
+        "numHeads": 16,
+        "numKVHeads": 8
       },
       "inputs": [
         "rmsNorm-3",
@@ -85,7 +86,7 @@
         "add-6"
       ],
       "scope": "layer.0.attention",
-      "notes": "MHA 36 heads, head dim 64, causal mask."
+      "notes": "GQA 16Q:8KV, head dim 256."
     },
     {
       "id": "rope-5",
@@ -96,14 +97,14 @@
         "y": 500
       },
       "params": {
-        "dim": 64
+        "dim": 256
       },
       "inputs": [],
       "outputs": [
-        "causalAttention-4"
+        "groupedQueryAttention-4"
       ],
       "scope": "layer.0.attention",
-      "notes": "Rotary position embedding, rotary dim 64 per head."
+      "notes": "Rotary position embedding, rotary dim 256 per head. RoPE; 5:1 local(1024-window):global attention layers (40 sliding, 8 full, verified from config)."
     },
     {
       "id": "add-6",
@@ -115,7 +116,7 @@
       },
       "params": {},
       "inputs": [
-        "causalAttention-4",
+        "groupedQueryAttention-4",
         "embedding-2"
       ],
       "outputs": [
@@ -133,27 +134,27 @@
         "y": 800
       },
       "params": {
-        "normalizedShape": 2304
+        "normalizedShape": 3840
       },
       "inputs": [
         "add-6"
       ],
       "outputs": [
-        "swiglu-8"
+        "geglu-8"
       ],
       "scope": "layer.0.ffn"
     },
     {
-      "id": "swiglu-8",
-      "type": "swiglu",
-      "name": "swiglu_ffn",
+      "id": "geglu-8",
+      "type": "geglu",
+      "name": "geglu_ffn",
       "position": {
         "x": 300,
         "y": 950
       },
       "params": {
-        "embedDim": 2304,
-        "intermediateSize": 5760
+        "dim": 3840,
+        "hiddenDim": 15360
       },
       "inputs": [
         "rmsNorm-7"
@@ -162,7 +163,7 @@
         "add-9"
       ],
       "scope": "layer.0.ffn",
-      "notes": "SwiGLU gated FFN, intermediate size 5,760 (2.50x hidden)."
+      "notes": "GeGLU gated FFN, hidden size 15,360 (4.00x hidden)."
     },
     {
       "id": "add-9",
@@ -174,7 +175,7 @@
       },
       "params": {},
       "inputs": [
-        "swiglu-8",
+        "geglu-8",
         "add-6"
       ],
       "outputs": [
@@ -191,7 +192,7 @@
         "y": 1250
       },
       "params": {
-        "normalizedShape": 2304
+        "normalizedShape": 3840
       },
       "inputs": [
         "add-9"
@@ -210,8 +211,8 @@
         "y": 1400
       },
       "params": {
-        "inFeatures": 2304,
-        "outFeatures": 122753
+        "inFeatures": 3840,
+        "outFeatures": 262144
       },
       "inputs": [
         "rmsNorm-10"
@@ -250,16 +251,16 @@
     {
       "id": "c3",
       "from": "rmsNorm-3",
-      "to": "causalAttention-4"
+      "to": "groupedQueryAttention-4"
     },
     {
       "id": "c4",
       "from": "rope-5",
-      "to": "causalAttention-4"
+      "to": "groupedQueryAttention-4"
     },
     {
       "id": "c5",
-      "from": "causalAttention-4",
+      "from": "groupedQueryAttention-4",
       "to": "add-6"
     },
     {
@@ -275,11 +276,11 @@
     {
       "id": "c8",
       "from": "rmsNorm-7",
-      "to": "swiglu-8"
+      "to": "geglu-8"
     },
     {
       "id": "c9",
-      "from": "swiglu-8",
+      "from": "geglu-8",
       "to": "add-9"
     },
     {

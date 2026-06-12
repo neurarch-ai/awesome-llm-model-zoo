@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="496" height="1208" viewBox="0 0 496 1208" font-family="-apple-system, 'Segoe UI', Inter, Helvetica, Arial, sans-serif">
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#94a3b8"/></marker></defs>
+<rect x="0" y="0" width="496" height="1208" fill="#ffffff"/>
+<path d="M132.0,96.0 C132.0,121.0 248.0,121.0 248.0,146.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M248.0,200.0 C248.0,225.0 248.0,225.0 248.0,250.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M248.0,304.0 C248.0,329.0 248.0,329.0 248.0,354.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M248.0,408.0 C248.0,433.0 248.0,433.0 248.0,458.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M364.0,96.0 C364.0,277.0 248.0,277.0 248.0,458.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M248.0,512.0 C248.0,537.0 248.0,537.0 248.0,562.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M248.0,304.0 C248.0,433.0 248.0,433.0 248.0,562.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M248.0,616.0 C248.0,641.0 248.0,641.0 248.0,666.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M248.0,720.0 C248.0,745.0 248.0,745.0 248.0,770.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M248.0,824.0 C248.0,849.0 248.0,849.0 248.0,874.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M248.0,616.0 C248.0,745.0 248.0,745.0 248.0,874.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M248.0,928.0 C248.0,953.0 248.0,953.0 248.0,978.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M248.0,1032.0 C248.0,1057.0 248.0,1057.0 248.0,1082.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
+<rect x="48.0" y="48.0" width="168" height="48" rx="10" fill="rgb(224, 247, 232)" stroke="#22c55e" stroke-width="1.5"/>
+<text x="132.0" y="76.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">input_ids</text>
+<rect x="164.0" y="152.0" width="168" height="48" rx="10" fill="rgb(254, 241, 221)" stroke="#f59e0b" stroke-width="1.5"/>
+<text x="248.0" y="180.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">tok_embed</text>
+<rect x="164.0" y="256.0" width="168" height="48" rx="10" fill="rgb(233, 236, 239)" stroke="#64748b" stroke-width="1.5"/>
+<text x="248.0" y="284.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">embed_norm</text>
+<rect x="164.0" y="360.0" width="168" height="48" rx="10" fill="rgb(233, 236, 239)" stroke="#64748b" stroke-width="1.5"/>
+<text x="248.0" y="388.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">attn_norm</text>
+<rect x="164.0" y="464.0" width="168" height="48" rx="10" fill="rgb(243, 231, 254)" stroke="#a855f7" stroke-width="1.5"/>
+<text x="248.0" y="492.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">self_attn</text>
+<rect x="280.0" y="48.0" width="168" height="48" rx="10" fill="rgb(235, 235, 236)" stroke="#71717a" stroke-width="1.5"/>
+<text x="364.0" y="76.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">rope</text>
+<circle cx="248.0" cy="592.0" r="22" fill="rgb(220, 245, 249)" stroke="#06b6d4" stroke-width="1.5"/>
+<text x="248.0" y="600.0" text-anchor="middle" font-size="24" fill="#06b6d4">⊕</text>
+<rect x="164.0" y="672.0" width="168" height="48" rx="10" fill="rgb(233, 236, 239)" stroke="#64748b" stroke-width="1.5"/>
+<text x="248.0" y="700.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">ffn_norm</text>
+<rect x="164.0" y="776.0" width="168" height="48" rx="10" fill="rgb(235, 235, 236)" stroke="#71717a" stroke-width="1.5"/>
+<text x="248.0" y="804.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">geglu_ffn</text>
+<circle cx="248.0" cy="904.0" r="22" fill="rgb(220, 245, 249)" stroke="#06b6d4" stroke-width="1.5"/>
+<text x="248.0" y="912.0" text-anchor="middle" font-size="24" fill="#06b6d4">⊕</text>
+<rect x="164.0" y="984.0" width="168" height="48" rx="10" fill="rgb(233, 236, 239)" stroke="#64748b" stroke-width="1.5"/>
+<text x="248.0" y="1012.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">final_norm</text>
+<rect x="164.0" y="1088.0" width="168" height="48" rx="10" fill="rgb(253, 229, 229)" stroke="#ef4444" stroke-width="1.5"/>
+<text x="248.0" y="1116.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">hidden_states</text>
+<text x="448.0" y="1197.0" text-anchor="end" font-size="11" fill="#9aa6b8">Made with Neurarch · neurarch.com</text>
+</svg>

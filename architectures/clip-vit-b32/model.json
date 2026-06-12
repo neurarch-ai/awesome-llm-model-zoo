@@ -1,0 +1,399 @@
+{
+  "id": "clip-vit-b32",
+  "name": "CLIP ViT-B/32",
+  "description": "CLIP ViT-B/32 (OpenAI): contrastive image-text dual encoder. ViT-B/32 image tower and 12-layer text tower projected to a shared 512-dim space, scored by scaled dot product. Tower dims verified against the official config.json.",
+  "components": [
+    {
+      "id": "input-1",
+      "type": "input",
+      "name": "image",
+      "position": {
+        "x": 150,
+        "y": 50
+      },
+      "params": {
+        "shape": [
+          3,
+          224,
+          224
+        ]
+      },
+      "inputs": [],
+      "outputs": [
+        "patchEmbed-2"
+      ]
+    },
+    {
+      "id": "patchEmbed-2",
+      "type": "patchEmbed",
+      "name": "patch_embed",
+      "position": {
+        "x": 150,
+        "y": 200
+      },
+      "params": {
+        "imgSize": 224,
+        "patchSize": 32,
+        "embedDim": 768
+      },
+      "inputs": [
+        "input-1"
+      ],
+      "outputs": [
+        "positionalEncoding-3"
+      ],
+      "scope": "vision",
+      "notes": "32x32 patches: 224x224 image becomes 49 tokens of 768 dims (plus a class token)."
+    },
+    {
+      "id": "positionalEncoding-3",
+      "type": "positionalEncoding",
+      "name": "vis_pos",
+      "position": {
+        "x": 150,
+        "y": 350
+      },
+      "params": {
+        "maxLen": 50,
+        "embedDim": 768
+      },
+      "inputs": [
+        "patchEmbed-2"
+      ],
+      "outputs": [
+        "transformerBlock-4"
+      ],
+      "scope": "vision"
+    },
+    {
+      "id": "transformerBlock-4",
+      "type": "transformerBlock",
+      "name": "vis_encoder",
+      "position": {
+        "x": 150,
+        "y": 500
+      },
+      "params": {
+        "embedDim": 768,
+        "numHeads": 12,
+        "ffDim": 3072
+      },
+      "inputs": [
+        "positionalEncoding-3"
+      ],
+      "outputs": [
+        "layerNorm-5"
+      ],
+      "scope": "vision",
+      "notes": "One of 12 identical pre-norm ViT blocks (12 heads, MLP 3072, QuickGELU); repeats x12."
+    },
+    {
+      "id": "layerNorm-5",
+      "type": "layerNorm",
+      "name": "vis_norm",
+      "position": {
+        "x": 150,
+        "y": 650
+      },
+      "params": {
+        "normalizedShape": 768
+      },
+      "inputs": [
+        "transformerBlock-4"
+      ],
+      "outputs": [
+        "globalAvgPool1d-6"
+      ],
+      "scope": "vision"
+    },
+    {
+      "id": "globalAvgPool1d-6",
+      "type": "globalAvgPool1d",
+      "name": "vis_pool",
+      "position": {
+        "x": 150,
+        "y": 800
+      },
+      "params": {},
+      "inputs": [
+        "layerNorm-5"
+      ],
+      "outputs": [
+        "linear-7"
+      ],
+      "scope": "vision",
+      "notes": "Stand-in for class-token selection."
+    },
+    {
+      "id": "linear-7",
+      "type": "linear",
+      "name": "img_proj",
+      "position": {
+        "x": 150,
+        "y": 950
+      },
+      "params": {
+        "inFeatures": 768,
+        "outFeatures": 512
+      },
+      "inputs": [
+        "globalAvgPool1d-6"
+      ],
+      "outputs": [
+        "matmul-15"
+      ],
+      "scope": "vision",
+      "notes": "Projection into the shared 512-dim embedding space."
+    },
+    {
+      "id": "input-8",
+      "type": "input",
+      "name": "tokens",
+      "position": {
+        "x": 600,
+        "y": 50
+      },
+      "params": {
+        "shape": [
+          1,
+          77
+        ]
+      },
+      "inputs": [],
+      "outputs": [
+        "embedding-9"
+      ],
+      "notes": "77-token max context."
+    },
+    {
+      "id": "embedding-9",
+      "type": "embedding",
+      "name": "tok_embed",
+      "position": {
+        "x": 600,
+        "y": 200
+      },
+      "params": {
+        "numEmbeddings": 49408,
+        "embeddingDim": 512
+      },
+      "inputs": [
+        "input-8"
+      ],
+      "outputs": [
+        "positionalEncoding-10"
+      ],
+      "scope": "text",
+      "notes": "49408-token BPE vocabulary."
+    },
+    {
+      "id": "positionalEncoding-10",
+      "type": "positionalEncoding",
+      "name": "txt_pos",
+      "position": {
+        "x": 600,
+        "y": 350
+      },
+      "params": {
+        "maxLen": 77,
+        "embedDim": 512
+      },
+      "inputs": [
+        "embedding-9"
+      ],
+      "outputs": [
+        "transformerBlock-11"
+      ],
+      "scope": "text"
+    },
+    {
+      "id": "transformerBlock-11",
+      "type": "transformerBlock",
+      "name": "txt_encoder",
+      "position": {
+        "x": 600,
+        "y": 500
+      },
+      "params": {
+        "embedDim": 512,
+        "numHeads": 8,
+        "ffDim": 2048
+      },
+      "inputs": [
+        "positionalEncoding-10"
+      ],
+      "outputs": [
+        "layerNorm-12"
+      ],
+      "scope": "text",
+      "notes": "One of 12 identical causal text blocks (8 heads, MLP 2048, QuickGELU); repeats x12."
+    },
+    {
+      "id": "layerNorm-12",
+      "type": "layerNorm",
+      "name": "txt_norm",
+      "position": {
+        "x": 600,
+        "y": 650
+      },
+      "params": {
+        "normalizedShape": 512
+      },
+      "inputs": [
+        "transformerBlock-11"
+      ],
+      "outputs": [
+        "globalAvgPool1d-13"
+      ],
+      "scope": "text"
+    },
+    {
+      "id": "globalAvgPool1d-13",
+      "type": "globalAvgPool1d",
+      "name": "txt_pool",
+      "position": {
+        "x": 600,
+        "y": 800
+      },
+      "params": {},
+      "inputs": [
+        "layerNorm-12"
+      ],
+      "outputs": [
+        "linear-14"
+      ],
+      "scope": "text",
+      "notes": "Stand-in for EOT-token selection."
+    },
+    {
+      "id": "linear-14",
+      "type": "linear",
+      "name": "txt_proj",
+      "position": {
+        "x": 600,
+        "y": 950
+      },
+      "params": {
+        "inFeatures": 512,
+        "outFeatures": 512
+      },
+      "inputs": [
+        "globalAvgPool1d-13"
+      ],
+      "outputs": [
+        "matmul-15"
+      ],
+      "scope": "text",
+      "notes": "Projection into the shared 512-dim embedding space."
+    },
+    {
+      "id": "matmul-15",
+      "type": "matmul",
+      "name": "similarity",
+      "position": {
+        "x": 375,
+        "y": 1100
+      },
+      "params": {},
+      "inputs": [
+        "linear-7",
+        "linear-14"
+      ],
+      "outputs": [
+        "output-16"
+      ],
+      "notes": "Scaled dot product between L2-normalized image and text embeddings (learned temperature). Over a batch this is the NxN contrastive logit matrix."
+    },
+    {
+      "id": "output-16",
+      "type": "output",
+      "name": "logits",
+      "position": {
+        "x": 375,
+        "y": 1250
+      },
+      "params": {},
+      "inputs": [
+        "matmul-15"
+      ],
+      "outputs": []
+    }
+  ],
+  "connections": [
+    {
+      "id": "c1",
+      "from": "input-1",
+      "to": "patchEmbed-2"
+    },
+    {
+      "id": "c2",
+      "from": "patchEmbed-2",
+      "to": "positionalEncoding-3"
+    },
+    {
+      "id": "c3",
+      "from": "positionalEncoding-3",
+      "to": "transformerBlock-4"
+    },
+    {
+      "id": "c4",
+      "from": "transformerBlock-4",
+      "to": "layerNorm-5"
+    },
+    {
+      "id": "c5",
+      "from": "layerNorm-5",
+      "to": "globalAvgPool1d-6"
+    },
+    {
+      "id": "c6",
+      "from": "globalAvgPool1d-6",
+      "to": "linear-7"
+    },
+    {
+      "id": "c7",
+      "from": "input-8",
+      "to": "embedding-9"
+    },
+    {
+      "id": "c8",
+      "from": "embedding-9",
+      "to": "positionalEncoding-10"
+    },
+    {
+      "id": "c9",
+      "from": "positionalEncoding-10",
+      "to": "transformerBlock-11"
+    },
+    {
+      "id": "c10",
+      "from": "transformerBlock-11",
+      "to": "layerNorm-12"
+    },
+    {
+      "id": "c11",
+      "from": "layerNorm-12",
+      "to": "globalAvgPool1d-13"
+    },
+    {
+      "id": "c12",
+      "from": "globalAvgPool1d-13",
+      "to": "linear-14"
+    },
+    {
+      "id": "c13",
+      "from": "linear-7",
+      "to": "matmul-15"
+    },
+    {
+      "id": "c14",
+      "from": "linear-14",
+      "to": "matmul-15"
+    },
+    {
+      "id": "c15",
+      "from": "matmul-15",
+      "to": "output-16"
+    }
+  ]
+}

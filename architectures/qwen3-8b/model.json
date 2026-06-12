@@ -1,7 +1,7 @@
 {
-  "id": "minicpm-2b",
-  "name": "MiniCPM-2B",
-  "description": "MiniCPM-2B (ModelBest / OpenBMB (Tsinghua NLP)): decoder-only transformer, 40 layers x 2304 hidden, MHA 36 heads, SwiGLU FFN, RoPE + RMSNorm. One decoder block expanded; repeats x40. Verified against the official config.json.",
+  "id": "qwen3-8b",
+  "name": "Qwen3-8B",
+  "description": "Qwen3-8B (Alibaba Cloud (Qwen team)): decoder-only transformer, 36 layers x 4096 hidden, GQA 32Q:8KV, SwiGLU FFN, RoPE + RMSNorm. One decoder block expanded; repeats x36. Verified against the official config.json.",
   "components": [
     {
       "id": "input-1",
@@ -21,7 +21,7 @@
       "outputs": [
         "embedding-2"
       ],
-      "notes": "Token ids. Max context 4,096 tokens; shown at 4,096 for shape preview."
+      "notes": "Token ids. Max context 40,960 tokens; shown at 4,096 for shape preview."
     },
     {
       "id": "embedding-2",
@@ -32,18 +32,18 @@
         "y": 200
       },
       "params": {
-        "numEmbeddings": 122753,
-        "embeddingDim": 2304
+        "numEmbeddings": 151936,
+        "embeddingDim": 4096
       },
       "inputs": [
         "input-1"
       ],
       "outputs": [
         "rmsNorm-3",
-        "add-6"
+        "add-7"
       ],
       "scope": "embeddings",
-      "notes": "122,753-token vocabulary, 2304-dim embeddings."
+      "notes": "151,936-token vocabulary, 4096-dim embeddings."
     },
     {
       "id": "rmsNorm-3",
@@ -54,38 +54,40 @@
         "y": 350
       },
       "params": {
-        "normalizedShape": 2304
+        "normalizedShape": 4096
       },
       "inputs": [
         "embedding-2"
       ],
       "outputs": [
-        "causalAttention-4"
+        "groupedQueryAttention-4"
       ],
       "scope": "layer.0.attention",
-      "notes": "Pre-norm RMSNorm. One of 40 decoder blocks is expanded below; the stack repeats x40."
+      "notes": "Pre-norm RMSNorm. One of 36 decoder blocks is expanded below; the stack repeats x36."
     },
     {
-      "id": "causalAttention-4",
-      "type": "causalAttention",
+      "id": "groupedQueryAttention-4",
+      "type": "groupedQueryAttention",
       "name": "self_attn",
       "position": {
         "x": 300,
         "y": 500
       },
       "params": {
-        "embedDim": 2304,
-        "numHeads": 36
+        "embedDim": 4096,
+        "numHeads": 32,
+        "numKVHeads": 8
       },
       "inputs": [
         "rmsNorm-3",
-        "rope-5"
+        "rope-5",
+        "qkNorm-6"
       ],
       "outputs": [
-        "add-6"
+        "add-7"
       ],
       "scope": "layer.0.attention",
-      "notes": "MHA 36 heads, head dim 64, causal mask."
+      "notes": "GQA 32Q:8KV, head dim 128."
     },
     {
       "id": "rope-5",
@@ -96,142 +98,160 @@
         "y": 500
       },
       "params": {
-        "dim": 64
+        "dim": 128
       },
       "inputs": [],
       "outputs": [
-        "causalAttention-4"
+        "groupedQueryAttention-4"
       ],
       "scope": "layer.0.attention",
-      "notes": "Rotary position embedding, rotary dim 64 per head."
+      "notes": "Rotary position embedding, rotary dim 128 per head."
     },
     {
-      "id": "add-6",
+      "id": "qkNorm-6",
+      "type": "qkNorm",
+      "name": "qk_norm",
+      "position": {
+        "x": 580,
+        "y": 650
+      },
+      "params": {
+        "dim": 128
+      },
+      "inputs": [],
+      "outputs": [
+        "groupedQueryAttention-4"
+      ],
+      "scope": "layer.0.attention",
+      "notes": "Per-head RMSNorm on Q and K before RoPE (head dim 128)."
+    },
+    {
+      "id": "add-7",
       "type": "add",
       "name": "residual_1",
       "position": {
         "x": 300,
-        "y": 650
+        "y": 800
       },
       "params": {},
       "inputs": [
-        "causalAttention-4",
+        "groupedQueryAttention-4",
         "embedding-2"
       ],
       "outputs": [
-        "rmsNorm-7",
-        "add-9"
+        "rmsNorm-8",
+        "add-10"
       ],
       "scope": "layer.0.attention"
     },
     {
-      "id": "rmsNorm-7",
+      "id": "rmsNorm-8",
       "type": "rmsNorm",
       "name": "ffn_norm",
-      "position": {
-        "x": 300,
-        "y": 800
-      },
-      "params": {
-        "normalizedShape": 2304
-      },
-      "inputs": [
-        "add-6"
-      ],
-      "outputs": [
-        "swiglu-8"
-      ],
-      "scope": "layer.0.ffn"
-    },
-    {
-      "id": "swiglu-8",
-      "type": "swiglu",
-      "name": "swiglu_ffn",
       "position": {
         "x": 300,
         "y": 950
       },
       "params": {
-        "embedDim": 2304,
-        "intermediateSize": 5760
+        "normalizedShape": 4096
       },
       "inputs": [
-        "rmsNorm-7"
+        "add-7"
       ],
       "outputs": [
-        "add-9"
-      ],
-      "scope": "layer.0.ffn",
-      "notes": "SwiGLU gated FFN, intermediate size 5,760 (2.50x hidden)."
-    },
-    {
-      "id": "add-9",
-      "type": "add",
-      "name": "residual_2",
-      "position": {
-        "x": 300,
-        "y": 1100
-      },
-      "params": {},
-      "inputs": [
-        "swiglu-8",
-        "add-6"
-      ],
-      "outputs": [
-        "rmsNorm-10"
+        "swiglu-9"
       ],
       "scope": "layer.0.ffn"
     },
     {
-      "id": "rmsNorm-10",
-      "type": "rmsNorm",
-      "name": "final_norm",
+      "id": "swiglu-9",
+      "type": "swiglu",
+      "name": "swiglu_ffn",
+      "position": {
+        "x": 300,
+        "y": 1100
+      },
+      "params": {
+        "embedDim": 4096,
+        "intermediateSize": 12288
+      },
+      "inputs": [
+        "rmsNorm-8"
+      ],
+      "outputs": [
+        "add-10"
+      ],
+      "scope": "layer.0.ffn",
+      "notes": "SwiGLU gated FFN, intermediate size 12,288 (3.00x hidden)."
+    },
+    {
+      "id": "add-10",
+      "type": "add",
+      "name": "residual_2",
       "position": {
         "x": 300,
         "y": 1250
       },
-      "params": {
-        "normalizedShape": 2304
-      },
+      "params": {},
       "inputs": [
-        "add-9"
+        "swiglu-9",
+        "add-7"
       ],
       "outputs": [
-        "linear-11"
+        "rmsNorm-11"
       ],
-      "scope": "norm"
+      "scope": "layer.0.ffn"
     },
     {
-      "id": "linear-11",
-      "type": "linear",
-      "name": "lm_head",
+      "id": "rmsNorm-11",
+      "type": "rmsNorm",
+      "name": "final_norm",
       "position": {
         "x": 300,
         "y": 1400
       },
       "params": {
-        "inFeatures": 2304,
-        "outFeatures": 122753
+        "normalizedShape": 4096
       },
       "inputs": [
-        "rmsNorm-10"
+        "add-10"
       ],
       "outputs": [
-        "output-12"
+        "linear-12"
       ],
-      "scope": "head"
+      "scope": "norm"
     },
     {
-      "id": "output-12",
-      "type": "output",
-      "name": "logits",
+      "id": "linear-12",
+      "type": "linear",
+      "name": "lm_head",
       "position": {
         "x": 300,
         "y": 1550
       },
+      "params": {
+        "inFeatures": 4096,
+        "outFeatures": 151936
+      },
+      "inputs": [
+        "rmsNorm-11"
+      ],
+      "outputs": [
+        "output-13"
+      ],
+      "scope": "head"
+    },
+    {
+      "id": "output-13",
+      "type": "output",
+      "name": "logits",
+      "position": {
+        "x": 300,
+        "y": 1700
+      },
       "params": {},
       "inputs": [
-        "linear-11"
+        "linear-12"
       ],
       "outputs": []
     }
@@ -250,57 +270,62 @@
     {
       "id": "c3",
       "from": "rmsNorm-3",
-      "to": "causalAttention-4"
+      "to": "groupedQueryAttention-4"
     },
     {
       "id": "c4",
       "from": "rope-5",
-      "to": "causalAttention-4"
+      "to": "groupedQueryAttention-4"
     },
     {
       "id": "c5",
-      "from": "causalAttention-4",
-      "to": "add-6"
+      "from": "qkNorm-6",
+      "to": "groupedQueryAttention-4"
     },
     {
       "id": "c6",
-      "from": "embedding-2",
-      "to": "add-6"
+      "from": "groupedQueryAttention-4",
+      "to": "add-7"
     },
     {
       "id": "c7",
-      "from": "add-6",
-      "to": "rmsNorm-7"
+      "from": "embedding-2",
+      "to": "add-7"
     },
     {
       "id": "c8",
-      "from": "rmsNorm-7",
-      "to": "swiglu-8"
+      "from": "add-7",
+      "to": "rmsNorm-8"
     },
     {
       "id": "c9",
-      "from": "swiglu-8",
-      "to": "add-9"
+      "from": "rmsNorm-8",
+      "to": "swiglu-9"
     },
     {
       "id": "c10",
-      "from": "add-6",
-      "to": "add-9"
+      "from": "swiglu-9",
+      "to": "add-10"
     },
     {
       "id": "c11",
-      "from": "add-9",
-      "to": "rmsNorm-10"
+      "from": "add-7",
+      "to": "add-10"
     },
     {
       "id": "c12",
-      "from": "rmsNorm-10",
-      "to": "linear-11"
+      "from": "add-10",
+      "to": "rmsNorm-11"
     },
     {
       "id": "c13",
-      "from": "linear-11",
-      "to": "output-12"
+      "from": "rmsNorm-11",
+      "to": "linear-12"
+    },
+    {
+      "id": "c14",
+      "from": "linear-12",
+      "to": "output-13"
     }
   ]
 }

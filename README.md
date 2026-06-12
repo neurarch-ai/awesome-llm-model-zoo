@@ -2,11 +2,11 @@
 
 # 🧠 Neurarch Model Zoo
 
-### 42 reference architectures you can actually open, edit, validate, and train. Not pictures. Graphs.
+### 51 reference architectures you can actually open, edit, validate, and train. From DeepSeek-V3's latent attention to ResNet's first skip connection. Not pictures. Graphs.
 
-[![architectures](https://img.shields.io/badge/architectures-42-6366f1)](#catalog)
+[![architectures](https://img.shields.io/badge/architectures-51-6366f1)](#catalog)
 [![shape-checked](https://img.shields.io/badge/shape--checked-100%25%20passing-22c55e)](#every-entry-is-validated)
-[![domains](https://img.shields.io/badge/domains-8-f59e0b)](#catalog)
+[![domains](https://img.shields.io/badge/domains-10-f59e0b)](#catalog)
 [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)](CONTRIBUTING.md)
 
@@ -27,16 +27,16 @@ Every diagram of Qwen or Mixtral you have ever seen is a dead image. The entries
 
 <table>
 <tr>
-<td align="center"><b><a href="architectures/qwen2.5-7b/">Qwen2.5-7B</a></b><br/><sub>GQA 28:4 · RoPE · SwiGLU</sub></td>
+<td align="center"><b><a href="architectures/deepseek-v3/">DeepSeek-V3</a></b><br/><sub>MLA · 256 experts + shared</sub></td>
+<td align="center"><b><a href="architectures/clip-vit-b32/">CLIP ViT-B/32</a></b><br/><sub>two towers · one space</sub></td>
 <td align="center"><b><a href="architectures/whisper-small/">Whisper Small</a></b><br/><sub>audio conv stem · enc-dec</sub></td>
 <td align="center"><b><a href="architectures/mixtral-block/">Mixtral MoE Block</a></b><br/><sub>8 experts · top-2 routing</sub></td>
-<td align="center"><b><a href="architectures/two-tower/">Two-Tower</a></b><br/><sub>dual encoder · dot product</sub></td>
 </tr>
 <tr>
-<td><img src="architectures/qwen2.5-7b/assets/diagram.png" width="190" alt="Qwen2.5-7B architecture"/></td>
+<td><img src="architectures/deepseek-v3/assets/diagram.png" width="190" alt="DeepSeek-V3 architecture"/></td>
+<td><img src="architectures/clip-vit-b32/assets/diagram.png" width="190" alt="CLIP dual-encoder architecture"/></td>
 <td><img src="architectures/whisper-small/assets/diagram.png" width="190" alt="Whisper Small architecture"/></td>
 <td><img src="architectures/mixtral-block/assets/diagram.png" width="190" alt="Mixtral MoE block architecture"/></td>
-<td><img src="architectures/two-tower/assets/diagram.png" width="190" alt="Two-Tower retrieval architecture"/></td>
 </tr>
 </table>
 
@@ -62,6 +62,22 @@ Each folder under [`architectures/`](architectures/) contains:
 | `assets/diagram.png` | Raster diagram (renders everywhere). |
 
 ## Catalog
+
+### 🔥 Frontier LLMs (2025-2026 wave)
+
+The MoE generation. Every hyperparameter below is read from the model's official `config.json` (including the June 2026 releases), not from launch blog posts.
+
+| Architecture | Org | Params (total / active) | Attention | Notable |
+|--------------|-----|------------------------|-----------|---------|
+| [deepseek-v3](architectures/deepseek-v3/) | DeepSeek | 671B / 37B | MLA, 128 heads | 256 experts + shared, the R1 base |
+| [kimi-k2.6](architectures/kimi-k2.6/) | Moonshot AI | ~1T / ~32B | MLA, 64 heads | 384 experts, 256K context, vision encoder |
+| [glm-4.5-air](architectures/glm-4.5-air/) | Zhipu AI | 106B / 12B | GQA 96:8 | Wide attention (3x hidden), 128 slim experts |
+| [llama-4-scout](architectures/llama-4-scout/) | Meta | 109B / 17B | GQA 40:8 | Top-1 routing over 16 fat experts, iRoPE, 10M context |
+| [gpt-oss-20b](architectures/gpt-oss-20b/) | OpenAI | 21B / 3.6B | GQA 64:8 | Sliding(128)/full alternation, attention sinks |
+| [qwen3-8b](architectures/qwen3-8b/) | Alibaba Cloud | 8.2B (dense) | GQA 32:8 + QK-Norm | The default open dense model of 2025 |
+| [gemma-4-12b](architectures/gemma-4-12b/) | Google DeepMind | 12B (dense) | GQA 16:8, 256-dim heads | 5:1 local:global attention, 262K vocab |
+
+Side quest: open [deepseek-v3](architectures/deepseek-v3/) and [llama-4-scout](architectures/llama-4-scout/) side by side. Same problem, opposite expert-granularity bets.
 
 ### 🇨🇳 Chinese LLMs
 
@@ -96,6 +112,7 @@ Selection informed by [awesome-pretrained-chinese-nlp-models](https://github.com
 | Architecture | Org | Params | Notable |
 |--------------|-----|--------|---------|
 | [bert-base](architectures/bert-base/) | Google | 110M | The encoder that started transfer learning in NLP |
+| [modernbert-base](architectures/modernbert-base/) | Answer.AI / LightOn | 149M | BERT rebuilt with 2024 lessons: RoPE, GeGLU, 8K context |
 | [chinese-roberta-wwm-ext](architectures/chinese-roberta-wwm-ext/) | HFL | 102M | The standard Chinese encoder baseline |
 | [ernie-3.0-base-zh](architectures/ernie-3.0-base-zh/) | Baidu | 118M | 40K vocab, 2048 positions, knowledge-enhanced |
 | [t5-small](architectures/t5-small/) | Google | 60M | Text-to-text encoder-decoder, full two-stream graph |
@@ -111,6 +128,12 @@ Selection informed by [awesome-pretrained-chinese-nlp-models](https://github.com
 | [unet](architectures/unet/) | Ronneberger et al. | 31M | Encoder-decoder with skip connections |
 | [resnet-block](architectures/resnet-block/) | He et al. | block | The residual unit itself |
 | [simple-cnn](architectures/simple-cnn/) | LeNet lineage | starter | The hello-world of computer vision |
+
+### 🖼️ Multimodal
+
+| Architecture | Org | Params | Notable |
+|--------------|-----|--------|---------|
+| [clip-vit-b32](architectures/clip-vit-b32/) | OpenAI | 151M | The contrastive dual encoder behind modern multimodality |
 
 ### 🎨 Generative
 
@@ -156,6 +179,8 @@ This zoo has one bar, and it is not "looks right":
 3. Every entry **exports to runnable training code** from the Neurarch canvas.
 
 That bar caught real drift while building this repo: a widely copied Llama-3 block diagram carrying Llama-2's FFN size (11008 instead of 14336), and a "RoBERTa" checkpoint that is architecturally BERT. Validated graphs make those errors visible.
+
+It also sets the inclusion rule for the frontier section: models whose configs are public (Kimi K2.6, Gemma 4) are in; models behind gated configs we could not verify (DeepSeek-V4.x, GLM-6) wait until we can read their `config.json`.
 
 ## Contributing
 

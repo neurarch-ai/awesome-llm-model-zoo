@@ -1,7 +1,7 @@
 {
   "id": "deepseek-llm-7b",
   "name": "DeepSeek-LLM-7B",
-  "description": "DeepSeek-LLM-7B (DeepSeek): decoder-only transformer, 30 layers x 4096 hidden, MHA 32 heads, RoPE + RMSNorm + SwiGLU. One decoder block expanded; repeats x30. Verified against the official config.json.",
+  "description": "DeepSeek-LLM-7B (DeepSeek): decoder-only transformer, 30 layers x 4096 hidden, MHA 32 heads, SwiGLU FFN, RoPE + RMSNorm. One decoder block expanded; repeats x30. Verified against the official config.json.",
   "components": [
     {
       "id": "input-1",
@@ -63,7 +63,7 @@
         "causalAttention-4"
       ],
       "scope": "layer.0.attention",
-      "notes": "Pre-norm RMSNorm. One of 30 identical decoder blocks is expanded below; the stack repeats x30."
+      "notes": "Pre-norm RMSNorm. One of 30 decoder blocks is expanded below; the stack repeats x30."
     },
     {
       "id": "causalAttention-4",

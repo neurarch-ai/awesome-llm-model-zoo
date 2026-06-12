@@ -1,7 +1,7 @@
 {
   "id": "chatglm3-6b",
   "name": "ChatGLM3-6B",
-  "description": "ChatGLM3-6B (Zhipu AI / Tsinghua KEG (THUDM)): decoder-only transformer, 28 layers x 4096 hidden, GQA 32Q:2KV, RoPE + RMSNorm + SwiGLU. One decoder block expanded; repeats x28. Verified against the official config.json.",
+  "description": "ChatGLM3-6B (Zhipu AI / Tsinghua KEG (THUDM)): decoder-only transformer, 28 layers x 4096 hidden, GQA 32Q:2KV, SwiGLU FFN, RoPE + RMSNorm. One decoder block expanded; repeats x28. Verified against the official config.json.",
   "components": [
     {
       "id": "input-1",
@@ -63,7 +63,7 @@
         "groupedQueryAttention-4"
       ],
       "scope": "layer.0.attention",
-      "notes": "Pre-norm RMSNorm. One of 28 identical decoder blocks is expanded below; the stack repeats x28."
+      "notes": "Pre-norm RMSNorm. One of 28 decoder blocks is expanded below; the stack repeats x28."
     },
     {
       "id": "groupedQueryAttention-4",

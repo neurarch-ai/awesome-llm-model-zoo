@@ -1,7 +1,7 @@
 {
   "id": "yi-6b",
   "name": "Yi-6B",
-  "description": "Yi-6B (01.AI): decoder-only transformer, 32 layers x 4096 hidden, GQA 32Q:4KV, RoPE + RMSNorm + SwiGLU. One decoder block expanded; repeats x32. Verified against the official config.json.",
+  "description": "Yi-6B (01.AI): decoder-only transformer, 32 layers x 4096 hidden, GQA 32Q:4KV, SwiGLU FFN, RoPE + RMSNorm. One decoder block expanded; repeats x32. Verified against the official config.json.",
   "components": [
     {
       "id": "input-1",
@@ -63,7 +63,7 @@
         "groupedQueryAttention-4"
       ],
       "scope": "layer.0.attention",
-      "notes": "Pre-norm RMSNorm. One of 32 identical decoder blocks is expanded below; the stack repeats x32."
+      "notes": "Pre-norm RMSNorm. One of 32 decoder blocks is expanded below; the stack repeats x32."
     },
     {
       "id": "groupedQueryAttention-4",
