@@ -12,14 +12,14 @@ The Vision Transformer that ended CNN hegemony in image classification: 16x16 pa
 
 ## Architecture
 
-![ViT-B/16 block view](assets/block.svg)
+![ViT-B/16 full architecture](assets/diagram.png)
 
-*Compact view: one block expanded. The full graph below is what `model.json` holds.*
+*The full graph, all 75 nodes, tiled into columns for readability (read each column top-to-bottom, then left-to-right). Exactly what `model.json` holds. Vector: [diagram.svg](assets/diagram.svg).*
 
 <details>
-<summary><b>Full graph: 75 nodes (click to expand)</b></summary>
+<summary><b>One block, expanded (explainer view)</b></summary>
 
-![ViT-B/16 full architecture](assets/diagram.svg)
+![ViT-B/16 block view](assets/block.png)
 
 </details>
 

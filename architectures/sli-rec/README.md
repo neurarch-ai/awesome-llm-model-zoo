@@ -12,7 +12,7 @@ Short- and Long-term interest Recommender: a Time-aware LSTM models the evolving
 
 ## Architecture
 
-![SLi-Rec architecture](assets/diagram.svg)
+![SLi-Rec architecture](assets/diagram.png)
 
 <details>
 <summary><b>Layer-by-layer (18 nodes)</b></summary>

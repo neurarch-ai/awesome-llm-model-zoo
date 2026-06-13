@@ -12,14 +12,14 @@ The 671B-parameter MoE that made frontier-scale open weights real, and the archi
 
 ## Architecture
 
-![DeepSeek-V3 block view](assets/block.svg)
+![DeepSeek-V3 full architecture](assets/diagram.png)
 
-*Compact view: one block expanded. The full graph below is what `model.json` holds.*
+*The full graph, all 371 nodes, tiled into columns for readability (read each column top-to-bottom, then left-to-right). Exactly what `model.json` holds. Vector: [diagram.svg](assets/diagram.svg).*
 
 <details>
-<summary><b>Full graph: 371 nodes (click to expand)</b></summary>
+<summary><b>One block, expanded (explainer view)</b></summary>
 
-![DeepSeek-V3 full architecture](assets/diagram.svg)
+![DeepSeek-V3 block view](assets/block.png)
 
 </details>
 

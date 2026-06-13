@@ -11,7 +11,7 @@ The encoder-decoder with skip connections that owns biomedical and dense-predict
 
 ## Architecture
 
-![U-Net architecture](assets/diagram.svg)
+![U-Net architecture](assets/diagram.png)
 
 <details>
 <summary><b>Layer-by-layer (24 nodes)</b></summary>

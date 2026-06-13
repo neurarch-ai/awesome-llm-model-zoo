@@ -11,7 +11,7 @@ Inductive node embeddings by sampling and aggregating neighborhoods, wired here 
 
 ## Architecture
 
-![GraphSAGE Recommender architecture](assets/diagram.svg)
+![GraphSAGE Recommender architecture](assets/diagram.png)
 
 <details>
 <summary><b>Layer-by-layer (10 nodes)</b></summary>

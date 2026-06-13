@@ -12,7 +12,7 @@ The Mixtral 8x7B decoder block: the Mistral-7B block with its dense FFN swapped 
 
 ## Architecture
 
-![Mixtral MoE Block architecture](assets/diagram.svg)
+![Mixtral MoE Block architecture](assets/diagram.png)
 
 <details>
 <summary><b>Layer-by-layer (9 nodes)</b></summary>

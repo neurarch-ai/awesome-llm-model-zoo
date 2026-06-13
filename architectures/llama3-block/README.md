@@ -13,7 +13,7 @@ A single Llama-3 decoder block at 8B dimensions, expanded to individual operatio
 
 ## Architecture
 
-![Llama-3 Decoder Block architecture](assets/diagram.svg)
+![Llama-3 Decoder Block architecture](assets/diagram.png)
 
 <details>
 <summary><b>Layer-by-layer (10 nodes)</b></summary>

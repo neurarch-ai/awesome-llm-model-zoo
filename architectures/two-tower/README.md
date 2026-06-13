@@ -12,7 +12,7 @@ The dual-encoder retrieval architecture behind virtually every industrial recomm
 
 ## Architecture
 
-![Two-Tower Retrieval architecture](assets/diagram.svg)
+![Two-Tower Retrieval architecture](assets/diagram.png)
 
 <details>
 <summary><b>Layer-by-layer (12 nodes)</b></summary>

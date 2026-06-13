@@ -1,0 +1,14 @@
+{
+  "name": "neurarch-model-zoo-scripts",
+  "private": true,
+  "type": "module",
+  "description": "Maintainer tooling for regenerating zoo entries. Requires the Neurarch source checkout as a sibling directory (../Neurarch).",
+  "scripts": {
+    "generate": "tsx --tsconfig ../Neurarch/tsconfig.json scripts/generate.mts"
+  },
+  "devDependencies": {
+    "@resvg/resvg-js": "^2.6.2",
+    "pngjs": "^7.0.0",
+    "tsx": "^4.19.0"
+  }
+}

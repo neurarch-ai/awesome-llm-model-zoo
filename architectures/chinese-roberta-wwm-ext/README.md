@@ -12,14 +12,14 @@ The standard Chinese encoder from HFL: BERT-base architecture trained RoBERTa-st
 
 ## Architecture
 
-![Chinese-RoBERTa-wwm-ext block view](assets/block.svg)
+![Chinese-RoBERTa-wwm-ext full architecture](assets/diagram.png)
 
-*Compact view: one block expanded. The full graph below is what `model.json` holds.*
+*The full graph, all 51 nodes, tiled into columns for readability (read each column top-to-bottom, then left-to-right). Exactly what `model.json` holds. Vector: [diagram.svg](assets/diagram.svg).*
 
 <details>
-<summary><b>Full graph: 51 nodes (click to expand)</b></summary>
+<summary><b>One block, expanded (explainer view)</b></summary>
 
-![Chinese-RoBERTa-wwm-ext full architecture](assets/diagram.svg)
+![Chinese-RoBERTa-wwm-ext block view](assets/block.png)
 
 </details>
 

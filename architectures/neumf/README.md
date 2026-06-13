@@ -12,7 +12,7 @@ The full NCF model: a Generalized Matrix Factorization path (element-wise produc
 
 ## Architecture
 
-![NeuMF (GMF + MLP) architecture](assets/diagram.svg)
+![NeuMF (GMF + MLP) architecture](assets/diagram.png)
 
 <details>
 <summary><b>Layer-by-layer (16 nodes)</b></summary>

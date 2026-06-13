@@ -12,7 +12,7 @@ The Transformer that made long-horizon time-series forecasting work: each variab
 
 ## Architecture
 
-![PatchTST architecture](assets/diagram.svg)
+![PatchTST architecture](assets/diagram.png)
 
 <details>
 <summary><b>Layer-by-layer (19 nodes)</b></summary>

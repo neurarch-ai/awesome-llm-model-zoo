@@ -12,7 +12,7 @@ The compact CNN that became the universal baseline for EEG brain-computer interf
 
 ## Architecture
 
-![EEGNet architecture](assets/diagram.svg)
+![EEGNet architecture](assets/diagram.png)
 
 <details>
 <summary><b>Layer-by-layer (16 nodes)</b></summary>

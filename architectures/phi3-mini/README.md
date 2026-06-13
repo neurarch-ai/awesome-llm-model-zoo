@@ -12,7 +12,7 @@ The Phi-3 Mini (3.8B) decoder block: a compact Llama-style block at 3072 hidden,
 
 ## Architecture
 
-![Phi-3 Mini Block architecture](assets/diagram.svg)
+![Phi-3 Mini Block architecture](assets/diagram.png)
 
 <details>
 <summary><b>Layer-by-layer (12 nodes)</b></summary>

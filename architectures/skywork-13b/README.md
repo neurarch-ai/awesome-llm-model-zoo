@@ -12,14 +12,14 @@ Kunlun Tech's 13B bilingual base model, notable for an explicitly ablated deep-a
 
 ## Architecture
 
-![Skywork-13B block view](assets/block.svg)
+![Skywork-13B full architecture](assets/diagram.png)
 
-*Compact view: one block expanded. The full graph below is what `model.json` holds.*
+*The full graph, all 317 nodes, tiled into columns for readability (read each column top-to-bottom, then left-to-right). Exactly what `model.json` holds. Vector: [diagram.svg](assets/diagram.svg).*
 
 <details>
-<summary><b>Full graph: 317 nodes (click to expand)</b></summary>
+<summary><b>One block, expanded (explainer view)</b></summary>
 
-![Skywork-13B full architecture](assets/diagram.svg)
+![Skywork-13B block view](assets/block.png)
 
 </details>
 

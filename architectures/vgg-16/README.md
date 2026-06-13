@@ -11,7 +11,7 @@ The architecture that proved depth plus uniform 3x3 convolutions beats clever fi
 
 ## Architecture
 
-![VGG-16 architecture](assets/diagram.svg)
+![VGG-16 architecture](assets/diagram.png)
 
 <details>
 <summary><b>Layer-by-layer (42 nodes)</b></summary>

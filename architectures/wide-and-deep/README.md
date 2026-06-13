@@ -11,7 +11,7 @@ Google's Play-store ranking model that joint-trains a wide linear path (memoriza
 
 ## Architecture
 
-![Wide & Deep architecture](assets/diagram.svg)
+![Wide & Deep architecture](assets/diagram.png)
 
 <details>
 <summary><b>Layer-by-layer (12 nodes)</b></summary>

@@ -13,7 +13,7 @@ The latent-diffusion noise predictor behind Stable Diffusion: a U-Net operating 
 
 ## Architecture
 
-![Diffusion U-Net (Stable Diffusion) architecture](assets/diagram.svg)
+![Diffusion U-Net (Stable Diffusion) architecture](assets/diagram.png)
 
 <details>
 <summary><b>Layer-by-layer (15 nodes)</b></summary>

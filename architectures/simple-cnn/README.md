@@ -11,7 +11,7 @@ A LeNet-style starter CNN for image classification: conv-pool stacks into a dens
 
 ## Architecture
 
-![Simple CNN architecture](assets/diagram.svg)
+![Simple CNN architecture](assets/diagram.png)
 
 <details>
 <summary><b>Layer-by-layer (9 nodes)</b></summary>

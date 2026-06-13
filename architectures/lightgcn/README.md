@@ -12,7 +12,7 @@ Graph convolution for collaborative filtering stripped to its minimum: no featur
 
 ## Architecture
 
-![LightGCN architecture](assets/diagram.svg)
+![LightGCN architecture](assets/diagram.png)
 
 <details>
 <summary><b>Layer-by-layer (14 nodes)</b></summary>

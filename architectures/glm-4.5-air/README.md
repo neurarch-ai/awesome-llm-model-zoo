@@ -12,14 +12,14 @@ Zhipu AI's agent-focused MoE in its deployable Air size. Distinctive for spendin
 
 ## Architecture
 
-![GLM-4.5-Air block view](assets/block.svg)
+![GLM-4.5-Air full architecture](assets/diagram.png)
 
-*Compact view: one block expanded. The full graph below is what `model.json` holds.*
+*The full graph, all 281 nodes, tiled into columns for readability (read each column top-to-bottom, then left-to-right). Exactly what `model.json` holds. Vector: [diagram.svg](assets/diagram.svg).*
 
 <details>
-<summary><b>Full graph: 281 nodes (click to expand)</b></summary>
+<summary><b>One block, expanded (explainer view)</b></summary>
 
-![GLM-4.5-Air full architecture](assets/diagram.svg)
+![GLM-4.5-Air block view](assets/block.png)
 
 </details>
 

@@ -12,14 +12,14 @@ The dense 8B from the Qwen3 generation, the default open model of 2025 by downlo
 
 ## Architecture
 
-![Qwen3-8B block view](assets/block.svg)
+![Qwen3-8B full architecture](assets/diagram.png)
 
-*Compact view: one block expanded. The full graph below is what `model.json` holds.*
+*The full graph, all 221 nodes, tiled into columns for readability (read each column top-to-bottom, then left-to-right). Exactly what `model.json` holds. Vector: [diagram.svg](assets/diagram.svg).*
 
 <details>
-<summary><b>Full graph: 221 nodes (click to expand)</b></summary>
+<summary><b>One block, expanded (explainer view)</b></summary>
 
-![Qwen3-8B full architecture](assets/diagram.svg)
+![Qwen3-8B block view](assets/block.png)
 
 </details>
 

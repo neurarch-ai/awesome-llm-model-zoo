@@ -13,12 +13,9 @@ The contrastive image-text model that underpins modern multimodality: a full 12-
 
 ## Architecture
 
-<details>
-<summary><b>Full graph: 38 nodes (click to expand)</b></summary>
+![CLIP ViT-B/32 full architecture](assets/diagram.png)
 
-![CLIP ViT-B/32 full architecture](assets/diagram.svg)
-
-</details>
+*The full graph, all 38 nodes. Exactly what `model.json` holds. Vector: [diagram.svg](assets/diagram.svg).*
 
 | Hyperparameter | Value |
 |---|---|

@@ -12,7 +12,7 @@ Meta's production recommendation architecture: a bottom MLP for dense features, 
 
 ## Architecture
 
-![DLRM architecture](assets/diagram.svg)
+![DLRM architecture](assets/diagram.png)
 
 <details>
 <summary><b>Layer-by-layer (14 nodes)</b></summary>

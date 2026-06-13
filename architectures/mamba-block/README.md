@@ -12,7 +12,7 @@ The Mamba selective state-space block: causal conv plus gated selective SSM in p
 
 ## Architecture
 
-![Mamba SSM Block architecture](assets/diagram.svg)
+![Mamba SSM Block architecture](assets/diagram.png)
 
 <details>
 <summary><b>Layer-by-layer (16 nodes)</b></summary>

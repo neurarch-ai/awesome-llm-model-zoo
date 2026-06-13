@@ -12,7 +12,7 @@ Convolution meets attention for EEG decoding: an EEGNet-style conv stem tokenize
 
 ## Architecture
 
-![EEG Conformer architecture](assets/diagram.svg)
+![EEG Conformer architecture](assets/diagram.png)
 
 <details>
 <summary><b>Layer-by-layer (22 nodes)</b></summary>

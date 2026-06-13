@@ -11,7 +11,7 @@ The original "Attention Is All You Need" encoder block: multi-head self-attentio
 
 ## Architecture
 
-![Transformer Encoder Block architecture](assets/diagram.svg)
+![Transformer Encoder Block architecture](assets/diagram.png)
 
 <details>
 <summary><b>Layer-by-layer (8 nodes)</b></summary>

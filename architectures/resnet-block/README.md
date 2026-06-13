@@ -11,7 +11,7 @@ The residual unit from ResNet: conv-BN-ReLU twice, plus the identity skip connec
 
 ## Architecture
 
-![ResNet Residual Block architecture](assets/diagram.svg)
+![ResNet Residual Block architecture](assets/diagram.png)
 
 <details>
 <summary><b>Layer-by-layer (9 nodes)</b></summary>

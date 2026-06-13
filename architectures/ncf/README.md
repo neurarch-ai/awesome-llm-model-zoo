@@ -12,7 +12,7 @@ Neural Collaborative Filtering in its simplest form: user and item embeddings co
 
 ## Architecture
 
-![NCF (concat-MLP) architecture](assets/diagram.svg)
+![NCF (concat-MLP) architecture](assets/diagram.png)
 
 <details>
 <summary><b>Layer-by-layer (12 nodes)</b></summary>

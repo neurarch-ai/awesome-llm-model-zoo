@@ -12,14 +12,14 @@ Meta's 8B dense decoder, the de facto baseline architecture that most current op
 
 ## Architecture
 
-![Llama-3-8B block view](assets/block.svg)
+![Llama-3-8B full architecture](assets/diagram.png)
 
-*Compact view: one block expanded. The full graph below is what `model.json` holds.*
+*The full graph, all 197 nodes, tiled into columns for readability (read each column top-to-bottom, then left-to-right). Exactly what `model.json` holds. Vector: [diagram.svg](assets/diagram.svg).*
 
 <details>
-<summary><b>Full graph: 197 nodes (click to expand)</b></summary>
+<summary><b>One block, expanded (explainer view)</b></summary>
 
-![Llama-3-8B full architecture](assets/diagram.svg)
+![Llama-3-8B block view](assets/block.png)
 
 </details>
 

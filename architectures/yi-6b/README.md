@@ -12,14 +12,14 @@ The 6B base model from 01.AI (founded by Kai-Fu Lee), trained on 3.1T bilingual 
 
 ## Architecture
 
-![Yi-6B block view](assets/block.svg)
+![Yi-6B full architecture](assets/diagram.png)
 
-*Compact view: one block expanded. The full graph below is what `model.json` holds.*
+*The full graph, all 197 nodes, tiled into columns for readability (read each column top-to-bottom, then left-to-right). Exactly what `model.json` holds. Vector: [diagram.svg](assets/diagram.svg).*
 
 <details>
-<summary><b>Full graph: 197 nodes (click to expand)</b></summary>
+<summary><b>One block, expanded (explainer view)</b></summary>
 
-![Yi-6B full architecture](assets/diagram.svg)
+![Yi-6B block view](assets/block.png)
 
 </details>
 

@@ -11,7 +11,7 @@ Alibaba's CTR model that replaced sum-pooled user history with a Transformer enc
 
 ## Architecture
 
-![Behavior Sequence Transformer architecture](assets/diagram.svg)
+![Behavior Sequence Transformer architecture](assets/diagram.png)
 
 <details>
 <summary><b>Layer-by-layer (19 nodes)</b></summary>

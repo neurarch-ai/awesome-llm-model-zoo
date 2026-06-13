@@ -12,14 +12,14 @@ Moonshot AI's trillion-parameter-class MoE, the largest architecture in this zoo
 
 ## Architecture
 
-![Kimi K2.6 block view](assets/block.svg)
+![Kimi K2.6 full architecture](assets/diagram.png)
 
-*Compact view: one block expanded. The full graph below is what `model.json` holds.*
+*The full graph, all 247 nodes, tiled into columns for readability (read each column top-to-bottom, then left-to-right). Exactly what `model.json` holds. Vector: [diagram.svg](assets/diagram.svg).*
 
 <details>
-<summary><b>Full graph: 247 nodes (click to expand)</b></summary>
+<summary><b>One block, expanded (explainer view)</b></summary>
 
-![Kimi K2.6 full architecture](assets/diagram.svg)
+![Kimi K2.6 block view](assets/block.png)
 
 </details>
 

@@ -11,7 +11,7 @@ A minimal Elman-style recurrent network for sequence processing. Four nodes: the
 
 ## Architecture
 
-![Simple RNN architecture](assets/diagram.svg)
+![Simple RNN architecture](assets/diagram.png)
 
 <details>
 <summary><b>Layer-by-layer (4 nodes)</b></summary>

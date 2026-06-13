@@ -12,14 +12,14 @@ A 7.6B-parameter decoder-only transformer from the Qwen2.5 family, one of the mo
 
 ## Architecture
 
-![Qwen2.5-7B block view](assets/block.svg)
+![Qwen2.5-7B full architecture](assets/diagram.png)
 
-*Compact view: one block expanded. The full graph below is what `model.json` holds.*
+*The full graph, all 173 nodes, tiled into columns for readability (read each column top-to-bottom, then left-to-right). Exactly what `model.json` holds. Vector: [diagram.svg](assets/diagram.svg).*
 
 <details>
-<summary><b>Full graph: 173 nodes (click to expand)</b></summary>
+<summary><b>One block, expanded (explainer view)</b></summary>
 
-![Qwen2.5-7B full architecture](assets/diagram.svg)
+![Qwen2.5-7B block view](assets/block.png)
 
 </details>
 

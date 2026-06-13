@@ -13,12 +13,9 @@ The 2024 rebuild of BERT with a decade of decoder-side lessons applied: RoPE, Ge
 
 ## Architecture
 
-<details>
-<summary><b>Full graph: 91 nodes (click to expand)</b></summary>
+![ModernBERT-Base full architecture](assets/diagram.png)
 
-![ModernBERT-Base full architecture](assets/diagram.svg)
-
-</details>
+*The full graph, all 91 nodes, tiled into columns for readability (read each column top-to-bottom, then left-to-right). Exactly what `model.json` holds. Vector: [diagram.svg](assets/diagram.svg).*
 
 | Hyperparameter | Value |
 |---|---|

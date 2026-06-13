@@ -38,6 +38,8 @@ const { propagateShapes, annotateModelShapes } = await import(path.join(NEURARCH
 const { parsePaperTextToModel } = await import(path.join(NEURARCH, 'src/utils/paperArchitectureParser.ts'));
 const { loadHFModel } = await import(path.join(NEURARCH, 'src/utils/hfModelLoader.ts'));
 const { estimateLayerParams } = await import(path.join(NEURARCH, 'src/utils/paramEstimator.ts'));
+const { Resvg } = await import('@resvg/resvg-js');
+const { PNG } = await import('pngjs');
 
 // ---------------------------------------------------------------------------
 // Spec types
@@ -1447,14 +1449,21 @@ function paramCheckSection(model: Graph, check: ParamCheck, tyingNote?: string):
 
 function fullGraphSection(id: string, displayName: string, model: Graph, hasBlock: boolean): string {
   const blockPart = hasBlock
-    ? `![${displayName} block view](assets/block.svg)\n\n*Compact view: one block expanded. The full graph below is what \`model.json\` holds.*\n\n`
+    ? `\n\n<details>
+<summary><b>One block, expanded (explainer view)</b></summary>
+
+![${displayName} block view](assets/block.png)
+
+</details>`
     : '';
-  return `${blockPart}<details>
-<summary><b>Full graph: ${model.components.length} nodes (click to expand)</b></summary>
+  const svg = fs.readFileSync(path.join(ZOO, 'architectures', id, 'assets', 'diagram.svg'), 'utf8');
+  const tall = (() => { const m = svg.match(/viewBox="0 0 \d+ (\d+)"/); return m ? Number(m[1]) > TALL_THRESHOLD : false; })();
+  const caption = tall
+    ? `*The full graph, all ${model.components.length} nodes, tiled into columns for readability (read each column top-to-bottom, then left-to-right). Exactly what \`model.json\` holds. Vector: [diagram.svg](assets/diagram.svg).*`
+    : `*The full graph, all ${model.components.length} nodes. Exactly what \`model.json\` holds. Vector: [diagram.svg](assets/diagram.svg).*`;
+  return `![${displayName} full architecture](assets/diagram.png)
 
-![${displayName} full architecture](assets/diagram.svg)
-
-</details>`;
+${caption}${blockPart}`;
 }
 
 function filesSection(hasBlock: boolean): string {
@@ -1561,7 +1570,7 @@ ${links.map(([l, u]) => `| ${l} | ${u} |`).join('\n')}
 
 ## Architecture
 
-![${e.displayName} architecture](assets/diagram.svg)
+![${e.displayName} architecture](assets/diagram.png)
 
 <details>
 <summary><b>Layer-by-layer (${model.components.length} nodes)</b></summary>
@@ -1590,13 +1599,61 @@ ${e.license ? `\n**License:** ${e.license}. The graph and diagrams here describe
 // Main
 // ---------------------------------------------------------------------------
 
+/** Tall single-column graphs are unreadable as one 30k-pixel strip. We render
+ *  the (resvg-safe) raw SVG once to a pixmap, then tile it into newspaper-style
+ *  columns at the pixel level. resvg panics on any viewBox offset / clipping /
+ *  out-of-viewport transform, so all column layout happens on the RGBA buffer,
+ *  never in SVG. Returns a PNG buffer. */
+const TALL_THRESHOLD = 3600; // SVG height (units) above which we tile into columns
+const MAX_RASTER_H = 42000;  // cap the intermediate pixmap height (memory bound)
+const MAX_COLS = 14;
+
+function svgToPng(svg: string): Buffer {
+  const m = svg.match(/viewBox="0 0 (\d+) (\d+)"/);
+  const H = m ? Number(m[2]) : 0;
+  // Scale down so the intermediate pixmap stays within the memory cap; small
+  // graphs render at 2x for crispness.
+  const zoom = H <= TALL_THRESHOLD ? 2 : Math.min(1.6, MAX_RASTER_H / H);
+  const full = new Resvg(svg, { fitTo: { mode: 'zoom', value: zoom }, background: 'white' }).render();
+  const FW = full.width, FH = full.height;
+  if (H <= TALL_THRESHOLD) return full.asPng();
+
+  const src = full.pixels;
+  // Pick a column count that keeps the tiled image roughly card-shaped.
+  const cols = Math.max(3, Math.min(MAX_COLS, Math.round(Math.sqrt(FH / FW / 1.4))));
+  const sliceH = Math.ceil(FH / cols);
+  const GAP = 44;
+  const HEADER = 40;
+  const outW = cols * FW + (cols + 1) * GAP;
+  const outH = sliceH + GAP + HEADER;
+  const out = new PNG({ width: outW, height: outH });
+  out.data.fill(255);
+  for (let c = 0; c < cols; c++) {
+    const sy0 = c * sliceH;
+    const colX = GAP + c * (FW + GAP);
+    for (let row = 0; row < sliceH; row++) {
+      const sy = sy0 + row;
+      if (sy >= FH) break;
+      const dy = HEADER + row;
+      const sOff = sy * FW * 4;
+      const dOff = (dy * outW + colX) * 4;
+      src.copy(out.data, dOff, sOff, sOff + FW * 4);
+    }
+  }
+  return PNG.sync.write(out);
+}
+
 function writeAssets(id: string, model: Graph, blockView?: Graph) {
   const dir = path.join(ZOO, 'architectures', id);
   fs.mkdirSync(path.join(dir, 'assets'), { recursive: true });
   fs.writeFileSync(path.join(dir, 'model.json'), JSON.stringify(model, null, 2) + '\n');
-  fs.writeFileSync(path.join(dir, 'assets', 'diagram.svg'), exportPaperSvg(model as never, { attribution: true }));
+  const svg = exportPaperSvg(model as never, { attribution: true });
+  fs.writeFileSync(path.join(dir, 'assets', 'diagram.svg'), svg);
+  fs.writeFileSync(path.join(dir, 'assets', 'diagram.png'), svgToPng(svg));
   if (blockView) {
-    fs.writeFileSync(path.join(dir, 'assets', 'block.svg'), exportPaperSvg(blockView as never, { attribution: true }));
+    const bsvg = exportPaperSvg(blockView as never, { attribution: true });
+    fs.writeFileSync(path.join(dir, 'assets', 'block.svg'), bsvg);
+    fs.writeFileSync(path.join(dir, 'assets', 'block.png'), svgToPng(bsvg));
   }
 }
 
@@ -1660,4 +1717,4 @@ for (const s of ALL) {
   }
   count++;
 }
-console.log(`\nDone: ${count} entries. Convert SVGs to PNG (resvg, height-capped zoom), then update the top-level catalog.`);
+console.log(`\nDone: ${count} entries (model.json + SVG + PNG written). Update the top-level catalog if the lineup changed.`);

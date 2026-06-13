@@ -12,14 +12,14 @@ The original dense 7B model from DeepSeek, trained on 2T bilingual tokens. A cle
 
 ## Architecture
 
-![DeepSeek-LLM-7B block view](assets/block.svg)
+![DeepSeek-LLM-7B full architecture](assets/diagram.png)
 
-*Compact view: one block expanded. The full graph below is what `model.json` holds.*
+*The full graph, all 185 nodes, tiled into columns for readability (read each column top-to-bottom, then left-to-right). Exactly what `model.json` holds. Vector: [diagram.svg](assets/diagram.svg).*
 
 <details>
-<summary><b>Full graph: 185 nodes (click to expand)</b></summary>
+<summary><b>One block, expanded (explainer view)</b></summary>
 
-![DeepSeek-LLM-7B full architecture](assets/diagram.svg)
+![DeepSeek-LLM-7B block view](assets/block.png)
 
 </details>
 

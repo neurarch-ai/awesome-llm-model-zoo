@@ -11,7 +11,7 @@ The standard hybrid for long 1D physiological signals (ECG, PPG, IMU): a Conv1D 
 
 ## Architecture
 
-![1D CNN + LSTM architecture](assets/diagram.svg)
+![1D CNN + LSTM architecture](assets/diagram.png)
 
 <details>
 <summary><b>Layer-by-layer (13 nodes)</b></summary>

@@ -12,14 +12,14 @@ The most-cited convolutional network ever and the ILSVRC 2015 winner. This is th
 
 ## Architecture
 
-![ResNet-50 block view](assets/block.svg)
+![ResNet-50 full architecture](assets/diagram.png)
 
-*Compact view: one block expanded. The full graph below is what `model.json` holds.*
+*The full graph, all 176 nodes, tiled into columns for readability (read each column top-to-bottom, then left-to-right). Exactly what `model.json` holds. Vector: [diagram.svg](assets/diagram.svg).*
 
 <details>
-<summary><b>Full graph: 176 nodes (click to expand)</b></summary>
+<summary><b>One block, expanded (explainer view)</b></summary>
 
-![ResNet-50 full architecture](assets/diagram.svg)
+![ResNet-50 block view](assets/block.png)
 
 </details>
 
