@@ -23,7 +23,7 @@
 <text x="132.0" y="392.0" text-anchor="middle" font-size="24" fill="#06b6d4">⊕</text>
 <rect x="48.0" y="464.0" width="168" height="48" rx="10" fill="rgb(233, 236, 239)" stroke="#64748b" stroke-width="1.5"/>
 <text x="132.0" y="492.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">LayerNorm</text>
-<rect x="48.0" y="568.0" width="168" height="48" rx="10" fill="rgb(222, 245, 243)" stroke="#14b8a6" stroke-width="1.5"/>
+<rect x="48.0" y="568.0" width="168" height="48" rx="10" fill="rgb(235, 235, 236)" stroke="#71717a" stroke-width="1.5"/>
 <text x="132.0" y="596.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">FFN</text>
 <rect x="48.0" y="672.0" width="168" height="48" rx="10" fill="rgb(253, 229, 229)" stroke="#ef4444" stroke-width="1.5"/>
 <text x="132.0" y="700.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">Output</text>

@@ -33,7 +33,7 @@ import { fileURLToPath } from 'node:url';
 const NEURARCH = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../Neurarch');
 const ZOO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
-const { exportPaperSvg } = await import(path.join(NEURARCH, 'src/utils/figureExporter.ts'));
+const { exportPaperSvg, foldRepeatedBlocks } = await import(path.join(NEURARCH, 'src/utils/figureExporter.ts'));
 const { propagateShapes, annotateModelShapes } = await import(path.join(NEURARCH, 'src/utils/shapeInference.ts'));
 const { parsePaperTextToModel } = await import(path.join(NEURARCH, 'src/utils/paperArchitectureParser.ts'));
 const { loadHFModel } = await import(path.join(NEURARCH, 'src/utils/hfModelLoader.ts'));
@@ -1632,192 +1632,16 @@ function svgToPng(svg: string): Buffer {
   return PNG.sync.write(out);
 }
 
-// ── Folded diagram: collapse runs of structurally-identical consecutive blocks
-//    into one representative block (expanded) + a "x N" repeat badge. The full
-//    graph stays in model.json; this is purely the figure. ──────────────────
-
-const FOLD_BOX_W = 168, FOLD_BOX_H = 48, FOLD_PAD = 48, FOLD_COL_GAP = 64;
-const FOLD_ROW_GAP = FOLD_BOX_H + 56;
-const MERGE_GLYPH: Record<string, string> = { add: '⊕', residual: '⊕', sum: '⊕', multiply: '⊗', subtract: '⊖', concatenate: '∥' };
-function roleColor(t: string): string {
-  if (t === 'input') return '#22c55e';
-  if (t === 'output') return '#ef4444';
-  if (t.endsWith('Attention') || t === 'attention' || t === 'transformerBlock' || t === 'crossAttention' || t === 'mla') return '#a855f7';
-  if (t === 'linear' || t === 'feedForward' || t === 'mlp' || t === 'swiglu' || t === 'geglu' || t === 'moeLayer' || t === 'sharedExpertMoE') return '#14b8a6';
-  if (t.startsWith('conv') || t === 'depthwiseConv2d' || t === 'separableConv2d' || t === 'transposeConv2d' || t === 'patchEmbed') return '#3b82f6';
-  if (t.endsWith('pool2d') || t.endsWith('pool1d') || t.includes('Pool')) return '#6366f1';
-  if (t.endsWith('Norm') || t === 'batchNorm' || t === 'layerNorm' || t === 'groupNorm' || t === 'instanceNorm' || t === 'rmsNorm') return '#64748b';
-  if (['relu', 'gelu', 'swish', 'silu', 'leakyRelu', 'sigmoid', 'tanh', 'softmax', 'mish', 'elu'].includes(t)) return '#10b981';
-  if (['lstm', 'gru', 'rnn', 'bidirectionalLSTM'].includes(t)) return '#f43f5e';
-  if (t === 'embedding' || t === 'positionalEncoding' || t === 'rope' || t === 'rotaryEmbedding') return '#f59e0b';
-  if (t === 'dropout' || t === 'spatialDropout' || t === 'alphaDropout') return '#94a3b8';
-  if (t === 'add' || t === 'concatenate' || t === 'multiply' || t === 'subtract') return '#06b6d4';
-  return '#71717a';
-}
-function pastel(hex: string, mix = 0.86): string {
-  const h = hex.replace('#', '');
-  const m = (c: number) => Math.round(c + (255 - c) * mix);
-  return `rgb(${m(parseInt(h.slice(0, 2), 16))}, ${m(parseInt(h.slice(2, 4), 16))}, ${m(parseInt(h.slice(4, 6), 16))})`;
-}
-const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-const cleanName = (s: string) => s.replace(/_\d+(_\d+)?/g, '').replace(/__+/g, '_').replace(/^_|_$/g, '') || s;
-const sig = (c: Comp) => `${c.type}|${JSON.stringify(c.params, Object.keys(c.params).sort())}`;
-
-interface FoldRun { memberIds: string[]; count: number }
-
-/** Returns a folded graph + the representative blocks that carry a repeat count. */
-function foldGraph(model: Graph): { folded: Graph; runs: FoldRun[] } {
-  const comps = model.components;
-  const n = comps.length;
-  const out = new Map<string, string[]>(); // id -> outgoing target ids (backbone + skips)
-  comps.forEach((c) => out.set(c.id, []));
-  for (const cn of model.connections) out.get(cn.from)?.push(cn.to);
-  const hasEdge = (from: string, to: string) => out.get(from)?.includes(to) ?? false;
-
-  const removed = new Set<string>();
-  const bridges: Conn[] = [];
-  const runs: FoldRun[] = [];
-  const MAXLEN = 16;
-  let i = 0;
-  while (i < n) {
-    let folded = false;
-    for (let L = 1; L <= MAXLEN && i + 2 * L <= n; L++) {
-      // signatures of two consecutive L-blocks must match
-      let ok = true;
-      for (let j = 0; j < L; j++) if (sig(comps[i + j]) !== sig(comps[i + L + j])) { ok = false; break; }
-      if (!ok) continue;
-      // count consecutive matching blocks, requiring chain continuity
-      // (last node of block b connects to first node of block b+1) so we never
-      // fold parallel branches (e.g. the two towers of a retrieval model).
-      let k = 1;
-      const contiguous = () => hasEdge(comps[i + k * L - 1].id, comps[i + k * L].id);
-      while (i + (k + 1) * L <= n && contiguous()) {
-        let same = true;
-        for (let j = 0; j < L; j++) if (sig(comps[i + j]) !== sig(comps[i + k * L + j])) { same = false; break; }
-        if (!same) break;
-        k++;
-      }
-      if (k >= 2) {
-        const block0 = comps.slice(i, i + L).map((c) => c.id);
-        for (let b = 1; b < k; b++) for (let j = 0; j < L; j++) removed.add(comps[i + b * L + j].id);
-        const succIdx = i + k * L;
-        if (succIdx < n) bridges.push({ id: `fold-${i}`, from: comps[i + L - 1].id, to: comps[succIdx].id });
-        runs.push({ memberIds: block0, count: k });
-        i = succIdx;
-        folded = true;
-        break;
-      }
-    }
-    if (!folded) i++;
-  }
-
-  const keep = comps.filter((c) => !removed.has(c.id)).map((c) => ({ ...c, params: { ...c.params }, name: cleanName(c.name) }));
-  const keepIds = new Set(keep.map((c) => c.id));
-  const conns = model.connections
-    .filter((cn) => keepIds.has(cn.from) && keepIds.has(cn.to))
-    .concat(bridges.filter((b) => keepIds.has(b.from) && keepIds.has(b.to)));
-  return { folded: { id: model.id, name: model.name, components: keep, connections: conns }, runs };
-}
-
-/** Render the folded graph in exportPaperSvg's style, drawing a stacked-card
- *  backdrop + "x N" badge around each representative repeated block. */
-function renderFoldedSvg(folded: Graph, runs: FoldRun[]): string {
-  const comps = folded.components;
-  const idset = new Set(comps.map((c) => c.id));
-  const parents = new Map<string, string[]>();
-  comps.forEach((c) => parents.set(c.id, []));
-  for (const cn of folded.connections) if (idset.has(cn.from) && idset.has(cn.to)) parents.get(cn.to)!.push(cn.from);
-  const memo = new Map<string, number>();
-  const depthOf = (id: string, st: Set<string>): number => {
-    if (memo.has(id)) return memo.get(id)!;
-    if (st.has(id)) return 0;
-    st.add(id);
-    let d = 0;
-    for (const p of parents.get(id) ?? []) d = Math.max(d, depthOf(p, st) + 1);
-    st.delete(id);
-    memo.set(id, d);
-    return d;
-  };
-  const rows = new Map<number, string[]>();
-  let maxDepth = 0;
-  for (const c of comps) { const d = depthOf(c.id, new Set()); maxDepth = Math.max(maxDepth, d); (rows.get(d) ?? rows.set(d, []).get(d)!).push(c.id); }
-  let maxRowW = FOLD_BOX_W;
-  for (const arr of rows.values()) maxRowW = Math.max(maxRowW, arr.length * FOLD_BOX_W + (arr.length - 1) * FOLD_COL_GAP);
-  const BADGE_GUTTER = 150; // room on the right for repeat badges
-  const box = new Map<string, { x: number; y: number; cx: number; top: number; bottom: number }>();
-  for (let d = 0; d <= maxDepth; d++) {
-    const arr = rows.get(d) ?? [];
-    const rowW = arr.length * FOLD_BOX_W + (arr.length - 1) * FOLD_COL_GAP;
-    const startX = (maxRowW - rowW) / 2;
-    arr.forEach((id, i) => { const x = startX + i * (FOLD_BOX_W + FOLD_COL_GAP); const y = d * FOLD_ROW_GAP; box.set(id, { x, y, cx: x + FOLD_BOX_W / 2, top: y, bottom: y + FOLD_BOX_H }); });
-  }
-  const W = maxRowW + FOLD_PAD * 2 + BADGE_GUTTER;
-  const H = maxDepth * FOLD_ROW_GAP + FOLD_BOX_H + FOLD_PAD * 2 + 24;
-  const ox = FOLD_PAD, oy = FOLD_PAD;
-  const parts: string[] = [];
-  parts.push(`<svg xmlns="http://www.w3.org/2000/svg" width="${Math.round(W)}" height="${Math.round(H)}" viewBox="0 0 ${Math.round(W)} ${Math.round(H)}" font-family="-apple-system, 'Segoe UI', Inter, Helvetica, Arial, sans-serif">`);
-  parts.push(`<defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#94a3b8"/></marker></defs>`);
-  parts.push(`<rect x="0" y="0" width="${Math.round(W)}" height="${Math.round(H)}" fill="#ffffff"/>`);
-
-  // Stacked-card backdrop for each repeated block (drawn first, behind nodes).
-  for (const run of runs) {
-    const boxes = run.memberIds.map((id) => box.get(id)).filter(Boolean) as Array<{ x: number; y: number; top: number; bottom: number }>;
-    if (!boxes.length) continue;
-    const bx = Math.min(...boxes.map((b) => b.x)) + ox - 14;
-    const bw = (Math.max(...boxes.map((b) => b.x)) - Math.min(...boxes.map((b) => b.x))) + FOLD_BOX_W + 28;
-    const by = Math.min(...boxes.map((b) => b.top)) + oy - 14;
-    const bh = (Math.max(...boxes.map((b) => b.bottom)) - Math.min(...boxes.map((b) => b.top))) + 28;
-    for (const off of [16, 8]) {
-      parts.push(`<rect x="${(bx + off).toFixed(1)}" y="${(by + off).toFixed(1)}" width="${bw.toFixed(1)}" height="${bh.toFixed(1)}" rx="14" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1.5"/>`);
-    }
-    parts.push(`<rect x="${bx.toFixed(1)}" y="${by.toFixed(1)}" width="${bw.toFixed(1)}" height="${bh.toFixed(1)}" rx="14" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="7 6"/>`);
-    // "x N" badge pill, centered vertically on the block's right edge.
-    const px = bx + bw + 22, py = by + bh / 2;
-    const label = `× ${run.count}`;
-    const pillW = 30 + label.length * 9;
-    parts.push(`<rect x="${px.toFixed(1)}" y="${(py - 19).toFixed(1)}" width="${pillW}" height="38" rx="19" fill="#4f46e5"/>`);
-    parts.push(`<text x="${(px + pillW / 2).toFixed(1)}" y="${(py + 6).toFixed(1)}" text-anchor="middle" font-size="17" font-weight="700" fill="#ffffff">${esc(label)}</text>`);
-  }
-
-  // Edges.
-  for (const cn of folded.connections) {
-    const a = box.get(cn.from), b = box.get(cn.to);
-    if (!a || !b) continue;
-    const sx = a.cx + ox, sy = a.bottom + oy, tx = b.cx + ox, ty = b.top + oy - 6;
-    const dy = ty - sy;
-    parts.push(`<path d="M${sx.toFixed(1)},${sy.toFixed(1)} C${sx.toFixed(1)},${(sy + dy * 0.5).toFixed(1)} ${tx.toFixed(1)},${(ty - dy * 0.5).toFixed(1)} ${tx.toFixed(1)},${ty.toFixed(1)}" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>`);
-  }
-
-  // Nodes.
-  for (const c of comps) {
-    const g = box.get(c.id)!;
-    const x = g.x + ox, y = g.y + oy;
-    const color = roleColor(c.type);
-    const merge = MERGE_GLYPH[c.type];
-    if (merge) {
-      const ccx = x + FOLD_BOX_W / 2, ccy = y + FOLD_BOX_H / 2;
-      parts.push(`<circle cx="${ccx.toFixed(1)}" cy="${ccy.toFixed(1)}" r="22" fill="${pastel(color)}" stroke="${color}" stroke-width="1.5"/>`);
-      parts.push(`<text x="${ccx.toFixed(1)}" y="${(ccy + 8).toFixed(1)}" text-anchor="middle" font-size="24" fill="${color}">${esc(merge)}</text>`);
-      continue;
-    }
-    parts.push(`<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${FOLD_BOX_W}" height="${FOLD_BOX_H}" rx="10" fill="${pastel(color)}" stroke="${color}" stroke-width="1.5"/>`);
-    const label = (c.name || c.type).length > 22 ? (c.name || c.type).slice(0, 21) + '…' : (c.name || c.type);
-    parts.push(`<text x="${(x + FOLD_BOX_W / 2).toFixed(1)}" y="${(y + FOLD_BOX_H / 2 + 4.5).toFixed(1)}" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">${esc(label)}</text>`);
-  }
-  parts.push(`<text x="${(W - FOLD_PAD).toFixed(1)}" y="${(H - 11).toFixed(1)}" text-anchor="end" font-size="11" fill="#9aa6b8">Made with Neurarch · neurarch.com</text>`);
-  parts.push(`</svg>`);
-  return parts.join('\n');
-}
-
 function writeAssets(id: string, model: Graph): number {
   const dir = path.join(ZOO, 'architectures', id);
   fs.mkdirSync(path.join(dir, 'assets'), { recursive: true });
   fs.writeFileSync(path.join(dir, 'model.json'), JSON.stringify(model, null, 2) + '\n');
-  const { folded, runs } = foldGraph(model);
-  const svg = runs.length ? renderFoldedSvg(folded, runs) : exportPaperSvg(model as never, { attribution: true });
+  // Single source of truth: the app's exportPaperSvg now folds repeated blocks
+  // (representative block + "x N" badge), the same logic shipped to neurarch.com.
+  const svg = exportPaperSvg(model as never, { attribution: true, fold: true });
   fs.writeFileSync(path.join(dir, 'assets', 'diagram.svg'), svg);
   fs.writeFileSync(path.join(dir, 'assets', 'diagram.png'), svgToPng(svg));
-  return folded.components.length;
+  return foldRepeatedBlocks(model as never).components.length;
 }
 
 const ALL: Spec[] = [...DECODERS, ...FRONTIER, ...ENCODERS, ...HFFULL, ...TEMPLATES, ...PARSED];

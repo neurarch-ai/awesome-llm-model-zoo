@@ -28,7 +28,7 @@
 <path d="M364.0,408.0 C364.0,433.0 364.0,433.0 364.0,458.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
 <rect x="48.0" y="48.0" width="168" height="48" rx="10" fill="rgb(224, 247, 232)" stroke="#22c55e" stroke-width="1.5"/>
 <text x="132.0" y="76.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">image</text>
-<rect x="48.0" y="152.0" width="168" height="48" rx="10" fill="rgb(228, 238, 254)" stroke="#3b82f6" stroke-width="1.5"/>
+<rect x="48.0" y="152.0" width="168" height="48" rx="10" fill="rgb(235, 235, 236)" stroke="#71717a" stroke-width="1.5"/>
 <text x="132.0" y="180.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">patch_embed</text>
 <rect x="48.0" y="256.0" width="168" height="48" rx="10" fill="rgb(254, 241, 221)" stroke="#f59e0b" stroke-width="1.5"/>
 <text x="132.0" y="284.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">vis_pos</text>
