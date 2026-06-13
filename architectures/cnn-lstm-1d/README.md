@@ -19,17 +19,17 @@ The standard hybrid for long 1D physiological signals (ECG, PPG, IMU): a Conv1D 
 | # | Layer | Type | Params |
 |---|---|---|---|
 | 1 | ts_window | `input` | shape: [1, 12, 5000] |
-| 2 | conv1 | `conv1d` | outChannels: 64, kernelSize: 7, stride: 1, padding: 3 |
+| 2 | conv1 | `conv1d` | outChannels: 64, kernelSize: 7, stride: 1, padding: 3, inChannels: 1 |
 | 3 | bn | `batchNorm` | normalizedShape: 64 |
 | 4 | act | `relu` |   |
 | 5 | pool | `maxpool1d` | kernelSize: 2, stride: 2 |
-| 6 | conv2 | `conv1d` | outChannels: 128, kernelSize: 5, stride: 1, padding: 2 |
+| 6 | conv2 | `conv1d` | outChannels: 128, kernelSize: 5, stride: 1, padding: 2, inChannels: 64 |
 | 7 | bn | `batchNorm` | normalizedShape: 128 |
 | 8 | act | `relu` |   |
 | 9 | pool | `maxpool1d` | kernelSize: 2, stride: 2 |
 | 10 | lstm | `lstm` | inFeatures: 128, hiddenSize: 128, numLayers: 2, returnSequences: false |
 | 11 | drop | `dropout` | p: 0.3 |
-| 12 | classifier | `linear` | outFeatures: 5 |
+| 12 | classifier | `linear` | outFeatures: 5, inFeatures: 128 |
 | 13 | logits | `output` |   |
 
 </details>

@@ -1,6 +1,6 @@
 # T5-Small
 
-The text-to-text encoder-decoder that reframed every NLP task as sequence generation. This graph shows the full two-stream layout: bidirectional encoder, causal decoder, and cross-attention tying them together.
+The text-to-text encoder-decoder that reframed every NLP task as sequence generation. The full two-stream graph: bidirectional encoder, causal decoder, and cross-attention tying them together.
 
 ## Model URLs
 
@@ -12,44 +12,42 @@ The text-to-text encoder-decoder that reframed every NLP task as sequence genera
 
 ## Architecture
 
-![T5-Small architecture](assets/diagram.svg)
+![T5-Small block view](assets/block.svg)
+
+*Compact view: one block expanded. The full graph below is what `model.json` holds.*
 
 <details>
-<summary><b>Layer-by-layer (23 nodes)</b></summary>
+<summary><b>Full graph: 53 nodes (click to expand)</b></summary>
 
-| # | Layer | Type | Params |
-|---|---|---|---|
-| 1 | encoder_ids | `input` | shape: [1, 512] |
-| 2 | shared_embed | `embedding` | numEmbeddings: 32128, embeddingDim: 512 |
-| 3 | enc_norm | `rmsNorm` | normalizedShape: 512 |
-| 4 | enc_self_attn | `multiHeadAttention` | embedDim: 512, numHeads: 8 |
-| 5 | enc_residual | `add` |   |
-| 6 | enc_ffn_norm | `rmsNorm` | normalizedShape: 512 |
-| 7 | enc_ffn | `feedForward` | embedDim: 512, ffDim: 2048 |
-| 8 | enc_ffn_residual | `add` |   |
-| 9 | enc_out_norm | `layerNorm` | normalizedShape: 512 |
-| 10 | decoder_ids | `input` | shape: [1, 128] |
-| 11 | dec_embed | `embedding` | numEmbeddings: 32128, embeddingDim: 512 |
-| 12 | dec_sa_norm | `rmsNorm` | normalizedShape: 512 |
-| 13 | dec_self_attn | `causalAttention` | embedDim: 512, numHeads: 8 |
-| 14 | dec_sa_residual | `add` |   |
-| 15 | dec_ca_norm | `rmsNorm` | normalizedShape: 512 |
-| 16 | cross_attn | `multiHeadAttention` | embedDim: 512, numHeads: 8 |
-| 17 | dec_ca_residual | `add` |   |
-| 18 | dec_ffn_norm | `rmsNorm` | normalizedShape: 512 |
-| 19 | dec_ffn | `feedForward` | embedDim: 512, ffDim: 2048 |
-| 20 | dec_ffn_residual | `add` |   |
-| 21 | dec_out_norm | `layerNorm` | normalizedShape: 512 |
-| 22 | lm_head | `linear` | outFeatures: 32128 |
-| 23 | logits | `output` |   |
+![T5-Small full architecture](assets/diagram.svg)
 
 </details>
 
-This graph ships in Neurarch's in-app template library; the copy here passes shape propagation with zero errors.
+| Hyperparameter | Value |
+|---|---|
+| Type | Encoder-decoder transformer (text-to-text) |
+| Parameters | 60.5M |
+| Layers | 6 encoder + 6 decoder |
+| Hidden size | 512 |
+| Attention | 8 heads; decoder adds cross-attention |
+| FFN | Dense, 2048, ReLU |
+| Normalization | RMSNorm, pre-norm |
+| Positions | Relative position biases |
+| Vocabulary | 32,128 (shared) |
+
+`model.json` is the full graph, produced with the same import path the Neurarch app uses for "load from Hugging Face".
+
+## Parameter check
+
+Neurarch's per-layer parameter estimate over this graph: **87.2M**.
+Hugging Face safetensors metadata reports **60.5M** for the real weights.
+Deviation from the authoritative count (60.5M): **+44.1%**.
+
+> T5 ties the encoder embedding, decoder embedding, and LM head to one 16.4M-parameter matrix; the graph carries each occurrence separately, so the naive per-layer sum overcounts by roughly 27M. The real unique count is 60.5M (safetensors).
 
 ## Design notes
 
-- Both streams share one 32128-token SentencePiece embedding matrix.
+- Both streams and the LM head share one 32128-token SentencePiece embedding matrix (see the parameter note below).
 - RMSNorm (T5 called it "simplified LayerNorm") years before the Llama lineage made it standard; relative position biases instead of absolute embeddings.
 - The graph makes the three attention types visually distinct: encoder self-attention, decoder causal self-attention, and cross-attention.
 
@@ -57,8 +55,8 @@ This graph ships in Neurarch's in-app template library; the copy here passes sha
 
 | File | What it is |
 |---|---|
-| [`model.json`](model.json) | The Neurarch graph. Shape-validated; open it at [neurarch.com](https://www.neurarch.com/) to edit or export training code. |
-| [`assets/diagram.svg`](assets/diagram.svg) | Vector diagram (papers, slides). |
-| [`assets/diagram.png`](assets/diagram.png) | Raster diagram (renders everywhere). |
+| [`model.json`](model.json) | The full Neurarch graph (every layer, real dimensions). Open it at [neurarch.com](https://www.neurarch.com/) to edit or export training code. |
+| [`assets/diagram.svg`](assets/diagram.svg) / [`.png`](assets/diagram.png) | Diagram of the full graph. |
+| [`assets/block.svg`](assets/block.svg) / [`.png`](assets/block.png) | Compact one-block explainer view. |
 
 **License:** Apache 2.0. The graph and diagrams here describe the architecture; any referenced weights remain under the upstream license.

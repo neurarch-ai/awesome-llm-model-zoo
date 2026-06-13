@@ -210,7 +210,8 @@
       "name": "lm_head",
       "scope": "head",
       "params": {
-        "outFeatures": 32064
+        "outFeatures": 32064,
+        "inFeatures": 3072
       },
       "position": {
         "x": 400,

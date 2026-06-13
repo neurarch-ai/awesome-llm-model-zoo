@@ -29,7 +29,7 @@ The Phi-3 Mini (3.8B) decoder block: a compact Llama-style block at 3072 hidden,
 | 8 | ffn | `swiglu` | embedDim: 3072, intermediateSize: 8192 |
 | 9 | residual_2 | `add` |   |
 | 10 | norm_out | `rmsNorm` | normalizedShape: 3072 |
-| 11 | lm_head | `linear` | outFeatures: 32064 |
+| 11 | lm_head | `linear` | outFeatures: 32064, inFeatures: 3072 |
 | 12 | output | `output` |   |
 
 </details>

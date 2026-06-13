@@ -12,12 +12,21 @@ OpenBMB's flagship small LLM, a 2.4B deep-and-thin decoder that punches above it
 
 ## Architecture
 
-![MiniCPM-2B architecture](assets/diagram.svg)
+![MiniCPM-2B block view](assets/block.svg)
+
+*Compact view: one block expanded. The full graph below is what `model.json` holds.*
+
+<details>
+<summary><b>Full graph: 243 nodes (click to expand)</b></summary>
+
+![MiniCPM-2B full architecture](assets/diagram.svg)
+
+</details>
 
 | Hyperparameter | Value |
 |---|---|
 | Type | Decoder-only transformer (causal LM) |
-| Parameters | 2.4B (non-embedding) |
+| Parameters | 2.7B total (2.4B non-embedding) |
 | Layers | 40 |
 | Hidden size | 2304 |
 | Attention | Multi-head: 36 heads |
@@ -28,7 +37,14 @@ OpenBMB's flagship small LLM, a 2.4B deep-and-thin decoder that punches above it
 | Vocabulary | 122,753 |
 | Max context | 4,096 |
 
-The diagram and `model.json` show the full forward path with one of the 40 identical decoder blocks expanded (the stack repeats x40). All hyperparameters are taken from the official `config.json` on Hugging Face.
+`model.json` is the full 40-layer graph, produced with the same import path the Neurarch app uses for "load from Hugging Face", with all hyperparameters from the official `config.json`.
+
+## Parameter check
+
+Neurarch's per-layer parameter estimate over this graph: **2.72B**.
+Deviation from the authoritative count (2.72B): **+0.2%**.
+
+> MiniCPM ties input and output embeddings; the official 2.4B figure excludes the 283M-parameter embedding table, while the graph sum counts it once.
 
 ## Design notes
 
@@ -41,8 +57,8 @@ The diagram and `model.json` show the full forward path with one of the 40 ident
 
 | File | What it is |
 |---|---|
-| [`model.json`](model.json) | The Neurarch graph. Shape-validated; open it at [neurarch.com](https://www.neurarch.com/) to edit or export training code. |
-| [`assets/diagram.svg`](assets/diagram.svg) | Vector diagram (papers, slides). |
-| [`assets/diagram.png`](assets/diagram.png) | Raster diagram (renders everywhere). |
+| [`model.json`](model.json) | The full Neurarch graph (every layer, real dimensions). Open it at [neurarch.com](https://www.neurarch.com/) to edit or export training code. |
+| [`assets/diagram.svg`](assets/diagram.svg) / [`.png`](assets/diagram.png) | Diagram of the full graph. |
+| [`assets/block.svg`](assets/block.svg) / [`.png`](assets/block.png) | Compact one-block explainer view. |
 
 **License:** Apache 2.0 (code); weights free for commercial use after registration. The graph and diagrams here describe the architecture; the model weights remain under the upstream license.

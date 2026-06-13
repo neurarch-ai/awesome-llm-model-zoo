@@ -12,12 +12,21 @@ Kunlun Tech's 13B bilingual base model, notable for an explicitly ablated deep-a
 
 ## Architecture
 
-![Skywork-13B architecture](assets/diagram.svg)
+![Skywork-13B block view](assets/block.svg)
+
+*Compact view: one block expanded. The full graph below is what `model.json` holds.*
+
+<details>
+<summary><b>Full graph: 317 nodes (click to expand)</b></summary>
+
+![Skywork-13B full architecture](assets/diagram.svg)
+
+</details>
 
 | Hyperparameter | Value |
 |---|---|
 | Type | Decoder-only transformer (causal LM) |
-| Parameters | 13B |
+| Parameters | 13.8B |
 | Layers | 52 |
 | Hidden size | 4608 |
 | Attention | Multi-head: 36 heads |
@@ -28,7 +37,12 @@ Kunlun Tech's 13B bilingual base model, notable for an explicitly ablated deep-a
 | Vocabulary | 65,519 |
 | Max context | 4,096 |
 
-The diagram and `model.json` show the full forward path with one of the 52 identical decoder blocks expanded (the stack repeats x52). All hyperparameters are taken from the official `config.json` on Hugging Face.
+`model.json` is the full 52-layer graph, produced with the same import path the Neurarch app uses for "load from Hugging Face", with all hyperparameters from the official `config.json`.
+
+## Parameter check
+
+Neurarch's per-layer parameter estimate over this graph: **13.85B**.
+Deviation from the authoritative count (13.85B): **+0.0%**.
 
 ## Design notes
 
@@ -41,8 +55,8 @@ The diagram and `model.json` show the full forward path with one of the 52 ident
 
 | File | What it is |
 |---|---|
-| [`model.json`](model.json) | The Neurarch graph. Shape-validated; open it at [neurarch.com](https://www.neurarch.com/) to edit or export training code. |
-| [`assets/diagram.svg`](assets/diagram.svg) | Vector diagram (papers, slides). |
-| [`assets/diagram.png`](assets/diagram.png) | Raster diagram (renders everywhere). |
+| [`model.json`](model.json) | The full Neurarch graph (every layer, real dimensions). Open it at [neurarch.com](https://www.neurarch.com/) to edit or export training code. |
+| [`assets/diagram.svg`](assets/diagram.svg) / [`.png`](assets/diagram.png) | Diagram of the full graph. |
+| [`assets/block.svg`](assets/block.svg) / [`.png`](assets/block.png) | Compact one-block explainer view. |
 
 **License:** Code Apache-style; weights under the Skywork Community License (free commercial use after agreement). The graph and diagrams here describe the architecture; the model weights remain under the upstream license.

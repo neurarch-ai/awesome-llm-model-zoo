@@ -39,7 +39,8 @@
           25
         ],
         "stride": 1,
-        "padding": 0
+        "padding": 0,
+        "inChannels": 1
       },
       "inputs": [
         "input-1"
@@ -64,7 +65,8 @@
           1
         ],
         "stride": 1,
-        "padding": 0
+        "padding": 0,
+        "inChannels": 40
       },
       "inputs": [
         "conv-temporal"
@@ -151,7 +153,8 @@
           1
         ],
         "stride": 1,
-        "padding": 0
+        "padding": 0,
+        "inChannels": 40
       },
       "inputs": [
         "pool-1"
@@ -419,7 +422,8 @@
         "y": 3450
       },
       "params": {
-        "outFeatures": 4
+        "outFeatures": 4,
+        "inFeatures": null
       },
       "inputs": [
         "flatten-1"

@@ -13,29 +13,33 @@ The 2024 rebuild of BERT with a decade of decoder-side lessons applied: RoPE, Ge
 
 ## Architecture
 
-![ModernBERT-Base architecture](assets/diagram.svg)
-
 <details>
-<summary><b>Layer-by-layer (12 nodes)</b></summary>
+<summary><b>Full graph: 91 nodes (click to expand)</b></summary>
 
-| # | Layer | Type | Params |
-|---|---|---|---|
-| 1 | input_ids | `input` | shape: [1, 8192] |
-| 2 | tok_embed | `embedding` | numEmbeddings: 50368, embeddingDim: 768 |
-| 3 | embed_norm | `layerNorm` | normalizedShape: 768 |
-| 4 | attn_norm | `layerNorm` | normalizedShape: 768 |
-| 5 | self_attn | `multiHeadAttention` | embedDim: 768, numHeads: 12 |
-| 6 | rope | `rope` | dim: 64 |
-| 7 | residual_1 | `add` |   |
-| 8 | ffn_norm | `layerNorm` | normalizedShape: 768 |
-| 9 | geglu_ffn | `geglu` | dim: 768, hiddenDim: 1152 |
-| 10 | residual_2 | `add` |   |
-| 11 | final_norm | `layerNorm` | normalizedShape: 768 |
-| 12 | hidden_states | `output` |   |
+![ModernBERT-Base full architecture](assets/diagram.svg)
 
 </details>
 
-This graph is hand-built for the zoo, passes shape propagation with zero errors, and has its key dimensions verified against the official config.json.
+| Hyperparameter | Value |
+|---|---|
+| Type | Bidirectional encoder |
+| Parameters | 149M |
+| Layers | 22 |
+| Hidden size | 768 |
+| Attention | 12 heads; 5:1 local(128):global, RoPE |
+| FFN | GeGLU, 1152 (paired) |
+| Normalization | LayerNorm (bias-free), pre-norm |
+| Positions | RoPE (theta 10000 local / 160000 global) |
+| Vocabulary | 50,368 |
+| Max context | 8,192 |
+
+`model.json` is the full graph, produced with the same import path the Neurarch app uses for "load from Hugging Face" (with importer fixes noted in the generator script).
+
+## Parameter check
+
+Neurarch's per-layer parameter estimate over this graph: **149.1M**.
+Hugging Face safetensors metadata reports **149.7M** for the real weights.
+Deviation from the authoritative count (149.7M): **-0.4%**.
 
 ## Design notes
 
@@ -48,8 +52,7 @@ This graph is hand-built for the zoo, passes shape propagation with zero errors,
 
 | File | What it is |
 |---|---|
-| [`model.json`](model.json) | The Neurarch graph. Shape-validated; open it at [neurarch.com](https://www.neurarch.com/) to edit or export training code. |
-| [`assets/diagram.svg`](assets/diagram.svg) | Vector diagram (papers, slides). |
-| [`assets/diagram.png`](assets/diagram.png) | Raster diagram (renders everywhere). |
+| [`model.json`](model.json) | The full Neurarch graph (every layer, real dimensions). Open it at [neurarch.com](https://www.neurarch.com/) to edit or export training code. |
+| [`assets/diagram.svg`](assets/diagram.svg) / [`.png`](assets/diagram.png) | Diagram of the full graph. |
 
 **License:** Apache 2.0. The graph and diagrams here describe the architecture; any referenced weights remain under the upstream license.

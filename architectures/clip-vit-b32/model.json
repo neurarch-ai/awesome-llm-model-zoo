@@ -1,10 +1,10 @@
 {
   "id": "clip-vit-b32",
   "name": "CLIP ViT-B/32",
-  "description": "CLIP ViT-B/32 (OpenAI): contrastive image-text dual encoder. ViT-B/32 image tower and 12-layer text tower projected to a shared 512-dim space, scored by scaled dot product. Tower dims verified against the official config.json.",
+  "description": "CLIP ViT-B/32 (OpenAI): full graph; dimensions verified against the official config.json.",
   "components": [
     {
-      "id": "input-1",
+      "id": "n1",
       "type": "input",
       "name": "image",
       "position": {
@@ -13,6 +13,7 @@
       },
       "params": {
         "shape": [
+          1,
           3,
           224,
           224
@@ -20,11 +21,11 @@
       },
       "inputs": [],
       "outputs": [
-        "patchEmbed-2"
+        "n2"
       ]
     },
     {
-      "id": "patchEmbed-2",
+      "id": "n2",
       "type": "patchEmbed",
       "name": "patch_embed",
       "position": {
@@ -34,19 +35,20 @@
       "params": {
         "imgSize": 224,
         "patchSize": 32,
-        "embedDim": 768
+        "embedDim": 768,
+        "inChans": 3
       },
       "inputs": [
-        "input-1"
+        "n1"
       ],
       "outputs": [
-        "positionalEncoding-3"
+        "n3"
       ],
       "scope": "vision",
       "notes": "32x32 patches: 224x224 image becomes 49 tokens of 768 dims (plus a class token)."
     },
     {
-      "id": "positionalEncoding-3",
+      "id": "n3",
       "type": "positionalEncoding",
       "name": "vis_pos",
       "position": {
@@ -58,17 +60,17 @@
         "embedDim": 768
       },
       "inputs": [
-        "patchEmbed-2"
+        "n2"
       ],
       "outputs": [
-        "transformerBlock-4"
+        "n4"
       ],
       "scope": "vision"
     },
     {
-      "id": "transformerBlock-4",
+      "id": "n4",
       "type": "transformerBlock",
-      "name": "vis_encoder",
+      "name": "vis_block_1",
       "position": {
         "x": 150,
         "y": 500
@@ -79,78 +81,310 @@
         "ffDim": 3072
       },
       "inputs": [
-        "positionalEncoding-3"
+        "n3"
       ],
       "outputs": [
-        "layerNorm-5"
+        "n5"
       ],
-      "scope": "vision",
-      "notes": "One of 12 identical pre-norm ViT blocks (12 heads, MLP 3072, QuickGELU); repeats x12."
+      "scope": "vision.layer.0",
+      "notes": "Pre-norm ViT block (12 heads, MLP 3072, QuickGELU). One of 12."
     },
     {
-      "id": "layerNorm-5",
-      "type": "layerNorm",
-      "name": "vis_norm",
+      "id": "n5",
+      "type": "transformerBlock",
+      "name": "vis_block_2",
       "position": {
         "x": 150,
         "y": 650
       },
       "params": {
-        "normalizedShape": 768
+        "embedDim": 768,
+        "numHeads": 12,
+        "ffDim": 3072
       },
       "inputs": [
-        "transformerBlock-4"
+        "n4"
       ],
       "outputs": [
-        "globalAvgPool1d-6"
+        "n6"
       ],
-      "scope": "vision"
+      "scope": "vision.layer.1"
     },
     {
-      "id": "globalAvgPool1d-6",
-      "type": "globalAvgPool1d",
-      "name": "vis_pool",
+      "id": "n6",
+      "type": "transformerBlock",
+      "name": "vis_block_3",
       "position": {
         "x": 150,
         "y": 800
       },
-      "params": {},
+      "params": {
+        "embedDim": 768,
+        "numHeads": 12,
+        "ffDim": 3072
+      },
       "inputs": [
-        "layerNorm-5"
+        "n5"
       ],
       "outputs": [
-        "linear-7"
+        "n7"
       ],
-      "scope": "vision",
-      "notes": "Stand-in for class-token selection."
+      "scope": "vision.layer.2"
     },
     {
-      "id": "linear-7",
-      "type": "linear",
-      "name": "img_proj",
+      "id": "n7",
+      "type": "transformerBlock",
+      "name": "vis_block_4",
       "position": {
         "x": 150,
         "y": 950
       },
       "params": {
-        "inFeatures": 768,
-        "outFeatures": 512
+        "embedDim": 768,
+        "numHeads": 12,
+        "ffDim": 3072
       },
       "inputs": [
-        "globalAvgPool1d-6"
+        "n6"
       ],
       "outputs": [
-        "matmul-15"
+        "n8"
+      ],
+      "scope": "vision.layer.3"
+    },
+    {
+      "id": "n8",
+      "type": "transformerBlock",
+      "name": "vis_block_5",
+      "position": {
+        "x": 150,
+        "y": 1100
+      },
+      "params": {
+        "embedDim": 768,
+        "numHeads": 12,
+        "ffDim": 3072
+      },
+      "inputs": [
+        "n7"
+      ],
+      "outputs": [
+        "n9"
+      ],
+      "scope": "vision.layer.4"
+    },
+    {
+      "id": "n9",
+      "type": "transformerBlock",
+      "name": "vis_block_6",
+      "position": {
+        "x": 150,
+        "y": 1250
+      },
+      "params": {
+        "embedDim": 768,
+        "numHeads": 12,
+        "ffDim": 3072
+      },
+      "inputs": [
+        "n8"
+      ],
+      "outputs": [
+        "n10"
+      ],
+      "scope": "vision.layer.5"
+    },
+    {
+      "id": "n10",
+      "type": "transformerBlock",
+      "name": "vis_block_7",
+      "position": {
+        "x": 150,
+        "y": 1400
+      },
+      "params": {
+        "embedDim": 768,
+        "numHeads": 12,
+        "ffDim": 3072
+      },
+      "inputs": [
+        "n9"
+      ],
+      "outputs": [
+        "n11"
+      ],
+      "scope": "vision.layer.6"
+    },
+    {
+      "id": "n11",
+      "type": "transformerBlock",
+      "name": "vis_block_8",
+      "position": {
+        "x": 150,
+        "y": 1550
+      },
+      "params": {
+        "embedDim": 768,
+        "numHeads": 12,
+        "ffDim": 3072
+      },
+      "inputs": [
+        "n10"
+      ],
+      "outputs": [
+        "n12"
+      ],
+      "scope": "vision.layer.7"
+    },
+    {
+      "id": "n12",
+      "type": "transformerBlock",
+      "name": "vis_block_9",
+      "position": {
+        "x": 150,
+        "y": 1700
+      },
+      "params": {
+        "embedDim": 768,
+        "numHeads": 12,
+        "ffDim": 3072
+      },
+      "inputs": [
+        "n11"
+      ],
+      "outputs": [
+        "n13"
+      ],
+      "scope": "vision.layer.8"
+    },
+    {
+      "id": "n13",
+      "type": "transformerBlock",
+      "name": "vis_block_10",
+      "position": {
+        "x": 150,
+        "y": 1850
+      },
+      "params": {
+        "embedDim": 768,
+        "numHeads": 12,
+        "ffDim": 3072
+      },
+      "inputs": [
+        "n12"
+      ],
+      "outputs": [
+        "n14"
+      ],
+      "scope": "vision.layer.9"
+    },
+    {
+      "id": "n14",
+      "type": "transformerBlock",
+      "name": "vis_block_11",
+      "position": {
+        "x": 150,
+        "y": 2000
+      },
+      "params": {
+        "embedDim": 768,
+        "numHeads": 12,
+        "ffDim": 3072
+      },
+      "inputs": [
+        "n13"
+      ],
+      "outputs": [
+        "n15"
+      ],
+      "scope": "vision.layer.10"
+    },
+    {
+      "id": "n15",
+      "type": "transformerBlock",
+      "name": "vis_block_12",
+      "position": {
+        "x": 150,
+        "y": 2150
+      },
+      "params": {
+        "embedDim": 768,
+        "numHeads": 12,
+        "ffDim": 3072
+      },
+      "inputs": [
+        "n14"
+      ],
+      "outputs": [
+        "n16"
+      ],
+      "scope": "vision.layer.11"
+    },
+    {
+      "id": "n16",
+      "type": "layerNorm",
+      "name": "vis_norm",
+      "position": {
+        "x": 150,
+        "y": 2300
+      },
+      "params": {
+        "normalizedShape": 768
+      },
+      "inputs": [
+        "n15"
+      ],
+      "outputs": [
+        "n17"
+      ],
+      "scope": "vision"
+    },
+    {
+      "id": "n17",
+      "type": "globalAvgPool1d",
+      "name": "vis_pool",
+      "position": {
+        "x": 150,
+        "y": 2450
+      },
+      "params": {},
+      "inputs": [
+        "n16"
+      ],
+      "outputs": [
+        "n18"
+      ],
+      "scope": "vision",
+      "notes": "Stand-in for class-token selection."
+    },
+    {
+      "id": "n18",
+      "type": "linear",
+      "name": "img_proj",
+      "position": {
+        "x": 150,
+        "y": 2600
+      },
+      "params": {
+        "inFeatures": 768,
+        "outFeatures": 512,
+        "bias": false
+      },
+      "inputs": [
+        "n17"
+      ],
+      "outputs": [
+        "n37"
       ],
       "scope": "vision",
       "notes": "Projection into the shared 512-dim embedding space."
     },
     {
-      "id": "input-8",
+      "id": "n19",
       "type": "input",
       "name": "tokens",
       "position": {
-        "x": 600,
+        "x": 650,
         "y": 50
       },
       "params": {
@@ -161,16 +395,16 @@
       },
       "inputs": [],
       "outputs": [
-        "embedding-9"
+        "n20"
       ],
       "notes": "77-token max context."
     },
     {
-      "id": "embedding-9",
+      "id": "n20",
       "type": "embedding",
       "name": "tok_embed",
       "position": {
-        "x": 600,
+        "x": 650,
         "y": 200
       },
       "params": {
@@ -178,20 +412,20 @@
         "embeddingDim": 512
       },
       "inputs": [
-        "input-8"
+        "n19"
       ],
       "outputs": [
-        "positionalEncoding-10"
+        "n21"
       ],
       "scope": "text",
       "notes": "49408-token BPE vocabulary."
     },
     {
-      "id": "positionalEncoding-10",
+      "id": "n21",
       "type": "positionalEncoding",
       "name": "txt_pos",
       "position": {
-        "x": 600,
+        "x": 650,
         "y": 350
       },
       "params": {
@@ -199,19 +433,19 @@
         "embedDim": 512
       },
       "inputs": [
-        "embedding-9"
+        "n20"
       ],
       "outputs": [
-        "transformerBlock-11"
+        "n22"
       ],
       "scope": "text"
     },
     {
-      "id": "transformerBlock-11",
+      "id": "n22",
       "type": "transformerBlock",
-      "name": "txt_encoder",
+      "name": "txt_block_1",
       "position": {
-        "x": 600,
+        "x": 650,
         "y": 500
       },
       "params": {
@@ -220,101 +454,333 @@
         "ffDim": 2048
       },
       "inputs": [
-        "positionalEncoding-10"
+        "n21"
       ],
       "outputs": [
-        "layerNorm-12"
+        "n23"
       ],
-      "scope": "text",
-      "notes": "One of 12 identical causal text blocks (8 heads, MLP 2048, QuickGELU); repeats x12."
+      "scope": "text.layer.0",
+      "notes": "Causal text block (8 heads, MLP 2048, QuickGELU). One of 12."
     },
     {
-      "id": "layerNorm-12",
+      "id": "n23",
+      "type": "transformerBlock",
+      "name": "txt_block_2",
+      "position": {
+        "x": 650,
+        "y": 650
+      },
+      "params": {
+        "embedDim": 512,
+        "numHeads": 8,
+        "ffDim": 2048
+      },
+      "inputs": [
+        "n22"
+      ],
+      "outputs": [
+        "n24"
+      ],
+      "scope": "text.layer.1"
+    },
+    {
+      "id": "n24",
+      "type": "transformerBlock",
+      "name": "txt_block_3",
+      "position": {
+        "x": 650,
+        "y": 800
+      },
+      "params": {
+        "embedDim": 512,
+        "numHeads": 8,
+        "ffDim": 2048
+      },
+      "inputs": [
+        "n23"
+      ],
+      "outputs": [
+        "n25"
+      ],
+      "scope": "text.layer.2"
+    },
+    {
+      "id": "n25",
+      "type": "transformerBlock",
+      "name": "txt_block_4",
+      "position": {
+        "x": 650,
+        "y": 950
+      },
+      "params": {
+        "embedDim": 512,
+        "numHeads": 8,
+        "ffDim": 2048
+      },
+      "inputs": [
+        "n24"
+      ],
+      "outputs": [
+        "n26"
+      ],
+      "scope": "text.layer.3"
+    },
+    {
+      "id": "n26",
+      "type": "transformerBlock",
+      "name": "txt_block_5",
+      "position": {
+        "x": 650,
+        "y": 1100
+      },
+      "params": {
+        "embedDim": 512,
+        "numHeads": 8,
+        "ffDim": 2048
+      },
+      "inputs": [
+        "n25"
+      ],
+      "outputs": [
+        "n27"
+      ],
+      "scope": "text.layer.4"
+    },
+    {
+      "id": "n27",
+      "type": "transformerBlock",
+      "name": "txt_block_6",
+      "position": {
+        "x": 650,
+        "y": 1250
+      },
+      "params": {
+        "embedDim": 512,
+        "numHeads": 8,
+        "ffDim": 2048
+      },
+      "inputs": [
+        "n26"
+      ],
+      "outputs": [
+        "n28"
+      ],
+      "scope": "text.layer.5"
+    },
+    {
+      "id": "n28",
+      "type": "transformerBlock",
+      "name": "txt_block_7",
+      "position": {
+        "x": 650,
+        "y": 1400
+      },
+      "params": {
+        "embedDim": 512,
+        "numHeads": 8,
+        "ffDim": 2048
+      },
+      "inputs": [
+        "n27"
+      ],
+      "outputs": [
+        "n29"
+      ],
+      "scope": "text.layer.6"
+    },
+    {
+      "id": "n29",
+      "type": "transformerBlock",
+      "name": "txt_block_8",
+      "position": {
+        "x": 650,
+        "y": 1550
+      },
+      "params": {
+        "embedDim": 512,
+        "numHeads": 8,
+        "ffDim": 2048
+      },
+      "inputs": [
+        "n28"
+      ],
+      "outputs": [
+        "n30"
+      ],
+      "scope": "text.layer.7"
+    },
+    {
+      "id": "n30",
+      "type": "transformerBlock",
+      "name": "txt_block_9",
+      "position": {
+        "x": 650,
+        "y": 1700
+      },
+      "params": {
+        "embedDim": 512,
+        "numHeads": 8,
+        "ffDim": 2048
+      },
+      "inputs": [
+        "n29"
+      ],
+      "outputs": [
+        "n31"
+      ],
+      "scope": "text.layer.8"
+    },
+    {
+      "id": "n31",
+      "type": "transformerBlock",
+      "name": "txt_block_10",
+      "position": {
+        "x": 650,
+        "y": 1850
+      },
+      "params": {
+        "embedDim": 512,
+        "numHeads": 8,
+        "ffDim": 2048
+      },
+      "inputs": [
+        "n30"
+      ],
+      "outputs": [
+        "n32"
+      ],
+      "scope": "text.layer.9"
+    },
+    {
+      "id": "n32",
+      "type": "transformerBlock",
+      "name": "txt_block_11",
+      "position": {
+        "x": 650,
+        "y": 2000
+      },
+      "params": {
+        "embedDim": 512,
+        "numHeads": 8,
+        "ffDim": 2048
+      },
+      "inputs": [
+        "n31"
+      ],
+      "outputs": [
+        "n33"
+      ],
+      "scope": "text.layer.10"
+    },
+    {
+      "id": "n33",
+      "type": "transformerBlock",
+      "name": "txt_block_12",
+      "position": {
+        "x": 650,
+        "y": 2150
+      },
+      "params": {
+        "embedDim": 512,
+        "numHeads": 8,
+        "ffDim": 2048
+      },
+      "inputs": [
+        "n32"
+      ],
+      "outputs": [
+        "n34"
+      ],
+      "scope": "text.layer.11"
+    },
+    {
+      "id": "n34",
       "type": "layerNorm",
       "name": "txt_norm",
       "position": {
-        "x": 600,
-        "y": 650
+        "x": 650,
+        "y": 2300
       },
       "params": {
         "normalizedShape": 512
       },
       "inputs": [
-        "transformerBlock-11"
+        "n33"
       ],
       "outputs": [
-        "globalAvgPool1d-13"
+        "n35"
       ],
       "scope": "text"
     },
     {
-      "id": "globalAvgPool1d-13",
+      "id": "n35",
       "type": "globalAvgPool1d",
       "name": "txt_pool",
       "position": {
-        "x": 600,
-        "y": 800
+        "x": 650,
+        "y": 2450
       },
       "params": {},
       "inputs": [
-        "layerNorm-12"
+        "n34"
       ],
       "outputs": [
-        "linear-14"
+        "n36"
       ],
       "scope": "text",
       "notes": "Stand-in for EOT-token selection."
     },
     {
-      "id": "linear-14",
+      "id": "n36",
       "type": "linear",
       "name": "txt_proj",
       "position": {
-        "x": 600,
-        "y": 950
+        "x": 650,
+        "y": 2600
       },
       "params": {
         "inFeatures": 512,
-        "outFeatures": 512
+        "outFeatures": 512,
+        "bias": false
       },
       "inputs": [
-        "globalAvgPool1d-13"
+        "n35"
       ],
       "outputs": [
-        "matmul-15"
+        "n37"
       ],
       "scope": "text",
       "notes": "Projection into the shared 512-dim embedding space."
     },
     {
-      "id": "matmul-15",
+      "id": "n37",
       "type": "matmul",
       "name": "similarity",
       "position": {
-        "x": 375,
-        "y": 1100
+        "x": 400,
+        "y": 2750
       },
       "params": {},
       "inputs": [
-        "linear-7",
-        "linear-14"
+        "n18",
+        "n36"
       ],
       "outputs": [
-        "output-16"
+        "n38"
       ],
       "notes": "Scaled dot product between L2-normalized image and text embeddings (learned temperature). Over a batch this is the NxN contrastive logit matrix."
     },
     {
-      "id": "output-16",
+      "id": "n38",
       "type": "output",
       "name": "logits",
       "position": {
-        "x": 375,
-        "y": 1250
+        "x": 400,
+        "y": 2900
       },
       "params": {},
       "inputs": [
-        "matmul-15"
+        "n37"
       ],
       "outputs": []
     }
@@ -322,78 +788,188 @@
   "connections": [
     {
       "id": "c1",
-      "from": "input-1",
-      "to": "patchEmbed-2"
+      "from": "n1",
+      "to": "n2"
     },
     {
       "id": "c2",
-      "from": "patchEmbed-2",
-      "to": "positionalEncoding-3"
+      "from": "n2",
+      "to": "n3"
     },
     {
       "id": "c3",
-      "from": "positionalEncoding-3",
-      "to": "transformerBlock-4"
+      "from": "n3",
+      "to": "n4"
     },
     {
       "id": "c4",
-      "from": "transformerBlock-4",
-      "to": "layerNorm-5"
+      "from": "n4",
+      "to": "n5"
     },
     {
       "id": "c5",
-      "from": "layerNorm-5",
-      "to": "globalAvgPool1d-6"
+      "from": "n5",
+      "to": "n6"
     },
     {
       "id": "c6",
-      "from": "globalAvgPool1d-6",
-      "to": "linear-7"
+      "from": "n6",
+      "to": "n7"
     },
     {
       "id": "c7",
-      "from": "input-8",
-      "to": "embedding-9"
+      "from": "n7",
+      "to": "n8"
     },
     {
       "id": "c8",
-      "from": "embedding-9",
-      "to": "positionalEncoding-10"
+      "from": "n8",
+      "to": "n9"
     },
     {
       "id": "c9",
-      "from": "positionalEncoding-10",
-      "to": "transformerBlock-11"
+      "from": "n9",
+      "to": "n10"
     },
     {
       "id": "c10",
-      "from": "transformerBlock-11",
-      "to": "layerNorm-12"
+      "from": "n10",
+      "to": "n11"
     },
     {
       "id": "c11",
-      "from": "layerNorm-12",
-      "to": "globalAvgPool1d-13"
+      "from": "n11",
+      "to": "n12"
     },
     {
       "id": "c12",
-      "from": "globalAvgPool1d-13",
-      "to": "linear-14"
+      "from": "n12",
+      "to": "n13"
     },
     {
       "id": "c13",
-      "from": "linear-7",
-      "to": "matmul-15"
+      "from": "n13",
+      "to": "n14"
     },
     {
       "id": "c14",
-      "from": "linear-14",
-      "to": "matmul-15"
+      "from": "n14",
+      "to": "n15"
     },
     {
       "id": "c15",
-      "from": "matmul-15",
-      "to": "output-16"
+      "from": "n15",
+      "to": "n16"
+    },
+    {
+      "id": "c16",
+      "from": "n16",
+      "to": "n17"
+    },
+    {
+      "id": "c17",
+      "from": "n17",
+      "to": "n18"
+    },
+    {
+      "id": "c18",
+      "from": "n19",
+      "to": "n20"
+    },
+    {
+      "id": "c19",
+      "from": "n20",
+      "to": "n21"
+    },
+    {
+      "id": "c20",
+      "from": "n21",
+      "to": "n22"
+    },
+    {
+      "id": "c21",
+      "from": "n22",
+      "to": "n23"
+    },
+    {
+      "id": "c22",
+      "from": "n23",
+      "to": "n24"
+    },
+    {
+      "id": "c23",
+      "from": "n24",
+      "to": "n25"
+    },
+    {
+      "id": "c24",
+      "from": "n25",
+      "to": "n26"
+    },
+    {
+      "id": "c25",
+      "from": "n26",
+      "to": "n27"
+    },
+    {
+      "id": "c26",
+      "from": "n27",
+      "to": "n28"
+    },
+    {
+      "id": "c27",
+      "from": "n28",
+      "to": "n29"
+    },
+    {
+      "id": "c28",
+      "from": "n29",
+      "to": "n30"
+    },
+    {
+      "id": "c29",
+      "from": "n30",
+      "to": "n31"
+    },
+    {
+      "id": "c30",
+      "from": "n31",
+      "to": "n32"
+    },
+    {
+      "id": "c31",
+      "from": "n32",
+      "to": "n33"
+    },
+    {
+      "id": "c32",
+      "from": "n33",
+      "to": "n34"
+    },
+    {
+      "id": "c33",
+      "from": "n34",
+      "to": "n35"
+    },
+    {
+      "id": "c34",
+      "from": "n35",
+      "to": "n36"
+    },
+    {
+      "id": "c35",
+      "from": "n18",
+      "to": "n37"
+    },
+    {
+      "id": "c36",
+      "from": "n36",
+      "to": "n37"
+    },
+    {
+      "id": "c37",
+      "from": "n37",
+      "to": "n38"
     }
   ]
 }

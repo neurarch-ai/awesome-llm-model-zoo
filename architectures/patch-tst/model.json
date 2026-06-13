@@ -342,7 +342,8 @@
         "y": 2940
       },
       "params": {
-        "outFeatures": 4
+        "outFeatures": 4,
+        "inFeatures": null
       },
       "inputs": [
         "flatten-1"

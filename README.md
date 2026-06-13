@@ -33,9 +33,9 @@ Every diagram of Qwen or Mixtral you have ever seen is a dead image. The entries
 <td align="center"><b><a href="architectures/mixtral-block/">Mixtral MoE Block</a></b><br/><sub>8 experts · top-2 routing</sub></td>
 </tr>
 <tr>
-<td><img src="architectures/deepseek-v3/assets/diagram.png" width="190" alt="DeepSeek-V3 architecture"/></td>
+<td><img src="architectures/deepseek-v3/assets/block.png" width="190" alt="DeepSeek-V3 architecture (block view)"/></td>
 <td><img src="architectures/clip-vit-b32/assets/diagram.png" width="190" alt="CLIP dual-encoder architecture"/></td>
-<td><img src="architectures/whisper-small/assets/diagram.png" width="190" alt="Whisper Small architecture"/></td>
+<td><img src="architectures/whisper-small/assets/block.png" width="190" alt="Whisper Small architecture (block view)"/></td>
 <td><img src="architectures/mixtral-block/assets/diagram.png" width="190" alt="Mixtral MoE block architecture"/></td>
 </tr>
 </table>
@@ -56,10 +56,10 @@ Each folder under [`architectures/`](architectures/) contains:
 
 | File | What it is |
 |------|------------|
-| `README.md` | What the model is, its **model URLs** (Neurarch, Hugging Face, GitHub, paper), verified hyperparameters, and design notes. |
-| `model.json` | The Neurarch graph. |
-| `assets/diagram.svg` | Vector diagram (papers, slides). |
-| `assets/diagram.png` | Raster diagram (renders everywhere). |
+| `README.md` | What the model is, its **model URLs** (Neurarch, Hugging Face, GitHub, paper), verified hyperparameters, a parameter check, and design notes. |
+| `model.json` | The full Neurarch graph: for full models, every layer at real dimensions, the same graph you get by importing the HF model in the app. |
+| `assets/diagram.svg` / `.png` | Diagram of the full graph. |
+| `assets/block.svg` / `.png` | Compact one-block explainer view (full-model entries). |
 
 ## Catalog
 
@@ -175,8 +175,9 @@ Selection informed by [awesome-pretrained-chinese-nlp-models](https://github.com
 This zoo has one bar, and it is not "looks right":
 
 1. Every graph passes Neurarch's shape propagation with **zero errors** (the generator script fails the build otherwise).
-2. Every full LLM entry's hyperparameters are pulled from the model's **official `config.json`**, with quirks (Qwen's QKV bias, Baichuan's NormHead, ChatGLM's 2 KV groups) called out in the entry README instead of papered over.
-3. Every entry **exports to runnable training code** from the Neurarch canvas.
+2. Every full-model `model.json` is the **complete layer stack**, built with the same import path the Neurarch app uses for "load from Hugging Face", and must pass a **parameter gate**: Neurarch's per-layer parameter estimate over the graph has to land within 10% of the real count (HF safetensors metadata or the official figure), or the build fails. Most entries land at 0%; every entry README shows its own parameter check, and the few deviations (weight tying in GPT-2/T5/Whisper) are explained inline.
+3. Every full LLM entry's hyperparameters are pulled from the model's **official `config.json`**, with quirks (Qwen's QKV bias, Baichuan's NormHead, ChatGLM's 2 KV groups) called out in the entry README instead of papered over.
+4. Every entry **exports to runnable training code** from the Neurarch canvas.
 
 That bar caught real drift while building this repo: a widely copied Llama-3 block diagram carrying Llama-2's FFN size (11008 instead of 14336), and a "RoBERTa" checkpoint that is architecturally BERT. Validated graphs make those errors visible.
 

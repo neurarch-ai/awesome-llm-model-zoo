@@ -20,12 +20,12 @@ Convolution meets attention for EEG decoding: an EEGNet-style conv stem tokenize
 | # | Layer | Type | Params |
 |---|---|---|---|
 | 1 | eeg_window | `input` | shape: [1, 22, 1000] |
-| 2 | temporal_conv | `conv2d` | outChannels: 40, kernelSize: [1, 25], stride: 1, padding: 0 |
-| 3 | spatial_conv | `conv2d` | outChannels: 40, kernelSize: [22, 1], stride: 1, padding: 0 |
+| 2 | temporal_conv | `conv2d` | outChannels: 40, kernelSize: [1, 25], stride: 1, padding: 0, inChannels: 1 |
+| 3 | spatial_conv | `conv2d` | outChannels: 40, kernelSize: [22, 1], stride: 1, padding: 0, inChannels: 40 |
 | 4 | norm | `batchNorm` | normalizedShape: 40 |
 | 5 | act | `elu` |   |
 | 6 | pool | `avgpool2d` | kernelSize: [1, 75], stride: [1, 15] |
-| 7 | patch_proj | `conv2d` | outChannels: 40, kernelSize: [1, 1], stride: 1, padding: 0 |
+| 7 | patch_proj | `conv2d` | outChannels: 40, kernelSize: [1, 1], stride: 1, padding: 0, inChannels: 40 |
 | 8 | norm | `layerNorm` | normalizedShape: 40 |
 | 9 | self_attn | `multiHeadAttention` | embedDim: 40, numHeads: 10 |
 | 10 | residual | `add` |   |
@@ -39,7 +39,7 @@ Convolution meets attention for EEG decoding: an EEGNet-style conv stem tokenize
 | 18 | dense | `feedForward` | embedDim: 40, ffDim: 160 |
 | 19 | residual | `add` |   |
 | 20 | flatten | `flatten` |   |
-| 21 | classifier | `linear` | outFeatures: 4 |
+| 21 | classifier | `linear` | outFeatures: 4, inFeatures: NaN |
 | 22 | logits | `output` |   |
 
 </details>

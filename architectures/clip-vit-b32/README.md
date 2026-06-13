@@ -1,6 +1,6 @@
 # CLIP ViT-B/32
 
-The contrastive image-text model that underpins modern multimodality: a ViT image tower and a Transformer text tower projected into one 512-dim space, trained so matching pairs score high by dot product. Stable Diffusion's text encoder is the text half of this design.
+The contrastive image-text model that underpins modern multimodality: a full 12-block ViT image tower and a full 12-block Transformer text tower projected into one 512-dim space, trained so matching pairs score high by dot product. Stable Diffusion's text encoder is the text half of this design.
 
 ## Model URLs
 
@@ -13,38 +13,34 @@ The contrastive image-text model that underpins modern multimodality: a ViT imag
 
 ## Architecture
 
-![CLIP ViT-B/32 architecture](assets/diagram.svg)
-
 <details>
-<summary><b>Layer-by-layer (16 nodes)</b></summary>
+<summary><b>Full graph: 38 nodes (click to expand)</b></summary>
 
-| # | Layer | Type | Params |
-|---|---|---|---|
-| 1 | image | `input` | shape: [3, 224, 224] |
-| 2 | patch_embed | `patchEmbed` | imgSize: 224, patchSize: 32, embedDim: 768 |
-| 3 | vis_pos | `positionalEncoding` | maxLen: 50, embedDim: 768 |
-| 4 | vis_encoder | `transformerBlock` | embedDim: 768, numHeads: 12, ffDim: 3072 |
-| 5 | vis_norm | `layerNorm` | normalizedShape: 768 |
-| 6 | vis_pool | `globalAvgPool1d` |   |
-| 7 | img_proj | `linear` | inFeatures: 768, outFeatures: 512 |
-| 8 | tokens | `input` | shape: [1, 77] |
-| 9 | tok_embed | `embedding` | numEmbeddings: 49408, embeddingDim: 512 |
-| 10 | txt_pos | `positionalEncoding` | maxLen: 77, embedDim: 512 |
-| 11 | txt_encoder | `transformerBlock` | embedDim: 512, numHeads: 8, ffDim: 2048 |
-| 12 | txt_norm | `layerNorm` | normalizedShape: 512 |
-| 13 | txt_pool | `globalAvgPool1d` |   |
-| 14 | txt_proj | `linear` | inFeatures: 512, outFeatures: 512 |
-| 15 | similarity | `matmul` |   |
-| 16 | logits | `output` |   |
+![CLIP ViT-B/32 full architecture](assets/diagram.svg)
 
 </details>
 
-This graph is hand-built for the zoo, passes shape propagation with zero errors, and has its key dimensions verified against the official config.json.
+| Hyperparameter | Value |
+|---|---|
+| Type | Contrastive image-text dual encoder |
+| Parameters | 151M (88M vision + 63M text) |
+| Vision tower | ViT-B/32: 12 blocks, 768 hidden, 12 heads |
+| Text tower | 12 blocks, 512 hidden, 8 heads, causal |
+| Projection | Both towers project to a shared 512-dim space |
+| Similarity | Scaled dot product, learned temperature |
+| Vocabulary | 49,408 BPE (text), 77-token max |
+| Input | 224x224 image, 32x32 patches |
+
+`model.json` is the full graph, hand-built against the official config.json.
+
+## Parameter check
+
+Neurarch's per-layer parameter estimate over this graph: **151.2M**.
+Deviation from the authoritative count (151.3M): **-0.1%**.
 
 ## Design notes
 
-- Two towers, one space: image (12-layer ViT, 768 hidden, patch 32) and text (12-layer Transformer, 512 hidden, 77-token context) each end in a linear projection to 512 dims.
-- The similarity logit is just a scaled dot product between the two embeddings; in training, a batch of N pairs gives an NxN contrastive matrix.
+- Two towers, one space: each tower ends in a linear projection to 512 dims; the similarity logit is a scaled dot product.
 - The graph pools each tower with an average-pool node as a stand-in for CLIP's token selection (class token for the image tower, EOT token for text).
 - Tower dims verified from the official config.json; the text tower is causal, a quirk inherited from GPT-style pretraining.
 
@@ -52,8 +48,7 @@ This graph is hand-built for the zoo, passes shape propagation with zero errors,
 
 | File | What it is |
 |---|---|
-| [`model.json`](model.json) | The Neurarch graph. Shape-validated; open it at [neurarch.com](https://www.neurarch.com/) to edit or export training code. |
-| [`assets/diagram.svg`](assets/diagram.svg) | Vector diagram (papers, slides). |
-| [`assets/diagram.png`](assets/diagram.png) | Raster diagram (renders everywhere). |
+| [`model.json`](model.json) | The full Neurarch graph (every layer, real dimensions). Open it at [neurarch.com](https://www.neurarch.com/) to edit or export training code. |
+| [`assets/diagram.svg`](assets/diagram.svg) / [`.png`](assets/diagram.png) | Diagram of the full graph. |
 
 **License:** MIT. The graph and diagrams here describe the architecture; any referenced weights remain under the upstream license.

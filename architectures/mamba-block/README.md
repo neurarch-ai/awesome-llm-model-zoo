@@ -22,18 +22,18 @@ The Mamba selective state-space block: causal conv plus gated selective SSM in p
 | 1 | tokens | `input` | shape: [1, 1024] |
 | 2 | embed | `embedding` | numEmbeddings: 50280, embeddingDim: 1024 |
 | 3 | norm_ssm | `rmsNorm` | normalizedShape: 1024 |
-| 4 | in_proj | `linear` | outFeatures: 4096 |
-| 5 | causal_conv | `conv1d` | outChannels: 2048, kernelSize: 4, stride: 1, padding: 3 |
+| 4 | in_proj | `linear` | outFeatures: 4096, inFeatures: 1024 |
+| 5 | causal_conv | `conv1d` | outChannels: 2048, kernelSize: 4, stride: 1, padding: 3, inChannels: 4096 |
 | 6 | silu_x | `swish` |   |
-| 7 | ssm_BC_dt | `linear` | outFeatures: 128 |
+| 7 | ssm_BC_dt | `linear` | outFeatures: 128, inFeatures: 4096 |
 | 8 | z_gate | `swish` |   |
 | 9 | gate_out | `multiply` |   |
-| 10 | out_proj | `linear` | outFeatures: 1024 |
+| 10 | out_proj | `linear` | outFeatures: 1024, inFeatures: 128 |
 | 11 | residual_1 | `add` |   |
 | 12 | norm_ffn | `rmsNorm` | normalizedShape: 1024 |
 | 13 | ffn | `swiglu` | embedDim: 1024, intermediateSize: 2048 |
 | 14 | residual_2 | `add` |   |
-| 15 | lm_head | `linear` | outFeatures: 50280 |
+| 15 | lm_head | `linear` | outFeatures: 50280, inFeatures: 1024 |
 | 16 | output | `output` |   |
 
 </details>

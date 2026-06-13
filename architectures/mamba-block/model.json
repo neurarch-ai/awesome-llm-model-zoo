@@ -70,7 +70,8 @@
       "name": "in_proj",
       "scope": "layer.0.ssm",
       "params": {
-        "outFeatures": 4096
+        "outFeatures": 4096,
+        "inFeatures": 1024
       },
       "position": {
         "x": 260,
@@ -94,7 +95,8 @@
         "outChannels": 2048,
         "kernelSize": 4,
         "stride": 1,
-        "padding": 3
+        "padding": 3,
+        "inChannels": 4096
       },
       "position": {
         "x": 260,
@@ -132,7 +134,8 @@
       "name": "ssm_BC_dt",
       "scope": "layer.0.ssm",
       "params": {
-        "outFeatures": 128
+        "outFeatures": 128,
+        "inFeatures": 4096
       },
       "position": {
         "x": 260,
@@ -189,7 +192,8 @@
       "name": "out_proj",
       "scope": "layer.0.ssm",
       "params": {
-        "outFeatures": 1024
+        "outFeatures": 1024,
+        "inFeatures": 128
       },
       "position": {
         "x": 400,
@@ -288,7 +292,8 @@
       "name": "lm_head",
       "scope": "head",
       "params": {
-        "outFeatures": 50280
+        "outFeatures": 50280,
+        "inFeatures": 1024
       },
       "position": {
         "x": 400,

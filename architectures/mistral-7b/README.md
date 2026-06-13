@@ -12,7 +12,16 @@ The 7B model from Mistral AI that beat Llama-2-13B at release, built on grouped-
 
 ## Architecture
 
-![Mistral-7B architecture](assets/diagram.svg)
+![Mistral-7B block view](assets/block.svg)
+
+*Compact view: one block expanded. The full graph below is what `model.json` holds.*
+
+<details>
+<summary><b>Full graph: 197 nodes (click to expand)</b></summary>
+
+![Mistral-7B full architecture](assets/diagram.svg)
+
+</details>
 
 | Hyperparameter | Value |
 |---|---|
@@ -28,7 +37,13 @@ The 7B model from Mistral AI that beat Llama-2-13B at release, built on grouped-
 | Vocabulary | 32,000 |
 | Max context | 32,768 |
 
-The diagram and `model.json` show the full forward path with one of the 32 identical decoder blocks expanded (the stack repeats x32). All hyperparameters are taken from the official `config.json` on Hugging Face.
+`model.json` is the full 32-layer graph, produced with the same import path the Neurarch app uses for "load from Hugging Face", with all hyperparameters from the official `config.json`.
+
+## Parameter check
+
+Neurarch's per-layer parameter estimate over this graph: **7.24B**.
+Hugging Face safetensors metadata reports **7.24B** for the real weights.
+Deviation from the authoritative count (7.24B): **+0.0%**.
 
 ## Design notes
 
@@ -41,8 +56,8 @@ The diagram and `model.json` show the full forward path with one of the 32 ident
 
 | File | What it is |
 |---|---|
-| [`model.json`](model.json) | The Neurarch graph. Shape-validated; open it at [neurarch.com](https://www.neurarch.com/) to edit or export training code. |
-| [`assets/diagram.svg`](assets/diagram.svg) | Vector diagram (papers, slides). |
-| [`assets/diagram.png`](assets/diagram.png) | Raster diagram (renders everywhere). |
+| [`model.json`](model.json) | The full Neurarch graph (every layer, real dimensions). Open it at [neurarch.com](https://www.neurarch.com/) to edit or export training code. |
+| [`assets/diagram.svg`](assets/diagram.svg) / [`.png`](assets/diagram.png) | Diagram of the full graph. |
+| [`assets/block.svg`](assets/block.svg) / [`.png`](assets/block.png) | Compact one-block explainer view. |
 
 **License:** Apache 2.0. The graph and diagrams here describe the architecture; the model weights remain under the upstream license.

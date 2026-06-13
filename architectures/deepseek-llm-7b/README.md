@@ -12,12 +12,21 @@ The original dense 7B model from DeepSeek, trained on 2T bilingual tokens. A cle
 
 ## Architecture
 
-![DeepSeek-LLM-7B architecture](assets/diagram.svg)
+![DeepSeek-LLM-7B block view](assets/block.svg)
+
+*Compact view: one block expanded. The full graph below is what `model.json` holds.*
+
+<details>
+<summary><b>Full graph: 185 nodes (click to expand)</b></summary>
+
+![DeepSeek-LLM-7B full architecture](assets/diagram.svg)
+
+</details>
 
 | Hyperparameter | Value |
 |---|---|
 | Type | Decoder-only transformer (causal LM) |
-| Parameters | 7B |
+| Parameters | 6.9B |
 | Layers | 30 |
 | Hidden size | 4096 |
 | Attention | Multi-head: 32 heads |
@@ -28,7 +37,12 @@ The original dense 7B model from DeepSeek, trained on 2T bilingual tokens. A cle
 | Vocabulary | 102,400 |
 | Max context | 4,096 |
 
-The diagram and `model.json` show the full forward path with one of the 30 identical decoder blocks expanded (the stack repeats x30). All hyperparameters are taken from the official `config.json` on Hugging Face.
+`model.json` is the full 30-layer graph, produced with the same import path the Neurarch app uses for "load from Hugging Face", with all hyperparameters from the official `config.json`.
+
+## Parameter check
+
+Neurarch's per-layer parameter estimate over this graph: **6.91B**.
+Deviation from the authoritative count (6.91B): **+0.0%**.
 
 ## Design notes
 
@@ -41,8 +55,8 @@ The diagram and `model.json` show the full forward path with one of the 30 ident
 
 | File | What it is |
 |---|---|
-| [`model.json`](model.json) | The Neurarch graph. Shape-validated; open it at [neurarch.com](https://www.neurarch.com/) to edit or export training code. |
-| [`assets/diagram.svg`](assets/diagram.svg) | Vector diagram (papers, slides). |
-| [`assets/diagram.png`](assets/diagram.png) | Raster diagram (renders everywhere). |
+| [`model.json`](model.json) | The full Neurarch graph (every layer, real dimensions). Open it at [neurarch.com](https://www.neurarch.com/) to edit or export training code. |
+| [`assets/diagram.svg`](assets/diagram.svg) / [`.png`](assets/diagram.png) | Diagram of the full graph. |
+| [`assets/block.svg`](assets/block.svg) / [`.png`](assets/block.png) | Compact one-block explainer view. |
 
 **License:** Code MIT; weights under the DeepSeek Model License (commercial use permitted). The graph and diagrams here describe the architecture; the model weights remain under the upstream license.

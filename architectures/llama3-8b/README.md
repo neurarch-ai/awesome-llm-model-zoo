@@ -12,7 +12,16 @@ Meta's 8B dense decoder, the de facto baseline architecture that most current op
 
 ## Architecture
 
-![Llama-3-8B architecture](assets/diagram.svg)
+![Llama-3-8B block view](assets/block.svg)
+
+*Compact view: one block expanded. The full graph below is what `model.json` holds.*
+
+<details>
+<summary><b>Full graph: 197 nodes (click to expand)</b></summary>
+
+![Llama-3-8B full architecture](assets/diagram.svg)
+
+</details>
 
 | Hyperparameter | Value |
 |---|---|
@@ -28,21 +37,27 @@ Meta's 8B dense decoder, the de facto baseline architecture that most current op
 | Vocabulary | 128,256 |
 | Max context | 8,192 |
 
-The diagram and `model.json` show the full forward path with one of the 32 identical decoder blocks expanded (the stack repeats x32). All hyperparameters are taken from the official `config.json` on Hugging Face.
+`model.json` is the full 32-layer graph, produced with the same import path the Neurarch app uses for "load from Hugging Face", with all hyperparameters from the official `config.json`.
+
+## Parameter check
+
+Neurarch's per-layer parameter estimate over this graph: **8.03B**.
+Hugging Face safetensors metadata reports **8.03B** for the real weights.
+Deviation from the authoritative count (8.03B): **+0.0%**.
 
 ## Design notes
 
 - The reference open-weight architecture of 2024: 32 layers, GQA 32:8, SwiGLU 14336, RMSNorm pre-norm. Half the models in this zoo are best described as deltas against this graph.
 - Big vocabulary jump over Llama-2: 128256 tokens (tiktoken-style BPE), which moves a meaningful fraction of parameters into the embedding and head.
 - rope_theta raised to 500000 for the native 8192-token context.
-- Grouped-query attention arrived at the 8B scale here; Llama-2-7B was still plain MHA.
+- Graph imported via the NousResearch mirror because the official repo is gated; the config is byte-identical.
 
 ## Files
 
 | File | What it is |
 |---|---|
-| [`model.json`](model.json) | The Neurarch graph. Shape-validated; open it at [neurarch.com](https://www.neurarch.com/) to edit or export training code. |
-| [`assets/diagram.svg`](assets/diagram.svg) | Vector diagram (papers, slides). |
-| [`assets/diagram.png`](assets/diagram.png) | Raster diagram (renders everywhere). |
+| [`model.json`](model.json) | The full Neurarch graph (every layer, real dimensions). Open it at [neurarch.com](https://www.neurarch.com/) to edit or export training code. |
+| [`assets/diagram.svg`](assets/diagram.svg) / [`.png`](assets/diagram.png) | Diagram of the full graph. |
+| [`assets/block.svg`](assets/block.svg) / [`.png`](assets/block.png) | Compact one-block explainer view. |
 
 **License:** Llama 3 Community License. The graph and diagrams here describe the architecture; the model weights remain under the upstream license.

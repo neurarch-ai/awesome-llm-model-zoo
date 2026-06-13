@@ -36,7 +36,7 @@ The Transformer that made long-horizon time-series forecasting work: each variab
 | 15 | residual | `add` |   |
 | 16 | norm | `layerNorm` | normalizedShape: 128 |
 | 17 | flatten | `flatten` |   |
-| 18 | classifier | `linear` | outFeatures: 4 |
+| 18 | classifier | `linear` | outFeatures: 4, inFeatures: NaN |
 | 19 | logits | `output` |   |
 
 </details>

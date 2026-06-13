@@ -1,307 +1,1439 @@
 {
   "id": "chinese-roberta-wwm-ext",
   "name": "Chinese-RoBERTa-wwm-ext",
-  "description": "Chinese-RoBERTa-wwm-ext (HFL (HIT and iFLYTEK joint lab)): BERT-style bidirectional encoder, 12 layers x 768 hidden, 12 heads, post-LayerNorm, GeLU FFN. One encoder block expanded; repeats x12. Verified against the official config.json.",
   "components": [
     {
-      "id": "input-1",
+      "id": "n1",
       "type": "input",
-      "name": "input_ids",
+      "name": "Input",
       "position": {
-        "x": 300,
+        "x": 200,
         "y": 50
       },
       "params": {
         "shape": [
           1,
-          512
+          512,
+          768
         ]
       },
       "inputs": [],
       "outputs": [
-        "embedding-2"
+        "n2"
+      ],
+      "inputShape": [
+        1,
+        512,
+        768
       ]
     },
     {
-      "id": "embedding-2",
+      "id": "n2",
       "type": "embedding",
-      "name": "word_embed",
+      "name": "Embedding",
       "position": {
-        "x": 300,
-        "y": 200
+        "x": 200,
+        "y": 250
       },
       "params": {
-        "numEmbeddings": 21128,
-        "embeddingDim": 768
+        "vocabSize": 21128,
+        "embeddingDim": 768,
+        "maxSeqLen": 512
       },
       "inputs": [
-        "input-1"
+        "n1"
       ],
       "outputs": [
-        "positionalEncoding-3"
-      ],
-      "scope": "embeddings",
-      "notes": "21,128-token vocabulary."
-    },
-    {
-      "id": "positionalEncoding-3",
-      "type": "positionalEncoding",
-      "name": "pos_embed",
-      "position": {
-        "x": 300,
-        "y": 350
-      },
-      "params": {
-        "maxLen": 512,
-        "embedDim": 768
-      },
-      "inputs": [
-        "embedding-2"
-      ],
-      "outputs": [
-        "layerNorm-4"
-      ],
-      "scope": "embeddings",
-      "notes": "Absolute learned position embeddings, max 512 positions."
-    },
-    {
-      "id": "layerNorm-4",
-      "type": "layerNorm",
-      "name": "embed_norm",
-      "position": {
-        "x": 300,
-        "y": 500
-      },
-      "params": {
-        "normalizedShape": 768
-      },
-      "inputs": [
-        "positionalEncoding-3"
-      ],
-      "outputs": [
-        "dropout-5"
+        "n3",
+        "n4"
       ],
       "scope": "embeddings"
     },
     {
-      "id": "dropout-5",
-      "type": "dropout",
-      "name": "embed_drop",
-      "position": {
-        "x": 300,
-        "y": 650
-      },
-      "params": {
-        "p": 0.1
-      },
-      "inputs": [
-        "layerNorm-4"
-      ],
-      "outputs": [
-        "multiHeadAttention-6",
-        "add-7"
-      ],
-      "scope": "embeddings"
-    },
-    {
-      "id": "multiHeadAttention-6",
+      "id": "n3",
       "type": "multiHeadAttention",
-      "name": "self_attn",
+      "name": "Attention_1",
       "position": {
-        "x": 300,
-        "y": 800
+        "x": 50,
+        "y": 450
       },
       "params": {
-        "embedDim": 768,
-        "numHeads": 12
+        "numHeads": 12,
+        "hiddenDim": 768
       },
       "inputs": [
-        "dropout-5"
+        "n2"
       ],
       "outputs": [
-        "add-7"
-      ],
-      "scope": "layer.0.attention",
-      "notes": "Bidirectional self-attention, 12 heads. One of 12 identical encoder blocks is expanded; the stack repeats x12."
-    },
-    {
-      "id": "add-7",
-      "type": "add",
-      "name": "residual_1",
-      "position": {
-        "x": 300,
-        "y": 950
-      },
-      "params": {},
-      "inputs": [
-        "multiHeadAttention-6",
-        "dropout-5"
-      ],
-      "outputs": [
-        "layerNorm-8"
+        "n4"
       ],
       "scope": "layer.0.attention"
     },
     {
-      "id": "layerNorm-8",
-      "type": "layerNorm",
-      "name": "attn_norm",
+      "id": "n4",
+      "type": "add",
+      "name": "Add_1",
       "position": {
-        "x": 300,
-        "y": 1100
+        "x": 200,
+        "y": 570
+      },
+      "params": {},
+      "inputs": [
+        "n2",
+        "n3"
+      ],
+      "outputs": [
+        "n5"
+      ],
+      "scope": "layer.0.attention"
+    },
+    {
+      "id": "n5",
+      "type": "layerNorm",
+      "name": "LayerNorm_1_1",
+      "position": {
+        "x": 200,
+        "y": 690
       },
       "params": {
         "normalizedShape": 768
       },
       "inputs": [
-        "add-7"
+        "n4"
       ],
       "outputs": [
-        "feedForward-9",
-        "add-10"
+        "n6"
       ],
-      "scope": "layer.0.attention",
-      "notes": "Post-norm: LayerNorm applied after the residual add (original BERT placement)."
+      "scope": "layer.0.attention"
     },
     {
-      "id": "feedForward-9",
+      "id": "n6",
       "type": "feedForward",
-      "name": "ffn",
+      "name": "FFN_1",
       "position": {
-        "x": 300,
-        "y": 1250
+        "x": 200,
+        "y": 810
       },
       "params": {
-        "embedDim": 768,
+        "hiddenDim": 768,
         "ffDim": 3072
       },
       "inputs": [
-        "layerNorm-8"
+        "n5"
       ],
       "outputs": [
-        "add-10"
-      ],
-      "scope": "layer.0.ffn",
-      "notes": "Dense FFN 768 -> 3072 -> 768, GeLU activation."
-    },
-    {
-      "id": "add-10",
-      "type": "add",
-      "name": "residual_2",
-      "position": {
-        "x": 300,
-        "y": 1400
-      },
-      "params": {},
-      "inputs": [
-        "feedForward-9",
-        "layerNorm-8"
-      ],
-      "outputs": [
-        "layerNorm-11"
+        "n7",
+        "n8"
       ],
       "scope": "layer.0.ffn"
     },
     {
-      "id": "layerNorm-11",
-      "type": "layerNorm",
-      "name": "ffn_norm",
+      "id": "n7",
+      "type": "multiHeadAttention",
+      "name": "Attention_2",
       "position": {
-        "x": 300,
-        "y": 1550
+        "x": 50,
+        "y": 900
+      },
+      "params": {
+        "numHeads": 12,
+        "hiddenDim": 768
+      },
+      "inputs": [
+        "n6"
+      ],
+      "outputs": [
+        "n8"
+      ],
+      "scope": "layer.1.attention"
+    },
+    {
+      "id": "n8",
+      "type": "add",
+      "name": "Add_2",
+      "position": {
+        "x": 200,
+        "y": 1020
+      },
+      "params": {},
+      "inputs": [
+        "n6",
+        "n7"
+      ],
+      "outputs": [
+        "n9"
+      ],
+      "scope": "layer.1.attention"
+    },
+    {
+      "id": "n9",
+      "type": "layerNorm",
+      "name": "LayerNorm_2_1",
+      "position": {
+        "x": 200,
+        "y": 1140
       },
       "params": {
         "normalizedShape": 768
       },
       "inputs": [
-        "add-10"
+        "n8"
       ],
       "outputs": [
-        "output-12"
+        "n10"
       ],
-      "scope": "layer.0.ffn"
+      "scope": "layer.1.attention"
     },
     {
-      "id": "output-12",
-      "type": "output",
-      "name": "hidden_states",
+      "id": "n10",
+      "type": "feedForward",
+      "name": "FFN_2",
       "position": {
-        "x": 300,
-        "y": 1700
+        "x": 200,
+        "y": 1260
+      },
+      "params": {
+        "hiddenDim": 768,
+        "ffDim": 3072
+      },
+      "inputs": [
+        "n9"
+      ],
+      "outputs": [
+        "n11",
+        "n12"
+      ],
+      "scope": "layer.1.ffn"
+    },
+    {
+      "id": "n11",
+      "type": "multiHeadAttention",
+      "name": "Attention_3",
+      "position": {
+        "x": 50,
+        "y": 1350
+      },
+      "params": {
+        "numHeads": 12,
+        "hiddenDim": 768
+      },
+      "inputs": [
+        "n10"
+      ],
+      "outputs": [
+        "n12"
+      ],
+      "scope": "layer.2.attention"
+    },
+    {
+      "id": "n12",
+      "type": "add",
+      "name": "Add_3",
+      "position": {
+        "x": 200,
+        "y": 1470
       },
       "params": {},
       "inputs": [
-        "layerNorm-11"
+        "n10",
+        "n11"
       ],
-      "outputs": [],
-      "notes": "Sequence of contextual embeddings; [CLS] position is used for classification heads."
+      "outputs": [
+        "n13"
+      ],
+      "scope": "layer.2.attention"
+    },
+    {
+      "id": "n13",
+      "type": "layerNorm",
+      "name": "LayerNorm_3_1",
+      "position": {
+        "x": 200,
+        "y": 1590
+      },
+      "params": {
+        "normalizedShape": 768
+      },
+      "inputs": [
+        "n12"
+      ],
+      "outputs": [
+        "n14"
+      ],
+      "scope": "layer.2.attention"
+    },
+    {
+      "id": "n14",
+      "type": "feedForward",
+      "name": "FFN_3",
+      "position": {
+        "x": 200,
+        "y": 1710
+      },
+      "params": {
+        "hiddenDim": 768,
+        "ffDim": 3072
+      },
+      "inputs": [
+        "n13"
+      ],
+      "outputs": [
+        "n15",
+        "n16"
+      ],
+      "scope": "layer.2.ffn"
+    },
+    {
+      "id": "n15",
+      "type": "multiHeadAttention",
+      "name": "Attention_4",
+      "position": {
+        "x": 50,
+        "y": 1800
+      },
+      "params": {
+        "numHeads": 12,
+        "hiddenDim": 768
+      },
+      "inputs": [
+        "n14"
+      ],
+      "outputs": [
+        "n16"
+      ],
+      "scope": "layer.3.attention"
+    },
+    {
+      "id": "n16",
+      "type": "add",
+      "name": "Add_4",
+      "position": {
+        "x": 200,
+        "y": 1920
+      },
+      "params": {},
+      "inputs": [
+        "n14",
+        "n15"
+      ],
+      "outputs": [
+        "n17"
+      ],
+      "scope": "layer.3.attention"
+    },
+    {
+      "id": "n17",
+      "type": "layerNorm",
+      "name": "LayerNorm_4_1",
+      "position": {
+        "x": 200,
+        "y": 2040
+      },
+      "params": {
+        "normalizedShape": 768
+      },
+      "inputs": [
+        "n16"
+      ],
+      "outputs": [
+        "n18"
+      ],
+      "scope": "layer.3.attention"
+    },
+    {
+      "id": "n18",
+      "type": "feedForward",
+      "name": "FFN_4",
+      "position": {
+        "x": 200,
+        "y": 2160
+      },
+      "params": {
+        "hiddenDim": 768,
+        "ffDim": 3072
+      },
+      "inputs": [
+        "n17"
+      ],
+      "outputs": [
+        "n19",
+        "n20"
+      ],
+      "scope": "layer.3.ffn"
+    },
+    {
+      "id": "n19",
+      "type": "multiHeadAttention",
+      "name": "Attention_5",
+      "position": {
+        "x": 50,
+        "y": 2250
+      },
+      "params": {
+        "numHeads": 12,
+        "hiddenDim": 768
+      },
+      "inputs": [
+        "n18"
+      ],
+      "outputs": [
+        "n20"
+      ],
+      "scope": "layer.4.attention"
+    },
+    {
+      "id": "n20",
+      "type": "add",
+      "name": "Add_5",
+      "position": {
+        "x": 200,
+        "y": 2370
+      },
+      "params": {},
+      "inputs": [
+        "n18",
+        "n19"
+      ],
+      "outputs": [
+        "n21"
+      ],
+      "scope": "layer.4.attention"
+    },
+    {
+      "id": "n21",
+      "type": "layerNorm",
+      "name": "LayerNorm_5_1",
+      "position": {
+        "x": 200,
+        "y": 2490
+      },
+      "params": {
+        "normalizedShape": 768
+      },
+      "inputs": [
+        "n20"
+      ],
+      "outputs": [
+        "n22"
+      ],
+      "scope": "layer.4.attention"
+    },
+    {
+      "id": "n22",
+      "type": "feedForward",
+      "name": "FFN_5",
+      "position": {
+        "x": 200,
+        "y": 2610
+      },
+      "params": {
+        "hiddenDim": 768,
+        "ffDim": 3072
+      },
+      "inputs": [
+        "n21"
+      ],
+      "outputs": [
+        "n23",
+        "n24"
+      ],
+      "scope": "layer.4.ffn"
+    },
+    {
+      "id": "n23",
+      "type": "multiHeadAttention",
+      "name": "Attention_6",
+      "position": {
+        "x": 50,
+        "y": 2700
+      },
+      "params": {
+        "numHeads": 12,
+        "hiddenDim": 768
+      },
+      "inputs": [
+        "n22"
+      ],
+      "outputs": [
+        "n24"
+      ],
+      "scope": "layer.5.attention"
+    },
+    {
+      "id": "n24",
+      "type": "add",
+      "name": "Add_6",
+      "position": {
+        "x": 200,
+        "y": 2820
+      },
+      "params": {},
+      "inputs": [
+        "n22",
+        "n23"
+      ],
+      "outputs": [
+        "n25"
+      ],
+      "scope": "layer.5.attention"
+    },
+    {
+      "id": "n25",
+      "type": "layerNorm",
+      "name": "LayerNorm_6_1",
+      "position": {
+        "x": 200,
+        "y": 2940
+      },
+      "params": {
+        "normalizedShape": 768
+      },
+      "inputs": [
+        "n24"
+      ],
+      "outputs": [
+        "n26"
+      ],
+      "scope": "layer.5.attention"
+    },
+    {
+      "id": "n26",
+      "type": "feedForward",
+      "name": "FFN_6",
+      "position": {
+        "x": 200,
+        "y": 3060
+      },
+      "params": {
+        "hiddenDim": 768,
+        "ffDim": 3072
+      },
+      "inputs": [
+        "n25"
+      ],
+      "outputs": [
+        "n27",
+        "n28"
+      ],
+      "scope": "layer.5.ffn"
+    },
+    {
+      "id": "n27",
+      "type": "multiHeadAttention",
+      "name": "Attention_7",
+      "position": {
+        "x": 50,
+        "y": 3150
+      },
+      "params": {
+        "numHeads": 12,
+        "hiddenDim": 768
+      },
+      "inputs": [
+        "n26"
+      ],
+      "outputs": [
+        "n28"
+      ],
+      "scope": "layer.6.attention"
+    },
+    {
+      "id": "n28",
+      "type": "add",
+      "name": "Add_7",
+      "position": {
+        "x": 200,
+        "y": 3270
+      },
+      "params": {},
+      "inputs": [
+        "n26",
+        "n27"
+      ],
+      "outputs": [
+        "n29"
+      ],
+      "scope": "layer.6.attention"
+    },
+    {
+      "id": "n29",
+      "type": "layerNorm",
+      "name": "LayerNorm_7_1",
+      "position": {
+        "x": 200,
+        "y": 3390
+      },
+      "params": {
+        "normalizedShape": 768
+      },
+      "inputs": [
+        "n28"
+      ],
+      "outputs": [
+        "n30"
+      ],
+      "scope": "layer.6.attention"
+    },
+    {
+      "id": "n30",
+      "type": "feedForward",
+      "name": "FFN_7",
+      "position": {
+        "x": 200,
+        "y": 3510
+      },
+      "params": {
+        "hiddenDim": 768,
+        "ffDim": 3072
+      },
+      "inputs": [
+        "n29"
+      ],
+      "outputs": [
+        "n31",
+        "n32"
+      ],
+      "scope": "layer.6.ffn"
+    },
+    {
+      "id": "n31",
+      "type": "multiHeadAttention",
+      "name": "Attention_8",
+      "position": {
+        "x": 50,
+        "y": 3600
+      },
+      "params": {
+        "numHeads": 12,
+        "hiddenDim": 768
+      },
+      "inputs": [
+        "n30"
+      ],
+      "outputs": [
+        "n32"
+      ],
+      "scope": "layer.7.attention"
+    },
+    {
+      "id": "n32",
+      "type": "add",
+      "name": "Add_8",
+      "position": {
+        "x": 200,
+        "y": 3720
+      },
+      "params": {},
+      "inputs": [
+        "n30",
+        "n31"
+      ],
+      "outputs": [
+        "n33"
+      ],
+      "scope": "layer.7.attention"
+    },
+    {
+      "id": "n33",
+      "type": "layerNorm",
+      "name": "LayerNorm_8_1",
+      "position": {
+        "x": 200,
+        "y": 3840
+      },
+      "params": {
+        "normalizedShape": 768
+      },
+      "inputs": [
+        "n32"
+      ],
+      "outputs": [
+        "n34"
+      ],
+      "scope": "layer.7.attention"
+    },
+    {
+      "id": "n34",
+      "type": "feedForward",
+      "name": "FFN_8",
+      "position": {
+        "x": 200,
+        "y": 3960
+      },
+      "params": {
+        "hiddenDim": 768,
+        "ffDim": 3072
+      },
+      "inputs": [
+        "n33"
+      ],
+      "outputs": [
+        "n35",
+        "n36"
+      ],
+      "scope": "layer.7.ffn"
+    },
+    {
+      "id": "n35",
+      "type": "multiHeadAttention",
+      "name": "Attention_9",
+      "position": {
+        "x": 50,
+        "y": 4050
+      },
+      "params": {
+        "numHeads": 12,
+        "hiddenDim": 768
+      },
+      "inputs": [
+        "n34"
+      ],
+      "outputs": [
+        "n36"
+      ],
+      "scope": "layer.8.attention"
+    },
+    {
+      "id": "n36",
+      "type": "add",
+      "name": "Add_9",
+      "position": {
+        "x": 200,
+        "y": 4170
+      },
+      "params": {},
+      "inputs": [
+        "n34",
+        "n35"
+      ],
+      "outputs": [
+        "n37"
+      ],
+      "scope": "layer.8.attention"
+    },
+    {
+      "id": "n37",
+      "type": "layerNorm",
+      "name": "LayerNorm_9_1",
+      "position": {
+        "x": 200,
+        "y": 4290
+      },
+      "params": {
+        "normalizedShape": 768
+      },
+      "inputs": [
+        "n36"
+      ],
+      "outputs": [
+        "n38"
+      ],
+      "scope": "layer.8.attention"
+    },
+    {
+      "id": "n38",
+      "type": "feedForward",
+      "name": "FFN_9",
+      "position": {
+        "x": 200,
+        "y": 4410
+      },
+      "params": {
+        "hiddenDim": 768,
+        "ffDim": 3072
+      },
+      "inputs": [
+        "n37"
+      ],
+      "outputs": [
+        "n39",
+        "n40"
+      ],
+      "scope": "layer.8.ffn"
+    },
+    {
+      "id": "n39",
+      "type": "multiHeadAttention",
+      "name": "Attention_10",
+      "position": {
+        "x": 50,
+        "y": 4500
+      },
+      "params": {
+        "numHeads": 12,
+        "hiddenDim": 768
+      },
+      "inputs": [
+        "n38"
+      ],
+      "outputs": [
+        "n40"
+      ],
+      "scope": "layer.9.attention"
+    },
+    {
+      "id": "n40",
+      "type": "add",
+      "name": "Add_10",
+      "position": {
+        "x": 200,
+        "y": 4620
+      },
+      "params": {},
+      "inputs": [
+        "n38",
+        "n39"
+      ],
+      "outputs": [
+        "n41"
+      ],
+      "scope": "layer.9.attention"
+    },
+    {
+      "id": "n41",
+      "type": "layerNorm",
+      "name": "LayerNorm_10_1",
+      "position": {
+        "x": 200,
+        "y": 4740
+      },
+      "params": {
+        "normalizedShape": 768
+      },
+      "inputs": [
+        "n40"
+      ],
+      "outputs": [
+        "n42"
+      ],
+      "scope": "layer.9.attention"
+    },
+    {
+      "id": "n42",
+      "type": "feedForward",
+      "name": "FFN_10",
+      "position": {
+        "x": 200,
+        "y": 4860
+      },
+      "params": {
+        "hiddenDim": 768,
+        "ffDim": 3072
+      },
+      "inputs": [
+        "n41"
+      ],
+      "outputs": [
+        "n43",
+        "n44"
+      ],
+      "scope": "layer.9.ffn"
+    },
+    {
+      "id": "n43",
+      "type": "multiHeadAttention",
+      "name": "Attention_11",
+      "position": {
+        "x": 50,
+        "y": 4950
+      },
+      "params": {
+        "numHeads": 12,
+        "hiddenDim": 768
+      },
+      "inputs": [
+        "n42"
+      ],
+      "outputs": [
+        "n44"
+      ],
+      "scope": "layer.10.attention"
+    },
+    {
+      "id": "n44",
+      "type": "add",
+      "name": "Add_11",
+      "position": {
+        "x": 200,
+        "y": 5070
+      },
+      "params": {},
+      "inputs": [
+        "n42",
+        "n43"
+      ],
+      "outputs": [
+        "n45"
+      ],
+      "scope": "layer.10.attention"
+    },
+    {
+      "id": "n45",
+      "type": "layerNorm",
+      "name": "LayerNorm_11_1",
+      "position": {
+        "x": 200,
+        "y": 5190
+      },
+      "params": {
+        "normalizedShape": 768
+      },
+      "inputs": [
+        "n44"
+      ],
+      "outputs": [
+        "n46"
+      ],
+      "scope": "layer.10.attention"
+    },
+    {
+      "id": "n46",
+      "type": "feedForward",
+      "name": "FFN_11",
+      "position": {
+        "x": 200,
+        "y": 5310
+      },
+      "params": {
+        "hiddenDim": 768,
+        "ffDim": 3072
+      },
+      "inputs": [
+        "n45"
+      ],
+      "outputs": [
+        "n47",
+        "n48"
+      ],
+      "scope": "layer.10.ffn"
+    },
+    {
+      "id": "n47",
+      "type": "multiHeadAttention",
+      "name": "Attention_12",
+      "position": {
+        "x": 50,
+        "y": 5400
+      },
+      "params": {
+        "numHeads": 12,
+        "hiddenDim": 768
+      },
+      "inputs": [
+        "n46"
+      ],
+      "outputs": [
+        "n48"
+      ],
+      "scope": "layer.11.attention"
+    },
+    {
+      "id": "n48",
+      "type": "add",
+      "name": "Add_12",
+      "position": {
+        "x": 200,
+        "y": 5520
+      },
+      "params": {},
+      "inputs": [
+        "n46",
+        "n47"
+      ],
+      "outputs": [
+        "n49"
+      ],
+      "scope": "layer.11.attention"
+    },
+    {
+      "id": "n49",
+      "type": "layerNorm",
+      "name": "LayerNorm_12_1",
+      "position": {
+        "x": 200,
+        "y": 5640
+      },
+      "params": {
+        "normalizedShape": 768
+      },
+      "inputs": [
+        "n48"
+      ],
+      "outputs": [
+        "n50"
+      ],
+      "scope": "layer.11.attention"
+    },
+    {
+      "id": "n50",
+      "type": "feedForward",
+      "name": "FFN_12",
+      "position": {
+        "x": 200,
+        "y": 5760
+      },
+      "params": {
+        "hiddenDim": 768,
+        "ffDim": 3072
+      },
+      "inputs": [
+        "n49"
+      ],
+      "outputs": [
+        "n51"
+      ],
+      "scope": "layer.11.ffn"
+    },
+    {
+      "id": "n51",
+      "type": "output",
+      "name": "Output",
+      "position": {
+        "x": 200,
+        "y": 5850
+      },
+      "params": {},
+      "inputs": [
+        "n50"
+      ],
+      "outputs": []
     }
   ],
   "connections": [
     {
       "id": "c1",
-      "from": "input-1",
-      "to": "embedding-2"
+      "from": "n1",
+      "to": "n2",
+      "fromPort": "bottom",
+      "toPort": "top"
     },
     {
       "id": "c2",
-      "from": "embedding-2",
-      "to": "positionalEncoding-3"
+      "from": "n2",
+      "to": "n3",
+      "fromPort": "bottom",
+      "toPort": "top"
     },
     {
       "id": "c3",
-      "from": "positionalEncoding-3",
-      "to": "layerNorm-4"
+      "from": "n2",
+      "to": "n4",
+      "fromPort": "bottom",
+      "toPort": "left"
     },
     {
       "id": "c4",
-      "from": "layerNorm-4",
-      "to": "dropout-5"
+      "from": "n3",
+      "to": "n4",
+      "fromPort": "bottom",
+      "toPort": "right"
     },
     {
       "id": "c5",
-      "from": "dropout-5",
-      "to": "multiHeadAttention-6"
+      "from": "n4",
+      "to": "n5",
+      "fromPort": "bottom",
+      "toPort": "top"
     },
     {
       "id": "c6",
-      "from": "multiHeadAttention-6",
-      "to": "add-7"
+      "from": "n5",
+      "to": "n6",
+      "fromPort": "bottom",
+      "toPort": "top"
     },
     {
       "id": "c7",
-      "from": "dropout-5",
-      "to": "add-7"
+      "from": "n6",
+      "to": "n7",
+      "fromPort": "bottom",
+      "toPort": "top"
     },
     {
       "id": "c8",
-      "from": "add-7",
-      "to": "layerNorm-8"
+      "from": "n6",
+      "to": "n8",
+      "fromPort": "bottom",
+      "toPort": "left"
     },
     {
       "id": "c9",
-      "from": "layerNorm-8",
-      "to": "feedForward-9"
+      "from": "n7",
+      "to": "n8",
+      "fromPort": "bottom",
+      "toPort": "right"
     },
     {
       "id": "c10",
-      "from": "feedForward-9",
-      "to": "add-10"
+      "from": "n8",
+      "to": "n9",
+      "fromPort": "bottom",
+      "toPort": "top"
     },
     {
       "id": "c11",
-      "from": "layerNorm-8",
-      "to": "add-10"
+      "from": "n9",
+      "to": "n10",
+      "fromPort": "bottom",
+      "toPort": "top"
     },
     {
       "id": "c12",
-      "from": "add-10",
-      "to": "layerNorm-11"
+      "from": "n10",
+      "to": "n11",
+      "fromPort": "bottom",
+      "toPort": "top"
     },
     {
       "id": "c13",
-      "from": "layerNorm-11",
-      "to": "output-12"
+      "from": "n10",
+      "to": "n12",
+      "fromPort": "bottom",
+      "toPort": "left"
+    },
+    {
+      "id": "c14",
+      "from": "n11",
+      "to": "n12",
+      "fromPort": "bottom",
+      "toPort": "right"
+    },
+    {
+      "id": "c15",
+      "from": "n12",
+      "to": "n13",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c16",
+      "from": "n13",
+      "to": "n14",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c17",
+      "from": "n14",
+      "to": "n15",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c18",
+      "from": "n14",
+      "to": "n16",
+      "fromPort": "bottom",
+      "toPort": "left"
+    },
+    {
+      "id": "c19",
+      "from": "n15",
+      "to": "n16",
+      "fromPort": "bottom",
+      "toPort": "right"
+    },
+    {
+      "id": "c20",
+      "from": "n16",
+      "to": "n17",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c21",
+      "from": "n17",
+      "to": "n18",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c22",
+      "from": "n18",
+      "to": "n19",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c23",
+      "from": "n18",
+      "to": "n20",
+      "fromPort": "bottom",
+      "toPort": "left"
+    },
+    {
+      "id": "c24",
+      "from": "n19",
+      "to": "n20",
+      "fromPort": "bottom",
+      "toPort": "right"
+    },
+    {
+      "id": "c25",
+      "from": "n20",
+      "to": "n21",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c26",
+      "from": "n21",
+      "to": "n22",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c27",
+      "from": "n22",
+      "to": "n23",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c28",
+      "from": "n22",
+      "to": "n24",
+      "fromPort": "bottom",
+      "toPort": "left"
+    },
+    {
+      "id": "c29",
+      "from": "n23",
+      "to": "n24",
+      "fromPort": "bottom",
+      "toPort": "right"
+    },
+    {
+      "id": "c30",
+      "from": "n24",
+      "to": "n25",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c31",
+      "from": "n25",
+      "to": "n26",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c32",
+      "from": "n26",
+      "to": "n27",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c33",
+      "from": "n26",
+      "to": "n28",
+      "fromPort": "bottom",
+      "toPort": "left"
+    },
+    {
+      "id": "c34",
+      "from": "n27",
+      "to": "n28",
+      "fromPort": "bottom",
+      "toPort": "right"
+    },
+    {
+      "id": "c35",
+      "from": "n28",
+      "to": "n29",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c36",
+      "from": "n29",
+      "to": "n30",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c37",
+      "from": "n30",
+      "to": "n31",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c38",
+      "from": "n30",
+      "to": "n32",
+      "fromPort": "bottom",
+      "toPort": "left"
+    },
+    {
+      "id": "c39",
+      "from": "n31",
+      "to": "n32",
+      "fromPort": "bottom",
+      "toPort": "right"
+    },
+    {
+      "id": "c40",
+      "from": "n32",
+      "to": "n33",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c41",
+      "from": "n33",
+      "to": "n34",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c42",
+      "from": "n34",
+      "to": "n35",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c43",
+      "from": "n34",
+      "to": "n36",
+      "fromPort": "bottom",
+      "toPort": "left"
+    },
+    {
+      "id": "c44",
+      "from": "n35",
+      "to": "n36",
+      "fromPort": "bottom",
+      "toPort": "right"
+    },
+    {
+      "id": "c45",
+      "from": "n36",
+      "to": "n37",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c46",
+      "from": "n37",
+      "to": "n38",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c47",
+      "from": "n38",
+      "to": "n39",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c48",
+      "from": "n38",
+      "to": "n40",
+      "fromPort": "bottom",
+      "toPort": "left"
+    },
+    {
+      "id": "c49",
+      "from": "n39",
+      "to": "n40",
+      "fromPort": "bottom",
+      "toPort": "right"
+    },
+    {
+      "id": "c50",
+      "from": "n40",
+      "to": "n41",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c51",
+      "from": "n41",
+      "to": "n42",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c52",
+      "from": "n42",
+      "to": "n43",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c53",
+      "from": "n42",
+      "to": "n44",
+      "fromPort": "bottom",
+      "toPort": "left"
+    },
+    {
+      "id": "c54",
+      "from": "n43",
+      "to": "n44",
+      "fromPort": "bottom",
+      "toPort": "right"
+    },
+    {
+      "id": "c55",
+      "from": "n44",
+      "to": "n45",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c56",
+      "from": "n45",
+      "to": "n46",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c57",
+      "from": "n46",
+      "to": "n47",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c58",
+      "from": "n46",
+      "to": "n48",
+      "fromPort": "bottom",
+      "toPort": "left"
+    },
+    {
+      "id": "c59",
+      "from": "n47",
+      "to": "n48",
+      "fromPort": "bottom",
+      "toPort": "right"
+    },
+    {
+      "id": "c60",
+      "from": "n48",
+      "to": "n49",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c61",
+      "from": "n49",
+      "to": "n50",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "c62",
+      "from": "n50",
+      "to": "n51",
+      "fromPort": "bottom",
+      "toPort": "top"
     }
-  ]
+  ],
+  "description": "Chinese-RoBERTa-wwm-ext (HFL (HIT and iFLYTEK joint lab)): full 12-layer graph, MHA 12, imported from the official Hugging Face config.json."
 }

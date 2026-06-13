@@ -12,7 +12,16 @@ Baidu's workhorse Chinese encoder, the base-size distillation of the ERNIE 3.0 f
 
 ## Architecture
 
-![ERNIE 3.0 Base (Chinese) architecture](assets/diagram.svg)
+![ERNIE 3.0 Base (Chinese) block view](assets/block.svg)
+
+*Compact view: one block expanded. The full graph below is what `model.json` holds.*
+
+<details>
+<summary><b>Full graph: 51 nodes (click to expand)</b></summary>
+
+![ERNIE 3.0 Base (Chinese) full architecture](assets/diagram.svg)
+
+</details>
 
 | Hyperparameter | Value |
 |---|---|
@@ -26,7 +35,14 @@ Baidu's workhorse Chinese encoder, the base-size distillation of the ERNIE 3.0 f
 | Positions | Absolute learned, max 2,048 |
 | Vocabulary | 40,000 |
 
-The diagram and `model.json` show the full forward path with one of the 12 identical encoder blocks expanded (the stack repeats x12). All hyperparameters are taken from the official `config.json` on Hugging Face.
+`model.json` is the full 12-layer graph, produced with the same import path the Neurarch app uses for "load from Hugging Face", with all hyperparameters from the official `config.json`.
+
+## Parameter check
+
+Neurarch's per-layer parameter estimate over this graph: **115.8M**.
+Deviation from the authoritative count (118.0M): **-1.9%**.
+
+> The graph sum lands ~2% under the official figure, which includes ERNIE's task-type embedding table that the importer does not model.
 
 ## Design notes
 
@@ -39,8 +55,8 @@ The diagram and `model.json` show the full forward path with one of the 12 ident
 
 | File | What it is |
 |---|---|
-| [`model.json`](model.json) | The Neurarch graph. Shape-validated; open it at [neurarch.com](https://www.neurarch.com/) to edit or export training code. |
-| [`assets/diagram.svg`](assets/diagram.svg) | Vector diagram (papers, slides). |
-| [`assets/diagram.png`](assets/diagram.png) | Raster diagram (renders everywhere). |
+| [`model.json`](model.json) | The full Neurarch graph (every layer, real dimensions). Open it at [neurarch.com](https://www.neurarch.com/) to edit or export training code. |
+| [`assets/diagram.svg`](assets/diagram.svg) / [`.png`](assets/diagram.png) | Diagram of the full graph. |
+| [`assets/block.svg`](assets/block.svg) / [`.png`](assets/block.png) | Compact one-block explainer view. |
 
 **License:** Apache 2.0 (PaddleNLP). The graph and diagrams here describe the architecture; the model weights remain under the upstream license.

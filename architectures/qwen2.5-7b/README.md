@@ -12,7 +12,16 @@ A 7.6B-parameter decoder-only transformer from the Qwen2.5 family, one of the mo
 
 ## Architecture
 
-![Qwen2.5-7B architecture](assets/diagram.svg)
+![Qwen2.5-7B block view](assets/block.svg)
+
+*Compact view: one block expanded. The full graph below is what `model.json` holds.*
+
+<details>
+<summary><b>Full graph: 173 nodes (click to expand)</b></summary>
+
+![Qwen2.5-7B full architecture](assets/diagram.svg)
+
+</details>
 
 | Hyperparameter | Value |
 |---|---|
@@ -28,7 +37,13 @@ A 7.6B-parameter decoder-only transformer from the Qwen2.5 family, one of the mo
 | Vocabulary | 152,064 |
 | Max context | 131,072 |
 
-The diagram and `model.json` show the full forward path with one of the 28 identical decoder blocks expanded (the stack repeats x28). All hyperparameters are taken from the official `config.json` on Hugging Face.
+`model.json` is the full 28-layer graph, produced with the same import path the Neurarch app uses for "load from Hugging Face", with all hyperparameters from the official `config.json`.
+
+## Parameter check
+
+Neurarch's per-layer parameter estimate over this graph: **7.62B**.
+Hugging Face safetensors metadata reports **7.62B** for the real weights.
+Deviation from the authoritative count (7.62B): **+0.0%**.
 
 ## Design notes
 
@@ -41,8 +56,8 @@ The diagram and `model.json` show the full forward path with one of the 28 ident
 
 | File | What it is |
 |---|---|
-| [`model.json`](model.json) | The Neurarch graph. Shape-validated; open it at [neurarch.com](https://www.neurarch.com/) to edit or export training code. |
-| [`assets/diagram.svg`](assets/diagram.svg) | Vector diagram (papers, slides). |
-| [`assets/diagram.png`](assets/diagram.png) | Raster diagram (renders everywhere). |
+| [`model.json`](model.json) | The full Neurarch graph (every layer, real dimensions). Open it at [neurarch.com](https://www.neurarch.com/) to edit or export training code. |
+| [`assets/diagram.svg`](assets/diagram.svg) / [`.png`](assets/diagram.png) | Diagram of the full graph. |
+| [`assets/block.svg`](assets/block.svg) / [`.png`](assets/block.png) | Compact one-block explainer view. |
 
 **License:** Apache 2.0. The graph and diagrams here describe the architecture; the model weights remain under the upstream license.

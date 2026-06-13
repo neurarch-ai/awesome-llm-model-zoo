@@ -12,43 +12,49 @@ The Vision Transformer that ended CNN hegemony in image classification: 16x16 pa
 
 ## Architecture
 
-![ViT-B/16 architecture](assets/diagram.svg)
+![ViT-B/16 block view](assets/block.svg)
+
+*Compact view: one block expanded. The full graph below is what `model.json` holds.*
 
 <details>
-<summary><b>Layer-by-layer (13 nodes)</b></summary>
+<summary><b>Full graph: 75 nodes (click to expand)</b></summary>
 
-| # | Layer | Type | Params |
-|---|---|---|---|
-| 1 | image | `input` | shape: [3, 224, 224] |
-| 2 | patch_embed | `patchEmbed` | imgSize: 224, patchSize: 16, inChans: 3, embedDim: 768 |
-| 3 | pos_embed | `positionalEncoding` | maxLen: 197, embedDim: 768 |
-| 4 | dropout | `dropout` | p: 0 |
-| 5 | norm_1 | `layerNorm` | normalizedShape: 768 |
-| 6 | attn | `multiHeadAttention` | embedDim: 768, numHeads: 12 |
-| 7 | residual_1 | `add` |   |
-| 8 | norm_2 | `layerNorm` | normalizedShape: 768 |
-| 9 | mlp | `feedForward` | hiddenDim: 768, ffDim: 3072 |
-| 10 | residual_2 | `add` |   |
-| 11 | norm_final | `layerNorm` | normalizedShape: 768 |
-| 12 | head | `linear` | outFeatures: 1000 |
-| 13 | class_logits | `output` |   |
+![ViT-B/16 full architecture](assets/diagram.svg)
 
 </details>
 
-This graph ships in Neurarch's in-app template library; the copy here passes shape propagation with zero errors.
+| Hyperparameter | Value |
+|---|---|
+| Type | Vision Transformer (image classification) |
+| Parameters | 86M |
+| Layers | 12 encoder blocks |
+| Hidden size | 768 |
+| Attention | Multi-head: 12 heads |
+| FFN | Dense MLP, 3072, GeLU |
+| Normalization | LayerNorm, pre-norm |
+| Positions | Learned, 196 patches + class token |
+| Patch size | 16x16 over 224x224 input |
+
+`model.json` is the full graph, produced with the same import path the Neurarch app uses for "load from Hugging Face".
+
+## Parameter check
+
+Neurarch's per-layer parameter estimate over this graph: **85.2M**.
+Hugging Face safetensors metadata reports **86.6M** for the real weights.
+Deviation from the authoritative count (86.6M): **-1.6%**.
 
 ## Design notes
 
 - The patch-embed stem is just a strided conv: 3x224x224 becomes 196 patch tokens of 768 dims (plus the class token).
-- One of the 12 identical encoder blocks is expanded (MHA 12 heads, MLP 3072, pre-norm, both residuals); the stack repeats x12.
 - Identical block to BERT but pre-norm; the inductive-bias-free design needs large-scale pretraining to win.
+- The full 12-block stack lives in model.json; the block view shows one encoder block expanded.
 
 ## Files
 
 | File | What it is |
 |---|---|
-| [`model.json`](model.json) | The Neurarch graph. Shape-validated; open it at [neurarch.com](https://www.neurarch.com/) to edit or export training code. |
-| [`assets/diagram.svg`](assets/diagram.svg) | Vector diagram (papers, slides). |
-| [`assets/diagram.png`](assets/diagram.png) | Raster diagram (renders everywhere). |
+| [`model.json`](model.json) | The full Neurarch graph (every layer, real dimensions). Open it at [neurarch.com](https://www.neurarch.com/) to edit or export training code. |
+| [`assets/diagram.svg`](assets/diagram.svg) / [`.png`](assets/diagram.png) | Diagram of the full graph. |
+| [`assets/block.svg`](assets/block.svg) / [`.png`](assets/block.png) | Compact one-block explainer view. |
 
 **License:** Apache 2.0. The graph and diagrams here describe the architecture; any referenced weights remain under the upstream license.

@@ -44,7 +44,7 @@ This graph ships in Neurarch's in-app template library; the copy here passes sha
 
 - Cross-attention is the text-conditioning mechanism: image latents attend to CLIP text embeddings inside each block.
 - Works in 4x64x64 VAE latent space rather than pixels, which is the "latent" in latent diffusion and why it fits on consumer GPUs.
-- Timestep embedding is injected alongside the latents so one network handles every noise level.
+- This is a compact reference graph of the conditioning topology, not a parameter-faithful replica of the ~860M UNet.
 
 ## Files
 

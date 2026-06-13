@@ -12,7 +12,16 @@ The 12B of Google's Gemma 4 generation, the strongest permissively-distributed d
 
 ## Architecture
 
-![Gemma 4 12B architecture](assets/diagram.svg)
+![Gemma 4 12B block view](assets/block.svg)
+
+*Compact view: one block expanded. The full graph below is what `model.json` holds.*
+
+<details>
+<summary><b>Full graph: 300 nodes (click to expand)</b></summary>
+
+![Gemma 4 12B full architecture](assets/diagram.svg)
+
+</details>
 
 | Hyperparameter | Value |
 |---|---|
@@ -28,21 +37,27 @@ The 12B of Google's Gemma 4 generation, the strongest permissively-distributed d
 | Vocabulary | 262,144 |
 | Max context | 262,144 |
 
-The diagram and `model.json` show the full forward path with one of the 48 identical decoder blocks expanded (the stack repeats x48). All hyperparameters are taken from the official `config.json` on Hugging Face.
+`model.json` is the full 48-layer graph, produced with the same import path the Neurarch app uses for "load from Hugging Face" (with importer fixes noted in the generator script), with all hyperparameters from the official `config.json`.
+
+## Parameter check
+
+Neurarch's per-layer parameter estimate over this graph: **11.79B**.
+Hugging Face safetensors metadata reports **11.96B** for the real weights.
+Deviation from the authoritative count (11.96B): **-1.5%**.
 
 ## Design notes
 
 - Hyperparameters read directly from the June 2026 config.json (gemma4_unified_text): this entry tracks the release, not secondhand writeups.
 - Oversized heads: 16 heads of dim 256 (4096-dim attention over 3840 hidden), continuing the Gemma trademark of few-but-wide heads.
 - 5:1 local-to-global attention with a 1024-token window keeps the 262144-token context affordable; only 8 of 48 layers see the full sequence.
-- GeGLU FFN at 15360 (4x hidden) and the huge 262144-token SentencePiece vocabulary; "unified" model_type with a built-in vision encoder (text stack shown here).
+- GeGLU FFN at 15360 (4x hidden) and the huge 262144-token SentencePiece vocabulary; "unified" model_type with a built-in vision encoder, and the imported graph includes the vision patch-embed entry path feeding the shared decoder.
 
 ## Files
 
 | File | What it is |
 |---|---|
-| [`model.json`](model.json) | The Neurarch graph. Shape-validated; open it at [neurarch.com](https://www.neurarch.com/) to edit or export training code. |
-| [`assets/diagram.svg`](assets/diagram.svg) | Vector diagram (papers, slides). |
-| [`assets/diagram.png`](assets/diagram.png) | Raster diagram (renders everywhere). |
+| [`model.json`](model.json) | The full Neurarch graph (every layer, real dimensions). Open it at [neurarch.com](https://www.neurarch.com/) to edit or export training code. |
+| [`assets/diagram.svg`](assets/diagram.svg) / [`.png`](assets/diagram.png) | Diagram of the full graph. |
+| [`assets/block.svg`](assets/block.svg) / [`.png`](assets/block.png) | Compact one-block explainer view. |
 
 **License:** Gemma Terms of Use. The graph and diagrams here describe the architecture; the model weights remain under the upstream license.

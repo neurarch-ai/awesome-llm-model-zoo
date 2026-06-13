@@ -38,7 +38,8 @@
         "outChannels": 64,
         "kernelSize": 3,
         "stride": 1,
-        "padding": 1
+        "padding": 1,
+        "inChannels": 3
       },
       "inputs": [
         "input-1"
@@ -117,7 +118,8 @@
         "outChannels": 128,
         "kernelSize": 3,
         "stride": 1,
-        "padding": 1
+        "padding": 1,
+        "inChannels": 64
       },
       "inputs": [
         "enc1-pool"
@@ -196,7 +198,8 @@
         "outChannels": 256,
         "kernelSize": 3,
         "stride": 1,
-        "padding": 1
+        "padding": 1,
+        "inChannels": 128
       },
       "inputs": [
         "enc2-pool"
@@ -295,7 +298,8 @@
         "outChannels": 128,
         "kernelSize": 3,
         "stride": 1,
-        "padding": 1
+        "padding": 1,
+        "inChannels": 128
       },
       "inputs": [
         "dec2-concat"
@@ -394,7 +398,8 @@
         "outChannels": 64,
         "kernelSize": 3,
         "stride": 1,
-        "padding": 1
+        "padding": 1,
+        "inChannels": 64
       },
       "inputs": [
         "dec1-concat"
@@ -452,7 +457,8 @@
         "outChannels": 1,
         "kernelSize": 1,
         "stride": 1,
-        "padding": 0
+        "padding": 0,
+        "inChannels": 64
       },
       "inputs": [
         "dec1-relu"

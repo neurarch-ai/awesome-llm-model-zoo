@@ -20,7 +20,7 @@ The compact CNN that became the universal baseline for EEG brain-computer interf
 | # | Layer | Type | Params |
 |---|---|---|---|
 | 1 | eeg_window | `input` | shape: [1, 22, 1000] |
-| 2 | temporal_conv | `conv2d` | outChannels: 8, kernelSize: [1, 64], stride: 1, padding: [0, 32] |
+| 2 | temporal_conv | `conv2d` | outChannels: 8, kernelSize: [1, 64], stride: 1, padding: [0, 32], inChannels: 1 |
 | 3 | norm | `batchNorm` | normalizedShape: 8 |
 | 4 | spatial_depthwise | `depthwiseConv2d` | outChannels: 16, kernelSize: [22, 1], stride: 1, padding: 0, depthMultiplier: 2 |
 | 5 | norm | `batchNorm` | normalizedShape: 16 |
@@ -33,7 +33,7 @@ The compact CNN that became the universal baseline for EEG brain-computer interf
 | 12 | pool | `avgpool2d` | kernelSize: [1, 8], stride: [1, 8] |
 | 13 | drop | `dropout` | p: 0.25 |
 | 14 | flatten | `flatten` |   |
-| 15 | classifier | `linear` | outFeatures: 4 |
+| 15 | classifier | `linear` | outFeatures: 4, inFeatures: NaN |
 | 16 | logits | `output` |   |
 
 </details>
