@@ -25,22 +25,20 @@ Every diagram of Qwen or Mixtral you have ever seen is a dead image. The entries
 
 ## A few of the graphs
 
+These are the **full** graphs, every layer, exactly what each `model.json` holds. The two big ones are tiled into columns so all their layers fit on screen.
+
 <table>
 <tr>
-<td align="center"><b><a href="architectures/deepseek-v3/">DeepSeek-V3</a></b><br/><sub>MLA · 256 experts + shared</sub></td>
-<td align="center"><b><a href="architectures/clip-vit-b32/">CLIP ViT-B/32</a></b><br/><sub>two towers · one space</sub></td>
-<td align="center"><b><a href="architectures/whisper-small/">Whisper Small</a></b><br/><sub>audio conv stem · enc-dec</sub></td>
-<td align="center"><b><a href="architectures/mixtral-block/">Mixtral MoE Block</a></b><br/><sub>8 experts · top-2 routing</sub></td>
+<td align="center" width="50%"><b><a href="architectures/deepseek-v3/">DeepSeek-V3</a></b> · <sub>671B MoE · MLA + 256 experts · all 371 nodes</sub><br/><img src="architectures/deepseek-v3/assets/diagram.png" width="430" alt="DeepSeek-V3 full architecture"/></td>
+<td align="center" width="50%"><b><a href="architectures/gemma-4-12b/">Gemma 4 12B</a></b> · <sub>5:1 local:global · all 300 nodes</sub><br/><img src="architectures/gemma-4-12b/assets/diagram.png" width="430" alt="Gemma 4 12B full architecture"/></td>
 </tr>
 <tr>
-<td><img src="architectures/deepseek-v3/assets/block.png" width="190" alt="DeepSeek-V3 architecture (block view)"/></td>
-<td><img src="architectures/clip-vit-b32/assets/diagram.png" width="190" alt="CLIP dual-encoder architecture"/></td>
-<td><img src="architectures/whisper-small/assets/block.png" width="190" alt="Whisper Small architecture (block view)"/></td>
-<td><img src="architectures/mixtral-block/assets/diagram.png" width="190" alt="Mixtral MoE block architecture"/></td>
+<td align="center" width="50%"><b><a href="architectures/clip-vit-b32/">CLIP ViT-B/32</a></b> · <sub>dual encoder, two towers into one space</sub><br/><img src="architectures/clip-vit-b32/assets/diagram.png" width="300" alt="CLIP full dual-encoder architecture"/></td>
+<td align="center" width="50%"><b><a href="architectures/whisper-small/">Whisper Small</a></b> · <sub>conv stem · 12+12 enc-dec · cross-attention</sub><br/><img src="architectures/whisper-small/assets/diagram.png" width="430" alt="Whisper Small full architecture"/></td>
 </tr>
 </table>
 
-Want the heavy stuff? The full [ResNet-50](architectures/resnet-50/) is a 50-node graph with every bottleneck block expanded, and [VGG-16](architectures/vgg-16/) carries all 138M parameters' worth of layers.
+Every entry also has a compact one-block explainer view, and the parameter-faithful CNNs are here too: the full [ResNet-50](architectures/resnet-50/) (all 16 bottleneck blocks, 25.6M params, exact) and [VGG-16](architectures/vgg-16/) (138M, exact).
 
 ## Open any architecture in one click
 
