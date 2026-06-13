@@ -1,6 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="264" height="5368" viewBox="0 0 264 5368" font-family="-apple-system, 'Segoe UI', Inter, Helvetica, Arial, sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" width="414" height="792" viewBox="0 0 414 792" font-family="-apple-system, 'Segoe UI', Inter, Helvetica, Arial, sans-serif">
 <defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#94a3b8"/></marker></defs>
-<rect x="0" y="0" width="264" height="5368" fill="#ffffff"/>
+<rect x="0" y="0" width="414" height="792" fill="#ffffff"/>
+<rect x="50.0" y="258.0" width="196.0" height="388.0" rx="14" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1.5"/>
+<rect x="42.0" y="250.0" width="196.0" height="388.0" rx="14" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1.5"/>
+<rect x="34.0" y="242.0" width="196.0" height="388.0" rx="14" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="7 6"/>
+<rect x="252.0" y="417.0" width="66" height="38" rx="19" fill="#4f46e5"/>
+<text x="285.0" y="442.0" text-anchor="middle" font-size="17" font-weight="700" fill="#ffffff">× 12</text>
 <path d="M132.0,96.0 C132.0,121.0 132.0,121.0 132.0,146.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
 <path d="M132.0,200.0 C132.0,225.0 132.0,225.0 132.0,250.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
 <path d="M132.0,200.0 C132.0,277.0 132.0,277.0 132.0,354.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
@@ -8,162 +13,19 @@
 <path d="M132.0,408.0 C132.0,433.0 132.0,433.0 132.0,458.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
 <path d="M132.0,512.0 C132.0,537.0 132.0,537.0 132.0,562.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
 <path d="M132.0,616.0 C132.0,641.0 132.0,641.0 132.0,666.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M132.0,616.0 C132.0,693.0 132.0,693.0 132.0,770.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M132.0,720.0 C132.0,745.0 132.0,745.0 132.0,770.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M132.0,824.0 C132.0,849.0 132.0,849.0 132.0,874.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M132.0,928.0 C132.0,953.0 132.0,953.0 132.0,978.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M132.0,1032.0 C132.0,1057.0 132.0,1057.0 132.0,1082.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M132.0,1032.0 C132.0,1109.0 132.0,1109.0 132.0,1186.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M132.0,1136.0 C132.0,1161.0 132.0,1161.0 132.0,1186.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M132.0,1240.0 C132.0,1265.0 132.0,1265.0 132.0,1290.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M132.0,1344.0 C132.0,1369.0 132.0,1369.0 132.0,1394.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M132.0,1448.0 C132.0,1473.0 132.0,1473.0 132.0,1498.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M132.0,1448.0 C132.0,1525.0 132.0,1525.0 132.0,1602.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M132.0,1552.0 C132.0,1577.0 132.0,1577.0 132.0,1602.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M132.0,1656.0 C132.0,1681.0 132.0,1681.0 132.0,1706.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M132.0,1760.0 C132.0,1785.0 132.0,1785.0 132.0,1810.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M132.0,1864.0 C132.0,1889.0 132.0,1889.0 132.0,1914.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M132.0,1864.0 C132.0,1941.0 132.0,1941.0 132.0,2018.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M132.0,1968.0 C132.0,1993.0 132.0,1993.0 132.0,2018.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M132.0,2072.0 C132.0,2097.0 132.0,2097.0 132.0,2122.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M132.0,2176.0 C132.0,2201.0 132.0,2201.0 132.0,2226.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M132.0,2280.0 C132.0,2305.0 132.0,2305.0 132.0,2330.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M132.0,2280.0 C132.0,2357.0 132.0,2357.0 132.0,2434.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M132.0,2384.0 C132.0,2409.0 132.0,2409.0 132.0,2434.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M132.0,2488.0 C132.0,2513.0 132.0,2513.0 132.0,2538.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M132.0,2592.0 C132.0,2617.0 132.0,2617.0 132.0,2642.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M132.0,2696.0 C132.0,2721.0 132.0,2721.0 132.0,2746.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M132.0,2696.0 C132.0,2773.0 132.0,2773.0 132.0,2850.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M132.0,2800.0 C132.0,2825.0 132.0,2825.0 132.0,2850.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M132.0,2904.0 C132.0,2929.0 132.0,2929.0 132.0,2954.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M132.0,3008.0 C132.0,3033.0 132.0,3033.0 132.0,3058.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M132.0,3112.0 C132.0,3137.0 132.0,3137.0 132.0,3162.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M132.0,3112.0 C132.0,3189.0 132.0,3189.0 132.0,3266.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M132.0,3216.0 C132.0,3241.0 132.0,3241.0 132.0,3266.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M132.0,3320.0 C132.0,3345.0 132.0,3345.0 132.0,3370.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M132.0,3424.0 C132.0,3449.0 132.0,3449.0 132.0,3474.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M132.0,3528.0 C132.0,3553.0 132.0,3553.0 132.0,3578.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M132.0,3528.0 C132.0,3605.0 132.0,3605.0 132.0,3682.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M132.0,3632.0 C132.0,3657.0 132.0,3657.0 132.0,3682.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M132.0,3736.0 C132.0,3761.0 132.0,3761.0 132.0,3786.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M132.0,3840.0 C132.0,3865.0 132.0,3865.0 132.0,3890.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M132.0,3944.0 C132.0,3969.0 132.0,3969.0 132.0,3994.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M132.0,3944.0 C132.0,4021.0 132.0,4021.0 132.0,4098.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M132.0,4048.0 C132.0,4073.0 132.0,4073.0 132.0,4098.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M132.0,4152.0 C132.0,4177.0 132.0,4177.0 132.0,4202.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M132.0,4256.0 C132.0,4281.0 132.0,4281.0 132.0,4306.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M132.0,4360.0 C132.0,4385.0 132.0,4385.0 132.0,4410.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M132.0,4360.0 C132.0,4437.0 132.0,4437.0 132.0,4514.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M132.0,4464.0 C132.0,4489.0 132.0,4489.0 132.0,4514.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M132.0,4568.0 C132.0,4593.0 132.0,4593.0 132.0,4618.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M132.0,4672.0 C132.0,4697.0 132.0,4697.0 132.0,4722.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M132.0,4776.0 C132.0,4801.0 132.0,4801.0 132.0,4826.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M132.0,4776.0 C132.0,4853.0 132.0,4853.0 132.0,4930.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M132.0,4880.0 C132.0,4905.0 132.0,4905.0 132.0,4930.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M132.0,4984.0 C132.0,5009.0 132.0,5009.0 132.0,5034.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M132.0,5088.0 C132.0,5113.0 132.0,5113.0 132.0,5138.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M132.0,5192.0 C132.0,5217.0 132.0,5217.0 132.0,5242.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
 <rect x="48.0" y="48.0" width="168" height="48" rx="10" fill="rgb(224, 247, 232)" stroke="#22c55e" stroke-width="1.5"/>
 <text x="132.0" y="76.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">Input</text>
 <rect x="48.0" y="152.0" width="168" height="48" rx="10" fill="rgb(254, 241, 221)" stroke="#f59e0b" stroke-width="1.5"/>
 <text x="132.0" y="180.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">Embedding</text>
 <rect x="48.0" y="256.0" width="168" height="48" rx="10" fill="rgb(243, 231, 254)" stroke="#a855f7" stroke-width="1.5"/>
-<text x="132.0" y="284.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">Attention_1</text>
+<text x="132.0" y="284.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">Attention</text>
 <circle cx="132.0" cy="384.0" r="22" fill="rgb(220, 245, 249)" stroke="#06b6d4" stroke-width="1.5"/>
 <text x="132.0" y="392.0" text-anchor="middle" font-size="24" fill="#06b6d4">⊕</text>
 <rect x="48.0" y="464.0" width="168" height="48" rx="10" fill="rgb(233, 236, 239)" stroke="#64748b" stroke-width="1.5"/>
-<text x="132.0" y="492.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">LayerNorm_1_1</text>
+<text x="132.0" y="492.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">LayerNorm</text>
 <rect x="48.0" y="568.0" width="168" height="48" rx="10" fill="rgb(222, 245, 243)" stroke="#14b8a6" stroke-width="1.5"/>
-<text x="132.0" y="596.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">FFN_1</text>
-<rect x="48.0" y="672.0" width="168" height="48" rx="10" fill="rgb(243, 231, 254)" stroke="#a855f7" stroke-width="1.5"/>
-<text x="132.0" y="700.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">Attention_2</text>
-<circle cx="132.0" cy="800.0" r="22" fill="rgb(220, 245, 249)" stroke="#06b6d4" stroke-width="1.5"/>
-<text x="132.0" y="808.0" text-anchor="middle" font-size="24" fill="#06b6d4">⊕</text>
-<rect x="48.0" y="880.0" width="168" height="48" rx="10" fill="rgb(233, 236, 239)" stroke="#64748b" stroke-width="1.5"/>
-<text x="132.0" y="908.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">LayerNorm_2_1</text>
-<rect x="48.0" y="984.0" width="168" height="48" rx="10" fill="rgb(222, 245, 243)" stroke="#14b8a6" stroke-width="1.5"/>
-<text x="132.0" y="1012.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">FFN_2</text>
-<rect x="48.0" y="1088.0" width="168" height="48" rx="10" fill="rgb(243, 231, 254)" stroke="#a855f7" stroke-width="1.5"/>
-<text x="132.0" y="1116.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">Attention_3</text>
-<circle cx="132.0" cy="1216.0" r="22" fill="rgb(220, 245, 249)" stroke="#06b6d4" stroke-width="1.5"/>
-<text x="132.0" y="1224.0" text-anchor="middle" font-size="24" fill="#06b6d4">⊕</text>
-<rect x="48.0" y="1296.0" width="168" height="48" rx="10" fill="rgb(233, 236, 239)" stroke="#64748b" stroke-width="1.5"/>
-<text x="132.0" y="1324.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">LayerNorm_3_1</text>
-<rect x="48.0" y="1400.0" width="168" height="48" rx="10" fill="rgb(222, 245, 243)" stroke="#14b8a6" stroke-width="1.5"/>
-<text x="132.0" y="1428.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">FFN_3</text>
-<rect x="48.0" y="1504.0" width="168" height="48" rx="10" fill="rgb(243, 231, 254)" stroke="#a855f7" stroke-width="1.5"/>
-<text x="132.0" y="1532.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">Attention_4</text>
-<circle cx="132.0" cy="1632.0" r="22" fill="rgb(220, 245, 249)" stroke="#06b6d4" stroke-width="1.5"/>
-<text x="132.0" y="1640.0" text-anchor="middle" font-size="24" fill="#06b6d4">⊕</text>
-<rect x="48.0" y="1712.0" width="168" height="48" rx="10" fill="rgb(233, 236, 239)" stroke="#64748b" stroke-width="1.5"/>
-<text x="132.0" y="1740.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">LayerNorm_4_1</text>
-<rect x="48.0" y="1816.0" width="168" height="48" rx="10" fill="rgb(222, 245, 243)" stroke="#14b8a6" stroke-width="1.5"/>
-<text x="132.0" y="1844.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">FFN_4</text>
-<rect x="48.0" y="1920.0" width="168" height="48" rx="10" fill="rgb(243, 231, 254)" stroke="#a855f7" stroke-width="1.5"/>
-<text x="132.0" y="1948.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">Attention_5</text>
-<circle cx="132.0" cy="2048.0" r="22" fill="rgb(220, 245, 249)" stroke="#06b6d4" stroke-width="1.5"/>
-<text x="132.0" y="2056.0" text-anchor="middle" font-size="24" fill="#06b6d4">⊕</text>
-<rect x="48.0" y="2128.0" width="168" height="48" rx="10" fill="rgb(233, 236, 239)" stroke="#64748b" stroke-width="1.5"/>
-<text x="132.0" y="2156.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">LayerNorm_5_1</text>
-<rect x="48.0" y="2232.0" width="168" height="48" rx="10" fill="rgb(222, 245, 243)" stroke="#14b8a6" stroke-width="1.5"/>
-<text x="132.0" y="2260.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">FFN_5</text>
-<rect x="48.0" y="2336.0" width="168" height="48" rx="10" fill="rgb(243, 231, 254)" stroke="#a855f7" stroke-width="1.5"/>
-<text x="132.0" y="2364.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">Attention_6</text>
-<circle cx="132.0" cy="2464.0" r="22" fill="rgb(220, 245, 249)" stroke="#06b6d4" stroke-width="1.5"/>
-<text x="132.0" y="2472.0" text-anchor="middle" font-size="24" fill="#06b6d4">⊕</text>
-<rect x="48.0" y="2544.0" width="168" height="48" rx="10" fill="rgb(233, 236, 239)" stroke="#64748b" stroke-width="1.5"/>
-<text x="132.0" y="2572.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">LayerNorm_6_1</text>
-<rect x="48.0" y="2648.0" width="168" height="48" rx="10" fill="rgb(222, 245, 243)" stroke="#14b8a6" stroke-width="1.5"/>
-<text x="132.0" y="2676.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">FFN_6</text>
-<rect x="48.0" y="2752.0" width="168" height="48" rx="10" fill="rgb(243, 231, 254)" stroke="#a855f7" stroke-width="1.5"/>
-<text x="132.0" y="2780.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">Attention_7</text>
-<circle cx="132.0" cy="2880.0" r="22" fill="rgb(220, 245, 249)" stroke="#06b6d4" stroke-width="1.5"/>
-<text x="132.0" y="2888.0" text-anchor="middle" font-size="24" fill="#06b6d4">⊕</text>
-<rect x="48.0" y="2960.0" width="168" height="48" rx="10" fill="rgb(233, 236, 239)" stroke="#64748b" stroke-width="1.5"/>
-<text x="132.0" y="2988.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">LayerNorm_7_1</text>
-<rect x="48.0" y="3064.0" width="168" height="48" rx="10" fill="rgb(222, 245, 243)" stroke="#14b8a6" stroke-width="1.5"/>
-<text x="132.0" y="3092.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">FFN_7</text>
-<rect x="48.0" y="3168.0" width="168" height="48" rx="10" fill="rgb(243, 231, 254)" stroke="#a855f7" stroke-width="1.5"/>
-<text x="132.0" y="3196.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">Attention_8</text>
-<circle cx="132.0" cy="3296.0" r="22" fill="rgb(220, 245, 249)" stroke="#06b6d4" stroke-width="1.5"/>
-<text x="132.0" y="3304.0" text-anchor="middle" font-size="24" fill="#06b6d4">⊕</text>
-<rect x="48.0" y="3376.0" width="168" height="48" rx="10" fill="rgb(233, 236, 239)" stroke="#64748b" stroke-width="1.5"/>
-<text x="132.0" y="3404.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">LayerNorm_8_1</text>
-<rect x="48.0" y="3480.0" width="168" height="48" rx="10" fill="rgb(222, 245, 243)" stroke="#14b8a6" stroke-width="1.5"/>
-<text x="132.0" y="3508.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">FFN_8</text>
-<rect x="48.0" y="3584.0" width="168" height="48" rx="10" fill="rgb(243, 231, 254)" stroke="#a855f7" stroke-width="1.5"/>
-<text x="132.0" y="3612.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">Attention_9</text>
-<circle cx="132.0" cy="3712.0" r="22" fill="rgb(220, 245, 249)" stroke="#06b6d4" stroke-width="1.5"/>
-<text x="132.0" y="3720.0" text-anchor="middle" font-size="24" fill="#06b6d4">⊕</text>
-<rect x="48.0" y="3792.0" width="168" height="48" rx="10" fill="rgb(233, 236, 239)" stroke="#64748b" stroke-width="1.5"/>
-<text x="132.0" y="3820.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">LayerNorm_9_1</text>
-<rect x="48.0" y="3896.0" width="168" height="48" rx="10" fill="rgb(222, 245, 243)" stroke="#14b8a6" stroke-width="1.5"/>
-<text x="132.0" y="3924.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">FFN_9</text>
-<rect x="48.0" y="4000.0" width="168" height="48" rx="10" fill="rgb(243, 231, 254)" stroke="#a855f7" stroke-width="1.5"/>
-<text x="132.0" y="4028.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">Attention_10</text>
-<circle cx="132.0" cy="4128.0" r="22" fill="rgb(220, 245, 249)" stroke="#06b6d4" stroke-width="1.5"/>
-<text x="132.0" y="4136.0" text-anchor="middle" font-size="24" fill="#06b6d4">⊕</text>
-<rect x="48.0" y="4208.0" width="168" height="48" rx="10" fill="rgb(233, 236, 239)" stroke="#64748b" stroke-width="1.5"/>
-<text x="132.0" y="4236.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">LayerNorm_10_1</text>
-<rect x="48.0" y="4312.0" width="168" height="48" rx="10" fill="rgb(222, 245, 243)" stroke="#14b8a6" stroke-width="1.5"/>
-<text x="132.0" y="4340.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">FFN_10</text>
-<rect x="48.0" y="4416.0" width="168" height="48" rx="10" fill="rgb(243, 231, 254)" stroke="#a855f7" stroke-width="1.5"/>
-<text x="132.0" y="4444.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">Attention_11</text>
-<circle cx="132.0" cy="4544.0" r="22" fill="rgb(220, 245, 249)" stroke="#06b6d4" stroke-width="1.5"/>
-<text x="132.0" y="4552.0" text-anchor="middle" font-size="24" fill="#06b6d4">⊕</text>
-<rect x="48.0" y="4624.0" width="168" height="48" rx="10" fill="rgb(233, 236, 239)" stroke="#64748b" stroke-width="1.5"/>
-<text x="132.0" y="4652.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">LayerNorm_11_1</text>
-<rect x="48.0" y="4728.0" width="168" height="48" rx="10" fill="rgb(222, 245, 243)" stroke="#14b8a6" stroke-width="1.5"/>
-<text x="132.0" y="4756.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">FFN_11</text>
-<rect x="48.0" y="4832.0" width="168" height="48" rx="10" fill="rgb(243, 231, 254)" stroke="#a855f7" stroke-width="1.5"/>
-<text x="132.0" y="4860.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">Attention_12</text>
-<circle cx="132.0" cy="4960.0" r="22" fill="rgb(220, 245, 249)" stroke="#06b6d4" stroke-width="1.5"/>
-<text x="132.0" y="4968.0" text-anchor="middle" font-size="24" fill="#06b6d4">⊕</text>
-<rect x="48.0" y="5040.0" width="168" height="48" rx="10" fill="rgb(233, 236, 239)" stroke="#64748b" stroke-width="1.5"/>
-<text x="132.0" y="5068.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">LayerNorm_12_1</text>
-<rect x="48.0" y="5144.0" width="168" height="48" rx="10" fill="rgb(222, 245, 243)" stroke="#14b8a6" stroke-width="1.5"/>
-<text x="132.0" y="5172.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">FFN_12</text>
-<rect x="48.0" y="5248.0" width="168" height="48" rx="10" fill="rgb(253, 229, 229)" stroke="#ef4444" stroke-width="1.5"/>
-<text x="132.0" y="5276.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">Output</text>
-<text x="216.0" y="5357.0" text-anchor="end" font-size="11" fill="#9aa6b8">Made with Neurarch · neurarch.com</text>
+<text x="132.0" y="596.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">FFN</text>
+<rect x="48.0" y="672.0" width="168" height="48" rx="10" fill="rgb(253, 229, 229)" stroke="#ef4444" stroke-width="1.5"/>
+<text x="132.0" y="700.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">Output</text>
+<text x="366.0" y="781.0" text-anchor="end" font-size="11" fill="#9aa6b8">Made with Neurarch · neurarch.com</text>
 </svg>

@@ -12,16 +12,9 @@ Meta's 8B dense decoder, the de facto baseline architecture that most current op
 
 ## Architecture
 
-![Llama-3-8B full architecture](assets/diagram.png)
+![Llama-3-8B architecture](assets/diagram.png)
 
-*The full graph, all 197 nodes, tiled into columns for readability (read each column top-to-bottom, then left-to-right). Exactly what `model.json` holds. Vector: [diagram.svg](assets/diagram.svg).*
-
-<details>
-<summary><b>One block, expanded (explainer view)</b></summary>
-
-![Llama-3-8B block view](assets/block.png)
-
-</details>
+*Identical repeated blocks are folded into one representative block with a `× N` badge, so the whole architecture fits on screen. `model.json` keeps all 197 nodes (open it in Neurarch to see and edit every layer). Vector: [diagram.svg](assets/diagram.svg).*
 
 | Hyperparameter | Value |
 |---|---|
@@ -57,7 +50,6 @@ Deviation from the authoritative count (8.03B): **+0.0%**.
 | File | What it is |
 |---|---|
 | [`model.json`](model.json) | The full Neurarch graph (every layer, real dimensions). Open it at [neurarch.com](https://www.neurarch.com/) to edit or export training code. |
-| [`assets/diagram.svg`](assets/diagram.svg) / [`.png`](assets/diagram.png) | Diagram of the full graph. |
-| [`assets/block.svg`](assets/block.svg) / [`.png`](assets/block.png) | Compact one-block explainer view. |
+| [`assets/diagram.svg`](assets/diagram.svg) / [`.png`](assets/diagram.png) | Architecture diagram (repeated blocks folded with a `× N` badge). |
 
 **License:** Llama 3 Community License. The graph and diagrams here describe the architecture; the model weights remain under the upstream license.

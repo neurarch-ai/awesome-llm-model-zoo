@@ -25,20 +25,20 @@ Every diagram of Qwen or Mixtral you have ever seen is a dead image. The entries
 
 ## A few of the graphs
 
-These are the **full** graphs, every layer, exactly what each `model.json` holds. The two big ones are tiled into columns so all their layers fit on screen.
+`model.json` always holds the **full** graph (every layer, real dimensions). The diagrams fold runs of identical blocks into one representative block with a `× N` badge, so even a 671B model fits on one screen, the way papers draw it.
 
 <table>
 <tr>
-<td align="center" width="50%"><b><a href="architectures/deepseek-v3/">DeepSeek-V3</a></b> · <sub>671B MoE · MLA + 256 experts · all 371 nodes</sub><br/><img src="architectures/deepseek-v3/assets/diagram.png" width="430" alt="DeepSeek-V3 full architecture"/></td>
-<td align="center" width="50%"><b><a href="architectures/gemma-4-12b/">Gemma 4 12B</a></b> · <sub>5:1 local:global · all 300 nodes</sub><br/><img src="architectures/gemma-4-12b/assets/diagram.png" width="430" alt="Gemma 4 12B full architecture"/></td>
+<td align="center" valign="top"><b><a href="architectures/deepseek-v3/">DeepSeek-V3</a></b><br/><sub>671B MoE · MLA · 3 dense + 58 MoE blocks</sub><br/><img src="architectures/deepseek-v3/assets/diagram.png" width="215" alt="DeepSeek-V3 architecture"/></td>
+<td align="center" valign="top"><b><a href="architectures/clip-vit-b32/">CLIP ViT-B/32</a></b><br/><sub>dual encoder · two towers into one space</sub><br/><img src="architectures/clip-vit-b32/assets/diagram.png" width="430" alt="CLIP dual-encoder architecture"/></td>
 </tr>
 <tr>
-<td align="center" width="50%"><b><a href="architectures/clip-vit-b32/">CLIP ViT-B/32</a></b> · <sub>dual encoder, two towers into one space</sub><br/><img src="architectures/clip-vit-b32/assets/diagram.png" width="300" alt="CLIP full dual-encoder architecture"/></td>
-<td align="center" width="50%"><b><a href="architectures/whisper-small/">Whisper Small</a></b> · <sub>conv stem · 12+12 enc-dec · cross-attention</sub><br/><img src="architectures/whisper-small/assets/diagram.png" width="430" alt="Whisper Small full architecture"/></td>
+<td align="center" valign="top"><b><a href="architectures/whisper-small/">Whisper Small</a></b><br/><sub>conv stem · 12+12 enc-dec · cross-attention</sub><br/><img src="architectures/whisper-small/assets/diagram.png" width="430" alt="Whisper Small architecture"/></td>
+<td align="center" valign="top"><b><a href="architectures/qwen2.5-7b/">Qwen2.5-7B</a></b><br/><sub>GQA 28:4 · QKV bias · 28 blocks</sub><br/><img src="architectures/qwen2.5-7b/assets/diagram.png" width="215" alt="Qwen2.5-7B architecture"/></td>
 </tr>
 </table>
 
-Every entry also has a compact one-block explainer view, and the parameter-faithful CNNs are here too: the full [ResNet-50](architectures/resnet-50/) (all 16 bottleneck blocks, 25.6M params, exact) and [VGG-16](architectures/vgg-16/) (138M, exact).
+The full expanded graph (every one of those 371 / 300 / … nodes) is one click away in Neurarch via the **Open in Neurarch** link on each entry. Parameter-faithful CNNs are here too: [ResNet-50](architectures/resnet-50/) (all 16 bottleneck blocks, 25.6M, exact) and [VGG-16](architectures/vgg-16/) (138M, exact).
 
 ## Open any architecture in one click
 
@@ -55,9 +55,8 @@ Each folder under [`architectures/`](architectures/) contains:
 | File | What it is |
 |------|------------|
 | `README.md` | What the model is, its **model URLs** (Neurarch, Hugging Face, GitHub, paper), verified hyperparameters, a parameter check, and design notes. |
-| `model.json` | The full Neurarch graph: for full models, every layer at real dimensions, the same graph you get by importing the HF model in the app. |
-| `assets/diagram.svg` / `.png` | Diagram of the full graph. |
-| `assets/block.svg` / `.png` | Compact one-block explainer view (full-model entries). |
+| `model.json` | The full Neurarch graph: every layer at real dimensions, the same graph you get by importing the HF model in the app. |
+| `assets/diagram.svg` / `.png` | Architecture diagram. Runs of identical blocks are folded into one representative block with a `× N` badge; `model.json` still holds them all. |
 
 ## Catalog
 

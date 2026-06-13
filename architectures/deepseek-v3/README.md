@@ -12,16 +12,9 @@ The 671B-parameter MoE that made frontier-scale open weights real, and the archi
 
 ## Architecture
 
-![DeepSeek-V3 full architecture](assets/diagram.png)
+![DeepSeek-V3 architecture](assets/diagram.png)
 
-*The full graph, all 371 nodes, tiled into columns for readability (read each column top-to-bottom, then left-to-right). Exactly what `model.json` holds. Vector: [diagram.svg](assets/diagram.svg).*
-
-<details>
-<summary><b>One block, expanded (explainer view)</b></summary>
-
-![DeepSeek-V3 block view](assets/block.png)
-
-</details>
+*Identical repeated blocks are folded into one representative block with a `× N` badge, so the whole architecture fits on screen. `model.json` keeps all 371 nodes (open it in Neurarch to see and edit every layer). Vector: [diagram.svg](assets/diagram.svg).*
 
 | Hyperparameter | Value |
 |---|---|
@@ -56,7 +49,6 @@ Deviation from the authoritative count (684.53B): **-1.8%**.
 | File | What it is |
 |---|---|
 | [`model.json`](model.json) | The full Neurarch graph (every layer, real dimensions). Open it at [neurarch.com](https://www.neurarch.com/) to edit or export training code. |
-| [`assets/diagram.svg`](assets/diagram.svg) / [`.png`](assets/diagram.png) | Diagram of the full graph. |
-| [`assets/block.svg`](assets/block.svg) / [`.png`](assets/block.png) | Compact one-block explainer view. |
+| [`assets/diagram.svg`](assets/diagram.svg) / [`.png`](assets/diagram.png) | Architecture diagram (repeated blocks folded with a `× N` badge). |
 
 **License:** Code MIT; weights under the DeepSeek Model License (V3) and MIT from V3-0324 on. The graph and diagrams here describe the architecture; the model weights remain under the upstream license.
