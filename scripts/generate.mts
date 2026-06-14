@@ -311,6 +311,22 @@ const FRONTIER: DecoderSpec[] = [
     blurb: 'The 671B-parameter MoE that made frontier-scale open weights real, and the architecture behind DeepSeek-R1. Two signature moves: multi-head latent attention for cheap KV cache, and 256 fine-grained experts with a shared expert.',
   },
   {
+    kind: 'decoder', id: 'deepseek-v2', displayName: 'DeepSeek-V2', org: 'DeepSeek',
+    paramsLabel: '236B total, 21B active', github: 'https://github.com/deepseek-ai/DeepSeek-V2', hf: 'https://huggingface.co/deepseek-ai/DeepSeek-V2',
+    hfId: 'deepseek-ai/DeepSeek-V2',
+    license: 'Code MIT; weights under the DeepSeek Model License',
+    hidden: 5120, layers: 60, heads: 128, kvHeads: 128, ffn: 12288, vocab: 102400, ctx: 163840, ropeDim: 64,
+    mla: { kvLatentDim: 512, qLatentDim: 1536, ropeHeadDim: 64, nopeHeadDim: 128, vHeadDim: 128 },
+    moe: { numExperts: 160, topK: 6, expertDim: 1536, sharedExpert: true, denseFirstK: 1 },
+    notes: [
+      'The model that introduced multi-head latent attention and fine-grained MoE, the recipe DeepSeek-V3 later scaled. 236B total, only 21B active per token.',
+      'MLA: KV compressed to a 512-dim latent, Q to a 1536-dim latent; each of 128 heads splits into 128-dim NoPE content + 64-dim decoupled RoPE.',
+      '160 routed experts (top-6) + 2 shared, slim 1536-dim each; first layer dense.',
+      'See [deepseek-v2-lite](../deepseek-v2-lite/) for the runnable 16B version and [deepseek-v3](../deepseek-v3/) for the scaled-up 671B.',
+    ],
+    blurb: 'The 236B MoE where multi-head latent attention and fine-grained mixture-of-experts debuted, the architecture the whole DeepSeek line is built on. Cheap KV cache from MLA, cheap compute from 160 slim experts.',
+  },
+  {
     kind: 'decoder', id: 'kimi-k2.6', displayName: 'Kimi K2.6', org: 'Moonshot AI',
     paramsLabel: '~1.06T total, ~32B active', github: 'https://github.com/MoonshotAI/Kimi-K2', hf: 'https://huggingface.co/moonshotai/Kimi-K2.6',
     hfId: 'moonshotai/Kimi-K2.6',
@@ -950,6 +966,217 @@ function buildMobileNetV2(): Graph {
   });
 }
 
+function buildEfficientNet(): Graph {
+  return rsGraph('efficientnet-b0', 'EfficientNet-B0', 'EfficientNet (Tan and Le 2019): MBConv blocks (mobile inverted bottleneck + squeeze-and-excite) found by compound-scaling neural architecture search. B0 is the baseline the whole B1-B7 family scales up from.', ({ add, wire }) => {
+    let y = 50;
+    const inp = add('input', 'image', { shape: [3, 224, 224] }, 300, y); y += 150;
+    const stem = add('conv2d', 'stem_3x3/2', { inChannels: 3, outChannels: 32, kernelSize: 3, stride: 2, padding: 1 }, 300, y); wire(inp, stem); y += 150;
+    // MBConv schedule (expand, out, stride, kernel) x16
+    const blocks: Array<[number, number, number, number, number]> = [
+      [1, 32, 16, 1, 3], [6, 16, 24, 2, 3], [6, 24, 24, 1, 3], [6, 24, 40, 2, 5], [6, 40, 40, 1, 5],
+      [6, 40, 80, 2, 3], [6, 80, 80, 1, 3], [6, 80, 80, 1, 3], [6, 80, 112, 1, 5], [6, 112, 112, 1, 5],
+      [6, 112, 112, 1, 5], [6, 112, 192, 2, 5], [6, 192, 192, 1, 5], [6, 192, 192, 1, 5], [6, 192, 192, 1, 5], [6, 192, 320, 1, 3],
+    ];
+    let prev = stem; let bi = 0;
+    for (const [t, inC, outC, stride, k] of blocks) {
+      bi++; const expC = inC * t;
+      let p = prev;
+      if (t !== 1) { const e = add('conv2d', `mb${bi}_expand_1x1`, { inChannels: inC, outChannels: expC, kernelSize: 1 }, 300, y); wire(p, e); p = e; y += 150; }
+      const dw = add('depthwiseConv2d', `mb${bi}_dw_${k}x${k}`, { inChannels: expC, outChannels: expC, kernelSize: k, stride, padding: (k - 1) / 2 }, 300, y); wire(p, dw); y += 150;
+      const se = add('seBlock', `mb${bi}_squeeze_excite`, { channels: expC, reduction: 4 }, 300, y); wire(dw, se); y += 150;
+      const pj = add('conv2d', `mb${bi}_project_1x1`, { inChannels: expC, outChannels: outC, kernelSize: 1 }, 300, y); wire(se, pj); y += 150;
+      if (inC === outC && stride === 1) { const r = add('add', `mb${bi}_residual`, {}, 300, y); wire(pj, r); wire(prev, r); y += 150; prev = r; } else prev = pj;
+    }
+    const head = add('conv2d', 'head_1x1', { inChannels: 320, outChannels: 1280, kernelSize: 1 }, 300, y); wire(prev, head); y += 150;
+    const gap = add('globalAvgPool2d', 'avgpool', {}, 300, y); wire(head, gap); y += 150;
+    const fc = add('linear', 'classifier', { inFeatures: 1280, outFeatures: 1000 }, 300, y); wire(gap, fc); y += 150;
+    const out = add('output', 'class_logits', {}, 300, y); wire(fc, out);
+  });
+}
+
+function buildConvNeXt(): Graph {
+  return rsGraph('convnext-tiny', 'ConvNeXt-Tiny', 'ConvNeXt (Liu et al. 2022): a pure ConvNet modernized with Transformer-era design choices (large depthwise kernels, LayerNorm, GeLU, inverted bottleneck) until it matches Swin. The "ConvNets strike back" architecture.', ({ add, wire }) => {
+    let y = 50;
+    const inp = add('input', 'image', { shape: [3, 224, 224] }, 300, y); y += 150;
+    const stem = add('conv2d', 'patchify_4x4/4', { inChannels: 3, outChannels: 96, kernelSize: 4, stride: 4 }, 300, y); wire(inp, stem); y += 150;
+    const stages = [[96, 3], [192, 3], [384, 9], [768, 3]];
+    let prev = stem; let si = 0;
+    for (const [dim, depth] of stages) {
+      si++;
+      if (si > 1) { const ds = add('conv2d', `downsample_${si}`, { inChannels: stages[si - 2][0], outChannels: dim, kernelSize: 2, stride: 2 }, 300, y); wire(prev, ds); prev = ds; y += 150; }
+      for (let b = 0; b < depth; b++) {
+        const dw = add('depthwiseConv2d', `s${si}b${b + 1}_dw_7x7`, { inChannels: dim, outChannels: dim, kernelSize: 7, padding: 3 }, 300, y); wire(prev, dw); y += 150;
+        const ln = add('layerNorm', `s${si}b${b + 1}_norm`, { normalizedShape: dim }, 300, y); wire(dw, ln); y += 150;
+        const pw1 = add('conv2d', `s${si}b${b + 1}_pw_expand`, { inChannels: dim, outChannels: dim * 4, kernelSize: 1 }, 300, y); wire(ln, pw1); y += 150;
+        const g = add('gelu', `s${si}b${b + 1}_gelu`, {}, 300, y); wire(pw1, g); y += 150;
+        const pw2 = add('conv2d', `s${si}b${b + 1}_pw_project`, { inChannels: dim * 4, outChannels: dim, kernelSize: 1 }, 300, y); wire(g, pw2); y += 150;
+        const r = add('add', `s${si}b${b + 1}_residual`, {}, 300, y); wire(pw2, r); wire(prev, r); y += 150; prev = r;
+      }
+    }
+    const gn = add('layerNorm', 'final_norm', { normalizedShape: 768 }, 300, y); wire(prev, gn); y += 150;
+    const gap = add('globalAvgPool2d', 'avgpool', {}, 300, y); wire(gn, gap); y += 150;
+    const fc = add('linear', 'classifier', { inFeatures: 768, outFeatures: 1000 }, 300, y); wire(gap, fc); y += 150;
+    const out = add('output', 'class_logits', {}, 300, y); wire(fc, out);
+  });
+}
+
+function buildSwin(): Graph {
+  return rsGraph('swin-tiny', 'Swin Transformer (Tiny)', 'Swin (Liu et al. 2021): a hierarchical Vision Transformer that computes self-attention inside local windows and shifts the windows every other block to mix across them, giving linear-in-image-size cost and a CNN-like pyramid. The general-purpose vision backbone.', ({ add, wire }) => {
+    let y = 50;
+    const inp = add('input', 'image', { shape: [3, 224, 224] }, 300, y); y += 150;
+    const patch = add('patchEmbed', 'patch_embed_4x4', { imgSize: 224, patchSize: 4, embedDim: 96, inChans: 3 }, 300, y); wire(inp, patch); y += 150;
+    const stages = [[96, 2], [192, 2], [384, 6], [768, 2]];
+    let prev = patch; let si = 0;
+    for (const [dim, depth] of stages) {
+      si++;
+      if (si > 1) { const pm = add('linear', `patch_merging_${si}`, { inFeatures: stages[si - 2][0] * 4, outFeatures: dim }, 300, y); wire(prev, pm); prev = pm; y += 150; }
+      for (let b = 0; b < depth; b++) {
+        const shifted = b % 2 === 1;
+        const n1 = add('layerNorm', `s${si}b${b + 1}_norm1`, { normalizedShape: dim }, 300, y); wire(prev, n1); y += 150;
+        const at = add('multiHeadAttention', `s${si}b${b + 1}_${shifted ? 'shifted_' : ''}window_attn`, { embedDim: dim, numHeads: dim / 32 }, 300, y); wire(n1, at); y += 150;
+        const a1 = add('add', `s${si}b${b + 1}_res1`, {}, 300, y); wire(at, a1); wire(prev, a1); y += 150;
+        const n2 = add('layerNorm', `s${si}b${b + 1}_norm2`, { normalizedShape: dim }, 300, y); wire(a1, n2); y += 150;
+        const mlp = add('feedForward', `s${si}b${b + 1}_mlp`, { embedDim: dim, ffDim: dim * 4 }, 300, y); wire(n2, mlp); y += 150;
+        const a2 = add('add', `s${si}b${b + 1}_res2`, {}, 300, y); wire(mlp, a2); wire(a1, a2); y += 150; prev = a2;
+      }
+    }
+    const fn = add('layerNorm', 'final_norm', { normalizedShape: 768 }, 300, y); wire(prev, fn); y += 150;
+    const gap = add('globalAvgPool1d', 'avgpool', {}, 300, y); wire(fn, gap); y += 150;
+    const fc = add('linear', 'classifier', { inFeatures: 768, outFeatures: 1000 }, 300, y); wire(gap, fc); y += 150;
+    const out = add('output', 'class_logits', {}, 300, y); wire(fc, out);
+  });
+}
+
+function buildDenseNet(): Graph {
+  return rsGraph('densenet-121', 'DenseNet-121', 'DenseNet (Huang et al. 2017): every layer in a block receives the concatenated feature maps of all preceding layers, so features are reused instead of re-learned. Maximal connectivity, very few parameters.', ({ add, wire }) => {
+    let y = 50;
+    const inp = add('input', 'image', { shape: [3, 224, 224] }, 300, y); y += 150;
+    const stem = add('conv2d', 'conv1_7x7/2', { inChannels: 3, outChannels: 64, kernelSize: 7, stride: 2, padding: 3 }, 300, y); wire(inp, stem); y += 150;
+    const pool0 = add('maxpool2d', 'maxpool_3x3/2', { kernelSize: 3, stride: 2, padding: 1 }, 300, y); wire(stem, pool0); y += 150;
+    const denseLayers = [6, 12, 24, 16];
+    let prev = pool0; let chan = 64;
+    denseLayers.forEach((nLayers, di) => {
+      for (let l = 0; l < nLayers; l++) {
+        const bn1 = add('batchNorm', `db${di + 1}_l${l + 1}_bn1`, { numFeatures: chan }, 300, y); wire(prev, bn1); y += 150;
+        const r1 = add('relu', `db${di + 1}_l${l + 1}_relu1`, {}, 300, y); wire(bn1, r1); y += 150;
+        const c1 = add('conv2d', `db${di + 1}_l${l + 1}_1x1`, { inChannels: chan, outChannels: 128, kernelSize: 1 }, 300, y); wire(r1, c1); y += 150;
+        const r2 = add('relu', `db${di + 1}_l${l + 1}_relu2`, {}, 300, y); wire(c1, r2); y += 150;
+        const c2 = add('conv2d', `db${di + 1}_l${l + 1}_3x3`, { inChannels: 128, outChannels: 32, kernelSize: 3, padding: 1 }, 300, y); wire(r2, c2); y += 150;
+        const cat = add('concatenate', `db${di + 1}_l${l + 1}_concat`, {}, 300, y); wire(c2, cat); wire(prev, cat); y += 150;
+        chan += 32; prev = cat;
+      }
+      if (di < denseLayers.length - 1) {
+        const tbn = add('batchNorm', `transition_${di + 1}_bn`, { numFeatures: chan }, 300, y); wire(prev, tbn); y += 150;
+        const tc = add('conv2d', `transition_${di + 1}_1x1`, { inChannels: chan, outChannels: chan / 2, kernelSize: 1 }, 300, y); wire(tbn, tc); y += 150;
+        const tp = add('avgpool2d', `transition_${di + 1}_pool`, { kernelSize: 2, stride: 2 }, 300, y); wire(tc, tp); y += 150;
+        chan = Math.floor(chan / 2); prev = tp;
+      }
+    });
+    const gap = add('globalAvgPool2d', 'avgpool', {}, 300, y); wire(prev, gap); y += 150;
+    const fc = add('linear', 'classifier', { inFeatures: chan, outFeatures: 1000 }, 300, y); wire(gap, fc); y += 150;
+    const out = add('output', 'class_logits', {}, 300, y); wire(fc, out);
+  });
+}
+
+function buildBLIP2(): Graph {
+  return rsGraph('blip2', 'BLIP-2', 'BLIP-2 (Li et al. 2023): bridges a frozen image encoder and a frozen LLM with a lightweight Querying Transformer (Q-Former). A fixed set of learned query tokens cross-attend the image features and feed the LLM, so almost nothing is trained.', ({ add, wire }) => {
+    // frozen vision encoder
+    let y = 50;
+    const img = add('input', 'image', { shape: [1, 3, 224, 224] }, 150, y); y += 150;
+    const patch = add('patchEmbed', 'vit_patch_14', { imgSize: 224, patchSize: 14, embedDim: 1408, inChans: 3 }, 150, y); wire(img, patch); y += 150;
+    let vp = patch;
+    for (let i = 0; i < 12; i++) { const b = add('transformerBlock', `vit_block_${i + 1}`, { embedDim: 1408, numHeads: 16, ffDim: 5632 }, 150, y); wire(vp, b); vp = b; y += 150; }
+    // Q-Former: learned queries cross-attend the frozen image features
+    const q = add('embedding', 'learned_queries', { numEmbeddings: 32, embeddingDim: 768 }, 560, 200);
+    let qp = q;
+    for (let i = 0; i < 6; i++) {
+      const sa = add('multiHeadAttention', `qformer_self_${i + 1}`, { embedDim: 768, numHeads: 12 }, 380, y); wire(qp, sa); y += 150;
+      const ca = add('crossAttention', `qformer_cross_${i + 1}`, { embedDim: 768, numHeads: 12 }, 380, y); wire(sa, ca); wire(vp, ca); y += 150;
+      const ff = add('feedForward', `qformer_ffn_${i + 1}`, { embedDim: 768, ffDim: 3072 }, 380, y); wire(ca, ff); y += 150;
+      qp = ff;
+    }
+    const proj = add('linear', 'llm_projection', { inFeatures: 768, outFeatures: 4096 }, 380, y); wire(qp, proj); y += 150;
+    // frozen LLM (decoder)
+    let prev = proj;
+    for (let i = 0; i < 4; i++) {
+      const n = add('layerNorm', `llm_norm_${i + 1}`, { normalizedShape: 4096 }, 380, y); wire(prev, n); y += 150;
+      const at = add('multiHeadAttention', `llm_attn_${i + 1}`, { embedDim: 4096, numHeads: 32 }, 380, y); wire(n, at); y += 150;
+      const a = add('add', `llm_res_${i + 1}`, {}, 380, y); wire(at, a); wire(prev, a); y += 150;
+      const ff = add('feedForward', `llm_ffn_${i + 1}`, { embedDim: 4096, ffDim: 16384 }, 380, y); wire(a, ff); y += 150;
+      prev = ff;
+    }
+    const out = add('output', 'text', {}, 380, y); wire(prev, out);
+  });
+}
+
+function buildFlamingo(): Graph {
+  return rsGraph('flamingo', 'Flamingo', 'Flamingo (Alayrac et al. 2022, DeepMind): the visual-language model that interleaves images and text. A Perceiver Resampler compresses image features to a few tokens, and gated cross-attention layers inserted into a frozen LLM let text attend to them.', ({ add, wire }) => {
+    let y = 50;
+    const img = add('input', 'images', { shape: [1, 3, 224, 224] }, 150, y); y += 150;
+    const patch = add('patchEmbed', 'vision_patch', { imgSize: 224, patchSize: 14, embedDim: 1024, inChans: 3 }, 150, y); wire(img, patch); y += 150;
+    let vp = patch;
+    for (let i = 0; i < 6; i++) { const b = add('transformerBlock', `vision_block_${i + 1}`, { embedDim: 1024, numHeads: 16, ffDim: 4096 }, 150, y); wire(vp, b); vp = b; y += 150; }
+    // Perceiver Resampler: learned latents cross-attend vision features -> fixed 64 visual tokens
+    const lat = add('embedding', 'perceiver_latents', { numEmbeddings: 64, embeddingDim: 1024 }, 560, 200);
+    const pres = add('crossAttention', 'perceiver_resampler', { embedDim: 1024, numHeads: 16 }, 380, y); wire(lat, pres); wire(vp, pres); y += 150;
+    // frozen LLM with interleaved gated cross-attention
+    const tok = add('input', 'text_tokens', { shape: [1, 2048] }, 760, 50);
+    const temb = add('embedding', 'token_embed', { numEmbeddings: 50000, embeddingDim: 4096 }, 760, 200); wire(tok, temb);
+    let prev = temb;
+    for (let i = 0; i < 6; i++) {
+      const gx = add('crossAttention', `gated_xattn_${i + 1}`, { embedDim: 4096, numHeads: 32 }, 380, y); wire(prev, gx); wire(pres, gx); y += 150;
+      const gxr = add('add', `gated_xattn_res_${i + 1}`, {}, 380, y); wire(gx, gxr); wire(prev, gxr); y += 150;
+      const sa = add('groupedQueryAttention', `llm_self_attn_${i + 1}`, { embedDim: 4096, numHeads: 32, numKVHeads: 32 }, 380, y); wire(gxr, sa); y += 150;
+      const sar = add('add', `llm_res_${i + 1}`, {}, 380, y); wire(sa, sar); wire(gxr, sar); y += 150;
+      const ff = add('feedForward', `llm_ffn_${i + 1}`, { embedDim: 4096, ffDim: 16384 }, 380, y); wire(sar, ff); y += 150;
+      prev = ff;
+    }
+    const out = add('output', 'text', {}, 380, y); wire(prev, out);
+  });
+}
+
+function buildHuBERT(): Graph {
+  return rsGraph('hubert-base', 'HuBERT base', 'HuBERT (Hsu et al. 2021): the same conv-feature-extractor + Transformer architecture as Wav2Vec2, but pretrained by predicting offline-clustered (k-means) hidden units instead of contrastive masking. The base of most modern speech systems.', ({ add, wire }) => {
+    let y = 50;
+    const wav = add('input', 'raw_waveform', { shape: [1, 16000] }, 300, y); y += 150;
+    let prev = wav;
+    for (let i = 0; i < 7; i++) {
+      const c = add('conv1d', `feat_conv_${i + 1}`, { inChannels: i === 0 ? 1 : 512, outChannels: 512, kernelSize: i < 1 ? 10 : 3, stride: i < 1 ? 5 : 2 }, 300, y); wire(prev, c); y += 150;
+      const g = add('gelu', `feat_gelu_${i + 1}`, {}, 300, y); wire(c, g); y += 150; prev = g;
+    }
+    const proj = add('linear', 'feature_projection', { inFeatures: 512, outFeatures: 768 }, 300, y); wire(prev, proj); y += 150;
+    const pos = add('conv1d', 'pos_conv_embed', { inChannels: 768, outChannels: 768, kernelSize: 128, padding: 64 }, 300, y); wire(proj, pos); y += 150;
+    let tp = pos;
+    for (let i = 0; i < 12; i++) { const b = add('transformerBlock', `enc_block_${i + 1}`, { embedDim: 768, numHeads: 12, ffDim: 3072 }, 300, y); wire(tp, b); tp = b; y += 150; }
+    const out = add('output', 'speech_units', {}, 300, y); wire(tp, out);
+  });
+}
+
+function buildEnCodec(): Graph {
+  return rsGraph('encodec', 'EnCodec', 'EnCodec (Defossez et al. 2022, Meta): a neural audio codec. A convolutional encoder downsamples the waveform, residual vector quantization turns it into discrete codes, and a mirrored decoder reconstructs it. The tokenizer behind audio language models (MusicGen, etc.).', ({ add, wire }) => {
+    let y = 50;
+    const wav = add('input', 'waveform', { shape: [1, 24000] }, 300, y); y += 150;
+    // convolutional encoder (downsampling)
+    const encC = [32, 64, 128, 256];
+    let prev = wav; let inC = 1;
+    encC.forEach((c, i) => {
+      const cv = add('conv1d', `enc_conv_${i + 1}`, { inChannels: inC, outChannels: c, kernelSize: 7, stride: i === 0 ? 1 : 2, padding: 3 }, 300, y); wire(prev, cv); y += 150;
+      const el = add('gelu', `enc_act_${i + 1}`, {}, 300, y); wire(cv, el); y += 150; prev = el; inC = c;
+    });
+    const lstm = add('lstm', 'enc_lstm', { hiddenSize: 256, inputSize: 256 }, 300, y); wire(prev, lstm); y += 150;
+    // residual vector quantizer
+    const rvq = add('embedding', 'residual_vq_codebook', { numEmbeddings: 1024, embeddingDim: 128 }, 300, y); wire(lstm, rvq); y += 150;
+    // mirrored decoder (upsampling)
+    let dprev = rvq; let dinC = 128;
+    [256, 128, 64, 32].forEach((c, i) => {
+      const cv = add('transposeConv2d', `dec_upconv_${i + 1}`, { inChannels: dinC, outChannels: c, kernelSize: 7, stride: 2, padding: 3 }, 300, y); wire(dprev, cv); y += 150;
+      const el = add('gelu', `dec_act_${i + 1}`, {}, 300, y); wire(cv, el); y += 150; dprev = el; dinC = c;
+    });
+    const outc = add('conv1d', 'dec_out_conv', { inChannels: 32, outChannels: 1, kernelSize: 7, padding: 3 }, 300, y); wire(dprev, outc); y += 150;
+    const out = add('output', 'reconstructed_audio', {}, 300, y); wire(outc, out);
+  });
+}
+
 const HFFULL: HFFullEntry[] = [
   {
     kind: 'hffull', id: 'resnet-50', displayName: 'ResNet-50', org: 'Microsoft Research (He et al.)',
@@ -1467,6 +1694,149 @@ const HFFULL: HFFullEntry[] = [
       'Inverted residual: unlike ResNet (wide → narrow → wide), MobileNetV2 goes narrow → wide → narrow, and the skip connects the narrow bottlenecks (where the information lives).',
       'Linear bottleneck: the projection has no ReLU, because ReLU destroys information in low-dimensional space.',
       'Depthwise-separable convs (the 3x3 acts per-channel) are what make it cheap; full graph with every block expanded.',
+    ],
+  },
+  {
+    kind: 'hffull', id: 'efficientnet-b0', displayName: 'EfficientNet-B0', org: 'Google',
+    paramsLabel: '5.3M', fullBuild: buildEfficientNet,
+    links: [['Paper (Tan and Le 2019)', 'https://arxiv.org/abs/1905.11946'], ['Hugging Face', 'https://huggingface.co/google/efficientnet-b0']],
+    license: 'Apache 2.0',
+    archRows: [
+      ['Type', 'Efficient convolutional network'], ['Parameters', '5.3M'],
+      ['Stem', '3x3/2 conv (32)'], ['Body', '16 MBConv blocks (7 stages)'],
+      ['MBConv', 'expand 1x1 → depthwise → squeeze-excite → project 1x1'],
+      ['Head', '1x1 conv (1280) → GAP → FC-1000'], ['Found by', 'Compound-scaling NAS'],
+    ],
+    blurb: 'The baseline of the EfficientNet family: MBConv blocks (mobile inverted bottleneck with a squeeze-and-excite gate) discovered by neural architecture search, then compound-scaled into B1-B7. The accuracy-per-FLOP reference for years.',
+    notes: [
+      'MBConv = MobileNetV2\'s inverted residual plus a squeeze-and-excite channel-attention block inside each one.',
+      'B0 was found by NAS; B1-B7 just scale depth, width, and resolution together by a single compound coefficient.',
+      'Compare with [mobilenet-v2](../mobilenet-v2/) (same inverted-residual core, no SE) and [resnet-50](../resnet-50/) (the non-inverted predecessor).',
+    ],
+  },
+  {
+    kind: 'hffull', id: 'convnext-tiny', displayName: 'ConvNeXt-Tiny', org: 'Meta / UC Berkeley',
+    paramsLabel: '28M', fullBuild: buildConvNeXt,
+    links: [['Paper (Liu et al. 2022)', 'https://arxiv.org/abs/2201.03545'], ['Hugging Face', 'https://huggingface.co/facebook/convnext-tiny-224']],
+    license: 'Apache 2.0',
+    archRows: [
+      ['Type', 'Modernized convolutional network'], ['Parameters', '28M'],
+      ['Stem', '4x4/4 patchify conv (96)'], ['Stages', '4 stages, depths 3/3/9/3'],
+      ['ConvNeXt block', 'depthwise 7x7 → LayerNorm → 1x1 expand → GeLU → 1x1 project + residual'],
+      ['Downsampling', '2x2/2 conv between stages'],
+    ],
+    blurb: 'A pure ConvNet rebuilt with every Transformer-era trick (large 7x7 depthwise kernels, LayerNorm not BatchNorm, GeLU, inverted bottleneck, fewer activations) until it matched Swin on ImageNet. The "ConvNets strike back" architecture.',
+    notes: [
+      'The block is essentially a Transformer block with the attention replaced by a large-kernel depthwise conv: depthwise mixes space, the 1x1s mix channels (an inverted bottleneck), with one LayerNorm and one GeLU.',
+      'No attention anywhere, yet it tracks [swin-tiny](../swin-tiny/) closely, the paper\'s point about how much of ViT\'s win was design vs attention.',
+    ],
+  },
+  {
+    kind: 'hffull', id: 'swin-tiny', displayName: 'Swin Transformer (Tiny)', org: 'Microsoft Research Asia',
+    paramsLabel: '28M', fullBuild: buildSwin,
+    links: [['Paper (Liu et al. 2021)', 'https://arxiv.org/abs/2103.14030'], ['Hugging Face', 'https://huggingface.co/microsoft/swin-tiny-patch4-window7-224']],
+    license: 'MIT',
+    archRows: [
+      ['Type', 'Hierarchical Vision Transformer'], ['Parameters', '28M'],
+      ['Patch embed', '4x4 conv (96)'], ['Stages', '4 stages, depths 2/2/6/2'],
+      ['Block', 'Window attention, alternating with shifted-window attention'],
+      ['Downsampling', 'Patch merging (2x2 → linear) between stages'],
+    ],
+    blurb: 'The Vision Transformer that became a general-purpose backbone. Self-attention runs inside fixed local windows (linear cost in image size), and every other block shifts the windows so information crosses window boundaries, while patch merging builds a CNN-like pyramid.',
+    notes: [
+      'Windowed attention makes cost linear in pixels (not quadratic like ViT), so Swin scales to detection/segmentation resolutions.',
+      'The shifted-window trick (alternating W-MSA and SW-MSA) is what lets non-adjacent windows communicate without global attention.',
+      'Hierarchical (4 stages, halving resolution and doubling channels) so it drops into FPN-style dense-prediction heads; compare with the flat [vit-b16](../vit-b16/).',
+    ],
+  },
+  {
+    kind: 'hffull', id: 'densenet-121', displayName: 'DenseNet-121', org: 'Cornell / Tsinghua / Facebook',
+    paramsLabel: '8M', fullBuild: buildDenseNet,
+    links: [['Paper (Huang et al. 2017)', 'https://arxiv.org/abs/1608.06993'], ['Hugging Face', 'https://huggingface.co/timm/densenet121.tv_in1k']],
+    license: 'Apache 2.0 / BSD',
+    archRows: [
+      ['Type', 'Densely-connected convolutional network'], ['Parameters', '8M'],
+      ['Stem', '7x7/2 conv + 3x3/2 max-pool'], ['Dense blocks', '4 blocks, 6/12/24/16 layers'],
+      ['Dense layer', 'BN → ReLU → 1x1 → BN → ReLU → 3x3, output concatenated to input'],
+      ['Transitions', 'BN → 1x1 conv → avg-pool (halve channels) between blocks'],
+    ],
+    blurb: 'The network where every layer is connected to every other layer in its block: each layer reads the concatenation of all preceding feature maps. Feature reuse instead of re-learning gives strong accuracy at very few parameters.',
+    notes: [
+      'The defining op is the concatenate: a layer adds only a small "growth" (32 channels here) but sees everything before it, so gradients and features flow directly to every layer.',
+      'Transition layers between blocks compress channels with a 1x1 conv + pooling so the concatenation does not explode.',
+      'The opposite design philosophy from [resnet-50](../resnet-50/) (additive skips): DenseNet concatenates instead of adds.',
+    ],
+  },
+  {
+    kind: 'hffull', id: 'blip2', displayName: 'BLIP-2', org: 'Salesforce Research',
+    paramsLabel: 'Reference graph (Q-Former 188M + frozen towers)', fullBuild: buildBLIP2,
+    links: [['Paper (Li et al. 2023)', 'https://arxiv.org/abs/2301.12597'], ['Hugging Face', 'https://huggingface.co/Salesforce/blip2-opt-2.7b']],
+    license: 'MIT',
+    archRows: [
+      ['Type', 'Multimodal (image-to-text)'], ['Vision encoder', 'Frozen ViT'],
+      ['Bridge', 'Q-Former: 32 learned queries, self + cross-attention to image'],
+      ['LLM', 'Frozen (OPT / Flan-T5), fed the projected queries'],
+      ['Trained', 'Only the Q-Former (everything else frozen)'],
+    ],
+    blurb: 'Bridges a frozen image encoder and a frozen LLM with a lightweight Querying Transformer. A fixed set of 32 learned query tokens cross-attend the image features, distilling them into something the language model can read, so almost no parameters are trained.',
+    notes: [
+      'The Q-Former is the whole idea: learned queries that self-attend each other and cross-attend the frozen image features, outputting a fixed 32-token visual summary.',
+      'Both the vision encoder and the LLM stay frozen; only the small Q-Former (and a linear projection) are trained, which is why BLIP-2 is so cheap to build.',
+      'A different bridge from [llava-1.5-7b](../llava-1.5-7b/)\'s simple MLP projector, a learned cross-attention compressor vs a direct projection.',
+    ],
+  },
+  {
+    kind: 'hffull', id: 'flamingo', displayName: 'Flamingo', org: 'Google DeepMind',
+    paramsLabel: 'Reference graph (gated x-attn into a frozen LLM)', fullBuild: buildFlamingo,
+    links: [['Paper (Alayrac et al. 2022)', 'https://arxiv.org/abs/2204.14198']],
+    license: 'Research (weights not released; open re-impl: OpenFlamingo)',
+    archRows: [
+      ['Type', 'Few-shot visual language model'], ['Vision encoder', 'Frozen (NFNet / CLIP)'],
+      ['Resampler', 'Perceiver: learned latents cross-attend vision features → fixed tokens'],
+      ['LLM', 'Frozen, with gated cross-attention layers inserted between blocks'],
+      ['Key idea', 'Interleave image + text, tanh-gated x-attn so init = pure LLM'],
+    ],
+    blurb: 'The visual-language model that handles interleaved images and text and does few-shot in-context learning. A Perceiver Resampler compresses image features to a few tokens, and gated cross-attention layers spliced into a frozen LLM let the text attend to them.',
+    notes: [
+      'Perceiver Resampler: a fixed set of learned latents cross-attend the variable-length vision features, so any image (or video) becomes a constant 64 visual tokens.',
+      'tanh gating: the inserted cross-attention starts at zero contribution (gate = 0), so the model begins as exactly the frozen LLM and learns to use vision gradually, which is what made training stable.',
+      'The ancestor of the "freeze the LLM, splice in vision via cross-attention" branch of MLLMs; contrast with the prefix-token approach of [llava-1.5-7b](../llava-1.5-7b/).',
+    ],
+  },
+  {
+    kind: 'hffull', id: 'hubert-base', displayName: 'HuBERT base', org: 'Meta AI',
+    paramsLabel: 'Reference graph (HuBERT-base: 95M)', fullBuild: buildHuBERT,
+    links: [['Paper (Hsu et al. 2021)', 'https://arxiv.org/abs/2106.07447'], ['Hugging Face', 'https://huggingface.co/facebook/hubert-base-ls960']],
+    license: 'Apache 2.0',
+    archRows: [
+      ['Type', 'Self-supervised speech encoder'], ['Parameters', '95M'],
+      ['Feature extractor', '7 Conv1D layers (raw waveform)'],
+      ['Encoder', '12 Transformer blocks, 768 hidden'],
+      ['Pretraining', 'Predict offline k-means cluster IDs of masked frames'],
+    ],
+    blurb: 'Architecturally a twin of Wav2Vec2 (conv feature extractor + Transformer), but pretrained differently: instead of contrastive masking it predicts the cluster ID (from offline k-means on features) of masked frames, a BERT-style masked-prediction objective for speech.',
+    notes: [
+      'Same backbone as [wav2vec2-base](../wav2vec2-base/); the contribution is the training target, a discrete unit from iterative k-means clustering rather than a contrastive loss.',
+      'That "predict the masked unit" recipe (closer to masked-LM) ended up underpinning a lot of modern speech and audio-LLM systems.',
+    ],
+  },
+  {
+    kind: 'hffull', id: 'encodec', displayName: 'EnCodec', org: 'Meta AI',
+    paramsLabel: 'Reference graph (neural audio codec)', fullBuild: buildEnCodec,
+    links: [['Paper (Defossez et al. 2022)', 'https://arxiv.org/abs/2210.13438'], ['Hugging Face', 'https://huggingface.co/facebook/encodec_24khz']],
+    license: 'MIT',
+    archRows: [
+      ['Type', 'Neural audio codec (autoencoder + quantizer)'],
+      ['Encoder', 'Strided Conv1D stack (downsamples the waveform)'],
+      ['Bottleneck', 'Residual vector quantization (discrete codes)'],
+      ['Decoder', 'Mirrored transposed-conv stack (reconstructs audio)'],
+      ['Use', 'The audio tokenizer behind audio LLMs (MusicGen, ...)'],
+    ],
+    blurb: 'A neural audio codec: a convolutional encoder downsamples the waveform, residual vector quantization turns the latents into a stack of discrete codes, and a mirrored decoder reconstructs the audio. The thing that turns continuous audio into tokens an LLM can model.',
+    notes: [
+      'Residual vector quantization (RVQ): a cascade of codebooks where each quantizes the residual the previous one left, so a few codebooks reconstruct audio at very low bitrate.',
+      'The encoder/decoder are SEANet-style strided conv stacks with an LSTM in the bottleneck; the discrete codes are what MusicGen / audio LLMs actually generate.',
+      'Conceptually the audio analogue of a VAE+codebook (VQ-VAE) for images; it is why "audio language model" is even possible.',
     ],
   },
 ];

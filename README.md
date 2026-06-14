@@ -2,9 +2,9 @@
 
 # 🧠 Neurarch Model Zoo
 
-### 69 reference architectures you can actually open, edit, validate, and train. From DeepSeek-V3's latent attention to ResNet's first skip connection. Not pictures. Graphs.
+### 78 reference architectures you can actually open, edit, validate, and train. From DeepSeek-V3's latent attention to ResNet's first skip connection. Not pictures. Graphs.
 
-[![architectures](https://img.shields.io/badge/architectures-69-6366f1)](#catalog)
+[![architectures](https://img.shields.io/badge/architectures-78-6366f1)](#catalog)
 [![shape-checked](https://img.shields.io/badge/shape--checked-100%25%20passing-22c55e)](#every-entry-is-validated)
 [![domains](https://img.shields.io/badge/domains-11-f59e0b)](#catalog)
 [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
@@ -18,7 +18,7 @@
 
 Every diagram of Qwen or Mixtral you have ever seen is a dead image. The entries here are live, structurally validated model graphs:
 
-- **Shape-checked end to end**: tensor shapes, attention head divisibility, GQA constraints. All 69 graphs pass with zero errors.
+- **Shape-checked end to end**: tensor shapes, attention head divisibility, GQA constraints. All 78 graphs pass with zero errors.
 - **Verified numbers**: LLM hyperparameters are taken from each model's official `config.json`, not from blog posts.
 - **One click to editable**: every entry opens straight onto the [Neurarch](https://www.neurarch.com/) canvas, where you can fork it, swap the attention, and re-validate before you ever launch a run.
 - **Exportable to runnable training code**: TRL, torchtune, Unsloth, plain PyTorch.
@@ -75,6 +75,7 @@ The MoE generation. Every hyperparameter below is read from the model's official
 | [gemma-4-12b](architectures/gemma-4-12b/) | Google DeepMind | 12B (dense) | GQA 16:8, 256-dim heads | 5:1 local:global attention, 262K vocab |
 | [gpt-oss-120b](architectures/gpt-oss-120b/) | OpenAI | 117B / 5.1B | GQA 64:8 | 128 experts top-4, the bigger gpt-oss |
 | [deepseek-v2-lite](architectures/deepseek-v2-lite/) | DeepSeek | 15.7B / 2.4B | MLA, 16 heads | The runnable way to study MLA + MoE |
+| [deepseek-v2](architectures/deepseek-v2/) | DeepSeek | 236B / 21B | MLA, 128 heads | Where MLA + fine-grained MoE debuted |
 
 Side quest: open [deepseek-v3](architectures/deepseek-v3/) and [llama-4-scout](architectures/llama-4-scout/) side by side. Same problem, opposite expert-granularity bets.
 
@@ -139,6 +140,10 @@ Selection informed by [awesome-pretrained-chinese-nlp-models](https://github.com
 | [resnet-50](architectures/resnet-50/) | Microsoft Research | 25.6M | Full 50-node graph, every bottleneck expanded |
 | [vgg-16](architectures/vgg-16/) | Oxford VGG | 138M | Depth + uniform 3x3 convs |
 | [vit-b16](architectures/vit-b16/) | Google | 86M | Patch embedding + Transformer encoder |
+| [swin-tiny](architectures/swin-tiny/) | Microsoft | 28M | Hierarchical ViT, shifted-window attention |
+| [convnext-tiny](architectures/convnext-tiny/) | Meta | 28M | A ConvNet modernized to match Swin |
+| [efficientnet-b0](architectures/efficientnet-b0/) | Google | 5.3M | MBConv + squeeze-excite, found by NAS |
+| [densenet-121](architectures/densenet-121/) | Cornell et al. | 8M | Dense connectivity (concat every layer) |
 | [unet](architectures/unet/) | Ronneberger et al. | 31M | Encoder-decoder with skip connections |
 | [mobilenet-v2](architectures/mobilenet-v2/) | Google | 3.5M | Inverted residual blocks; the on-device / CoreML staple |
 | [resnet-block](architectures/resnet-block/) | He et al. | block | The residual unit itself |
@@ -151,6 +156,8 @@ Selection informed by [awesome-pretrained-chinese-nlp-models](https://github.com
 | [clip-vit-b32](architectures/clip-vit-b32/) | OpenAI | 151M | The contrastive dual encoder behind modern multimodality |
 | [siglip-base](architectures/siglip-base/) | Google | 203M | CLIP with a sigmoid loss; the vision encoder of 2024+ MLLMs |
 | [llava-1.5-7b](architectures/llava-1.5-7b/) | Microsoft / UW | ~7B | The canonical MLLM: vision encoder → MLP projector → LLM |
+| [blip2](architectures/blip2/) | Salesforce | Q-Former | Learned queries bridge a frozen ViT and a frozen LLM |
+| [flamingo](architectures/flamingo/) | DeepMind | gated x-attn | Perceiver resampler + gated cross-attention into a frozen LLM |
 
 ### 🎨 Generative
 
@@ -165,6 +172,8 @@ Selection informed by [awesome-pretrained-chinese-nlp-models](https://github.com
 |--------------|-----|--------|---------|
 | [whisper-small](architectures/whisper-small/) | OpenAI | 244M | Mel spectrogram, conv stem, enc-dec with cross-attention |
 | [wav2vec2-base](architectures/wav2vec2-base/) | Meta AI | 95M | Conv feature extractor + Transformer; self-supervised speech |
+| [hubert-base](architectures/hubert-base/) | Meta AI | 95M | Wav2Vec2 backbone, masked-cluster-prediction pretraining |
+| [encodec](architectures/encodec/) | Meta AI | codec | Neural audio codec (conv + RVQ); the audio-LLM tokenizer |
 
 ### 🛒 Recommendation and ranking
 

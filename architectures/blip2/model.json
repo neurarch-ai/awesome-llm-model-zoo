@@ -1,0 +1,1285 @@
+{
+  "id": "blip2",
+  "name": "BLIP-2",
+  "description": "BLIP-2 (Salesforce Research): full graph; dimensions verified against the official config.json.",
+  "components": [
+    {
+      "id": "n1",
+      "type": "input",
+      "name": "image",
+      "position": {
+        "x": 150,
+        "y": 50
+      },
+      "params": {
+        "shape": [
+          1,
+          3,
+          224,
+          224
+        ]
+      },
+      "inputs": [],
+      "outputs": [
+        "n2"
+      ]
+    },
+    {
+      "id": "n2",
+      "type": "patchEmbed",
+      "name": "vit_patch_14",
+      "position": {
+        "x": 150,
+        "y": 200
+      },
+      "params": {
+        "imgSize": 224,
+        "patchSize": 14,
+        "embedDim": 1408,
+        "inChans": 3
+      },
+      "inputs": [
+        "n1"
+      ],
+      "outputs": [
+        "n3"
+      ]
+    },
+    {
+      "id": "n3",
+      "type": "transformerBlock",
+      "name": "vit_block_1",
+      "position": {
+        "x": 150,
+        "y": 350
+      },
+      "params": {
+        "embedDim": 1408,
+        "numHeads": 16,
+        "ffDim": 5632
+      },
+      "inputs": [
+        "n2"
+      ],
+      "outputs": [
+        "n4"
+      ]
+    },
+    {
+      "id": "n4",
+      "type": "transformerBlock",
+      "name": "vit_block_2",
+      "position": {
+        "x": 150,
+        "y": 500
+      },
+      "params": {
+        "embedDim": 1408,
+        "numHeads": 16,
+        "ffDim": 5632
+      },
+      "inputs": [
+        "n3"
+      ],
+      "outputs": [
+        "n5"
+      ]
+    },
+    {
+      "id": "n5",
+      "type": "transformerBlock",
+      "name": "vit_block_3",
+      "position": {
+        "x": 150,
+        "y": 650
+      },
+      "params": {
+        "embedDim": 1408,
+        "numHeads": 16,
+        "ffDim": 5632
+      },
+      "inputs": [
+        "n4"
+      ],
+      "outputs": [
+        "n6"
+      ]
+    },
+    {
+      "id": "n6",
+      "type": "transformerBlock",
+      "name": "vit_block_4",
+      "position": {
+        "x": 150,
+        "y": 800
+      },
+      "params": {
+        "embedDim": 1408,
+        "numHeads": 16,
+        "ffDim": 5632
+      },
+      "inputs": [
+        "n5"
+      ],
+      "outputs": [
+        "n7"
+      ]
+    },
+    {
+      "id": "n7",
+      "type": "transformerBlock",
+      "name": "vit_block_5",
+      "position": {
+        "x": 150,
+        "y": 950
+      },
+      "params": {
+        "embedDim": 1408,
+        "numHeads": 16,
+        "ffDim": 5632
+      },
+      "inputs": [
+        "n6"
+      ],
+      "outputs": [
+        "n8"
+      ]
+    },
+    {
+      "id": "n8",
+      "type": "transformerBlock",
+      "name": "vit_block_6",
+      "position": {
+        "x": 150,
+        "y": 1100
+      },
+      "params": {
+        "embedDim": 1408,
+        "numHeads": 16,
+        "ffDim": 5632
+      },
+      "inputs": [
+        "n7"
+      ],
+      "outputs": [
+        "n9"
+      ]
+    },
+    {
+      "id": "n9",
+      "type": "transformerBlock",
+      "name": "vit_block_7",
+      "position": {
+        "x": 150,
+        "y": 1250
+      },
+      "params": {
+        "embedDim": 1408,
+        "numHeads": 16,
+        "ffDim": 5632
+      },
+      "inputs": [
+        "n8"
+      ],
+      "outputs": [
+        "n10"
+      ]
+    },
+    {
+      "id": "n10",
+      "type": "transformerBlock",
+      "name": "vit_block_8",
+      "position": {
+        "x": 150,
+        "y": 1400
+      },
+      "params": {
+        "embedDim": 1408,
+        "numHeads": 16,
+        "ffDim": 5632
+      },
+      "inputs": [
+        "n9"
+      ],
+      "outputs": [
+        "n11"
+      ]
+    },
+    {
+      "id": "n11",
+      "type": "transformerBlock",
+      "name": "vit_block_9",
+      "position": {
+        "x": 150,
+        "y": 1550
+      },
+      "params": {
+        "embedDim": 1408,
+        "numHeads": 16,
+        "ffDim": 5632
+      },
+      "inputs": [
+        "n10"
+      ],
+      "outputs": [
+        "n12"
+      ]
+    },
+    {
+      "id": "n12",
+      "type": "transformerBlock",
+      "name": "vit_block_10",
+      "position": {
+        "x": 150,
+        "y": 1700
+      },
+      "params": {
+        "embedDim": 1408,
+        "numHeads": 16,
+        "ffDim": 5632
+      },
+      "inputs": [
+        "n11"
+      ],
+      "outputs": [
+        "n13"
+      ]
+    },
+    {
+      "id": "n13",
+      "type": "transformerBlock",
+      "name": "vit_block_11",
+      "position": {
+        "x": 150,
+        "y": 1850
+      },
+      "params": {
+        "embedDim": 1408,
+        "numHeads": 16,
+        "ffDim": 5632
+      },
+      "inputs": [
+        "n12"
+      ],
+      "outputs": [
+        "n14"
+      ]
+    },
+    {
+      "id": "n14",
+      "type": "transformerBlock",
+      "name": "vit_block_12",
+      "position": {
+        "x": 150,
+        "y": 2000
+      },
+      "params": {
+        "embedDim": 1408,
+        "numHeads": 16,
+        "ffDim": 5632
+      },
+      "inputs": [
+        "n13"
+      ],
+      "outputs": [
+        "n17",
+        "n20",
+        "n23",
+        "n26",
+        "n29",
+        "n32"
+      ]
+    },
+    {
+      "id": "n15",
+      "type": "embedding",
+      "name": "learned_queries",
+      "position": {
+        "x": 560,
+        "y": 200
+      },
+      "params": {
+        "numEmbeddings": 32,
+        "embeddingDim": 768
+      },
+      "inputs": [],
+      "outputs": [
+        "n16"
+      ]
+    },
+    {
+      "id": "n16",
+      "type": "multiHeadAttention",
+      "name": "qformer_self_1",
+      "position": {
+        "x": 380,
+        "y": 2150
+      },
+      "params": {
+        "embedDim": 768,
+        "numHeads": 12
+      },
+      "inputs": [
+        "n15"
+      ],
+      "outputs": [
+        "n17"
+      ]
+    },
+    {
+      "id": "n17",
+      "type": "crossAttention",
+      "name": "qformer_cross_1",
+      "position": {
+        "x": 380,
+        "y": 2300
+      },
+      "params": {
+        "embedDim": 768,
+        "numHeads": 12
+      },
+      "inputs": [
+        "n16",
+        "n14"
+      ],
+      "outputs": [
+        "n18"
+      ]
+    },
+    {
+      "id": "n18",
+      "type": "feedForward",
+      "name": "qformer_ffn_1",
+      "position": {
+        "x": 380,
+        "y": 2450
+      },
+      "params": {
+        "embedDim": 768,
+        "ffDim": 3072
+      },
+      "inputs": [
+        "n17"
+      ],
+      "outputs": [
+        "n19"
+      ]
+    },
+    {
+      "id": "n19",
+      "type": "multiHeadAttention",
+      "name": "qformer_self_2",
+      "position": {
+        "x": 380,
+        "y": 2600
+      },
+      "params": {
+        "embedDim": 768,
+        "numHeads": 12
+      },
+      "inputs": [
+        "n18"
+      ],
+      "outputs": [
+        "n20"
+      ]
+    },
+    {
+      "id": "n20",
+      "type": "crossAttention",
+      "name": "qformer_cross_2",
+      "position": {
+        "x": 380,
+        "y": 2750
+      },
+      "params": {
+        "embedDim": 768,
+        "numHeads": 12
+      },
+      "inputs": [
+        "n19",
+        "n14"
+      ],
+      "outputs": [
+        "n21"
+      ]
+    },
+    {
+      "id": "n21",
+      "type": "feedForward",
+      "name": "qformer_ffn_2",
+      "position": {
+        "x": 380,
+        "y": 2900
+      },
+      "params": {
+        "embedDim": 768,
+        "ffDim": 3072
+      },
+      "inputs": [
+        "n20"
+      ],
+      "outputs": [
+        "n22"
+      ]
+    },
+    {
+      "id": "n22",
+      "type": "multiHeadAttention",
+      "name": "qformer_self_3",
+      "position": {
+        "x": 380,
+        "y": 3050
+      },
+      "params": {
+        "embedDim": 768,
+        "numHeads": 12
+      },
+      "inputs": [
+        "n21"
+      ],
+      "outputs": [
+        "n23"
+      ]
+    },
+    {
+      "id": "n23",
+      "type": "crossAttention",
+      "name": "qformer_cross_3",
+      "position": {
+        "x": 380,
+        "y": 3200
+      },
+      "params": {
+        "embedDim": 768,
+        "numHeads": 12
+      },
+      "inputs": [
+        "n22",
+        "n14"
+      ],
+      "outputs": [
+        "n24"
+      ]
+    },
+    {
+      "id": "n24",
+      "type": "feedForward",
+      "name": "qformer_ffn_3",
+      "position": {
+        "x": 380,
+        "y": 3350
+      },
+      "params": {
+        "embedDim": 768,
+        "ffDim": 3072
+      },
+      "inputs": [
+        "n23"
+      ],
+      "outputs": [
+        "n25"
+      ]
+    },
+    {
+      "id": "n25",
+      "type": "multiHeadAttention",
+      "name": "qformer_self_4",
+      "position": {
+        "x": 380,
+        "y": 3500
+      },
+      "params": {
+        "embedDim": 768,
+        "numHeads": 12
+      },
+      "inputs": [
+        "n24"
+      ],
+      "outputs": [
+        "n26"
+      ]
+    },
+    {
+      "id": "n26",
+      "type": "crossAttention",
+      "name": "qformer_cross_4",
+      "position": {
+        "x": 380,
+        "y": 3650
+      },
+      "params": {
+        "embedDim": 768,
+        "numHeads": 12
+      },
+      "inputs": [
+        "n25",
+        "n14"
+      ],
+      "outputs": [
+        "n27"
+      ]
+    },
+    {
+      "id": "n27",
+      "type": "feedForward",
+      "name": "qformer_ffn_4",
+      "position": {
+        "x": 380,
+        "y": 3800
+      },
+      "params": {
+        "embedDim": 768,
+        "ffDim": 3072
+      },
+      "inputs": [
+        "n26"
+      ],
+      "outputs": [
+        "n28"
+      ]
+    },
+    {
+      "id": "n28",
+      "type": "multiHeadAttention",
+      "name": "qformer_self_5",
+      "position": {
+        "x": 380,
+        "y": 3950
+      },
+      "params": {
+        "embedDim": 768,
+        "numHeads": 12
+      },
+      "inputs": [
+        "n27"
+      ],
+      "outputs": [
+        "n29"
+      ]
+    },
+    {
+      "id": "n29",
+      "type": "crossAttention",
+      "name": "qformer_cross_5",
+      "position": {
+        "x": 380,
+        "y": 4100
+      },
+      "params": {
+        "embedDim": 768,
+        "numHeads": 12
+      },
+      "inputs": [
+        "n28",
+        "n14"
+      ],
+      "outputs": [
+        "n30"
+      ]
+    },
+    {
+      "id": "n30",
+      "type": "feedForward",
+      "name": "qformer_ffn_5",
+      "position": {
+        "x": 380,
+        "y": 4250
+      },
+      "params": {
+        "embedDim": 768,
+        "ffDim": 3072
+      },
+      "inputs": [
+        "n29"
+      ],
+      "outputs": [
+        "n31"
+      ]
+    },
+    {
+      "id": "n31",
+      "type": "multiHeadAttention",
+      "name": "qformer_self_6",
+      "position": {
+        "x": 380,
+        "y": 4400
+      },
+      "params": {
+        "embedDim": 768,
+        "numHeads": 12
+      },
+      "inputs": [
+        "n30"
+      ],
+      "outputs": [
+        "n32"
+      ]
+    },
+    {
+      "id": "n32",
+      "type": "crossAttention",
+      "name": "qformer_cross_6",
+      "position": {
+        "x": 380,
+        "y": 4550
+      },
+      "params": {
+        "embedDim": 768,
+        "numHeads": 12
+      },
+      "inputs": [
+        "n31",
+        "n14"
+      ],
+      "outputs": [
+        "n33"
+      ]
+    },
+    {
+      "id": "n33",
+      "type": "feedForward",
+      "name": "qformer_ffn_6",
+      "position": {
+        "x": 380,
+        "y": 4700
+      },
+      "params": {
+        "embedDim": 768,
+        "ffDim": 3072
+      },
+      "inputs": [
+        "n32"
+      ],
+      "outputs": [
+        "n34"
+      ]
+    },
+    {
+      "id": "n34",
+      "type": "linear",
+      "name": "llm_projection",
+      "position": {
+        "x": 380,
+        "y": 4850
+      },
+      "params": {
+        "inFeatures": 768,
+        "outFeatures": 4096
+      },
+      "inputs": [
+        "n33"
+      ],
+      "outputs": [
+        "n35",
+        "n37"
+      ]
+    },
+    {
+      "id": "n35",
+      "type": "layerNorm",
+      "name": "llm_norm_1",
+      "position": {
+        "x": 380,
+        "y": 5000
+      },
+      "params": {
+        "normalizedShape": 4096
+      },
+      "inputs": [
+        "n34"
+      ],
+      "outputs": [
+        "n36"
+      ]
+    },
+    {
+      "id": "n36",
+      "type": "multiHeadAttention",
+      "name": "llm_attn_1",
+      "position": {
+        "x": 380,
+        "y": 5150
+      },
+      "params": {
+        "embedDim": 4096,
+        "numHeads": 32
+      },
+      "inputs": [
+        "n35"
+      ],
+      "outputs": [
+        "n37"
+      ]
+    },
+    {
+      "id": "n37",
+      "type": "add",
+      "name": "llm_res_1",
+      "position": {
+        "x": 380,
+        "y": 5300
+      },
+      "params": {},
+      "inputs": [
+        "n36",
+        "n34"
+      ],
+      "outputs": [
+        "n38"
+      ]
+    },
+    {
+      "id": "n38",
+      "type": "feedForward",
+      "name": "llm_ffn_1",
+      "position": {
+        "x": 380,
+        "y": 5450
+      },
+      "params": {
+        "embedDim": 4096,
+        "ffDim": 16384
+      },
+      "inputs": [
+        "n37"
+      ],
+      "outputs": [
+        "n39",
+        "n41"
+      ]
+    },
+    {
+      "id": "n39",
+      "type": "layerNorm",
+      "name": "llm_norm_2",
+      "position": {
+        "x": 380,
+        "y": 5600
+      },
+      "params": {
+        "normalizedShape": 4096
+      },
+      "inputs": [
+        "n38"
+      ],
+      "outputs": [
+        "n40"
+      ]
+    },
+    {
+      "id": "n40",
+      "type": "multiHeadAttention",
+      "name": "llm_attn_2",
+      "position": {
+        "x": 380,
+        "y": 5750
+      },
+      "params": {
+        "embedDim": 4096,
+        "numHeads": 32
+      },
+      "inputs": [
+        "n39"
+      ],
+      "outputs": [
+        "n41"
+      ]
+    },
+    {
+      "id": "n41",
+      "type": "add",
+      "name": "llm_res_2",
+      "position": {
+        "x": 380,
+        "y": 5900
+      },
+      "params": {},
+      "inputs": [
+        "n40",
+        "n38"
+      ],
+      "outputs": [
+        "n42"
+      ]
+    },
+    {
+      "id": "n42",
+      "type": "feedForward",
+      "name": "llm_ffn_2",
+      "position": {
+        "x": 380,
+        "y": 6050
+      },
+      "params": {
+        "embedDim": 4096,
+        "ffDim": 16384
+      },
+      "inputs": [
+        "n41"
+      ],
+      "outputs": [
+        "n43",
+        "n45"
+      ]
+    },
+    {
+      "id": "n43",
+      "type": "layerNorm",
+      "name": "llm_norm_3",
+      "position": {
+        "x": 380,
+        "y": 6200
+      },
+      "params": {
+        "normalizedShape": 4096
+      },
+      "inputs": [
+        "n42"
+      ],
+      "outputs": [
+        "n44"
+      ]
+    },
+    {
+      "id": "n44",
+      "type": "multiHeadAttention",
+      "name": "llm_attn_3",
+      "position": {
+        "x": 380,
+        "y": 6350
+      },
+      "params": {
+        "embedDim": 4096,
+        "numHeads": 32
+      },
+      "inputs": [
+        "n43"
+      ],
+      "outputs": [
+        "n45"
+      ]
+    },
+    {
+      "id": "n45",
+      "type": "add",
+      "name": "llm_res_3",
+      "position": {
+        "x": 380,
+        "y": 6500
+      },
+      "params": {},
+      "inputs": [
+        "n44",
+        "n42"
+      ],
+      "outputs": [
+        "n46"
+      ]
+    },
+    {
+      "id": "n46",
+      "type": "feedForward",
+      "name": "llm_ffn_3",
+      "position": {
+        "x": 380,
+        "y": 6650
+      },
+      "params": {
+        "embedDim": 4096,
+        "ffDim": 16384
+      },
+      "inputs": [
+        "n45"
+      ],
+      "outputs": [
+        "n47",
+        "n49"
+      ]
+    },
+    {
+      "id": "n47",
+      "type": "layerNorm",
+      "name": "llm_norm_4",
+      "position": {
+        "x": 380,
+        "y": 6800
+      },
+      "params": {
+        "normalizedShape": 4096
+      },
+      "inputs": [
+        "n46"
+      ],
+      "outputs": [
+        "n48"
+      ]
+    },
+    {
+      "id": "n48",
+      "type": "multiHeadAttention",
+      "name": "llm_attn_4",
+      "position": {
+        "x": 380,
+        "y": 6950
+      },
+      "params": {
+        "embedDim": 4096,
+        "numHeads": 32
+      },
+      "inputs": [
+        "n47"
+      ],
+      "outputs": [
+        "n49"
+      ]
+    },
+    {
+      "id": "n49",
+      "type": "add",
+      "name": "llm_res_4",
+      "position": {
+        "x": 380,
+        "y": 7100
+      },
+      "params": {},
+      "inputs": [
+        "n48",
+        "n46"
+      ],
+      "outputs": [
+        "n50"
+      ]
+    },
+    {
+      "id": "n50",
+      "type": "feedForward",
+      "name": "llm_ffn_4",
+      "position": {
+        "x": 380,
+        "y": 7250
+      },
+      "params": {
+        "embedDim": 4096,
+        "ffDim": 16384
+      },
+      "inputs": [
+        "n49"
+      ],
+      "outputs": [
+        "n51"
+      ]
+    },
+    {
+      "id": "n51",
+      "type": "output",
+      "name": "text",
+      "position": {
+        "x": 380,
+        "y": 7400
+      },
+      "params": {},
+      "inputs": [
+        "n50"
+      ],
+      "outputs": []
+    }
+  ],
+  "connections": [
+    {
+      "id": "c1",
+      "from": "n1",
+      "to": "n2"
+    },
+    {
+      "id": "c2",
+      "from": "n2",
+      "to": "n3"
+    },
+    {
+      "id": "c3",
+      "from": "n3",
+      "to": "n4"
+    },
+    {
+      "id": "c4",
+      "from": "n4",
+      "to": "n5"
+    },
+    {
+      "id": "c5",
+      "from": "n5",
+      "to": "n6"
+    },
+    {
+      "id": "c6",
+      "from": "n6",
+      "to": "n7"
+    },
+    {
+      "id": "c7",
+      "from": "n7",
+      "to": "n8"
+    },
+    {
+      "id": "c8",
+      "from": "n8",
+      "to": "n9"
+    },
+    {
+      "id": "c9",
+      "from": "n9",
+      "to": "n10"
+    },
+    {
+      "id": "c10",
+      "from": "n10",
+      "to": "n11"
+    },
+    {
+      "id": "c11",
+      "from": "n11",
+      "to": "n12"
+    },
+    {
+      "id": "c12",
+      "from": "n12",
+      "to": "n13"
+    },
+    {
+      "id": "c13",
+      "from": "n13",
+      "to": "n14"
+    },
+    {
+      "id": "c14",
+      "from": "n15",
+      "to": "n16"
+    },
+    {
+      "id": "c15",
+      "from": "n16",
+      "to": "n17"
+    },
+    {
+      "id": "c16",
+      "from": "n14",
+      "to": "n17"
+    },
+    {
+      "id": "c17",
+      "from": "n17",
+      "to": "n18"
+    },
+    {
+      "id": "c18",
+      "from": "n18",
+      "to": "n19"
+    },
+    {
+      "id": "c19",
+      "from": "n19",
+      "to": "n20"
+    },
+    {
+      "id": "c20",
+      "from": "n14",
+      "to": "n20"
+    },
+    {
+      "id": "c21",
+      "from": "n20",
+      "to": "n21"
+    },
+    {
+      "id": "c22",
+      "from": "n21",
+      "to": "n22"
+    },
+    {
+      "id": "c23",
+      "from": "n22",
+      "to": "n23"
+    },
+    {
+      "id": "c24",
+      "from": "n14",
+      "to": "n23"
+    },
+    {
+      "id": "c25",
+      "from": "n23",
+      "to": "n24"
+    },
+    {
+      "id": "c26",
+      "from": "n24",
+      "to": "n25"
+    },
+    {
+      "id": "c27",
+      "from": "n25",
+      "to": "n26"
+    },
+    {
+      "id": "c28",
+      "from": "n14",
+      "to": "n26"
+    },
+    {
+      "id": "c29",
+      "from": "n26",
+      "to": "n27"
+    },
+    {
+      "id": "c30",
+      "from": "n27",
+      "to": "n28"
+    },
+    {
+      "id": "c31",
+      "from": "n28",
+      "to": "n29"
+    },
+    {
+      "id": "c32",
+      "from": "n14",
+      "to": "n29"
+    },
+    {
+      "id": "c33",
+      "from": "n29",
+      "to": "n30"
+    },
+    {
+      "id": "c34",
+      "from": "n30",
+      "to": "n31"
+    },
+    {
+      "id": "c35",
+      "from": "n31",
+      "to": "n32"
+    },
+    {
+      "id": "c36",
+      "from": "n14",
+      "to": "n32"
+    },
+    {
+      "id": "c37",
+      "from": "n32",
+      "to": "n33"
+    },
+    {
+      "id": "c38",
+      "from": "n33",
+      "to": "n34"
+    },
+    {
+      "id": "c39",
+      "from": "n34",
+      "to": "n35"
+    },
+    {
+      "id": "c40",
+      "from": "n35",
+      "to": "n36"
+    },
+    {
+      "id": "c41",
+      "from": "n36",
+      "to": "n37"
+    },
+    {
+      "id": "c42",
+      "from": "n34",
+      "to": "n37"
+    },
+    {
+      "id": "c43",
+      "from": "n37",
+      "to": "n38"
+    },
+    {
+      "id": "c44",
+      "from": "n38",
+      "to": "n39"
+    },
+    {
+      "id": "c45",
+      "from": "n39",
+      "to": "n40"
+    },
+    {
+      "id": "c46",
+      "from": "n40",
+      "to": "n41"
+    },
+    {
+      "id": "c47",
+      "from": "n38",
+      "to": "n41"
+    },
+    {
+      "id": "c48",
+      "from": "n41",
+      "to": "n42"
+    },
+    {
+      "id": "c49",
+      "from": "n42",
+      "to": "n43"
+    },
+    {
+      "id": "c50",
+      "from": "n43",
+      "to": "n44"
+    },
+    {
+      "id": "c51",
+      "from": "n44",
+      "to": "n45"
+    },
+    {
+      "id": "c52",
+      "from": "n42",
+      "to": "n45"
+    },
+    {
+      "id": "c53",
+      "from": "n45",
+      "to": "n46"
+    },
+    {
+      "id": "c54",
+      "from": "n46",
+      "to": "n47"
+    },
+    {
+      "id": "c55",
+      "from": "n47",
+      "to": "n48"
+    },
+    {
+      "id": "c56",
+      "from": "n48",
+      "to": "n49"
+    },
+    {
+      "id": "c57",
+      "from": "n46",
+      "to": "n49"
+    },
+    {
+      "id": "c58",
+      "from": "n49",
+      "to": "n50"
+    },
+    {
+      "id": "c59",
+      "from": "n50",
+      "to": "n51"
+    }
+  ]
+}

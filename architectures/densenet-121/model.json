@@ -1,0 +1,8713 @@
+{
+  "id": "densenet-121",
+  "name": "DenseNet-121",
+  "description": "DenseNet-121 (Cornell / Tsinghua / Facebook): full graph; dimensions verified against the official config.json.",
+  "components": [
+    {
+      "id": "n1",
+      "type": "input",
+      "name": "image",
+      "position": {
+        "x": 300,
+        "y": 50
+      },
+      "params": {
+        "shape": [
+          3,
+          224,
+          224
+        ]
+      },
+      "inputs": [],
+      "outputs": [
+        "n2"
+      ]
+    },
+    {
+      "id": "n2",
+      "type": "conv2d",
+      "name": "conv1_7x7/2",
+      "position": {
+        "x": 300,
+        "y": 200
+      },
+      "params": {
+        "inChannels": 3,
+        "outChannels": 64,
+        "kernelSize": 7,
+        "stride": 2,
+        "padding": 3
+      },
+      "inputs": [
+        "n1"
+      ],
+      "outputs": [
+        "n3"
+      ]
+    },
+    {
+      "id": "n3",
+      "type": "maxpool2d",
+      "name": "maxpool_3x3/2",
+      "position": {
+        "x": 300,
+        "y": 350
+      },
+      "params": {
+        "kernelSize": 3,
+        "stride": 2,
+        "padding": 1
+      },
+      "inputs": [
+        "n2"
+      ],
+      "outputs": [
+        "n4",
+        "n9"
+      ]
+    },
+    {
+      "id": "n4",
+      "type": "batchNorm",
+      "name": "db1_l1_bn1",
+      "position": {
+        "x": 300,
+        "y": 500
+      },
+      "params": {
+        "numFeatures": 64
+      },
+      "inputs": [
+        "n3"
+      ],
+      "outputs": [
+        "n5"
+      ]
+    },
+    {
+      "id": "n5",
+      "type": "relu",
+      "name": "db1_l1_relu1",
+      "position": {
+        "x": 300,
+        "y": 650
+      },
+      "params": {},
+      "inputs": [
+        "n4"
+      ],
+      "outputs": [
+        "n6"
+      ]
+    },
+    {
+      "id": "n6",
+      "type": "conv2d",
+      "name": "db1_l1_1x1",
+      "position": {
+        "x": 300,
+        "y": 800
+      },
+      "params": {
+        "inChannels": 64,
+        "outChannels": 128,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n5"
+      ],
+      "outputs": [
+        "n7"
+      ]
+    },
+    {
+      "id": "n7",
+      "type": "relu",
+      "name": "db1_l1_relu2",
+      "position": {
+        "x": 300,
+        "y": 950
+      },
+      "params": {},
+      "inputs": [
+        "n6"
+      ],
+      "outputs": [
+        "n8"
+      ]
+    },
+    {
+      "id": "n8",
+      "type": "conv2d",
+      "name": "db1_l1_3x3",
+      "position": {
+        "x": 300,
+        "y": 1100
+      },
+      "params": {
+        "inChannels": 128,
+        "outChannels": 32,
+        "kernelSize": 3,
+        "padding": 1
+      },
+      "inputs": [
+        "n7"
+      ],
+      "outputs": [
+        "n9"
+      ]
+    },
+    {
+      "id": "n9",
+      "type": "concatenate",
+      "name": "db1_l1_concat",
+      "position": {
+        "x": 300,
+        "y": 1250
+      },
+      "params": {},
+      "inputs": [
+        "n8",
+        "n3"
+      ],
+      "outputs": [
+        "n10",
+        "n15"
+      ]
+    },
+    {
+      "id": "n10",
+      "type": "batchNorm",
+      "name": "db1_l2_bn1",
+      "position": {
+        "x": 300,
+        "y": 1400
+      },
+      "params": {
+        "numFeatures": 96
+      },
+      "inputs": [
+        "n9"
+      ],
+      "outputs": [
+        "n11"
+      ]
+    },
+    {
+      "id": "n11",
+      "type": "relu",
+      "name": "db1_l2_relu1",
+      "position": {
+        "x": 300,
+        "y": 1550
+      },
+      "params": {},
+      "inputs": [
+        "n10"
+      ],
+      "outputs": [
+        "n12"
+      ]
+    },
+    {
+      "id": "n12",
+      "type": "conv2d",
+      "name": "db1_l2_1x1",
+      "position": {
+        "x": 300,
+        "y": 1700
+      },
+      "params": {
+        "inChannels": 96,
+        "outChannels": 128,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n11"
+      ],
+      "outputs": [
+        "n13"
+      ]
+    },
+    {
+      "id": "n13",
+      "type": "relu",
+      "name": "db1_l2_relu2",
+      "position": {
+        "x": 300,
+        "y": 1850
+      },
+      "params": {},
+      "inputs": [
+        "n12"
+      ],
+      "outputs": [
+        "n14"
+      ]
+    },
+    {
+      "id": "n14",
+      "type": "conv2d",
+      "name": "db1_l2_3x3",
+      "position": {
+        "x": 300,
+        "y": 2000
+      },
+      "params": {
+        "inChannels": 128,
+        "outChannels": 32,
+        "kernelSize": 3,
+        "padding": 1
+      },
+      "inputs": [
+        "n13"
+      ],
+      "outputs": [
+        "n15"
+      ]
+    },
+    {
+      "id": "n15",
+      "type": "concatenate",
+      "name": "db1_l2_concat",
+      "position": {
+        "x": 300,
+        "y": 2150
+      },
+      "params": {},
+      "inputs": [
+        "n14",
+        "n9"
+      ],
+      "outputs": [
+        "n16",
+        "n21"
+      ]
+    },
+    {
+      "id": "n16",
+      "type": "batchNorm",
+      "name": "db1_l3_bn1",
+      "position": {
+        "x": 300,
+        "y": 2300
+      },
+      "params": {
+        "numFeatures": 128
+      },
+      "inputs": [
+        "n15"
+      ],
+      "outputs": [
+        "n17"
+      ]
+    },
+    {
+      "id": "n17",
+      "type": "relu",
+      "name": "db1_l3_relu1",
+      "position": {
+        "x": 300,
+        "y": 2450
+      },
+      "params": {},
+      "inputs": [
+        "n16"
+      ],
+      "outputs": [
+        "n18"
+      ]
+    },
+    {
+      "id": "n18",
+      "type": "conv2d",
+      "name": "db1_l3_1x1",
+      "position": {
+        "x": 300,
+        "y": 2600
+      },
+      "params": {
+        "inChannels": 128,
+        "outChannels": 128,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n17"
+      ],
+      "outputs": [
+        "n19"
+      ]
+    },
+    {
+      "id": "n19",
+      "type": "relu",
+      "name": "db1_l3_relu2",
+      "position": {
+        "x": 300,
+        "y": 2750
+      },
+      "params": {},
+      "inputs": [
+        "n18"
+      ],
+      "outputs": [
+        "n20"
+      ]
+    },
+    {
+      "id": "n20",
+      "type": "conv2d",
+      "name": "db1_l3_3x3",
+      "position": {
+        "x": 300,
+        "y": 2900
+      },
+      "params": {
+        "inChannels": 128,
+        "outChannels": 32,
+        "kernelSize": 3,
+        "padding": 1
+      },
+      "inputs": [
+        "n19"
+      ],
+      "outputs": [
+        "n21"
+      ]
+    },
+    {
+      "id": "n21",
+      "type": "concatenate",
+      "name": "db1_l3_concat",
+      "position": {
+        "x": 300,
+        "y": 3050
+      },
+      "params": {},
+      "inputs": [
+        "n20",
+        "n15"
+      ],
+      "outputs": [
+        "n22",
+        "n27"
+      ]
+    },
+    {
+      "id": "n22",
+      "type": "batchNorm",
+      "name": "db1_l4_bn1",
+      "position": {
+        "x": 300,
+        "y": 3200
+      },
+      "params": {
+        "numFeatures": 160
+      },
+      "inputs": [
+        "n21"
+      ],
+      "outputs": [
+        "n23"
+      ]
+    },
+    {
+      "id": "n23",
+      "type": "relu",
+      "name": "db1_l4_relu1",
+      "position": {
+        "x": 300,
+        "y": 3350
+      },
+      "params": {},
+      "inputs": [
+        "n22"
+      ],
+      "outputs": [
+        "n24"
+      ]
+    },
+    {
+      "id": "n24",
+      "type": "conv2d",
+      "name": "db1_l4_1x1",
+      "position": {
+        "x": 300,
+        "y": 3500
+      },
+      "params": {
+        "inChannels": 160,
+        "outChannels": 128,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n23"
+      ],
+      "outputs": [
+        "n25"
+      ]
+    },
+    {
+      "id": "n25",
+      "type": "relu",
+      "name": "db1_l4_relu2",
+      "position": {
+        "x": 300,
+        "y": 3650
+      },
+      "params": {},
+      "inputs": [
+        "n24"
+      ],
+      "outputs": [
+        "n26"
+      ]
+    },
+    {
+      "id": "n26",
+      "type": "conv2d",
+      "name": "db1_l4_3x3",
+      "position": {
+        "x": 300,
+        "y": 3800
+      },
+      "params": {
+        "inChannels": 128,
+        "outChannels": 32,
+        "kernelSize": 3,
+        "padding": 1
+      },
+      "inputs": [
+        "n25"
+      ],
+      "outputs": [
+        "n27"
+      ]
+    },
+    {
+      "id": "n27",
+      "type": "concatenate",
+      "name": "db1_l4_concat",
+      "position": {
+        "x": 300,
+        "y": 3950
+      },
+      "params": {},
+      "inputs": [
+        "n26",
+        "n21"
+      ],
+      "outputs": [
+        "n28",
+        "n33"
+      ]
+    },
+    {
+      "id": "n28",
+      "type": "batchNorm",
+      "name": "db1_l5_bn1",
+      "position": {
+        "x": 300,
+        "y": 4100
+      },
+      "params": {
+        "numFeatures": 192
+      },
+      "inputs": [
+        "n27"
+      ],
+      "outputs": [
+        "n29"
+      ]
+    },
+    {
+      "id": "n29",
+      "type": "relu",
+      "name": "db1_l5_relu1",
+      "position": {
+        "x": 300,
+        "y": 4250
+      },
+      "params": {},
+      "inputs": [
+        "n28"
+      ],
+      "outputs": [
+        "n30"
+      ]
+    },
+    {
+      "id": "n30",
+      "type": "conv2d",
+      "name": "db1_l5_1x1",
+      "position": {
+        "x": 300,
+        "y": 4400
+      },
+      "params": {
+        "inChannels": 192,
+        "outChannels": 128,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n29"
+      ],
+      "outputs": [
+        "n31"
+      ]
+    },
+    {
+      "id": "n31",
+      "type": "relu",
+      "name": "db1_l5_relu2",
+      "position": {
+        "x": 300,
+        "y": 4550
+      },
+      "params": {},
+      "inputs": [
+        "n30"
+      ],
+      "outputs": [
+        "n32"
+      ]
+    },
+    {
+      "id": "n32",
+      "type": "conv2d",
+      "name": "db1_l5_3x3",
+      "position": {
+        "x": 300,
+        "y": 4700
+      },
+      "params": {
+        "inChannels": 128,
+        "outChannels": 32,
+        "kernelSize": 3,
+        "padding": 1
+      },
+      "inputs": [
+        "n31"
+      ],
+      "outputs": [
+        "n33"
+      ]
+    },
+    {
+      "id": "n33",
+      "type": "concatenate",
+      "name": "db1_l5_concat",
+      "position": {
+        "x": 300,
+        "y": 4850
+      },
+      "params": {},
+      "inputs": [
+        "n32",
+        "n27"
+      ],
+      "outputs": [
+        "n34",
+        "n39"
+      ]
+    },
+    {
+      "id": "n34",
+      "type": "batchNorm",
+      "name": "db1_l6_bn1",
+      "position": {
+        "x": 300,
+        "y": 5000
+      },
+      "params": {
+        "numFeatures": 224
+      },
+      "inputs": [
+        "n33"
+      ],
+      "outputs": [
+        "n35"
+      ]
+    },
+    {
+      "id": "n35",
+      "type": "relu",
+      "name": "db1_l6_relu1",
+      "position": {
+        "x": 300,
+        "y": 5150
+      },
+      "params": {},
+      "inputs": [
+        "n34"
+      ],
+      "outputs": [
+        "n36"
+      ]
+    },
+    {
+      "id": "n36",
+      "type": "conv2d",
+      "name": "db1_l6_1x1",
+      "position": {
+        "x": 300,
+        "y": 5300
+      },
+      "params": {
+        "inChannels": 224,
+        "outChannels": 128,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n35"
+      ],
+      "outputs": [
+        "n37"
+      ]
+    },
+    {
+      "id": "n37",
+      "type": "relu",
+      "name": "db1_l6_relu2",
+      "position": {
+        "x": 300,
+        "y": 5450
+      },
+      "params": {},
+      "inputs": [
+        "n36"
+      ],
+      "outputs": [
+        "n38"
+      ]
+    },
+    {
+      "id": "n38",
+      "type": "conv2d",
+      "name": "db1_l6_3x3",
+      "position": {
+        "x": 300,
+        "y": 5600
+      },
+      "params": {
+        "inChannels": 128,
+        "outChannels": 32,
+        "kernelSize": 3,
+        "padding": 1
+      },
+      "inputs": [
+        "n37"
+      ],
+      "outputs": [
+        "n39"
+      ]
+    },
+    {
+      "id": "n39",
+      "type": "concatenate",
+      "name": "db1_l6_concat",
+      "position": {
+        "x": 300,
+        "y": 5750
+      },
+      "params": {},
+      "inputs": [
+        "n38",
+        "n33"
+      ],
+      "outputs": [
+        "n40"
+      ]
+    },
+    {
+      "id": "n40",
+      "type": "batchNorm",
+      "name": "transition_1_bn",
+      "position": {
+        "x": 300,
+        "y": 5900
+      },
+      "params": {
+        "numFeatures": 256
+      },
+      "inputs": [
+        "n39"
+      ],
+      "outputs": [
+        "n41"
+      ]
+    },
+    {
+      "id": "n41",
+      "type": "conv2d",
+      "name": "transition_1_1x1",
+      "position": {
+        "x": 300,
+        "y": 6050
+      },
+      "params": {
+        "inChannels": 256,
+        "outChannels": 128,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n40"
+      ],
+      "outputs": [
+        "n42"
+      ]
+    },
+    {
+      "id": "n42",
+      "type": "avgpool2d",
+      "name": "transition_1_pool",
+      "position": {
+        "x": 300,
+        "y": 6200
+      },
+      "params": {
+        "kernelSize": 2,
+        "stride": 2
+      },
+      "inputs": [
+        "n41"
+      ],
+      "outputs": [
+        "n43",
+        "n48"
+      ]
+    },
+    {
+      "id": "n43",
+      "type": "batchNorm",
+      "name": "db2_l1_bn1",
+      "position": {
+        "x": 300,
+        "y": 6350
+      },
+      "params": {
+        "numFeatures": 128
+      },
+      "inputs": [
+        "n42"
+      ],
+      "outputs": [
+        "n44"
+      ]
+    },
+    {
+      "id": "n44",
+      "type": "relu",
+      "name": "db2_l1_relu1",
+      "position": {
+        "x": 300,
+        "y": 6500
+      },
+      "params": {},
+      "inputs": [
+        "n43"
+      ],
+      "outputs": [
+        "n45"
+      ]
+    },
+    {
+      "id": "n45",
+      "type": "conv2d",
+      "name": "db2_l1_1x1",
+      "position": {
+        "x": 300,
+        "y": 6650
+      },
+      "params": {
+        "inChannels": 128,
+        "outChannels": 128,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n44"
+      ],
+      "outputs": [
+        "n46"
+      ]
+    },
+    {
+      "id": "n46",
+      "type": "relu",
+      "name": "db2_l1_relu2",
+      "position": {
+        "x": 300,
+        "y": 6800
+      },
+      "params": {},
+      "inputs": [
+        "n45"
+      ],
+      "outputs": [
+        "n47"
+      ]
+    },
+    {
+      "id": "n47",
+      "type": "conv2d",
+      "name": "db2_l1_3x3",
+      "position": {
+        "x": 300,
+        "y": 6950
+      },
+      "params": {
+        "inChannels": 128,
+        "outChannels": 32,
+        "kernelSize": 3,
+        "padding": 1
+      },
+      "inputs": [
+        "n46"
+      ],
+      "outputs": [
+        "n48"
+      ]
+    },
+    {
+      "id": "n48",
+      "type": "concatenate",
+      "name": "db2_l1_concat",
+      "position": {
+        "x": 300,
+        "y": 7100
+      },
+      "params": {},
+      "inputs": [
+        "n47",
+        "n42"
+      ],
+      "outputs": [
+        "n49",
+        "n54"
+      ]
+    },
+    {
+      "id": "n49",
+      "type": "batchNorm",
+      "name": "db2_l2_bn1",
+      "position": {
+        "x": 300,
+        "y": 7250
+      },
+      "params": {
+        "numFeatures": 160
+      },
+      "inputs": [
+        "n48"
+      ],
+      "outputs": [
+        "n50"
+      ]
+    },
+    {
+      "id": "n50",
+      "type": "relu",
+      "name": "db2_l2_relu1",
+      "position": {
+        "x": 300,
+        "y": 7400
+      },
+      "params": {},
+      "inputs": [
+        "n49"
+      ],
+      "outputs": [
+        "n51"
+      ]
+    },
+    {
+      "id": "n51",
+      "type": "conv2d",
+      "name": "db2_l2_1x1",
+      "position": {
+        "x": 300,
+        "y": 7550
+      },
+      "params": {
+        "inChannels": 160,
+        "outChannels": 128,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n50"
+      ],
+      "outputs": [
+        "n52"
+      ]
+    },
+    {
+      "id": "n52",
+      "type": "relu",
+      "name": "db2_l2_relu2",
+      "position": {
+        "x": 300,
+        "y": 7700
+      },
+      "params": {},
+      "inputs": [
+        "n51"
+      ],
+      "outputs": [
+        "n53"
+      ]
+    },
+    {
+      "id": "n53",
+      "type": "conv2d",
+      "name": "db2_l2_3x3",
+      "position": {
+        "x": 300,
+        "y": 7850
+      },
+      "params": {
+        "inChannels": 128,
+        "outChannels": 32,
+        "kernelSize": 3,
+        "padding": 1
+      },
+      "inputs": [
+        "n52"
+      ],
+      "outputs": [
+        "n54"
+      ]
+    },
+    {
+      "id": "n54",
+      "type": "concatenate",
+      "name": "db2_l2_concat",
+      "position": {
+        "x": 300,
+        "y": 8000
+      },
+      "params": {},
+      "inputs": [
+        "n53",
+        "n48"
+      ],
+      "outputs": [
+        "n55",
+        "n60"
+      ]
+    },
+    {
+      "id": "n55",
+      "type": "batchNorm",
+      "name": "db2_l3_bn1",
+      "position": {
+        "x": 300,
+        "y": 8150
+      },
+      "params": {
+        "numFeatures": 192
+      },
+      "inputs": [
+        "n54"
+      ],
+      "outputs": [
+        "n56"
+      ]
+    },
+    {
+      "id": "n56",
+      "type": "relu",
+      "name": "db2_l3_relu1",
+      "position": {
+        "x": 300,
+        "y": 8300
+      },
+      "params": {},
+      "inputs": [
+        "n55"
+      ],
+      "outputs": [
+        "n57"
+      ]
+    },
+    {
+      "id": "n57",
+      "type": "conv2d",
+      "name": "db2_l3_1x1",
+      "position": {
+        "x": 300,
+        "y": 8450
+      },
+      "params": {
+        "inChannels": 192,
+        "outChannels": 128,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n56"
+      ],
+      "outputs": [
+        "n58"
+      ]
+    },
+    {
+      "id": "n58",
+      "type": "relu",
+      "name": "db2_l3_relu2",
+      "position": {
+        "x": 300,
+        "y": 8600
+      },
+      "params": {},
+      "inputs": [
+        "n57"
+      ],
+      "outputs": [
+        "n59"
+      ]
+    },
+    {
+      "id": "n59",
+      "type": "conv2d",
+      "name": "db2_l3_3x3",
+      "position": {
+        "x": 300,
+        "y": 8750
+      },
+      "params": {
+        "inChannels": 128,
+        "outChannels": 32,
+        "kernelSize": 3,
+        "padding": 1
+      },
+      "inputs": [
+        "n58"
+      ],
+      "outputs": [
+        "n60"
+      ]
+    },
+    {
+      "id": "n60",
+      "type": "concatenate",
+      "name": "db2_l3_concat",
+      "position": {
+        "x": 300,
+        "y": 8900
+      },
+      "params": {},
+      "inputs": [
+        "n59",
+        "n54"
+      ],
+      "outputs": [
+        "n61",
+        "n66"
+      ]
+    },
+    {
+      "id": "n61",
+      "type": "batchNorm",
+      "name": "db2_l4_bn1",
+      "position": {
+        "x": 300,
+        "y": 9050
+      },
+      "params": {
+        "numFeatures": 224
+      },
+      "inputs": [
+        "n60"
+      ],
+      "outputs": [
+        "n62"
+      ]
+    },
+    {
+      "id": "n62",
+      "type": "relu",
+      "name": "db2_l4_relu1",
+      "position": {
+        "x": 300,
+        "y": 9200
+      },
+      "params": {},
+      "inputs": [
+        "n61"
+      ],
+      "outputs": [
+        "n63"
+      ]
+    },
+    {
+      "id": "n63",
+      "type": "conv2d",
+      "name": "db2_l4_1x1",
+      "position": {
+        "x": 300,
+        "y": 9350
+      },
+      "params": {
+        "inChannels": 224,
+        "outChannels": 128,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n62"
+      ],
+      "outputs": [
+        "n64"
+      ]
+    },
+    {
+      "id": "n64",
+      "type": "relu",
+      "name": "db2_l4_relu2",
+      "position": {
+        "x": 300,
+        "y": 9500
+      },
+      "params": {},
+      "inputs": [
+        "n63"
+      ],
+      "outputs": [
+        "n65"
+      ]
+    },
+    {
+      "id": "n65",
+      "type": "conv2d",
+      "name": "db2_l4_3x3",
+      "position": {
+        "x": 300,
+        "y": 9650
+      },
+      "params": {
+        "inChannels": 128,
+        "outChannels": 32,
+        "kernelSize": 3,
+        "padding": 1
+      },
+      "inputs": [
+        "n64"
+      ],
+      "outputs": [
+        "n66"
+      ]
+    },
+    {
+      "id": "n66",
+      "type": "concatenate",
+      "name": "db2_l4_concat",
+      "position": {
+        "x": 300,
+        "y": 9800
+      },
+      "params": {},
+      "inputs": [
+        "n65",
+        "n60"
+      ],
+      "outputs": [
+        "n67",
+        "n72"
+      ]
+    },
+    {
+      "id": "n67",
+      "type": "batchNorm",
+      "name": "db2_l5_bn1",
+      "position": {
+        "x": 300,
+        "y": 9950
+      },
+      "params": {
+        "numFeatures": 256
+      },
+      "inputs": [
+        "n66"
+      ],
+      "outputs": [
+        "n68"
+      ]
+    },
+    {
+      "id": "n68",
+      "type": "relu",
+      "name": "db2_l5_relu1",
+      "position": {
+        "x": 300,
+        "y": 10100
+      },
+      "params": {},
+      "inputs": [
+        "n67"
+      ],
+      "outputs": [
+        "n69"
+      ]
+    },
+    {
+      "id": "n69",
+      "type": "conv2d",
+      "name": "db2_l5_1x1",
+      "position": {
+        "x": 300,
+        "y": 10250
+      },
+      "params": {
+        "inChannels": 256,
+        "outChannels": 128,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n68"
+      ],
+      "outputs": [
+        "n70"
+      ]
+    },
+    {
+      "id": "n70",
+      "type": "relu",
+      "name": "db2_l5_relu2",
+      "position": {
+        "x": 300,
+        "y": 10400
+      },
+      "params": {},
+      "inputs": [
+        "n69"
+      ],
+      "outputs": [
+        "n71"
+      ]
+    },
+    {
+      "id": "n71",
+      "type": "conv2d",
+      "name": "db2_l5_3x3",
+      "position": {
+        "x": 300,
+        "y": 10550
+      },
+      "params": {
+        "inChannels": 128,
+        "outChannels": 32,
+        "kernelSize": 3,
+        "padding": 1
+      },
+      "inputs": [
+        "n70"
+      ],
+      "outputs": [
+        "n72"
+      ]
+    },
+    {
+      "id": "n72",
+      "type": "concatenate",
+      "name": "db2_l5_concat",
+      "position": {
+        "x": 300,
+        "y": 10700
+      },
+      "params": {},
+      "inputs": [
+        "n71",
+        "n66"
+      ],
+      "outputs": [
+        "n73",
+        "n78"
+      ]
+    },
+    {
+      "id": "n73",
+      "type": "batchNorm",
+      "name": "db2_l6_bn1",
+      "position": {
+        "x": 300,
+        "y": 10850
+      },
+      "params": {
+        "numFeatures": 288
+      },
+      "inputs": [
+        "n72"
+      ],
+      "outputs": [
+        "n74"
+      ]
+    },
+    {
+      "id": "n74",
+      "type": "relu",
+      "name": "db2_l6_relu1",
+      "position": {
+        "x": 300,
+        "y": 11000
+      },
+      "params": {},
+      "inputs": [
+        "n73"
+      ],
+      "outputs": [
+        "n75"
+      ]
+    },
+    {
+      "id": "n75",
+      "type": "conv2d",
+      "name": "db2_l6_1x1",
+      "position": {
+        "x": 300,
+        "y": 11150
+      },
+      "params": {
+        "inChannels": 288,
+        "outChannels": 128,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n74"
+      ],
+      "outputs": [
+        "n76"
+      ]
+    },
+    {
+      "id": "n76",
+      "type": "relu",
+      "name": "db2_l6_relu2",
+      "position": {
+        "x": 300,
+        "y": 11300
+      },
+      "params": {},
+      "inputs": [
+        "n75"
+      ],
+      "outputs": [
+        "n77"
+      ]
+    },
+    {
+      "id": "n77",
+      "type": "conv2d",
+      "name": "db2_l6_3x3",
+      "position": {
+        "x": 300,
+        "y": 11450
+      },
+      "params": {
+        "inChannels": 128,
+        "outChannels": 32,
+        "kernelSize": 3,
+        "padding": 1
+      },
+      "inputs": [
+        "n76"
+      ],
+      "outputs": [
+        "n78"
+      ]
+    },
+    {
+      "id": "n78",
+      "type": "concatenate",
+      "name": "db2_l6_concat",
+      "position": {
+        "x": 300,
+        "y": 11600
+      },
+      "params": {},
+      "inputs": [
+        "n77",
+        "n72"
+      ],
+      "outputs": [
+        "n79",
+        "n84"
+      ]
+    },
+    {
+      "id": "n79",
+      "type": "batchNorm",
+      "name": "db2_l7_bn1",
+      "position": {
+        "x": 300,
+        "y": 11750
+      },
+      "params": {
+        "numFeatures": 320
+      },
+      "inputs": [
+        "n78"
+      ],
+      "outputs": [
+        "n80"
+      ]
+    },
+    {
+      "id": "n80",
+      "type": "relu",
+      "name": "db2_l7_relu1",
+      "position": {
+        "x": 300,
+        "y": 11900
+      },
+      "params": {},
+      "inputs": [
+        "n79"
+      ],
+      "outputs": [
+        "n81"
+      ]
+    },
+    {
+      "id": "n81",
+      "type": "conv2d",
+      "name": "db2_l7_1x1",
+      "position": {
+        "x": 300,
+        "y": 12050
+      },
+      "params": {
+        "inChannels": 320,
+        "outChannels": 128,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n80"
+      ],
+      "outputs": [
+        "n82"
+      ]
+    },
+    {
+      "id": "n82",
+      "type": "relu",
+      "name": "db2_l7_relu2",
+      "position": {
+        "x": 300,
+        "y": 12200
+      },
+      "params": {},
+      "inputs": [
+        "n81"
+      ],
+      "outputs": [
+        "n83"
+      ]
+    },
+    {
+      "id": "n83",
+      "type": "conv2d",
+      "name": "db2_l7_3x3",
+      "position": {
+        "x": 300,
+        "y": 12350
+      },
+      "params": {
+        "inChannels": 128,
+        "outChannels": 32,
+        "kernelSize": 3,
+        "padding": 1
+      },
+      "inputs": [
+        "n82"
+      ],
+      "outputs": [
+        "n84"
+      ]
+    },
+    {
+      "id": "n84",
+      "type": "concatenate",
+      "name": "db2_l7_concat",
+      "position": {
+        "x": 300,
+        "y": 12500
+      },
+      "params": {},
+      "inputs": [
+        "n83",
+        "n78"
+      ],
+      "outputs": [
+        "n85",
+        "n90"
+      ]
+    },
+    {
+      "id": "n85",
+      "type": "batchNorm",
+      "name": "db2_l8_bn1",
+      "position": {
+        "x": 300,
+        "y": 12650
+      },
+      "params": {
+        "numFeatures": 352
+      },
+      "inputs": [
+        "n84"
+      ],
+      "outputs": [
+        "n86"
+      ]
+    },
+    {
+      "id": "n86",
+      "type": "relu",
+      "name": "db2_l8_relu1",
+      "position": {
+        "x": 300,
+        "y": 12800
+      },
+      "params": {},
+      "inputs": [
+        "n85"
+      ],
+      "outputs": [
+        "n87"
+      ]
+    },
+    {
+      "id": "n87",
+      "type": "conv2d",
+      "name": "db2_l8_1x1",
+      "position": {
+        "x": 300,
+        "y": 12950
+      },
+      "params": {
+        "inChannels": 352,
+        "outChannels": 128,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n86"
+      ],
+      "outputs": [
+        "n88"
+      ]
+    },
+    {
+      "id": "n88",
+      "type": "relu",
+      "name": "db2_l8_relu2",
+      "position": {
+        "x": 300,
+        "y": 13100
+      },
+      "params": {},
+      "inputs": [
+        "n87"
+      ],
+      "outputs": [
+        "n89"
+      ]
+    },
+    {
+      "id": "n89",
+      "type": "conv2d",
+      "name": "db2_l8_3x3",
+      "position": {
+        "x": 300,
+        "y": 13250
+      },
+      "params": {
+        "inChannels": 128,
+        "outChannels": 32,
+        "kernelSize": 3,
+        "padding": 1
+      },
+      "inputs": [
+        "n88"
+      ],
+      "outputs": [
+        "n90"
+      ]
+    },
+    {
+      "id": "n90",
+      "type": "concatenate",
+      "name": "db2_l8_concat",
+      "position": {
+        "x": 300,
+        "y": 13400
+      },
+      "params": {},
+      "inputs": [
+        "n89",
+        "n84"
+      ],
+      "outputs": [
+        "n91",
+        "n96"
+      ]
+    },
+    {
+      "id": "n91",
+      "type": "batchNorm",
+      "name": "db2_l9_bn1",
+      "position": {
+        "x": 300,
+        "y": 13550
+      },
+      "params": {
+        "numFeatures": 384
+      },
+      "inputs": [
+        "n90"
+      ],
+      "outputs": [
+        "n92"
+      ]
+    },
+    {
+      "id": "n92",
+      "type": "relu",
+      "name": "db2_l9_relu1",
+      "position": {
+        "x": 300,
+        "y": 13700
+      },
+      "params": {},
+      "inputs": [
+        "n91"
+      ],
+      "outputs": [
+        "n93"
+      ]
+    },
+    {
+      "id": "n93",
+      "type": "conv2d",
+      "name": "db2_l9_1x1",
+      "position": {
+        "x": 300,
+        "y": 13850
+      },
+      "params": {
+        "inChannels": 384,
+        "outChannels": 128,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n92"
+      ],
+      "outputs": [
+        "n94"
+      ]
+    },
+    {
+      "id": "n94",
+      "type": "relu",
+      "name": "db2_l9_relu2",
+      "position": {
+        "x": 300,
+        "y": 14000
+      },
+      "params": {},
+      "inputs": [
+        "n93"
+      ],
+      "outputs": [
+        "n95"
+      ]
+    },
+    {
+      "id": "n95",
+      "type": "conv2d",
+      "name": "db2_l9_3x3",
+      "position": {
+        "x": 300,
+        "y": 14150
+      },
+      "params": {
+        "inChannels": 128,
+        "outChannels": 32,
+        "kernelSize": 3,
+        "padding": 1
+      },
+      "inputs": [
+        "n94"
+      ],
+      "outputs": [
+        "n96"
+      ]
+    },
+    {
+      "id": "n96",
+      "type": "concatenate",
+      "name": "db2_l9_concat",
+      "position": {
+        "x": 300,
+        "y": 14300
+      },
+      "params": {},
+      "inputs": [
+        "n95",
+        "n90"
+      ],
+      "outputs": [
+        "n97",
+        "n102"
+      ]
+    },
+    {
+      "id": "n97",
+      "type": "batchNorm",
+      "name": "db2_l10_bn1",
+      "position": {
+        "x": 300,
+        "y": 14450
+      },
+      "params": {
+        "numFeatures": 416
+      },
+      "inputs": [
+        "n96"
+      ],
+      "outputs": [
+        "n98"
+      ]
+    },
+    {
+      "id": "n98",
+      "type": "relu",
+      "name": "db2_l10_relu1",
+      "position": {
+        "x": 300,
+        "y": 14600
+      },
+      "params": {},
+      "inputs": [
+        "n97"
+      ],
+      "outputs": [
+        "n99"
+      ]
+    },
+    {
+      "id": "n99",
+      "type": "conv2d",
+      "name": "db2_l10_1x1",
+      "position": {
+        "x": 300,
+        "y": 14750
+      },
+      "params": {
+        "inChannels": 416,
+        "outChannels": 128,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n98"
+      ],
+      "outputs": [
+        "n100"
+      ]
+    },
+    {
+      "id": "n100",
+      "type": "relu",
+      "name": "db2_l10_relu2",
+      "position": {
+        "x": 300,
+        "y": 14900
+      },
+      "params": {},
+      "inputs": [
+        "n99"
+      ],
+      "outputs": [
+        "n101"
+      ]
+    },
+    {
+      "id": "n101",
+      "type": "conv2d",
+      "name": "db2_l10_3x3",
+      "position": {
+        "x": 300,
+        "y": 15050
+      },
+      "params": {
+        "inChannels": 128,
+        "outChannels": 32,
+        "kernelSize": 3,
+        "padding": 1
+      },
+      "inputs": [
+        "n100"
+      ],
+      "outputs": [
+        "n102"
+      ]
+    },
+    {
+      "id": "n102",
+      "type": "concatenate",
+      "name": "db2_l10_concat",
+      "position": {
+        "x": 300,
+        "y": 15200
+      },
+      "params": {},
+      "inputs": [
+        "n101",
+        "n96"
+      ],
+      "outputs": [
+        "n103",
+        "n108"
+      ]
+    },
+    {
+      "id": "n103",
+      "type": "batchNorm",
+      "name": "db2_l11_bn1",
+      "position": {
+        "x": 300,
+        "y": 15350
+      },
+      "params": {
+        "numFeatures": 448
+      },
+      "inputs": [
+        "n102"
+      ],
+      "outputs": [
+        "n104"
+      ]
+    },
+    {
+      "id": "n104",
+      "type": "relu",
+      "name": "db2_l11_relu1",
+      "position": {
+        "x": 300,
+        "y": 15500
+      },
+      "params": {},
+      "inputs": [
+        "n103"
+      ],
+      "outputs": [
+        "n105"
+      ]
+    },
+    {
+      "id": "n105",
+      "type": "conv2d",
+      "name": "db2_l11_1x1",
+      "position": {
+        "x": 300,
+        "y": 15650
+      },
+      "params": {
+        "inChannels": 448,
+        "outChannels": 128,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n104"
+      ],
+      "outputs": [
+        "n106"
+      ]
+    },
+    {
+      "id": "n106",
+      "type": "relu",
+      "name": "db2_l11_relu2",
+      "position": {
+        "x": 300,
+        "y": 15800
+      },
+      "params": {},
+      "inputs": [
+        "n105"
+      ],
+      "outputs": [
+        "n107"
+      ]
+    },
+    {
+      "id": "n107",
+      "type": "conv2d",
+      "name": "db2_l11_3x3",
+      "position": {
+        "x": 300,
+        "y": 15950
+      },
+      "params": {
+        "inChannels": 128,
+        "outChannels": 32,
+        "kernelSize": 3,
+        "padding": 1
+      },
+      "inputs": [
+        "n106"
+      ],
+      "outputs": [
+        "n108"
+      ]
+    },
+    {
+      "id": "n108",
+      "type": "concatenate",
+      "name": "db2_l11_concat",
+      "position": {
+        "x": 300,
+        "y": 16100
+      },
+      "params": {},
+      "inputs": [
+        "n107",
+        "n102"
+      ],
+      "outputs": [
+        "n109",
+        "n114"
+      ]
+    },
+    {
+      "id": "n109",
+      "type": "batchNorm",
+      "name": "db2_l12_bn1",
+      "position": {
+        "x": 300,
+        "y": 16250
+      },
+      "params": {
+        "numFeatures": 480
+      },
+      "inputs": [
+        "n108"
+      ],
+      "outputs": [
+        "n110"
+      ]
+    },
+    {
+      "id": "n110",
+      "type": "relu",
+      "name": "db2_l12_relu1",
+      "position": {
+        "x": 300,
+        "y": 16400
+      },
+      "params": {},
+      "inputs": [
+        "n109"
+      ],
+      "outputs": [
+        "n111"
+      ]
+    },
+    {
+      "id": "n111",
+      "type": "conv2d",
+      "name": "db2_l12_1x1",
+      "position": {
+        "x": 300,
+        "y": 16550
+      },
+      "params": {
+        "inChannels": 480,
+        "outChannels": 128,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n110"
+      ],
+      "outputs": [
+        "n112"
+      ]
+    },
+    {
+      "id": "n112",
+      "type": "relu",
+      "name": "db2_l12_relu2",
+      "position": {
+        "x": 300,
+        "y": 16700
+      },
+      "params": {},
+      "inputs": [
+        "n111"
+      ],
+      "outputs": [
+        "n113"
+      ]
+    },
+    {
+      "id": "n113",
+      "type": "conv2d",
+      "name": "db2_l12_3x3",
+      "position": {
+        "x": 300,
+        "y": 16850
+      },
+      "params": {
+        "inChannels": 128,
+        "outChannels": 32,
+        "kernelSize": 3,
+        "padding": 1
+      },
+      "inputs": [
+        "n112"
+      ],
+      "outputs": [
+        "n114"
+      ]
+    },
+    {
+      "id": "n114",
+      "type": "concatenate",
+      "name": "db2_l12_concat",
+      "position": {
+        "x": 300,
+        "y": 17000
+      },
+      "params": {},
+      "inputs": [
+        "n113",
+        "n108"
+      ],
+      "outputs": [
+        "n115"
+      ]
+    },
+    {
+      "id": "n115",
+      "type": "batchNorm",
+      "name": "transition_2_bn",
+      "position": {
+        "x": 300,
+        "y": 17150
+      },
+      "params": {
+        "numFeatures": 512
+      },
+      "inputs": [
+        "n114"
+      ],
+      "outputs": [
+        "n116"
+      ]
+    },
+    {
+      "id": "n116",
+      "type": "conv2d",
+      "name": "transition_2_1x1",
+      "position": {
+        "x": 300,
+        "y": 17300
+      },
+      "params": {
+        "inChannels": 512,
+        "outChannels": 256,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n115"
+      ],
+      "outputs": [
+        "n117"
+      ]
+    },
+    {
+      "id": "n117",
+      "type": "avgpool2d",
+      "name": "transition_2_pool",
+      "position": {
+        "x": 300,
+        "y": 17450
+      },
+      "params": {
+        "kernelSize": 2,
+        "stride": 2
+      },
+      "inputs": [
+        "n116"
+      ],
+      "outputs": [
+        "n118",
+        "n123"
+      ]
+    },
+    {
+      "id": "n118",
+      "type": "batchNorm",
+      "name": "db3_l1_bn1",
+      "position": {
+        "x": 300,
+        "y": 17600
+      },
+      "params": {
+        "numFeatures": 256
+      },
+      "inputs": [
+        "n117"
+      ],
+      "outputs": [
+        "n119"
+      ]
+    },
+    {
+      "id": "n119",
+      "type": "relu",
+      "name": "db3_l1_relu1",
+      "position": {
+        "x": 300,
+        "y": 17750
+      },
+      "params": {},
+      "inputs": [
+        "n118"
+      ],
+      "outputs": [
+        "n120"
+      ]
+    },
+    {
+      "id": "n120",
+      "type": "conv2d",
+      "name": "db3_l1_1x1",
+      "position": {
+        "x": 300,
+        "y": 17900
+      },
+      "params": {
+        "inChannels": 256,
+        "outChannels": 128,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n119"
+      ],
+      "outputs": [
+        "n121"
+      ]
+    },
+    {
+      "id": "n121",
+      "type": "relu",
+      "name": "db3_l1_relu2",
+      "position": {
+        "x": 300,
+        "y": 18050
+      },
+      "params": {},
+      "inputs": [
+        "n120"
+      ],
+      "outputs": [
+        "n122"
+      ]
+    },
+    {
+      "id": "n122",
+      "type": "conv2d",
+      "name": "db3_l1_3x3",
+      "position": {
+        "x": 300,
+        "y": 18200
+      },
+      "params": {
+        "inChannels": 128,
+        "outChannels": 32,
+        "kernelSize": 3,
+        "padding": 1
+      },
+      "inputs": [
+        "n121"
+      ],
+      "outputs": [
+        "n123"
+      ]
+    },
+    {
+      "id": "n123",
+      "type": "concatenate",
+      "name": "db3_l1_concat",
+      "position": {
+        "x": 300,
+        "y": 18350
+      },
+      "params": {},
+      "inputs": [
+        "n122",
+        "n117"
+      ],
+      "outputs": [
+        "n124",
+        "n129"
+      ]
+    },
+    {
+      "id": "n124",
+      "type": "batchNorm",
+      "name": "db3_l2_bn1",
+      "position": {
+        "x": 300,
+        "y": 18500
+      },
+      "params": {
+        "numFeatures": 288
+      },
+      "inputs": [
+        "n123"
+      ],
+      "outputs": [
+        "n125"
+      ]
+    },
+    {
+      "id": "n125",
+      "type": "relu",
+      "name": "db3_l2_relu1",
+      "position": {
+        "x": 300,
+        "y": 18650
+      },
+      "params": {},
+      "inputs": [
+        "n124"
+      ],
+      "outputs": [
+        "n126"
+      ]
+    },
+    {
+      "id": "n126",
+      "type": "conv2d",
+      "name": "db3_l2_1x1",
+      "position": {
+        "x": 300,
+        "y": 18800
+      },
+      "params": {
+        "inChannels": 288,
+        "outChannels": 128,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n125"
+      ],
+      "outputs": [
+        "n127"
+      ]
+    },
+    {
+      "id": "n127",
+      "type": "relu",
+      "name": "db3_l2_relu2",
+      "position": {
+        "x": 300,
+        "y": 18950
+      },
+      "params": {},
+      "inputs": [
+        "n126"
+      ],
+      "outputs": [
+        "n128"
+      ]
+    },
+    {
+      "id": "n128",
+      "type": "conv2d",
+      "name": "db3_l2_3x3",
+      "position": {
+        "x": 300,
+        "y": 19100
+      },
+      "params": {
+        "inChannels": 128,
+        "outChannels": 32,
+        "kernelSize": 3,
+        "padding": 1
+      },
+      "inputs": [
+        "n127"
+      ],
+      "outputs": [
+        "n129"
+      ]
+    },
+    {
+      "id": "n129",
+      "type": "concatenate",
+      "name": "db3_l2_concat",
+      "position": {
+        "x": 300,
+        "y": 19250
+      },
+      "params": {},
+      "inputs": [
+        "n128",
+        "n123"
+      ],
+      "outputs": [
+        "n130",
+        "n135"
+      ]
+    },
+    {
+      "id": "n130",
+      "type": "batchNorm",
+      "name": "db3_l3_bn1",
+      "position": {
+        "x": 300,
+        "y": 19400
+      },
+      "params": {
+        "numFeatures": 320
+      },
+      "inputs": [
+        "n129"
+      ],
+      "outputs": [
+        "n131"
+      ]
+    },
+    {
+      "id": "n131",
+      "type": "relu",
+      "name": "db3_l3_relu1",
+      "position": {
+        "x": 300,
+        "y": 19550
+      },
+      "params": {},
+      "inputs": [
+        "n130"
+      ],
+      "outputs": [
+        "n132"
+      ]
+    },
+    {
+      "id": "n132",
+      "type": "conv2d",
+      "name": "db3_l3_1x1",
+      "position": {
+        "x": 300,
+        "y": 19700
+      },
+      "params": {
+        "inChannels": 320,
+        "outChannels": 128,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n131"
+      ],
+      "outputs": [
+        "n133"
+      ]
+    },
+    {
+      "id": "n133",
+      "type": "relu",
+      "name": "db3_l3_relu2",
+      "position": {
+        "x": 300,
+        "y": 19850
+      },
+      "params": {},
+      "inputs": [
+        "n132"
+      ],
+      "outputs": [
+        "n134"
+      ]
+    },
+    {
+      "id": "n134",
+      "type": "conv2d",
+      "name": "db3_l3_3x3",
+      "position": {
+        "x": 300,
+        "y": 20000
+      },
+      "params": {
+        "inChannels": 128,
+        "outChannels": 32,
+        "kernelSize": 3,
+        "padding": 1
+      },
+      "inputs": [
+        "n133"
+      ],
+      "outputs": [
+        "n135"
+      ]
+    },
+    {
+      "id": "n135",
+      "type": "concatenate",
+      "name": "db3_l3_concat",
+      "position": {
+        "x": 300,
+        "y": 20150
+      },
+      "params": {},
+      "inputs": [
+        "n134",
+        "n129"
+      ],
+      "outputs": [
+        "n136",
+        "n141"
+      ]
+    },
+    {
+      "id": "n136",
+      "type": "batchNorm",
+      "name": "db3_l4_bn1",
+      "position": {
+        "x": 300,
+        "y": 20300
+      },
+      "params": {
+        "numFeatures": 352
+      },
+      "inputs": [
+        "n135"
+      ],
+      "outputs": [
+        "n137"
+      ]
+    },
+    {
+      "id": "n137",
+      "type": "relu",
+      "name": "db3_l4_relu1",
+      "position": {
+        "x": 300,
+        "y": 20450
+      },
+      "params": {},
+      "inputs": [
+        "n136"
+      ],
+      "outputs": [
+        "n138"
+      ]
+    },
+    {
+      "id": "n138",
+      "type": "conv2d",
+      "name": "db3_l4_1x1",
+      "position": {
+        "x": 300,
+        "y": 20600
+      },
+      "params": {
+        "inChannels": 352,
+        "outChannels": 128,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n137"
+      ],
+      "outputs": [
+        "n139"
+      ]
+    },
+    {
+      "id": "n139",
+      "type": "relu",
+      "name": "db3_l4_relu2",
+      "position": {
+        "x": 300,
+        "y": 20750
+      },
+      "params": {},
+      "inputs": [
+        "n138"
+      ],
+      "outputs": [
+        "n140"
+      ]
+    },
+    {
+      "id": "n140",
+      "type": "conv2d",
+      "name": "db3_l4_3x3",
+      "position": {
+        "x": 300,
+        "y": 20900
+      },
+      "params": {
+        "inChannels": 128,
+        "outChannels": 32,
+        "kernelSize": 3,
+        "padding": 1
+      },
+      "inputs": [
+        "n139"
+      ],
+      "outputs": [
+        "n141"
+      ]
+    },
+    {
+      "id": "n141",
+      "type": "concatenate",
+      "name": "db3_l4_concat",
+      "position": {
+        "x": 300,
+        "y": 21050
+      },
+      "params": {},
+      "inputs": [
+        "n140",
+        "n135"
+      ],
+      "outputs": [
+        "n142",
+        "n147"
+      ]
+    },
+    {
+      "id": "n142",
+      "type": "batchNorm",
+      "name": "db3_l5_bn1",
+      "position": {
+        "x": 300,
+        "y": 21200
+      },
+      "params": {
+        "numFeatures": 384
+      },
+      "inputs": [
+        "n141"
+      ],
+      "outputs": [
+        "n143"
+      ]
+    },
+    {
+      "id": "n143",
+      "type": "relu",
+      "name": "db3_l5_relu1",
+      "position": {
+        "x": 300,
+        "y": 21350
+      },
+      "params": {},
+      "inputs": [
+        "n142"
+      ],
+      "outputs": [
+        "n144"
+      ]
+    },
+    {
+      "id": "n144",
+      "type": "conv2d",
+      "name": "db3_l5_1x1",
+      "position": {
+        "x": 300,
+        "y": 21500
+      },
+      "params": {
+        "inChannels": 384,
+        "outChannels": 128,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n143"
+      ],
+      "outputs": [
+        "n145"
+      ]
+    },
+    {
+      "id": "n145",
+      "type": "relu",
+      "name": "db3_l5_relu2",
+      "position": {
+        "x": 300,
+        "y": 21650
+      },
+      "params": {},
+      "inputs": [
+        "n144"
+      ],
+      "outputs": [
+        "n146"
+      ]
+    },
+    {
+      "id": "n146",
+      "type": "conv2d",
+      "name": "db3_l5_3x3",
+      "position": {
+        "x": 300,
+        "y": 21800
+      },
+      "params": {
+        "inChannels": 128,
+        "outChannels": 32,
+        "kernelSize": 3,
+        "padding": 1
+      },
+      "inputs": [
+        "n145"
+      ],
+      "outputs": [
+        "n147"
+      ]
+    },
+    {
+      "id": "n147",
+      "type": "concatenate",
+      "name": "db3_l5_concat",
+      "position": {
+        "x": 300,
+        "y": 21950
+      },
+      "params": {},
+      "inputs": [
+        "n146",
+        "n141"
+      ],
+      "outputs": [
+        "n148",
+        "n153"
+      ]
+    },
+    {
+      "id": "n148",
+      "type": "batchNorm",
+      "name": "db3_l6_bn1",
+      "position": {
+        "x": 300,
+        "y": 22100
+      },
+      "params": {
+        "numFeatures": 416
+      },
+      "inputs": [
+        "n147"
+      ],
+      "outputs": [
+        "n149"
+      ]
+    },
+    {
+      "id": "n149",
+      "type": "relu",
+      "name": "db3_l6_relu1",
+      "position": {
+        "x": 300,
+        "y": 22250
+      },
+      "params": {},
+      "inputs": [
+        "n148"
+      ],
+      "outputs": [
+        "n150"
+      ]
+    },
+    {
+      "id": "n150",
+      "type": "conv2d",
+      "name": "db3_l6_1x1",
+      "position": {
+        "x": 300,
+        "y": 22400
+      },
+      "params": {
+        "inChannels": 416,
+        "outChannels": 128,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n149"
+      ],
+      "outputs": [
+        "n151"
+      ]
+    },
+    {
+      "id": "n151",
+      "type": "relu",
+      "name": "db3_l6_relu2",
+      "position": {
+        "x": 300,
+        "y": 22550
+      },
+      "params": {},
+      "inputs": [
+        "n150"
+      ],
+      "outputs": [
+        "n152"
+      ]
+    },
+    {
+      "id": "n152",
+      "type": "conv2d",
+      "name": "db3_l6_3x3",
+      "position": {
+        "x": 300,
+        "y": 22700
+      },
+      "params": {
+        "inChannels": 128,
+        "outChannels": 32,
+        "kernelSize": 3,
+        "padding": 1
+      },
+      "inputs": [
+        "n151"
+      ],
+      "outputs": [
+        "n153"
+      ]
+    },
+    {
+      "id": "n153",
+      "type": "concatenate",
+      "name": "db3_l6_concat",
+      "position": {
+        "x": 300,
+        "y": 22850
+      },
+      "params": {},
+      "inputs": [
+        "n152",
+        "n147"
+      ],
+      "outputs": [
+        "n154",
+        "n159"
+      ]
+    },
+    {
+      "id": "n154",
+      "type": "batchNorm",
+      "name": "db3_l7_bn1",
+      "position": {
+        "x": 300,
+        "y": 23000
+      },
+      "params": {
+        "numFeatures": 448
+      },
+      "inputs": [
+        "n153"
+      ],
+      "outputs": [
+        "n155"
+      ]
+    },
+    {
+      "id": "n155",
+      "type": "relu",
+      "name": "db3_l7_relu1",
+      "position": {
+        "x": 300,
+        "y": 23150
+      },
+      "params": {},
+      "inputs": [
+        "n154"
+      ],
+      "outputs": [
+        "n156"
+      ]
+    },
+    {
+      "id": "n156",
+      "type": "conv2d",
+      "name": "db3_l7_1x1",
+      "position": {
+        "x": 300,
+        "y": 23300
+      },
+      "params": {
+        "inChannels": 448,
+        "outChannels": 128,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n155"
+      ],
+      "outputs": [
+        "n157"
+      ]
+    },
+    {
+      "id": "n157",
+      "type": "relu",
+      "name": "db3_l7_relu2",
+      "position": {
+        "x": 300,
+        "y": 23450
+      },
+      "params": {},
+      "inputs": [
+        "n156"
+      ],
+      "outputs": [
+        "n158"
+      ]
+    },
+    {
+      "id": "n158",
+      "type": "conv2d",
+      "name": "db3_l7_3x3",
+      "position": {
+        "x": 300,
+        "y": 23600
+      },
+      "params": {
+        "inChannels": 128,
+        "outChannels": 32,
+        "kernelSize": 3,
+        "padding": 1
+      },
+      "inputs": [
+        "n157"
+      ],
+      "outputs": [
+        "n159"
+      ]
+    },
+    {
+      "id": "n159",
+      "type": "concatenate",
+      "name": "db3_l7_concat",
+      "position": {
+        "x": 300,
+        "y": 23750
+      },
+      "params": {},
+      "inputs": [
+        "n158",
+        "n153"
+      ],
+      "outputs": [
+        "n160",
+        "n165"
+      ]
+    },
+    {
+      "id": "n160",
+      "type": "batchNorm",
+      "name": "db3_l8_bn1",
+      "position": {
+        "x": 300,
+        "y": 23900
+      },
+      "params": {
+        "numFeatures": 480
+      },
+      "inputs": [
+        "n159"
+      ],
+      "outputs": [
+        "n161"
+      ]
+    },
+    {
+      "id": "n161",
+      "type": "relu",
+      "name": "db3_l8_relu1",
+      "position": {
+        "x": 300,
+        "y": 24050
+      },
+      "params": {},
+      "inputs": [
+        "n160"
+      ],
+      "outputs": [
+        "n162"
+      ]
+    },
+    {
+      "id": "n162",
+      "type": "conv2d",
+      "name": "db3_l8_1x1",
+      "position": {
+        "x": 300,
+        "y": 24200
+      },
+      "params": {
+        "inChannels": 480,
+        "outChannels": 128,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n161"
+      ],
+      "outputs": [
+        "n163"
+      ]
+    },
+    {
+      "id": "n163",
+      "type": "relu",
+      "name": "db3_l8_relu2",
+      "position": {
+        "x": 300,
+        "y": 24350
+      },
+      "params": {},
+      "inputs": [
+        "n162"
+      ],
+      "outputs": [
+        "n164"
+      ]
+    },
+    {
+      "id": "n164",
+      "type": "conv2d",
+      "name": "db3_l8_3x3",
+      "position": {
+        "x": 300,
+        "y": 24500
+      },
+      "params": {
+        "inChannels": 128,
+        "outChannels": 32,
+        "kernelSize": 3,
+        "padding": 1
+      },
+      "inputs": [
+        "n163"
+      ],
+      "outputs": [
+        "n165"
+      ]
+    },
+    {
+      "id": "n165",
+      "type": "concatenate",
+      "name": "db3_l8_concat",
+      "position": {
+        "x": 300,
+        "y": 24650
+      },
+      "params": {},
+      "inputs": [
+        "n164",
+        "n159"
+      ],
+      "outputs": [
+        "n166",
+        "n171"
+      ]
+    },
+    {
+      "id": "n166",
+      "type": "batchNorm",
+      "name": "db3_l9_bn1",
+      "position": {
+        "x": 300,
+        "y": 24800
+      },
+      "params": {
+        "numFeatures": 512
+      },
+      "inputs": [
+        "n165"
+      ],
+      "outputs": [
+        "n167"
+      ]
+    },
+    {
+      "id": "n167",
+      "type": "relu",
+      "name": "db3_l9_relu1",
+      "position": {
+        "x": 300,
+        "y": 24950
+      },
+      "params": {},
+      "inputs": [
+        "n166"
+      ],
+      "outputs": [
+        "n168"
+      ]
+    },
+    {
+      "id": "n168",
+      "type": "conv2d",
+      "name": "db3_l9_1x1",
+      "position": {
+        "x": 300,
+        "y": 25100
+      },
+      "params": {
+        "inChannels": 512,
+        "outChannels": 128,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n167"
+      ],
+      "outputs": [
+        "n169"
+      ]
+    },
+    {
+      "id": "n169",
+      "type": "relu",
+      "name": "db3_l9_relu2",
+      "position": {
+        "x": 300,
+        "y": 25250
+      },
+      "params": {},
+      "inputs": [
+        "n168"
+      ],
+      "outputs": [
+        "n170"
+      ]
+    },
+    {
+      "id": "n170",
+      "type": "conv2d",
+      "name": "db3_l9_3x3",
+      "position": {
+        "x": 300,
+        "y": 25400
+      },
+      "params": {
+        "inChannels": 128,
+        "outChannels": 32,
+        "kernelSize": 3,
+        "padding": 1
+      },
+      "inputs": [
+        "n169"
+      ],
+      "outputs": [
+        "n171"
+      ]
+    },
+    {
+      "id": "n171",
+      "type": "concatenate",
+      "name": "db3_l9_concat",
+      "position": {
+        "x": 300,
+        "y": 25550
+      },
+      "params": {},
+      "inputs": [
+        "n170",
+        "n165"
+      ],
+      "outputs": [
+        "n172",
+        "n177"
+      ]
+    },
+    {
+      "id": "n172",
+      "type": "batchNorm",
+      "name": "db3_l10_bn1",
+      "position": {
+        "x": 300,
+        "y": 25700
+      },
+      "params": {
+        "numFeatures": 544
+      },
+      "inputs": [
+        "n171"
+      ],
+      "outputs": [
+        "n173"
+      ]
+    },
+    {
+      "id": "n173",
+      "type": "relu",
+      "name": "db3_l10_relu1",
+      "position": {
+        "x": 300,
+        "y": 25850
+      },
+      "params": {},
+      "inputs": [
+        "n172"
+      ],
+      "outputs": [
+        "n174"
+      ]
+    },
+    {
+      "id": "n174",
+      "type": "conv2d",
+      "name": "db3_l10_1x1",
+      "position": {
+        "x": 300,
+        "y": 26000
+      },
+      "params": {
+        "inChannels": 544,
+        "outChannels": 128,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n173"
+      ],
+      "outputs": [
+        "n175"
+      ]
+    },
+    {
+      "id": "n175",
+      "type": "relu",
+      "name": "db3_l10_relu2",
+      "position": {
+        "x": 300,
+        "y": 26150
+      },
+      "params": {},
+      "inputs": [
+        "n174"
+      ],
+      "outputs": [
+        "n176"
+      ]
+    },
+    {
+      "id": "n176",
+      "type": "conv2d",
+      "name": "db3_l10_3x3",
+      "position": {
+        "x": 300,
+        "y": 26300
+      },
+      "params": {
+        "inChannels": 128,
+        "outChannels": 32,
+        "kernelSize": 3,
+        "padding": 1
+      },
+      "inputs": [
+        "n175"
+      ],
+      "outputs": [
+        "n177"
+      ]
+    },
+    {
+      "id": "n177",
+      "type": "concatenate",
+      "name": "db3_l10_concat",
+      "position": {
+        "x": 300,
+        "y": 26450
+      },
+      "params": {},
+      "inputs": [
+        "n176",
+        "n171"
+      ],
+      "outputs": [
+        "n178",
+        "n183"
+      ]
+    },
+    {
+      "id": "n178",
+      "type": "batchNorm",
+      "name": "db3_l11_bn1",
+      "position": {
+        "x": 300,
+        "y": 26600
+      },
+      "params": {
+        "numFeatures": 576
+      },
+      "inputs": [
+        "n177"
+      ],
+      "outputs": [
+        "n179"
+      ]
+    },
+    {
+      "id": "n179",
+      "type": "relu",
+      "name": "db3_l11_relu1",
+      "position": {
+        "x": 300,
+        "y": 26750
+      },
+      "params": {},
+      "inputs": [
+        "n178"
+      ],
+      "outputs": [
+        "n180"
+      ]
+    },
+    {
+      "id": "n180",
+      "type": "conv2d",
+      "name": "db3_l11_1x1",
+      "position": {
+        "x": 300,
+        "y": 26900
+      },
+      "params": {
+        "inChannels": 576,
+        "outChannels": 128,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n179"
+      ],
+      "outputs": [
+        "n181"
+      ]
+    },
+    {
+      "id": "n181",
+      "type": "relu",
+      "name": "db3_l11_relu2",
+      "position": {
+        "x": 300,
+        "y": 27050
+      },
+      "params": {},
+      "inputs": [
+        "n180"
+      ],
+      "outputs": [
+        "n182"
+      ]
+    },
+    {
+      "id": "n182",
+      "type": "conv2d",
+      "name": "db3_l11_3x3",
+      "position": {
+        "x": 300,
+        "y": 27200
+      },
+      "params": {
+        "inChannels": 128,
+        "outChannels": 32,
+        "kernelSize": 3,
+        "padding": 1
+      },
+      "inputs": [
+        "n181"
+      ],
+      "outputs": [
+        "n183"
+      ]
+    },
+    {
+      "id": "n183",
+      "type": "concatenate",
+      "name": "db3_l11_concat",
+      "position": {
+        "x": 300,
+        "y": 27350
+      },
+      "params": {},
+      "inputs": [
+        "n182",
+        "n177"
+      ],
+      "outputs": [
+        "n184",
+        "n189"
+      ]
+    },
+    {
+      "id": "n184",
+      "type": "batchNorm",
+      "name": "db3_l12_bn1",
+      "position": {
+        "x": 300,
+        "y": 27500
+      },
+      "params": {
+        "numFeatures": 608
+      },
+      "inputs": [
+        "n183"
+      ],
+      "outputs": [
+        "n185"
+      ]
+    },
+    {
+      "id": "n185",
+      "type": "relu",
+      "name": "db3_l12_relu1",
+      "position": {
+        "x": 300,
+        "y": 27650
+      },
+      "params": {},
+      "inputs": [
+        "n184"
+      ],
+      "outputs": [
+        "n186"
+      ]
+    },
+    {
+      "id": "n186",
+      "type": "conv2d",
+      "name": "db3_l12_1x1",
+      "position": {
+        "x": 300,
+        "y": 27800
+      },
+      "params": {
+        "inChannels": 608,
+        "outChannels": 128,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n185"
+      ],
+      "outputs": [
+        "n187"
+      ]
+    },
+    {
+      "id": "n187",
+      "type": "relu",
+      "name": "db3_l12_relu2",
+      "position": {
+        "x": 300,
+        "y": 27950
+      },
+      "params": {},
+      "inputs": [
+        "n186"
+      ],
+      "outputs": [
+        "n188"
+      ]
+    },
+    {
+      "id": "n188",
+      "type": "conv2d",
+      "name": "db3_l12_3x3",
+      "position": {
+        "x": 300,
+        "y": 28100
+      },
+      "params": {
+        "inChannels": 128,
+        "outChannels": 32,
+        "kernelSize": 3,
+        "padding": 1
+      },
+      "inputs": [
+        "n187"
+      ],
+      "outputs": [
+        "n189"
+      ]
+    },
+    {
+      "id": "n189",
+      "type": "concatenate",
+      "name": "db3_l12_concat",
+      "position": {
+        "x": 300,
+        "y": 28250
+      },
+      "params": {},
+      "inputs": [
+        "n188",
+        "n183"
+      ],
+      "outputs": [
+        "n190",
+        "n195"
+      ]
+    },
+    {
+      "id": "n190",
+      "type": "batchNorm",
+      "name": "db3_l13_bn1",
+      "position": {
+        "x": 300,
+        "y": 28400
+      },
+      "params": {
+        "numFeatures": 640
+      },
+      "inputs": [
+        "n189"
+      ],
+      "outputs": [
+        "n191"
+      ]
+    },
+    {
+      "id": "n191",
+      "type": "relu",
+      "name": "db3_l13_relu1",
+      "position": {
+        "x": 300,
+        "y": 28550
+      },
+      "params": {},
+      "inputs": [
+        "n190"
+      ],
+      "outputs": [
+        "n192"
+      ]
+    },
+    {
+      "id": "n192",
+      "type": "conv2d",
+      "name": "db3_l13_1x1",
+      "position": {
+        "x": 300,
+        "y": 28700
+      },
+      "params": {
+        "inChannels": 640,
+        "outChannels": 128,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n191"
+      ],
+      "outputs": [
+        "n193"
+      ]
+    },
+    {
+      "id": "n193",
+      "type": "relu",
+      "name": "db3_l13_relu2",
+      "position": {
+        "x": 300,
+        "y": 28850
+      },
+      "params": {},
+      "inputs": [
+        "n192"
+      ],
+      "outputs": [
+        "n194"
+      ]
+    },
+    {
+      "id": "n194",
+      "type": "conv2d",
+      "name": "db3_l13_3x3",
+      "position": {
+        "x": 300,
+        "y": 29000
+      },
+      "params": {
+        "inChannels": 128,
+        "outChannels": 32,
+        "kernelSize": 3,
+        "padding": 1
+      },
+      "inputs": [
+        "n193"
+      ],
+      "outputs": [
+        "n195"
+      ]
+    },
+    {
+      "id": "n195",
+      "type": "concatenate",
+      "name": "db3_l13_concat",
+      "position": {
+        "x": 300,
+        "y": 29150
+      },
+      "params": {},
+      "inputs": [
+        "n194",
+        "n189"
+      ],
+      "outputs": [
+        "n196",
+        "n201"
+      ]
+    },
+    {
+      "id": "n196",
+      "type": "batchNorm",
+      "name": "db3_l14_bn1",
+      "position": {
+        "x": 300,
+        "y": 29300
+      },
+      "params": {
+        "numFeatures": 672
+      },
+      "inputs": [
+        "n195"
+      ],
+      "outputs": [
+        "n197"
+      ]
+    },
+    {
+      "id": "n197",
+      "type": "relu",
+      "name": "db3_l14_relu1",
+      "position": {
+        "x": 300,
+        "y": 29450
+      },
+      "params": {},
+      "inputs": [
+        "n196"
+      ],
+      "outputs": [
+        "n198"
+      ]
+    },
+    {
+      "id": "n198",
+      "type": "conv2d",
+      "name": "db3_l14_1x1",
+      "position": {
+        "x": 300,
+        "y": 29600
+      },
+      "params": {
+        "inChannels": 672,
+        "outChannels": 128,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n197"
+      ],
+      "outputs": [
+        "n199"
+      ]
+    },
+    {
+      "id": "n199",
+      "type": "relu",
+      "name": "db3_l14_relu2",
+      "position": {
+        "x": 300,
+        "y": 29750
+      },
+      "params": {},
+      "inputs": [
+        "n198"
+      ],
+      "outputs": [
+        "n200"
+      ]
+    },
+    {
+      "id": "n200",
+      "type": "conv2d",
+      "name": "db3_l14_3x3",
+      "position": {
+        "x": 300,
+        "y": 29900
+      },
+      "params": {
+        "inChannels": 128,
+        "outChannels": 32,
+        "kernelSize": 3,
+        "padding": 1
+      },
+      "inputs": [
+        "n199"
+      ],
+      "outputs": [
+        "n201"
+      ]
+    },
+    {
+      "id": "n201",
+      "type": "concatenate",
+      "name": "db3_l14_concat",
+      "position": {
+        "x": 300,
+        "y": 30050
+      },
+      "params": {},
+      "inputs": [
+        "n200",
+        "n195"
+      ],
+      "outputs": [
+        "n202",
+        "n207"
+      ]
+    },
+    {
+      "id": "n202",
+      "type": "batchNorm",
+      "name": "db3_l15_bn1",
+      "position": {
+        "x": 300,
+        "y": 30200
+      },
+      "params": {
+        "numFeatures": 704
+      },
+      "inputs": [
+        "n201"
+      ],
+      "outputs": [
+        "n203"
+      ]
+    },
+    {
+      "id": "n203",
+      "type": "relu",
+      "name": "db3_l15_relu1",
+      "position": {
+        "x": 300,
+        "y": 30350
+      },
+      "params": {},
+      "inputs": [
+        "n202"
+      ],
+      "outputs": [
+        "n204"
+      ]
+    },
+    {
+      "id": "n204",
+      "type": "conv2d",
+      "name": "db3_l15_1x1",
+      "position": {
+        "x": 300,
+        "y": 30500
+      },
+      "params": {
+        "inChannels": 704,
+        "outChannels": 128,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n203"
+      ],
+      "outputs": [
+        "n205"
+      ]
+    },
+    {
+      "id": "n205",
+      "type": "relu",
+      "name": "db3_l15_relu2",
+      "position": {
+        "x": 300,
+        "y": 30650
+      },
+      "params": {},
+      "inputs": [
+        "n204"
+      ],
+      "outputs": [
+        "n206"
+      ]
+    },
+    {
+      "id": "n206",
+      "type": "conv2d",
+      "name": "db3_l15_3x3",
+      "position": {
+        "x": 300,
+        "y": 30800
+      },
+      "params": {
+        "inChannels": 128,
+        "outChannels": 32,
+        "kernelSize": 3,
+        "padding": 1
+      },
+      "inputs": [
+        "n205"
+      ],
+      "outputs": [
+        "n207"
+      ]
+    },
+    {
+      "id": "n207",
+      "type": "concatenate",
+      "name": "db3_l15_concat",
+      "position": {
+        "x": 300,
+        "y": 30950
+      },
+      "params": {},
+      "inputs": [
+        "n206",
+        "n201"
+      ],
+      "outputs": [
+        "n208",
+        "n213"
+      ]
+    },
+    {
+      "id": "n208",
+      "type": "batchNorm",
+      "name": "db3_l16_bn1",
+      "position": {
+        "x": 300,
+        "y": 31100
+      },
+      "params": {
+        "numFeatures": 736
+      },
+      "inputs": [
+        "n207"
+      ],
+      "outputs": [
+        "n209"
+      ]
+    },
+    {
+      "id": "n209",
+      "type": "relu",
+      "name": "db3_l16_relu1",
+      "position": {
+        "x": 300,
+        "y": 31250
+      },
+      "params": {},
+      "inputs": [
+        "n208"
+      ],
+      "outputs": [
+        "n210"
+      ]
+    },
+    {
+      "id": "n210",
+      "type": "conv2d",
+      "name": "db3_l16_1x1",
+      "position": {
+        "x": 300,
+        "y": 31400
+      },
+      "params": {
+        "inChannels": 736,
+        "outChannels": 128,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n209"
+      ],
+      "outputs": [
+        "n211"
+      ]
+    },
+    {
+      "id": "n211",
+      "type": "relu",
+      "name": "db3_l16_relu2",
+      "position": {
+        "x": 300,
+        "y": 31550
+      },
+      "params": {},
+      "inputs": [
+        "n210"
+      ],
+      "outputs": [
+        "n212"
+      ]
+    },
+    {
+      "id": "n212",
+      "type": "conv2d",
+      "name": "db3_l16_3x3",
+      "position": {
+        "x": 300,
+        "y": 31700
+      },
+      "params": {
+        "inChannels": 128,
+        "outChannels": 32,
+        "kernelSize": 3,
+        "padding": 1
+      },
+      "inputs": [
+        "n211"
+      ],
+      "outputs": [
+        "n213"
+      ]
+    },
+    {
+      "id": "n213",
+      "type": "concatenate",
+      "name": "db3_l16_concat",
+      "position": {
+        "x": 300,
+        "y": 31850
+      },
+      "params": {},
+      "inputs": [
+        "n212",
+        "n207"
+      ],
+      "outputs": [
+        "n214",
+        "n219"
+      ]
+    },
+    {
+      "id": "n214",
+      "type": "batchNorm",
+      "name": "db3_l17_bn1",
+      "position": {
+        "x": 300,
+        "y": 32000
+      },
+      "params": {
+        "numFeatures": 768
+      },
+      "inputs": [
+        "n213"
+      ],
+      "outputs": [
+        "n215"
+      ]
+    },
+    {
+      "id": "n215",
+      "type": "relu",
+      "name": "db3_l17_relu1",
+      "position": {
+        "x": 300,
+        "y": 32150
+      },
+      "params": {},
+      "inputs": [
+        "n214"
+      ],
+      "outputs": [
+        "n216"
+      ]
+    },
+    {
+      "id": "n216",
+      "type": "conv2d",
+      "name": "db3_l17_1x1",
+      "position": {
+        "x": 300,
+        "y": 32300
+      },
+      "params": {
+        "inChannels": 768,
+        "outChannels": 128,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n215"
+      ],
+      "outputs": [
+        "n217"
+      ]
+    },
+    {
+      "id": "n217",
+      "type": "relu",
+      "name": "db3_l17_relu2",
+      "position": {
+        "x": 300,
+        "y": 32450
+      },
+      "params": {},
+      "inputs": [
+        "n216"
+      ],
+      "outputs": [
+        "n218"
+      ]
+    },
+    {
+      "id": "n218",
+      "type": "conv2d",
+      "name": "db3_l17_3x3",
+      "position": {
+        "x": 300,
+        "y": 32600
+      },
+      "params": {
+        "inChannels": 128,
+        "outChannels": 32,
+        "kernelSize": 3,
+        "padding": 1
+      },
+      "inputs": [
+        "n217"
+      ],
+      "outputs": [
+        "n219"
+      ]
+    },
+    {
+      "id": "n219",
+      "type": "concatenate",
+      "name": "db3_l17_concat",
+      "position": {
+        "x": 300,
+        "y": 32750
+      },
+      "params": {},
+      "inputs": [
+        "n218",
+        "n213"
+      ],
+      "outputs": [
+        "n220",
+        "n225"
+      ]
+    },
+    {
+      "id": "n220",
+      "type": "batchNorm",
+      "name": "db3_l18_bn1",
+      "position": {
+        "x": 300,
+        "y": 32900
+      },
+      "params": {
+        "numFeatures": 800
+      },
+      "inputs": [
+        "n219"
+      ],
+      "outputs": [
+        "n221"
+      ]
+    },
+    {
+      "id": "n221",
+      "type": "relu",
+      "name": "db3_l18_relu1",
+      "position": {
+        "x": 300,
+        "y": 33050
+      },
+      "params": {},
+      "inputs": [
+        "n220"
+      ],
+      "outputs": [
+        "n222"
+      ]
+    },
+    {
+      "id": "n222",
+      "type": "conv2d",
+      "name": "db3_l18_1x1",
+      "position": {
+        "x": 300,
+        "y": 33200
+      },
+      "params": {
+        "inChannels": 800,
+        "outChannels": 128,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n221"
+      ],
+      "outputs": [
+        "n223"
+      ]
+    },
+    {
+      "id": "n223",
+      "type": "relu",
+      "name": "db3_l18_relu2",
+      "position": {
+        "x": 300,
+        "y": 33350
+      },
+      "params": {},
+      "inputs": [
+        "n222"
+      ],
+      "outputs": [
+        "n224"
+      ]
+    },
+    {
+      "id": "n224",
+      "type": "conv2d",
+      "name": "db3_l18_3x3",
+      "position": {
+        "x": 300,
+        "y": 33500
+      },
+      "params": {
+        "inChannels": 128,
+        "outChannels": 32,
+        "kernelSize": 3,
+        "padding": 1
+      },
+      "inputs": [
+        "n223"
+      ],
+      "outputs": [
+        "n225"
+      ]
+    },
+    {
+      "id": "n225",
+      "type": "concatenate",
+      "name": "db3_l18_concat",
+      "position": {
+        "x": 300,
+        "y": 33650
+      },
+      "params": {},
+      "inputs": [
+        "n224",
+        "n219"
+      ],
+      "outputs": [
+        "n226",
+        "n231"
+      ]
+    },
+    {
+      "id": "n226",
+      "type": "batchNorm",
+      "name": "db3_l19_bn1",
+      "position": {
+        "x": 300,
+        "y": 33800
+      },
+      "params": {
+        "numFeatures": 832
+      },
+      "inputs": [
+        "n225"
+      ],
+      "outputs": [
+        "n227"
+      ]
+    },
+    {
+      "id": "n227",
+      "type": "relu",
+      "name": "db3_l19_relu1",
+      "position": {
+        "x": 300,
+        "y": 33950
+      },
+      "params": {},
+      "inputs": [
+        "n226"
+      ],
+      "outputs": [
+        "n228"
+      ]
+    },
+    {
+      "id": "n228",
+      "type": "conv2d",
+      "name": "db3_l19_1x1",
+      "position": {
+        "x": 300,
+        "y": 34100
+      },
+      "params": {
+        "inChannels": 832,
+        "outChannels": 128,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n227"
+      ],
+      "outputs": [
+        "n229"
+      ]
+    },
+    {
+      "id": "n229",
+      "type": "relu",
+      "name": "db3_l19_relu2",
+      "position": {
+        "x": 300,
+        "y": 34250
+      },
+      "params": {},
+      "inputs": [
+        "n228"
+      ],
+      "outputs": [
+        "n230"
+      ]
+    },
+    {
+      "id": "n230",
+      "type": "conv2d",
+      "name": "db3_l19_3x3",
+      "position": {
+        "x": 300,
+        "y": 34400
+      },
+      "params": {
+        "inChannels": 128,
+        "outChannels": 32,
+        "kernelSize": 3,
+        "padding": 1
+      },
+      "inputs": [
+        "n229"
+      ],
+      "outputs": [
+        "n231"
+      ]
+    },
+    {
+      "id": "n231",
+      "type": "concatenate",
+      "name": "db3_l19_concat",
+      "position": {
+        "x": 300,
+        "y": 34550
+      },
+      "params": {},
+      "inputs": [
+        "n230",
+        "n225"
+      ],
+      "outputs": [
+        "n232",
+        "n237"
+      ]
+    },
+    {
+      "id": "n232",
+      "type": "batchNorm",
+      "name": "db3_l20_bn1",
+      "position": {
+        "x": 300,
+        "y": 34700
+      },
+      "params": {
+        "numFeatures": 864
+      },
+      "inputs": [
+        "n231"
+      ],
+      "outputs": [
+        "n233"
+      ]
+    },
+    {
+      "id": "n233",
+      "type": "relu",
+      "name": "db3_l20_relu1",
+      "position": {
+        "x": 300,
+        "y": 34850
+      },
+      "params": {},
+      "inputs": [
+        "n232"
+      ],
+      "outputs": [
+        "n234"
+      ]
+    },
+    {
+      "id": "n234",
+      "type": "conv2d",
+      "name": "db3_l20_1x1",
+      "position": {
+        "x": 300,
+        "y": 35000
+      },
+      "params": {
+        "inChannels": 864,
+        "outChannels": 128,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n233"
+      ],
+      "outputs": [
+        "n235"
+      ]
+    },
+    {
+      "id": "n235",
+      "type": "relu",
+      "name": "db3_l20_relu2",
+      "position": {
+        "x": 300,
+        "y": 35150
+      },
+      "params": {},
+      "inputs": [
+        "n234"
+      ],
+      "outputs": [
+        "n236"
+      ]
+    },
+    {
+      "id": "n236",
+      "type": "conv2d",
+      "name": "db3_l20_3x3",
+      "position": {
+        "x": 300,
+        "y": 35300
+      },
+      "params": {
+        "inChannels": 128,
+        "outChannels": 32,
+        "kernelSize": 3,
+        "padding": 1
+      },
+      "inputs": [
+        "n235"
+      ],
+      "outputs": [
+        "n237"
+      ]
+    },
+    {
+      "id": "n237",
+      "type": "concatenate",
+      "name": "db3_l20_concat",
+      "position": {
+        "x": 300,
+        "y": 35450
+      },
+      "params": {},
+      "inputs": [
+        "n236",
+        "n231"
+      ],
+      "outputs": [
+        "n238",
+        "n243"
+      ]
+    },
+    {
+      "id": "n238",
+      "type": "batchNorm",
+      "name": "db3_l21_bn1",
+      "position": {
+        "x": 300,
+        "y": 35600
+      },
+      "params": {
+        "numFeatures": 896
+      },
+      "inputs": [
+        "n237"
+      ],
+      "outputs": [
+        "n239"
+      ]
+    },
+    {
+      "id": "n239",
+      "type": "relu",
+      "name": "db3_l21_relu1",
+      "position": {
+        "x": 300,
+        "y": 35750
+      },
+      "params": {},
+      "inputs": [
+        "n238"
+      ],
+      "outputs": [
+        "n240"
+      ]
+    },
+    {
+      "id": "n240",
+      "type": "conv2d",
+      "name": "db3_l21_1x1",
+      "position": {
+        "x": 300,
+        "y": 35900
+      },
+      "params": {
+        "inChannels": 896,
+        "outChannels": 128,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n239"
+      ],
+      "outputs": [
+        "n241"
+      ]
+    },
+    {
+      "id": "n241",
+      "type": "relu",
+      "name": "db3_l21_relu2",
+      "position": {
+        "x": 300,
+        "y": 36050
+      },
+      "params": {},
+      "inputs": [
+        "n240"
+      ],
+      "outputs": [
+        "n242"
+      ]
+    },
+    {
+      "id": "n242",
+      "type": "conv2d",
+      "name": "db3_l21_3x3",
+      "position": {
+        "x": 300,
+        "y": 36200
+      },
+      "params": {
+        "inChannels": 128,
+        "outChannels": 32,
+        "kernelSize": 3,
+        "padding": 1
+      },
+      "inputs": [
+        "n241"
+      ],
+      "outputs": [
+        "n243"
+      ]
+    },
+    {
+      "id": "n243",
+      "type": "concatenate",
+      "name": "db3_l21_concat",
+      "position": {
+        "x": 300,
+        "y": 36350
+      },
+      "params": {},
+      "inputs": [
+        "n242",
+        "n237"
+      ],
+      "outputs": [
+        "n244",
+        "n249"
+      ]
+    },
+    {
+      "id": "n244",
+      "type": "batchNorm",
+      "name": "db3_l22_bn1",
+      "position": {
+        "x": 300,
+        "y": 36500
+      },
+      "params": {
+        "numFeatures": 928
+      },
+      "inputs": [
+        "n243"
+      ],
+      "outputs": [
+        "n245"
+      ]
+    },
+    {
+      "id": "n245",
+      "type": "relu",
+      "name": "db3_l22_relu1",
+      "position": {
+        "x": 300,
+        "y": 36650
+      },
+      "params": {},
+      "inputs": [
+        "n244"
+      ],
+      "outputs": [
+        "n246"
+      ]
+    },
+    {
+      "id": "n246",
+      "type": "conv2d",
+      "name": "db3_l22_1x1",
+      "position": {
+        "x": 300,
+        "y": 36800
+      },
+      "params": {
+        "inChannels": 928,
+        "outChannels": 128,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n245"
+      ],
+      "outputs": [
+        "n247"
+      ]
+    },
+    {
+      "id": "n247",
+      "type": "relu",
+      "name": "db3_l22_relu2",
+      "position": {
+        "x": 300,
+        "y": 36950
+      },
+      "params": {},
+      "inputs": [
+        "n246"
+      ],
+      "outputs": [
+        "n248"
+      ]
+    },
+    {
+      "id": "n248",
+      "type": "conv2d",
+      "name": "db3_l22_3x3",
+      "position": {
+        "x": 300,
+        "y": 37100
+      },
+      "params": {
+        "inChannels": 128,
+        "outChannels": 32,
+        "kernelSize": 3,
+        "padding": 1
+      },
+      "inputs": [
+        "n247"
+      ],
+      "outputs": [
+        "n249"
+      ]
+    },
+    {
+      "id": "n249",
+      "type": "concatenate",
+      "name": "db3_l22_concat",
+      "position": {
+        "x": 300,
+        "y": 37250
+      },
+      "params": {},
+      "inputs": [
+        "n248",
+        "n243"
+      ],
+      "outputs": [
+        "n250",
+        "n255"
+      ]
+    },
+    {
+      "id": "n250",
+      "type": "batchNorm",
+      "name": "db3_l23_bn1",
+      "position": {
+        "x": 300,
+        "y": 37400
+      },
+      "params": {
+        "numFeatures": 960
+      },
+      "inputs": [
+        "n249"
+      ],
+      "outputs": [
+        "n251"
+      ]
+    },
+    {
+      "id": "n251",
+      "type": "relu",
+      "name": "db3_l23_relu1",
+      "position": {
+        "x": 300,
+        "y": 37550
+      },
+      "params": {},
+      "inputs": [
+        "n250"
+      ],
+      "outputs": [
+        "n252"
+      ]
+    },
+    {
+      "id": "n252",
+      "type": "conv2d",
+      "name": "db3_l23_1x1",
+      "position": {
+        "x": 300,
+        "y": 37700
+      },
+      "params": {
+        "inChannels": 960,
+        "outChannels": 128,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n251"
+      ],
+      "outputs": [
+        "n253"
+      ]
+    },
+    {
+      "id": "n253",
+      "type": "relu",
+      "name": "db3_l23_relu2",
+      "position": {
+        "x": 300,
+        "y": 37850
+      },
+      "params": {},
+      "inputs": [
+        "n252"
+      ],
+      "outputs": [
+        "n254"
+      ]
+    },
+    {
+      "id": "n254",
+      "type": "conv2d",
+      "name": "db3_l23_3x3",
+      "position": {
+        "x": 300,
+        "y": 38000
+      },
+      "params": {
+        "inChannels": 128,
+        "outChannels": 32,
+        "kernelSize": 3,
+        "padding": 1
+      },
+      "inputs": [
+        "n253"
+      ],
+      "outputs": [
+        "n255"
+      ]
+    },
+    {
+      "id": "n255",
+      "type": "concatenate",
+      "name": "db3_l23_concat",
+      "position": {
+        "x": 300,
+        "y": 38150
+      },
+      "params": {},
+      "inputs": [
+        "n254",
+        "n249"
+      ],
+      "outputs": [
+        "n256",
+        "n261"
+      ]
+    },
+    {
+      "id": "n256",
+      "type": "batchNorm",
+      "name": "db3_l24_bn1",
+      "position": {
+        "x": 300,
+        "y": 38300
+      },
+      "params": {
+        "numFeatures": 992
+      },
+      "inputs": [
+        "n255"
+      ],
+      "outputs": [
+        "n257"
+      ]
+    },
+    {
+      "id": "n257",
+      "type": "relu",
+      "name": "db3_l24_relu1",
+      "position": {
+        "x": 300,
+        "y": 38450
+      },
+      "params": {},
+      "inputs": [
+        "n256"
+      ],
+      "outputs": [
+        "n258"
+      ]
+    },
+    {
+      "id": "n258",
+      "type": "conv2d",
+      "name": "db3_l24_1x1",
+      "position": {
+        "x": 300,
+        "y": 38600
+      },
+      "params": {
+        "inChannels": 992,
+        "outChannels": 128,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n257"
+      ],
+      "outputs": [
+        "n259"
+      ]
+    },
+    {
+      "id": "n259",
+      "type": "relu",
+      "name": "db3_l24_relu2",
+      "position": {
+        "x": 300,
+        "y": 38750
+      },
+      "params": {},
+      "inputs": [
+        "n258"
+      ],
+      "outputs": [
+        "n260"
+      ]
+    },
+    {
+      "id": "n260",
+      "type": "conv2d",
+      "name": "db3_l24_3x3",
+      "position": {
+        "x": 300,
+        "y": 38900
+      },
+      "params": {
+        "inChannels": 128,
+        "outChannels": 32,
+        "kernelSize": 3,
+        "padding": 1
+      },
+      "inputs": [
+        "n259"
+      ],
+      "outputs": [
+        "n261"
+      ]
+    },
+    {
+      "id": "n261",
+      "type": "concatenate",
+      "name": "db3_l24_concat",
+      "position": {
+        "x": 300,
+        "y": 39050
+      },
+      "params": {},
+      "inputs": [
+        "n260",
+        "n255"
+      ],
+      "outputs": [
+        "n262"
+      ]
+    },
+    {
+      "id": "n262",
+      "type": "batchNorm",
+      "name": "transition_3_bn",
+      "position": {
+        "x": 300,
+        "y": 39200
+      },
+      "params": {
+        "numFeatures": 1024
+      },
+      "inputs": [
+        "n261"
+      ],
+      "outputs": [
+        "n263"
+      ]
+    },
+    {
+      "id": "n263",
+      "type": "conv2d",
+      "name": "transition_3_1x1",
+      "position": {
+        "x": 300,
+        "y": 39350
+      },
+      "params": {
+        "inChannels": 1024,
+        "outChannels": 512,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n262"
+      ],
+      "outputs": [
+        "n264"
+      ]
+    },
+    {
+      "id": "n264",
+      "type": "avgpool2d",
+      "name": "transition_3_pool",
+      "position": {
+        "x": 300,
+        "y": 39500
+      },
+      "params": {
+        "kernelSize": 2,
+        "stride": 2
+      },
+      "inputs": [
+        "n263"
+      ],
+      "outputs": [
+        "n265",
+        "n270"
+      ]
+    },
+    {
+      "id": "n265",
+      "type": "batchNorm",
+      "name": "db4_l1_bn1",
+      "position": {
+        "x": 300,
+        "y": 39650
+      },
+      "params": {
+        "numFeatures": 512
+      },
+      "inputs": [
+        "n264"
+      ],
+      "outputs": [
+        "n266"
+      ]
+    },
+    {
+      "id": "n266",
+      "type": "relu",
+      "name": "db4_l1_relu1",
+      "position": {
+        "x": 300,
+        "y": 39800
+      },
+      "params": {},
+      "inputs": [
+        "n265"
+      ],
+      "outputs": [
+        "n267"
+      ]
+    },
+    {
+      "id": "n267",
+      "type": "conv2d",
+      "name": "db4_l1_1x1",
+      "position": {
+        "x": 300,
+        "y": 39950
+      },
+      "params": {
+        "inChannels": 512,
+        "outChannels": 128,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n266"
+      ],
+      "outputs": [
+        "n268"
+      ]
+    },
+    {
+      "id": "n268",
+      "type": "relu",
+      "name": "db4_l1_relu2",
+      "position": {
+        "x": 300,
+        "y": 40100
+      },
+      "params": {},
+      "inputs": [
+        "n267"
+      ],
+      "outputs": [
+        "n269"
+      ]
+    },
+    {
+      "id": "n269",
+      "type": "conv2d",
+      "name": "db4_l1_3x3",
+      "position": {
+        "x": 300,
+        "y": 40250
+      },
+      "params": {
+        "inChannels": 128,
+        "outChannels": 32,
+        "kernelSize": 3,
+        "padding": 1
+      },
+      "inputs": [
+        "n268"
+      ],
+      "outputs": [
+        "n270"
+      ]
+    },
+    {
+      "id": "n270",
+      "type": "concatenate",
+      "name": "db4_l1_concat",
+      "position": {
+        "x": 300,
+        "y": 40400
+      },
+      "params": {},
+      "inputs": [
+        "n269",
+        "n264"
+      ],
+      "outputs": [
+        "n271",
+        "n276"
+      ]
+    },
+    {
+      "id": "n271",
+      "type": "batchNorm",
+      "name": "db4_l2_bn1",
+      "position": {
+        "x": 300,
+        "y": 40550
+      },
+      "params": {
+        "numFeatures": 544
+      },
+      "inputs": [
+        "n270"
+      ],
+      "outputs": [
+        "n272"
+      ]
+    },
+    {
+      "id": "n272",
+      "type": "relu",
+      "name": "db4_l2_relu1",
+      "position": {
+        "x": 300,
+        "y": 40700
+      },
+      "params": {},
+      "inputs": [
+        "n271"
+      ],
+      "outputs": [
+        "n273"
+      ]
+    },
+    {
+      "id": "n273",
+      "type": "conv2d",
+      "name": "db4_l2_1x1",
+      "position": {
+        "x": 300,
+        "y": 40850
+      },
+      "params": {
+        "inChannels": 544,
+        "outChannels": 128,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n272"
+      ],
+      "outputs": [
+        "n274"
+      ]
+    },
+    {
+      "id": "n274",
+      "type": "relu",
+      "name": "db4_l2_relu2",
+      "position": {
+        "x": 300,
+        "y": 41000
+      },
+      "params": {},
+      "inputs": [
+        "n273"
+      ],
+      "outputs": [
+        "n275"
+      ]
+    },
+    {
+      "id": "n275",
+      "type": "conv2d",
+      "name": "db4_l2_3x3",
+      "position": {
+        "x": 300,
+        "y": 41150
+      },
+      "params": {
+        "inChannels": 128,
+        "outChannels": 32,
+        "kernelSize": 3,
+        "padding": 1
+      },
+      "inputs": [
+        "n274"
+      ],
+      "outputs": [
+        "n276"
+      ]
+    },
+    {
+      "id": "n276",
+      "type": "concatenate",
+      "name": "db4_l2_concat",
+      "position": {
+        "x": 300,
+        "y": 41300
+      },
+      "params": {},
+      "inputs": [
+        "n275",
+        "n270"
+      ],
+      "outputs": [
+        "n277",
+        "n282"
+      ]
+    },
+    {
+      "id": "n277",
+      "type": "batchNorm",
+      "name": "db4_l3_bn1",
+      "position": {
+        "x": 300,
+        "y": 41450
+      },
+      "params": {
+        "numFeatures": 576
+      },
+      "inputs": [
+        "n276"
+      ],
+      "outputs": [
+        "n278"
+      ]
+    },
+    {
+      "id": "n278",
+      "type": "relu",
+      "name": "db4_l3_relu1",
+      "position": {
+        "x": 300,
+        "y": 41600
+      },
+      "params": {},
+      "inputs": [
+        "n277"
+      ],
+      "outputs": [
+        "n279"
+      ]
+    },
+    {
+      "id": "n279",
+      "type": "conv2d",
+      "name": "db4_l3_1x1",
+      "position": {
+        "x": 300,
+        "y": 41750
+      },
+      "params": {
+        "inChannels": 576,
+        "outChannels": 128,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n278"
+      ],
+      "outputs": [
+        "n280"
+      ]
+    },
+    {
+      "id": "n280",
+      "type": "relu",
+      "name": "db4_l3_relu2",
+      "position": {
+        "x": 300,
+        "y": 41900
+      },
+      "params": {},
+      "inputs": [
+        "n279"
+      ],
+      "outputs": [
+        "n281"
+      ]
+    },
+    {
+      "id": "n281",
+      "type": "conv2d",
+      "name": "db4_l3_3x3",
+      "position": {
+        "x": 300,
+        "y": 42050
+      },
+      "params": {
+        "inChannels": 128,
+        "outChannels": 32,
+        "kernelSize": 3,
+        "padding": 1
+      },
+      "inputs": [
+        "n280"
+      ],
+      "outputs": [
+        "n282"
+      ]
+    },
+    {
+      "id": "n282",
+      "type": "concatenate",
+      "name": "db4_l3_concat",
+      "position": {
+        "x": 300,
+        "y": 42200
+      },
+      "params": {},
+      "inputs": [
+        "n281",
+        "n276"
+      ],
+      "outputs": [
+        "n283",
+        "n288"
+      ]
+    },
+    {
+      "id": "n283",
+      "type": "batchNorm",
+      "name": "db4_l4_bn1",
+      "position": {
+        "x": 300,
+        "y": 42350
+      },
+      "params": {
+        "numFeatures": 608
+      },
+      "inputs": [
+        "n282"
+      ],
+      "outputs": [
+        "n284"
+      ]
+    },
+    {
+      "id": "n284",
+      "type": "relu",
+      "name": "db4_l4_relu1",
+      "position": {
+        "x": 300,
+        "y": 42500
+      },
+      "params": {},
+      "inputs": [
+        "n283"
+      ],
+      "outputs": [
+        "n285"
+      ]
+    },
+    {
+      "id": "n285",
+      "type": "conv2d",
+      "name": "db4_l4_1x1",
+      "position": {
+        "x": 300,
+        "y": 42650
+      },
+      "params": {
+        "inChannels": 608,
+        "outChannels": 128,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n284"
+      ],
+      "outputs": [
+        "n286"
+      ]
+    },
+    {
+      "id": "n286",
+      "type": "relu",
+      "name": "db4_l4_relu2",
+      "position": {
+        "x": 300,
+        "y": 42800
+      },
+      "params": {},
+      "inputs": [
+        "n285"
+      ],
+      "outputs": [
+        "n287"
+      ]
+    },
+    {
+      "id": "n287",
+      "type": "conv2d",
+      "name": "db4_l4_3x3",
+      "position": {
+        "x": 300,
+        "y": 42950
+      },
+      "params": {
+        "inChannels": 128,
+        "outChannels": 32,
+        "kernelSize": 3,
+        "padding": 1
+      },
+      "inputs": [
+        "n286"
+      ],
+      "outputs": [
+        "n288"
+      ]
+    },
+    {
+      "id": "n288",
+      "type": "concatenate",
+      "name": "db4_l4_concat",
+      "position": {
+        "x": 300,
+        "y": 43100
+      },
+      "params": {},
+      "inputs": [
+        "n287",
+        "n282"
+      ],
+      "outputs": [
+        "n289",
+        "n294"
+      ]
+    },
+    {
+      "id": "n289",
+      "type": "batchNorm",
+      "name": "db4_l5_bn1",
+      "position": {
+        "x": 300,
+        "y": 43250
+      },
+      "params": {
+        "numFeatures": 640
+      },
+      "inputs": [
+        "n288"
+      ],
+      "outputs": [
+        "n290"
+      ]
+    },
+    {
+      "id": "n290",
+      "type": "relu",
+      "name": "db4_l5_relu1",
+      "position": {
+        "x": 300,
+        "y": 43400
+      },
+      "params": {},
+      "inputs": [
+        "n289"
+      ],
+      "outputs": [
+        "n291"
+      ]
+    },
+    {
+      "id": "n291",
+      "type": "conv2d",
+      "name": "db4_l5_1x1",
+      "position": {
+        "x": 300,
+        "y": 43550
+      },
+      "params": {
+        "inChannels": 640,
+        "outChannels": 128,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n290"
+      ],
+      "outputs": [
+        "n292"
+      ]
+    },
+    {
+      "id": "n292",
+      "type": "relu",
+      "name": "db4_l5_relu2",
+      "position": {
+        "x": 300,
+        "y": 43700
+      },
+      "params": {},
+      "inputs": [
+        "n291"
+      ],
+      "outputs": [
+        "n293"
+      ]
+    },
+    {
+      "id": "n293",
+      "type": "conv2d",
+      "name": "db4_l5_3x3",
+      "position": {
+        "x": 300,
+        "y": 43850
+      },
+      "params": {
+        "inChannels": 128,
+        "outChannels": 32,
+        "kernelSize": 3,
+        "padding": 1
+      },
+      "inputs": [
+        "n292"
+      ],
+      "outputs": [
+        "n294"
+      ]
+    },
+    {
+      "id": "n294",
+      "type": "concatenate",
+      "name": "db4_l5_concat",
+      "position": {
+        "x": 300,
+        "y": 44000
+      },
+      "params": {},
+      "inputs": [
+        "n293",
+        "n288"
+      ],
+      "outputs": [
+        "n295",
+        "n300"
+      ]
+    },
+    {
+      "id": "n295",
+      "type": "batchNorm",
+      "name": "db4_l6_bn1",
+      "position": {
+        "x": 300,
+        "y": 44150
+      },
+      "params": {
+        "numFeatures": 672
+      },
+      "inputs": [
+        "n294"
+      ],
+      "outputs": [
+        "n296"
+      ]
+    },
+    {
+      "id": "n296",
+      "type": "relu",
+      "name": "db4_l6_relu1",
+      "position": {
+        "x": 300,
+        "y": 44300
+      },
+      "params": {},
+      "inputs": [
+        "n295"
+      ],
+      "outputs": [
+        "n297"
+      ]
+    },
+    {
+      "id": "n297",
+      "type": "conv2d",
+      "name": "db4_l6_1x1",
+      "position": {
+        "x": 300,
+        "y": 44450
+      },
+      "params": {
+        "inChannels": 672,
+        "outChannels": 128,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n296"
+      ],
+      "outputs": [
+        "n298"
+      ]
+    },
+    {
+      "id": "n298",
+      "type": "relu",
+      "name": "db4_l6_relu2",
+      "position": {
+        "x": 300,
+        "y": 44600
+      },
+      "params": {},
+      "inputs": [
+        "n297"
+      ],
+      "outputs": [
+        "n299"
+      ]
+    },
+    {
+      "id": "n299",
+      "type": "conv2d",
+      "name": "db4_l6_3x3",
+      "position": {
+        "x": 300,
+        "y": 44750
+      },
+      "params": {
+        "inChannels": 128,
+        "outChannels": 32,
+        "kernelSize": 3,
+        "padding": 1
+      },
+      "inputs": [
+        "n298"
+      ],
+      "outputs": [
+        "n300"
+      ]
+    },
+    {
+      "id": "n300",
+      "type": "concatenate",
+      "name": "db4_l6_concat",
+      "position": {
+        "x": 300,
+        "y": 44900
+      },
+      "params": {},
+      "inputs": [
+        "n299",
+        "n294"
+      ],
+      "outputs": [
+        "n301",
+        "n306"
+      ]
+    },
+    {
+      "id": "n301",
+      "type": "batchNorm",
+      "name": "db4_l7_bn1",
+      "position": {
+        "x": 300,
+        "y": 45050
+      },
+      "params": {
+        "numFeatures": 704
+      },
+      "inputs": [
+        "n300"
+      ],
+      "outputs": [
+        "n302"
+      ]
+    },
+    {
+      "id": "n302",
+      "type": "relu",
+      "name": "db4_l7_relu1",
+      "position": {
+        "x": 300,
+        "y": 45200
+      },
+      "params": {},
+      "inputs": [
+        "n301"
+      ],
+      "outputs": [
+        "n303"
+      ]
+    },
+    {
+      "id": "n303",
+      "type": "conv2d",
+      "name": "db4_l7_1x1",
+      "position": {
+        "x": 300,
+        "y": 45350
+      },
+      "params": {
+        "inChannels": 704,
+        "outChannels": 128,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n302"
+      ],
+      "outputs": [
+        "n304"
+      ]
+    },
+    {
+      "id": "n304",
+      "type": "relu",
+      "name": "db4_l7_relu2",
+      "position": {
+        "x": 300,
+        "y": 45500
+      },
+      "params": {},
+      "inputs": [
+        "n303"
+      ],
+      "outputs": [
+        "n305"
+      ]
+    },
+    {
+      "id": "n305",
+      "type": "conv2d",
+      "name": "db4_l7_3x3",
+      "position": {
+        "x": 300,
+        "y": 45650
+      },
+      "params": {
+        "inChannels": 128,
+        "outChannels": 32,
+        "kernelSize": 3,
+        "padding": 1
+      },
+      "inputs": [
+        "n304"
+      ],
+      "outputs": [
+        "n306"
+      ]
+    },
+    {
+      "id": "n306",
+      "type": "concatenate",
+      "name": "db4_l7_concat",
+      "position": {
+        "x": 300,
+        "y": 45800
+      },
+      "params": {},
+      "inputs": [
+        "n305",
+        "n300"
+      ],
+      "outputs": [
+        "n307",
+        "n312"
+      ]
+    },
+    {
+      "id": "n307",
+      "type": "batchNorm",
+      "name": "db4_l8_bn1",
+      "position": {
+        "x": 300,
+        "y": 45950
+      },
+      "params": {
+        "numFeatures": 736
+      },
+      "inputs": [
+        "n306"
+      ],
+      "outputs": [
+        "n308"
+      ]
+    },
+    {
+      "id": "n308",
+      "type": "relu",
+      "name": "db4_l8_relu1",
+      "position": {
+        "x": 300,
+        "y": 46100
+      },
+      "params": {},
+      "inputs": [
+        "n307"
+      ],
+      "outputs": [
+        "n309"
+      ]
+    },
+    {
+      "id": "n309",
+      "type": "conv2d",
+      "name": "db4_l8_1x1",
+      "position": {
+        "x": 300,
+        "y": 46250
+      },
+      "params": {
+        "inChannels": 736,
+        "outChannels": 128,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n308"
+      ],
+      "outputs": [
+        "n310"
+      ]
+    },
+    {
+      "id": "n310",
+      "type": "relu",
+      "name": "db4_l8_relu2",
+      "position": {
+        "x": 300,
+        "y": 46400
+      },
+      "params": {},
+      "inputs": [
+        "n309"
+      ],
+      "outputs": [
+        "n311"
+      ]
+    },
+    {
+      "id": "n311",
+      "type": "conv2d",
+      "name": "db4_l8_3x3",
+      "position": {
+        "x": 300,
+        "y": 46550
+      },
+      "params": {
+        "inChannels": 128,
+        "outChannels": 32,
+        "kernelSize": 3,
+        "padding": 1
+      },
+      "inputs": [
+        "n310"
+      ],
+      "outputs": [
+        "n312"
+      ]
+    },
+    {
+      "id": "n312",
+      "type": "concatenate",
+      "name": "db4_l8_concat",
+      "position": {
+        "x": 300,
+        "y": 46700
+      },
+      "params": {},
+      "inputs": [
+        "n311",
+        "n306"
+      ],
+      "outputs": [
+        "n313",
+        "n318"
+      ]
+    },
+    {
+      "id": "n313",
+      "type": "batchNorm",
+      "name": "db4_l9_bn1",
+      "position": {
+        "x": 300,
+        "y": 46850
+      },
+      "params": {
+        "numFeatures": 768
+      },
+      "inputs": [
+        "n312"
+      ],
+      "outputs": [
+        "n314"
+      ]
+    },
+    {
+      "id": "n314",
+      "type": "relu",
+      "name": "db4_l9_relu1",
+      "position": {
+        "x": 300,
+        "y": 47000
+      },
+      "params": {},
+      "inputs": [
+        "n313"
+      ],
+      "outputs": [
+        "n315"
+      ]
+    },
+    {
+      "id": "n315",
+      "type": "conv2d",
+      "name": "db4_l9_1x1",
+      "position": {
+        "x": 300,
+        "y": 47150
+      },
+      "params": {
+        "inChannels": 768,
+        "outChannels": 128,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n314"
+      ],
+      "outputs": [
+        "n316"
+      ]
+    },
+    {
+      "id": "n316",
+      "type": "relu",
+      "name": "db4_l9_relu2",
+      "position": {
+        "x": 300,
+        "y": 47300
+      },
+      "params": {},
+      "inputs": [
+        "n315"
+      ],
+      "outputs": [
+        "n317"
+      ]
+    },
+    {
+      "id": "n317",
+      "type": "conv2d",
+      "name": "db4_l9_3x3",
+      "position": {
+        "x": 300,
+        "y": 47450
+      },
+      "params": {
+        "inChannels": 128,
+        "outChannels": 32,
+        "kernelSize": 3,
+        "padding": 1
+      },
+      "inputs": [
+        "n316"
+      ],
+      "outputs": [
+        "n318"
+      ]
+    },
+    {
+      "id": "n318",
+      "type": "concatenate",
+      "name": "db4_l9_concat",
+      "position": {
+        "x": 300,
+        "y": 47600
+      },
+      "params": {},
+      "inputs": [
+        "n317",
+        "n312"
+      ],
+      "outputs": [
+        "n319",
+        "n324"
+      ]
+    },
+    {
+      "id": "n319",
+      "type": "batchNorm",
+      "name": "db4_l10_bn1",
+      "position": {
+        "x": 300,
+        "y": 47750
+      },
+      "params": {
+        "numFeatures": 800
+      },
+      "inputs": [
+        "n318"
+      ],
+      "outputs": [
+        "n320"
+      ]
+    },
+    {
+      "id": "n320",
+      "type": "relu",
+      "name": "db4_l10_relu1",
+      "position": {
+        "x": 300,
+        "y": 47900
+      },
+      "params": {},
+      "inputs": [
+        "n319"
+      ],
+      "outputs": [
+        "n321"
+      ]
+    },
+    {
+      "id": "n321",
+      "type": "conv2d",
+      "name": "db4_l10_1x1",
+      "position": {
+        "x": 300,
+        "y": 48050
+      },
+      "params": {
+        "inChannels": 800,
+        "outChannels": 128,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n320"
+      ],
+      "outputs": [
+        "n322"
+      ]
+    },
+    {
+      "id": "n322",
+      "type": "relu",
+      "name": "db4_l10_relu2",
+      "position": {
+        "x": 300,
+        "y": 48200
+      },
+      "params": {},
+      "inputs": [
+        "n321"
+      ],
+      "outputs": [
+        "n323"
+      ]
+    },
+    {
+      "id": "n323",
+      "type": "conv2d",
+      "name": "db4_l10_3x3",
+      "position": {
+        "x": 300,
+        "y": 48350
+      },
+      "params": {
+        "inChannels": 128,
+        "outChannels": 32,
+        "kernelSize": 3,
+        "padding": 1
+      },
+      "inputs": [
+        "n322"
+      ],
+      "outputs": [
+        "n324"
+      ]
+    },
+    {
+      "id": "n324",
+      "type": "concatenate",
+      "name": "db4_l10_concat",
+      "position": {
+        "x": 300,
+        "y": 48500
+      },
+      "params": {},
+      "inputs": [
+        "n323",
+        "n318"
+      ],
+      "outputs": [
+        "n325",
+        "n330"
+      ]
+    },
+    {
+      "id": "n325",
+      "type": "batchNorm",
+      "name": "db4_l11_bn1",
+      "position": {
+        "x": 300,
+        "y": 48650
+      },
+      "params": {
+        "numFeatures": 832
+      },
+      "inputs": [
+        "n324"
+      ],
+      "outputs": [
+        "n326"
+      ]
+    },
+    {
+      "id": "n326",
+      "type": "relu",
+      "name": "db4_l11_relu1",
+      "position": {
+        "x": 300,
+        "y": 48800
+      },
+      "params": {},
+      "inputs": [
+        "n325"
+      ],
+      "outputs": [
+        "n327"
+      ]
+    },
+    {
+      "id": "n327",
+      "type": "conv2d",
+      "name": "db4_l11_1x1",
+      "position": {
+        "x": 300,
+        "y": 48950
+      },
+      "params": {
+        "inChannels": 832,
+        "outChannels": 128,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n326"
+      ],
+      "outputs": [
+        "n328"
+      ]
+    },
+    {
+      "id": "n328",
+      "type": "relu",
+      "name": "db4_l11_relu2",
+      "position": {
+        "x": 300,
+        "y": 49100
+      },
+      "params": {},
+      "inputs": [
+        "n327"
+      ],
+      "outputs": [
+        "n329"
+      ]
+    },
+    {
+      "id": "n329",
+      "type": "conv2d",
+      "name": "db4_l11_3x3",
+      "position": {
+        "x": 300,
+        "y": 49250
+      },
+      "params": {
+        "inChannels": 128,
+        "outChannels": 32,
+        "kernelSize": 3,
+        "padding": 1
+      },
+      "inputs": [
+        "n328"
+      ],
+      "outputs": [
+        "n330"
+      ]
+    },
+    {
+      "id": "n330",
+      "type": "concatenate",
+      "name": "db4_l11_concat",
+      "position": {
+        "x": 300,
+        "y": 49400
+      },
+      "params": {},
+      "inputs": [
+        "n329",
+        "n324"
+      ],
+      "outputs": [
+        "n331",
+        "n336"
+      ]
+    },
+    {
+      "id": "n331",
+      "type": "batchNorm",
+      "name": "db4_l12_bn1",
+      "position": {
+        "x": 300,
+        "y": 49550
+      },
+      "params": {
+        "numFeatures": 864
+      },
+      "inputs": [
+        "n330"
+      ],
+      "outputs": [
+        "n332"
+      ]
+    },
+    {
+      "id": "n332",
+      "type": "relu",
+      "name": "db4_l12_relu1",
+      "position": {
+        "x": 300,
+        "y": 49700
+      },
+      "params": {},
+      "inputs": [
+        "n331"
+      ],
+      "outputs": [
+        "n333"
+      ]
+    },
+    {
+      "id": "n333",
+      "type": "conv2d",
+      "name": "db4_l12_1x1",
+      "position": {
+        "x": 300,
+        "y": 49850
+      },
+      "params": {
+        "inChannels": 864,
+        "outChannels": 128,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n332"
+      ],
+      "outputs": [
+        "n334"
+      ]
+    },
+    {
+      "id": "n334",
+      "type": "relu",
+      "name": "db4_l12_relu2",
+      "position": {
+        "x": 300,
+        "y": 50000
+      },
+      "params": {},
+      "inputs": [
+        "n333"
+      ],
+      "outputs": [
+        "n335"
+      ]
+    },
+    {
+      "id": "n335",
+      "type": "conv2d",
+      "name": "db4_l12_3x3",
+      "position": {
+        "x": 300,
+        "y": 50150
+      },
+      "params": {
+        "inChannels": 128,
+        "outChannels": 32,
+        "kernelSize": 3,
+        "padding": 1
+      },
+      "inputs": [
+        "n334"
+      ],
+      "outputs": [
+        "n336"
+      ]
+    },
+    {
+      "id": "n336",
+      "type": "concatenate",
+      "name": "db4_l12_concat",
+      "position": {
+        "x": 300,
+        "y": 50300
+      },
+      "params": {},
+      "inputs": [
+        "n335",
+        "n330"
+      ],
+      "outputs": [
+        "n337",
+        "n342"
+      ]
+    },
+    {
+      "id": "n337",
+      "type": "batchNorm",
+      "name": "db4_l13_bn1",
+      "position": {
+        "x": 300,
+        "y": 50450
+      },
+      "params": {
+        "numFeatures": 896
+      },
+      "inputs": [
+        "n336"
+      ],
+      "outputs": [
+        "n338"
+      ]
+    },
+    {
+      "id": "n338",
+      "type": "relu",
+      "name": "db4_l13_relu1",
+      "position": {
+        "x": 300,
+        "y": 50600
+      },
+      "params": {},
+      "inputs": [
+        "n337"
+      ],
+      "outputs": [
+        "n339"
+      ]
+    },
+    {
+      "id": "n339",
+      "type": "conv2d",
+      "name": "db4_l13_1x1",
+      "position": {
+        "x": 300,
+        "y": 50750
+      },
+      "params": {
+        "inChannels": 896,
+        "outChannels": 128,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n338"
+      ],
+      "outputs": [
+        "n340"
+      ]
+    },
+    {
+      "id": "n340",
+      "type": "relu",
+      "name": "db4_l13_relu2",
+      "position": {
+        "x": 300,
+        "y": 50900
+      },
+      "params": {},
+      "inputs": [
+        "n339"
+      ],
+      "outputs": [
+        "n341"
+      ]
+    },
+    {
+      "id": "n341",
+      "type": "conv2d",
+      "name": "db4_l13_3x3",
+      "position": {
+        "x": 300,
+        "y": 51050
+      },
+      "params": {
+        "inChannels": 128,
+        "outChannels": 32,
+        "kernelSize": 3,
+        "padding": 1
+      },
+      "inputs": [
+        "n340"
+      ],
+      "outputs": [
+        "n342"
+      ]
+    },
+    {
+      "id": "n342",
+      "type": "concatenate",
+      "name": "db4_l13_concat",
+      "position": {
+        "x": 300,
+        "y": 51200
+      },
+      "params": {},
+      "inputs": [
+        "n341",
+        "n336"
+      ],
+      "outputs": [
+        "n343",
+        "n348"
+      ]
+    },
+    {
+      "id": "n343",
+      "type": "batchNorm",
+      "name": "db4_l14_bn1",
+      "position": {
+        "x": 300,
+        "y": 51350
+      },
+      "params": {
+        "numFeatures": 928
+      },
+      "inputs": [
+        "n342"
+      ],
+      "outputs": [
+        "n344"
+      ]
+    },
+    {
+      "id": "n344",
+      "type": "relu",
+      "name": "db4_l14_relu1",
+      "position": {
+        "x": 300,
+        "y": 51500
+      },
+      "params": {},
+      "inputs": [
+        "n343"
+      ],
+      "outputs": [
+        "n345"
+      ]
+    },
+    {
+      "id": "n345",
+      "type": "conv2d",
+      "name": "db4_l14_1x1",
+      "position": {
+        "x": 300,
+        "y": 51650
+      },
+      "params": {
+        "inChannels": 928,
+        "outChannels": 128,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n344"
+      ],
+      "outputs": [
+        "n346"
+      ]
+    },
+    {
+      "id": "n346",
+      "type": "relu",
+      "name": "db4_l14_relu2",
+      "position": {
+        "x": 300,
+        "y": 51800
+      },
+      "params": {},
+      "inputs": [
+        "n345"
+      ],
+      "outputs": [
+        "n347"
+      ]
+    },
+    {
+      "id": "n347",
+      "type": "conv2d",
+      "name": "db4_l14_3x3",
+      "position": {
+        "x": 300,
+        "y": 51950
+      },
+      "params": {
+        "inChannels": 128,
+        "outChannels": 32,
+        "kernelSize": 3,
+        "padding": 1
+      },
+      "inputs": [
+        "n346"
+      ],
+      "outputs": [
+        "n348"
+      ]
+    },
+    {
+      "id": "n348",
+      "type": "concatenate",
+      "name": "db4_l14_concat",
+      "position": {
+        "x": 300,
+        "y": 52100
+      },
+      "params": {},
+      "inputs": [
+        "n347",
+        "n342"
+      ],
+      "outputs": [
+        "n349",
+        "n354"
+      ]
+    },
+    {
+      "id": "n349",
+      "type": "batchNorm",
+      "name": "db4_l15_bn1",
+      "position": {
+        "x": 300,
+        "y": 52250
+      },
+      "params": {
+        "numFeatures": 960
+      },
+      "inputs": [
+        "n348"
+      ],
+      "outputs": [
+        "n350"
+      ]
+    },
+    {
+      "id": "n350",
+      "type": "relu",
+      "name": "db4_l15_relu1",
+      "position": {
+        "x": 300,
+        "y": 52400
+      },
+      "params": {},
+      "inputs": [
+        "n349"
+      ],
+      "outputs": [
+        "n351"
+      ]
+    },
+    {
+      "id": "n351",
+      "type": "conv2d",
+      "name": "db4_l15_1x1",
+      "position": {
+        "x": 300,
+        "y": 52550
+      },
+      "params": {
+        "inChannels": 960,
+        "outChannels": 128,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n350"
+      ],
+      "outputs": [
+        "n352"
+      ]
+    },
+    {
+      "id": "n352",
+      "type": "relu",
+      "name": "db4_l15_relu2",
+      "position": {
+        "x": 300,
+        "y": 52700
+      },
+      "params": {},
+      "inputs": [
+        "n351"
+      ],
+      "outputs": [
+        "n353"
+      ]
+    },
+    {
+      "id": "n353",
+      "type": "conv2d",
+      "name": "db4_l15_3x3",
+      "position": {
+        "x": 300,
+        "y": 52850
+      },
+      "params": {
+        "inChannels": 128,
+        "outChannels": 32,
+        "kernelSize": 3,
+        "padding": 1
+      },
+      "inputs": [
+        "n352"
+      ],
+      "outputs": [
+        "n354"
+      ]
+    },
+    {
+      "id": "n354",
+      "type": "concatenate",
+      "name": "db4_l15_concat",
+      "position": {
+        "x": 300,
+        "y": 53000
+      },
+      "params": {},
+      "inputs": [
+        "n353",
+        "n348"
+      ],
+      "outputs": [
+        "n355",
+        "n360"
+      ]
+    },
+    {
+      "id": "n355",
+      "type": "batchNorm",
+      "name": "db4_l16_bn1",
+      "position": {
+        "x": 300,
+        "y": 53150
+      },
+      "params": {
+        "numFeatures": 992
+      },
+      "inputs": [
+        "n354"
+      ],
+      "outputs": [
+        "n356"
+      ]
+    },
+    {
+      "id": "n356",
+      "type": "relu",
+      "name": "db4_l16_relu1",
+      "position": {
+        "x": 300,
+        "y": 53300
+      },
+      "params": {},
+      "inputs": [
+        "n355"
+      ],
+      "outputs": [
+        "n357"
+      ]
+    },
+    {
+      "id": "n357",
+      "type": "conv2d",
+      "name": "db4_l16_1x1",
+      "position": {
+        "x": 300,
+        "y": 53450
+      },
+      "params": {
+        "inChannels": 992,
+        "outChannels": 128,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n356"
+      ],
+      "outputs": [
+        "n358"
+      ]
+    },
+    {
+      "id": "n358",
+      "type": "relu",
+      "name": "db4_l16_relu2",
+      "position": {
+        "x": 300,
+        "y": 53600
+      },
+      "params": {},
+      "inputs": [
+        "n357"
+      ],
+      "outputs": [
+        "n359"
+      ]
+    },
+    {
+      "id": "n359",
+      "type": "conv2d",
+      "name": "db4_l16_3x3",
+      "position": {
+        "x": 300,
+        "y": 53750
+      },
+      "params": {
+        "inChannels": 128,
+        "outChannels": 32,
+        "kernelSize": 3,
+        "padding": 1
+      },
+      "inputs": [
+        "n358"
+      ],
+      "outputs": [
+        "n360"
+      ]
+    },
+    {
+      "id": "n360",
+      "type": "concatenate",
+      "name": "db4_l16_concat",
+      "position": {
+        "x": 300,
+        "y": 53900
+      },
+      "params": {},
+      "inputs": [
+        "n359",
+        "n354"
+      ],
+      "outputs": [
+        "n361"
+      ]
+    },
+    {
+      "id": "n361",
+      "type": "globalAvgPool2d",
+      "name": "avgpool",
+      "position": {
+        "x": 300,
+        "y": 54050
+      },
+      "params": {},
+      "inputs": [
+        "n360"
+      ],
+      "outputs": [
+        "n362"
+      ]
+    },
+    {
+      "id": "n362",
+      "type": "linear",
+      "name": "classifier",
+      "position": {
+        "x": 300,
+        "y": 54200
+      },
+      "params": {
+        "inFeatures": 1024,
+        "outFeatures": 1000
+      },
+      "inputs": [
+        "n361"
+      ],
+      "outputs": [
+        "n363"
+      ]
+    },
+    {
+      "id": "n363",
+      "type": "output",
+      "name": "class_logits",
+      "position": {
+        "x": 300,
+        "y": 54350
+      },
+      "params": {},
+      "inputs": [
+        "n362"
+      ],
+      "outputs": []
+    }
+  ],
+  "connections": [
+    {
+      "id": "c1",
+      "from": "n1",
+      "to": "n2"
+    },
+    {
+      "id": "c2",
+      "from": "n2",
+      "to": "n3"
+    },
+    {
+      "id": "c3",
+      "from": "n3",
+      "to": "n4"
+    },
+    {
+      "id": "c4",
+      "from": "n4",
+      "to": "n5"
+    },
+    {
+      "id": "c5",
+      "from": "n5",
+      "to": "n6"
+    },
+    {
+      "id": "c6",
+      "from": "n6",
+      "to": "n7"
+    },
+    {
+      "id": "c7",
+      "from": "n7",
+      "to": "n8"
+    },
+    {
+      "id": "c8",
+      "from": "n8",
+      "to": "n9"
+    },
+    {
+      "id": "c9",
+      "from": "n3",
+      "to": "n9"
+    },
+    {
+      "id": "c10",
+      "from": "n9",
+      "to": "n10"
+    },
+    {
+      "id": "c11",
+      "from": "n10",
+      "to": "n11"
+    },
+    {
+      "id": "c12",
+      "from": "n11",
+      "to": "n12"
+    },
+    {
+      "id": "c13",
+      "from": "n12",
+      "to": "n13"
+    },
+    {
+      "id": "c14",
+      "from": "n13",
+      "to": "n14"
+    },
+    {
+      "id": "c15",
+      "from": "n14",
+      "to": "n15"
+    },
+    {
+      "id": "c16",
+      "from": "n9",
+      "to": "n15"
+    },
+    {
+      "id": "c17",
+      "from": "n15",
+      "to": "n16"
+    },
+    {
+      "id": "c18",
+      "from": "n16",
+      "to": "n17"
+    },
+    {
+      "id": "c19",
+      "from": "n17",
+      "to": "n18"
+    },
+    {
+      "id": "c20",
+      "from": "n18",
+      "to": "n19"
+    },
+    {
+      "id": "c21",
+      "from": "n19",
+      "to": "n20"
+    },
+    {
+      "id": "c22",
+      "from": "n20",
+      "to": "n21"
+    },
+    {
+      "id": "c23",
+      "from": "n15",
+      "to": "n21"
+    },
+    {
+      "id": "c24",
+      "from": "n21",
+      "to": "n22"
+    },
+    {
+      "id": "c25",
+      "from": "n22",
+      "to": "n23"
+    },
+    {
+      "id": "c26",
+      "from": "n23",
+      "to": "n24"
+    },
+    {
+      "id": "c27",
+      "from": "n24",
+      "to": "n25"
+    },
+    {
+      "id": "c28",
+      "from": "n25",
+      "to": "n26"
+    },
+    {
+      "id": "c29",
+      "from": "n26",
+      "to": "n27"
+    },
+    {
+      "id": "c30",
+      "from": "n21",
+      "to": "n27"
+    },
+    {
+      "id": "c31",
+      "from": "n27",
+      "to": "n28"
+    },
+    {
+      "id": "c32",
+      "from": "n28",
+      "to": "n29"
+    },
+    {
+      "id": "c33",
+      "from": "n29",
+      "to": "n30"
+    },
+    {
+      "id": "c34",
+      "from": "n30",
+      "to": "n31"
+    },
+    {
+      "id": "c35",
+      "from": "n31",
+      "to": "n32"
+    },
+    {
+      "id": "c36",
+      "from": "n32",
+      "to": "n33"
+    },
+    {
+      "id": "c37",
+      "from": "n27",
+      "to": "n33"
+    },
+    {
+      "id": "c38",
+      "from": "n33",
+      "to": "n34"
+    },
+    {
+      "id": "c39",
+      "from": "n34",
+      "to": "n35"
+    },
+    {
+      "id": "c40",
+      "from": "n35",
+      "to": "n36"
+    },
+    {
+      "id": "c41",
+      "from": "n36",
+      "to": "n37"
+    },
+    {
+      "id": "c42",
+      "from": "n37",
+      "to": "n38"
+    },
+    {
+      "id": "c43",
+      "from": "n38",
+      "to": "n39"
+    },
+    {
+      "id": "c44",
+      "from": "n33",
+      "to": "n39"
+    },
+    {
+      "id": "c45",
+      "from": "n39",
+      "to": "n40"
+    },
+    {
+      "id": "c46",
+      "from": "n40",
+      "to": "n41"
+    },
+    {
+      "id": "c47",
+      "from": "n41",
+      "to": "n42"
+    },
+    {
+      "id": "c48",
+      "from": "n42",
+      "to": "n43"
+    },
+    {
+      "id": "c49",
+      "from": "n43",
+      "to": "n44"
+    },
+    {
+      "id": "c50",
+      "from": "n44",
+      "to": "n45"
+    },
+    {
+      "id": "c51",
+      "from": "n45",
+      "to": "n46"
+    },
+    {
+      "id": "c52",
+      "from": "n46",
+      "to": "n47"
+    },
+    {
+      "id": "c53",
+      "from": "n47",
+      "to": "n48"
+    },
+    {
+      "id": "c54",
+      "from": "n42",
+      "to": "n48"
+    },
+    {
+      "id": "c55",
+      "from": "n48",
+      "to": "n49"
+    },
+    {
+      "id": "c56",
+      "from": "n49",
+      "to": "n50"
+    },
+    {
+      "id": "c57",
+      "from": "n50",
+      "to": "n51"
+    },
+    {
+      "id": "c58",
+      "from": "n51",
+      "to": "n52"
+    },
+    {
+      "id": "c59",
+      "from": "n52",
+      "to": "n53"
+    },
+    {
+      "id": "c60",
+      "from": "n53",
+      "to": "n54"
+    },
+    {
+      "id": "c61",
+      "from": "n48",
+      "to": "n54"
+    },
+    {
+      "id": "c62",
+      "from": "n54",
+      "to": "n55"
+    },
+    {
+      "id": "c63",
+      "from": "n55",
+      "to": "n56"
+    },
+    {
+      "id": "c64",
+      "from": "n56",
+      "to": "n57"
+    },
+    {
+      "id": "c65",
+      "from": "n57",
+      "to": "n58"
+    },
+    {
+      "id": "c66",
+      "from": "n58",
+      "to": "n59"
+    },
+    {
+      "id": "c67",
+      "from": "n59",
+      "to": "n60"
+    },
+    {
+      "id": "c68",
+      "from": "n54",
+      "to": "n60"
+    },
+    {
+      "id": "c69",
+      "from": "n60",
+      "to": "n61"
+    },
+    {
+      "id": "c70",
+      "from": "n61",
+      "to": "n62"
+    },
+    {
+      "id": "c71",
+      "from": "n62",
+      "to": "n63"
+    },
+    {
+      "id": "c72",
+      "from": "n63",
+      "to": "n64"
+    },
+    {
+      "id": "c73",
+      "from": "n64",
+      "to": "n65"
+    },
+    {
+      "id": "c74",
+      "from": "n65",
+      "to": "n66"
+    },
+    {
+      "id": "c75",
+      "from": "n60",
+      "to": "n66"
+    },
+    {
+      "id": "c76",
+      "from": "n66",
+      "to": "n67"
+    },
+    {
+      "id": "c77",
+      "from": "n67",
+      "to": "n68"
+    },
+    {
+      "id": "c78",
+      "from": "n68",
+      "to": "n69"
+    },
+    {
+      "id": "c79",
+      "from": "n69",
+      "to": "n70"
+    },
+    {
+      "id": "c80",
+      "from": "n70",
+      "to": "n71"
+    },
+    {
+      "id": "c81",
+      "from": "n71",
+      "to": "n72"
+    },
+    {
+      "id": "c82",
+      "from": "n66",
+      "to": "n72"
+    },
+    {
+      "id": "c83",
+      "from": "n72",
+      "to": "n73"
+    },
+    {
+      "id": "c84",
+      "from": "n73",
+      "to": "n74"
+    },
+    {
+      "id": "c85",
+      "from": "n74",
+      "to": "n75"
+    },
+    {
+      "id": "c86",
+      "from": "n75",
+      "to": "n76"
+    },
+    {
+      "id": "c87",
+      "from": "n76",
+      "to": "n77"
+    },
+    {
+      "id": "c88",
+      "from": "n77",
+      "to": "n78"
+    },
+    {
+      "id": "c89",
+      "from": "n72",
+      "to": "n78"
+    },
+    {
+      "id": "c90",
+      "from": "n78",
+      "to": "n79"
+    },
+    {
+      "id": "c91",
+      "from": "n79",
+      "to": "n80"
+    },
+    {
+      "id": "c92",
+      "from": "n80",
+      "to": "n81"
+    },
+    {
+      "id": "c93",
+      "from": "n81",
+      "to": "n82"
+    },
+    {
+      "id": "c94",
+      "from": "n82",
+      "to": "n83"
+    },
+    {
+      "id": "c95",
+      "from": "n83",
+      "to": "n84"
+    },
+    {
+      "id": "c96",
+      "from": "n78",
+      "to": "n84"
+    },
+    {
+      "id": "c97",
+      "from": "n84",
+      "to": "n85"
+    },
+    {
+      "id": "c98",
+      "from": "n85",
+      "to": "n86"
+    },
+    {
+      "id": "c99",
+      "from": "n86",
+      "to": "n87"
+    },
+    {
+      "id": "c100",
+      "from": "n87",
+      "to": "n88"
+    },
+    {
+      "id": "c101",
+      "from": "n88",
+      "to": "n89"
+    },
+    {
+      "id": "c102",
+      "from": "n89",
+      "to": "n90"
+    },
+    {
+      "id": "c103",
+      "from": "n84",
+      "to": "n90"
+    },
+    {
+      "id": "c104",
+      "from": "n90",
+      "to": "n91"
+    },
+    {
+      "id": "c105",
+      "from": "n91",
+      "to": "n92"
+    },
+    {
+      "id": "c106",
+      "from": "n92",
+      "to": "n93"
+    },
+    {
+      "id": "c107",
+      "from": "n93",
+      "to": "n94"
+    },
+    {
+      "id": "c108",
+      "from": "n94",
+      "to": "n95"
+    },
+    {
+      "id": "c109",
+      "from": "n95",
+      "to": "n96"
+    },
+    {
+      "id": "c110",
+      "from": "n90",
+      "to": "n96"
+    },
+    {
+      "id": "c111",
+      "from": "n96",
+      "to": "n97"
+    },
+    {
+      "id": "c112",
+      "from": "n97",
+      "to": "n98"
+    },
+    {
+      "id": "c113",
+      "from": "n98",
+      "to": "n99"
+    },
+    {
+      "id": "c114",
+      "from": "n99",
+      "to": "n100"
+    },
+    {
+      "id": "c115",
+      "from": "n100",
+      "to": "n101"
+    },
+    {
+      "id": "c116",
+      "from": "n101",
+      "to": "n102"
+    },
+    {
+      "id": "c117",
+      "from": "n96",
+      "to": "n102"
+    },
+    {
+      "id": "c118",
+      "from": "n102",
+      "to": "n103"
+    },
+    {
+      "id": "c119",
+      "from": "n103",
+      "to": "n104"
+    },
+    {
+      "id": "c120",
+      "from": "n104",
+      "to": "n105"
+    },
+    {
+      "id": "c121",
+      "from": "n105",
+      "to": "n106"
+    },
+    {
+      "id": "c122",
+      "from": "n106",
+      "to": "n107"
+    },
+    {
+      "id": "c123",
+      "from": "n107",
+      "to": "n108"
+    },
+    {
+      "id": "c124",
+      "from": "n102",
+      "to": "n108"
+    },
+    {
+      "id": "c125",
+      "from": "n108",
+      "to": "n109"
+    },
+    {
+      "id": "c126",
+      "from": "n109",
+      "to": "n110"
+    },
+    {
+      "id": "c127",
+      "from": "n110",
+      "to": "n111"
+    },
+    {
+      "id": "c128",
+      "from": "n111",
+      "to": "n112"
+    },
+    {
+      "id": "c129",
+      "from": "n112",
+      "to": "n113"
+    },
+    {
+      "id": "c130",
+      "from": "n113",
+      "to": "n114"
+    },
+    {
+      "id": "c131",
+      "from": "n108",
+      "to": "n114"
+    },
+    {
+      "id": "c132",
+      "from": "n114",
+      "to": "n115"
+    },
+    {
+      "id": "c133",
+      "from": "n115",
+      "to": "n116"
+    },
+    {
+      "id": "c134",
+      "from": "n116",
+      "to": "n117"
+    },
+    {
+      "id": "c135",
+      "from": "n117",
+      "to": "n118"
+    },
+    {
+      "id": "c136",
+      "from": "n118",
+      "to": "n119"
+    },
+    {
+      "id": "c137",
+      "from": "n119",
+      "to": "n120"
+    },
+    {
+      "id": "c138",
+      "from": "n120",
+      "to": "n121"
+    },
+    {
+      "id": "c139",
+      "from": "n121",
+      "to": "n122"
+    },
+    {
+      "id": "c140",
+      "from": "n122",
+      "to": "n123"
+    },
+    {
+      "id": "c141",
+      "from": "n117",
+      "to": "n123"
+    },
+    {
+      "id": "c142",
+      "from": "n123",
+      "to": "n124"
+    },
+    {
+      "id": "c143",
+      "from": "n124",
+      "to": "n125"
+    },
+    {
+      "id": "c144",
+      "from": "n125",
+      "to": "n126"
+    },
+    {
+      "id": "c145",
+      "from": "n126",
+      "to": "n127"
+    },
+    {
+      "id": "c146",
+      "from": "n127",
+      "to": "n128"
+    },
+    {
+      "id": "c147",
+      "from": "n128",
+      "to": "n129"
+    },
+    {
+      "id": "c148",
+      "from": "n123",
+      "to": "n129"
+    },
+    {
+      "id": "c149",
+      "from": "n129",
+      "to": "n130"
+    },
+    {
+      "id": "c150",
+      "from": "n130",
+      "to": "n131"
+    },
+    {
+      "id": "c151",
+      "from": "n131",
+      "to": "n132"
+    },
+    {
+      "id": "c152",
+      "from": "n132",
+      "to": "n133"
+    },
+    {
+      "id": "c153",
+      "from": "n133",
+      "to": "n134"
+    },
+    {
+      "id": "c154",
+      "from": "n134",
+      "to": "n135"
+    },
+    {
+      "id": "c155",
+      "from": "n129",
+      "to": "n135"
+    },
+    {
+      "id": "c156",
+      "from": "n135",
+      "to": "n136"
+    },
+    {
+      "id": "c157",
+      "from": "n136",
+      "to": "n137"
+    },
+    {
+      "id": "c158",
+      "from": "n137",
+      "to": "n138"
+    },
+    {
+      "id": "c159",
+      "from": "n138",
+      "to": "n139"
+    },
+    {
+      "id": "c160",
+      "from": "n139",
+      "to": "n140"
+    },
+    {
+      "id": "c161",
+      "from": "n140",
+      "to": "n141"
+    },
+    {
+      "id": "c162",
+      "from": "n135",
+      "to": "n141"
+    },
+    {
+      "id": "c163",
+      "from": "n141",
+      "to": "n142"
+    },
+    {
+      "id": "c164",
+      "from": "n142",
+      "to": "n143"
+    },
+    {
+      "id": "c165",
+      "from": "n143",
+      "to": "n144"
+    },
+    {
+      "id": "c166",
+      "from": "n144",
+      "to": "n145"
+    },
+    {
+      "id": "c167",
+      "from": "n145",
+      "to": "n146"
+    },
+    {
+      "id": "c168",
+      "from": "n146",
+      "to": "n147"
+    },
+    {
+      "id": "c169",
+      "from": "n141",
+      "to": "n147"
+    },
+    {
+      "id": "c170",
+      "from": "n147",
+      "to": "n148"
+    },
+    {
+      "id": "c171",
+      "from": "n148",
+      "to": "n149"
+    },
+    {
+      "id": "c172",
+      "from": "n149",
+      "to": "n150"
+    },
+    {
+      "id": "c173",
+      "from": "n150",
+      "to": "n151"
+    },
+    {
+      "id": "c174",
+      "from": "n151",
+      "to": "n152"
+    },
+    {
+      "id": "c175",
+      "from": "n152",
+      "to": "n153"
+    },
+    {
+      "id": "c176",
+      "from": "n147",
+      "to": "n153"
+    },
+    {
+      "id": "c177",
+      "from": "n153",
+      "to": "n154"
+    },
+    {
+      "id": "c178",
+      "from": "n154",
+      "to": "n155"
+    },
+    {
+      "id": "c179",
+      "from": "n155",
+      "to": "n156"
+    },
+    {
+      "id": "c180",
+      "from": "n156",
+      "to": "n157"
+    },
+    {
+      "id": "c181",
+      "from": "n157",
+      "to": "n158"
+    },
+    {
+      "id": "c182",
+      "from": "n158",
+      "to": "n159"
+    },
+    {
+      "id": "c183",
+      "from": "n153",
+      "to": "n159"
+    },
+    {
+      "id": "c184",
+      "from": "n159",
+      "to": "n160"
+    },
+    {
+      "id": "c185",
+      "from": "n160",
+      "to": "n161"
+    },
+    {
+      "id": "c186",
+      "from": "n161",
+      "to": "n162"
+    },
+    {
+      "id": "c187",
+      "from": "n162",
+      "to": "n163"
+    },
+    {
+      "id": "c188",
+      "from": "n163",
+      "to": "n164"
+    },
+    {
+      "id": "c189",
+      "from": "n164",
+      "to": "n165"
+    },
+    {
+      "id": "c190",
+      "from": "n159",
+      "to": "n165"
+    },
+    {
+      "id": "c191",
+      "from": "n165",
+      "to": "n166"
+    },
+    {
+      "id": "c192",
+      "from": "n166",
+      "to": "n167"
+    },
+    {
+      "id": "c193",
+      "from": "n167",
+      "to": "n168"
+    },
+    {
+      "id": "c194",
+      "from": "n168",
+      "to": "n169"
+    },
+    {
+      "id": "c195",
+      "from": "n169",
+      "to": "n170"
+    },
+    {
+      "id": "c196",
+      "from": "n170",
+      "to": "n171"
+    },
+    {
+      "id": "c197",
+      "from": "n165",
+      "to": "n171"
+    },
+    {
+      "id": "c198",
+      "from": "n171",
+      "to": "n172"
+    },
+    {
+      "id": "c199",
+      "from": "n172",
+      "to": "n173"
+    },
+    {
+      "id": "c200",
+      "from": "n173",
+      "to": "n174"
+    },
+    {
+      "id": "c201",
+      "from": "n174",
+      "to": "n175"
+    },
+    {
+      "id": "c202",
+      "from": "n175",
+      "to": "n176"
+    },
+    {
+      "id": "c203",
+      "from": "n176",
+      "to": "n177"
+    },
+    {
+      "id": "c204",
+      "from": "n171",
+      "to": "n177"
+    },
+    {
+      "id": "c205",
+      "from": "n177",
+      "to": "n178"
+    },
+    {
+      "id": "c206",
+      "from": "n178",
+      "to": "n179"
+    },
+    {
+      "id": "c207",
+      "from": "n179",
+      "to": "n180"
+    },
+    {
+      "id": "c208",
+      "from": "n180",
+      "to": "n181"
+    },
+    {
+      "id": "c209",
+      "from": "n181",
+      "to": "n182"
+    },
+    {
+      "id": "c210",
+      "from": "n182",
+      "to": "n183"
+    },
+    {
+      "id": "c211",
+      "from": "n177",
+      "to": "n183"
+    },
+    {
+      "id": "c212",
+      "from": "n183",
+      "to": "n184"
+    },
+    {
+      "id": "c213",
+      "from": "n184",
+      "to": "n185"
+    },
+    {
+      "id": "c214",
+      "from": "n185",
+      "to": "n186"
+    },
+    {
+      "id": "c215",
+      "from": "n186",
+      "to": "n187"
+    },
+    {
+      "id": "c216",
+      "from": "n187",
+      "to": "n188"
+    },
+    {
+      "id": "c217",
+      "from": "n188",
+      "to": "n189"
+    },
+    {
+      "id": "c218",
+      "from": "n183",
+      "to": "n189"
+    },
+    {
+      "id": "c219",
+      "from": "n189",
+      "to": "n190"
+    },
+    {
+      "id": "c220",
+      "from": "n190",
+      "to": "n191"
+    },
+    {
+      "id": "c221",
+      "from": "n191",
+      "to": "n192"
+    },
+    {
+      "id": "c222",
+      "from": "n192",
+      "to": "n193"
+    },
+    {
+      "id": "c223",
+      "from": "n193",
+      "to": "n194"
+    },
+    {
+      "id": "c224",
+      "from": "n194",
+      "to": "n195"
+    },
+    {
+      "id": "c225",
+      "from": "n189",
+      "to": "n195"
+    },
+    {
+      "id": "c226",
+      "from": "n195",
+      "to": "n196"
+    },
+    {
+      "id": "c227",
+      "from": "n196",
+      "to": "n197"
+    },
+    {
+      "id": "c228",
+      "from": "n197",
+      "to": "n198"
+    },
+    {
+      "id": "c229",
+      "from": "n198",
+      "to": "n199"
+    },
+    {
+      "id": "c230",
+      "from": "n199",
+      "to": "n200"
+    },
+    {
+      "id": "c231",
+      "from": "n200",
+      "to": "n201"
+    },
+    {
+      "id": "c232",
+      "from": "n195",
+      "to": "n201"
+    },
+    {
+      "id": "c233",
+      "from": "n201",
+      "to": "n202"
+    },
+    {
+      "id": "c234",
+      "from": "n202",
+      "to": "n203"
+    },
+    {
+      "id": "c235",
+      "from": "n203",
+      "to": "n204"
+    },
+    {
+      "id": "c236",
+      "from": "n204",
+      "to": "n205"
+    },
+    {
+      "id": "c237",
+      "from": "n205",
+      "to": "n206"
+    },
+    {
+      "id": "c238",
+      "from": "n206",
+      "to": "n207"
+    },
+    {
+      "id": "c239",
+      "from": "n201",
+      "to": "n207"
+    },
+    {
+      "id": "c240",
+      "from": "n207",
+      "to": "n208"
+    },
+    {
+      "id": "c241",
+      "from": "n208",
+      "to": "n209"
+    },
+    {
+      "id": "c242",
+      "from": "n209",
+      "to": "n210"
+    },
+    {
+      "id": "c243",
+      "from": "n210",
+      "to": "n211"
+    },
+    {
+      "id": "c244",
+      "from": "n211",
+      "to": "n212"
+    },
+    {
+      "id": "c245",
+      "from": "n212",
+      "to": "n213"
+    },
+    {
+      "id": "c246",
+      "from": "n207",
+      "to": "n213"
+    },
+    {
+      "id": "c247",
+      "from": "n213",
+      "to": "n214"
+    },
+    {
+      "id": "c248",
+      "from": "n214",
+      "to": "n215"
+    },
+    {
+      "id": "c249",
+      "from": "n215",
+      "to": "n216"
+    },
+    {
+      "id": "c250",
+      "from": "n216",
+      "to": "n217"
+    },
+    {
+      "id": "c251",
+      "from": "n217",
+      "to": "n218"
+    },
+    {
+      "id": "c252",
+      "from": "n218",
+      "to": "n219"
+    },
+    {
+      "id": "c253",
+      "from": "n213",
+      "to": "n219"
+    },
+    {
+      "id": "c254",
+      "from": "n219",
+      "to": "n220"
+    },
+    {
+      "id": "c255",
+      "from": "n220",
+      "to": "n221"
+    },
+    {
+      "id": "c256",
+      "from": "n221",
+      "to": "n222"
+    },
+    {
+      "id": "c257",
+      "from": "n222",
+      "to": "n223"
+    },
+    {
+      "id": "c258",
+      "from": "n223",
+      "to": "n224"
+    },
+    {
+      "id": "c259",
+      "from": "n224",
+      "to": "n225"
+    },
+    {
+      "id": "c260",
+      "from": "n219",
+      "to": "n225"
+    },
+    {
+      "id": "c261",
+      "from": "n225",
+      "to": "n226"
+    },
+    {
+      "id": "c262",
+      "from": "n226",
+      "to": "n227"
+    },
+    {
+      "id": "c263",
+      "from": "n227",
+      "to": "n228"
+    },
+    {
+      "id": "c264",
+      "from": "n228",
+      "to": "n229"
+    },
+    {
+      "id": "c265",
+      "from": "n229",
+      "to": "n230"
+    },
+    {
+      "id": "c266",
+      "from": "n230",
+      "to": "n231"
+    },
+    {
+      "id": "c267",
+      "from": "n225",
+      "to": "n231"
+    },
+    {
+      "id": "c268",
+      "from": "n231",
+      "to": "n232"
+    },
+    {
+      "id": "c269",
+      "from": "n232",
+      "to": "n233"
+    },
+    {
+      "id": "c270",
+      "from": "n233",
+      "to": "n234"
+    },
+    {
+      "id": "c271",
+      "from": "n234",
+      "to": "n235"
+    },
+    {
+      "id": "c272",
+      "from": "n235",
+      "to": "n236"
+    },
+    {
+      "id": "c273",
+      "from": "n236",
+      "to": "n237"
+    },
+    {
+      "id": "c274",
+      "from": "n231",
+      "to": "n237"
+    },
+    {
+      "id": "c275",
+      "from": "n237",
+      "to": "n238"
+    },
+    {
+      "id": "c276",
+      "from": "n238",
+      "to": "n239"
+    },
+    {
+      "id": "c277",
+      "from": "n239",
+      "to": "n240"
+    },
+    {
+      "id": "c278",
+      "from": "n240",
+      "to": "n241"
+    },
+    {
+      "id": "c279",
+      "from": "n241",
+      "to": "n242"
+    },
+    {
+      "id": "c280",
+      "from": "n242",
+      "to": "n243"
+    },
+    {
+      "id": "c281",
+      "from": "n237",
+      "to": "n243"
+    },
+    {
+      "id": "c282",
+      "from": "n243",
+      "to": "n244"
+    },
+    {
+      "id": "c283",
+      "from": "n244",
+      "to": "n245"
+    },
+    {
+      "id": "c284",
+      "from": "n245",
+      "to": "n246"
+    },
+    {
+      "id": "c285",
+      "from": "n246",
+      "to": "n247"
+    },
+    {
+      "id": "c286",
+      "from": "n247",
+      "to": "n248"
+    },
+    {
+      "id": "c287",
+      "from": "n248",
+      "to": "n249"
+    },
+    {
+      "id": "c288",
+      "from": "n243",
+      "to": "n249"
+    },
+    {
+      "id": "c289",
+      "from": "n249",
+      "to": "n250"
+    },
+    {
+      "id": "c290",
+      "from": "n250",
+      "to": "n251"
+    },
+    {
+      "id": "c291",
+      "from": "n251",
+      "to": "n252"
+    },
+    {
+      "id": "c292",
+      "from": "n252",
+      "to": "n253"
+    },
+    {
+      "id": "c293",
+      "from": "n253",
+      "to": "n254"
+    },
+    {
+      "id": "c294",
+      "from": "n254",
+      "to": "n255"
+    },
+    {
+      "id": "c295",
+      "from": "n249",
+      "to": "n255"
+    },
+    {
+      "id": "c296",
+      "from": "n255",
+      "to": "n256"
+    },
+    {
+      "id": "c297",
+      "from": "n256",
+      "to": "n257"
+    },
+    {
+      "id": "c298",
+      "from": "n257",
+      "to": "n258"
+    },
+    {
+      "id": "c299",
+      "from": "n258",
+      "to": "n259"
+    },
+    {
+      "id": "c300",
+      "from": "n259",
+      "to": "n260"
+    },
+    {
+      "id": "c301",
+      "from": "n260",
+      "to": "n261"
+    },
+    {
+      "id": "c302",
+      "from": "n255",
+      "to": "n261"
+    },
+    {
+      "id": "c303",
+      "from": "n261",
+      "to": "n262"
+    },
+    {
+      "id": "c304",
+      "from": "n262",
+      "to": "n263"
+    },
+    {
+      "id": "c305",
+      "from": "n263",
+      "to": "n264"
+    },
+    {
+      "id": "c306",
+      "from": "n264",
+      "to": "n265"
+    },
+    {
+      "id": "c307",
+      "from": "n265",
+      "to": "n266"
+    },
+    {
+      "id": "c308",
+      "from": "n266",
+      "to": "n267"
+    },
+    {
+      "id": "c309",
+      "from": "n267",
+      "to": "n268"
+    },
+    {
+      "id": "c310",
+      "from": "n268",
+      "to": "n269"
+    },
+    {
+      "id": "c311",
+      "from": "n269",
+      "to": "n270"
+    },
+    {
+      "id": "c312",
+      "from": "n264",
+      "to": "n270"
+    },
+    {
+      "id": "c313",
+      "from": "n270",
+      "to": "n271"
+    },
+    {
+      "id": "c314",
+      "from": "n271",
+      "to": "n272"
+    },
+    {
+      "id": "c315",
+      "from": "n272",
+      "to": "n273"
+    },
+    {
+      "id": "c316",
+      "from": "n273",
+      "to": "n274"
+    },
+    {
+      "id": "c317",
+      "from": "n274",
+      "to": "n275"
+    },
+    {
+      "id": "c318",
+      "from": "n275",
+      "to": "n276"
+    },
+    {
+      "id": "c319",
+      "from": "n270",
+      "to": "n276"
+    },
+    {
+      "id": "c320",
+      "from": "n276",
+      "to": "n277"
+    },
+    {
+      "id": "c321",
+      "from": "n277",
+      "to": "n278"
+    },
+    {
+      "id": "c322",
+      "from": "n278",
+      "to": "n279"
+    },
+    {
+      "id": "c323",
+      "from": "n279",
+      "to": "n280"
+    },
+    {
+      "id": "c324",
+      "from": "n280",
+      "to": "n281"
+    },
+    {
+      "id": "c325",
+      "from": "n281",
+      "to": "n282"
+    },
+    {
+      "id": "c326",
+      "from": "n276",
+      "to": "n282"
+    },
+    {
+      "id": "c327",
+      "from": "n282",
+      "to": "n283"
+    },
+    {
+      "id": "c328",
+      "from": "n283",
+      "to": "n284"
+    },
+    {
+      "id": "c329",
+      "from": "n284",
+      "to": "n285"
+    },
+    {
+      "id": "c330",
+      "from": "n285",
+      "to": "n286"
+    },
+    {
+      "id": "c331",
+      "from": "n286",
+      "to": "n287"
+    },
+    {
+      "id": "c332",
+      "from": "n287",
+      "to": "n288"
+    },
+    {
+      "id": "c333",
+      "from": "n282",
+      "to": "n288"
+    },
+    {
+      "id": "c334",
+      "from": "n288",
+      "to": "n289"
+    },
+    {
+      "id": "c335",
+      "from": "n289",
+      "to": "n290"
+    },
+    {
+      "id": "c336",
+      "from": "n290",
+      "to": "n291"
+    },
+    {
+      "id": "c337",
+      "from": "n291",
+      "to": "n292"
+    },
+    {
+      "id": "c338",
+      "from": "n292",
+      "to": "n293"
+    },
+    {
+      "id": "c339",
+      "from": "n293",
+      "to": "n294"
+    },
+    {
+      "id": "c340",
+      "from": "n288",
+      "to": "n294"
+    },
+    {
+      "id": "c341",
+      "from": "n294",
+      "to": "n295"
+    },
+    {
+      "id": "c342",
+      "from": "n295",
+      "to": "n296"
+    },
+    {
+      "id": "c343",
+      "from": "n296",
+      "to": "n297"
+    },
+    {
+      "id": "c344",
+      "from": "n297",
+      "to": "n298"
+    },
+    {
+      "id": "c345",
+      "from": "n298",
+      "to": "n299"
+    },
+    {
+      "id": "c346",
+      "from": "n299",
+      "to": "n300"
+    },
+    {
+      "id": "c347",
+      "from": "n294",
+      "to": "n300"
+    },
+    {
+      "id": "c348",
+      "from": "n300",
+      "to": "n301"
+    },
+    {
+      "id": "c349",
+      "from": "n301",
+      "to": "n302"
+    },
+    {
+      "id": "c350",
+      "from": "n302",
+      "to": "n303"
+    },
+    {
+      "id": "c351",
+      "from": "n303",
+      "to": "n304"
+    },
+    {
+      "id": "c352",
+      "from": "n304",
+      "to": "n305"
+    },
+    {
+      "id": "c353",
+      "from": "n305",
+      "to": "n306"
+    },
+    {
+      "id": "c354",
+      "from": "n300",
+      "to": "n306"
+    },
+    {
+      "id": "c355",
+      "from": "n306",
+      "to": "n307"
+    },
+    {
+      "id": "c356",
+      "from": "n307",
+      "to": "n308"
+    },
+    {
+      "id": "c357",
+      "from": "n308",
+      "to": "n309"
+    },
+    {
+      "id": "c358",
+      "from": "n309",
+      "to": "n310"
+    },
+    {
+      "id": "c359",
+      "from": "n310",
+      "to": "n311"
+    },
+    {
+      "id": "c360",
+      "from": "n311",
+      "to": "n312"
+    },
+    {
+      "id": "c361",
+      "from": "n306",
+      "to": "n312"
+    },
+    {
+      "id": "c362",
+      "from": "n312",
+      "to": "n313"
+    },
+    {
+      "id": "c363",
+      "from": "n313",
+      "to": "n314"
+    },
+    {
+      "id": "c364",
+      "from": "n314",
+      "to": "n315"
+    },
+    {
+      "id": "c365",
+      "from": "n315",
+      "to": "n316"
+    },
+    {
+      "id": "c366",
+      "from": "n316",
+      "to": "n317"
+    },
+    {
+      "id": "c367",
+      "from": "n317",
+      "to": "n318"
+    },
+    {
+      "id": "c368",
+      "from": "n312",
+      "to": "n318"
+    },
+    {
+      "id": "c369",
+      "from": "n318",
+      "to": "n319"
+    },
+    {
+      "id": "c370",
+      "from": "n319",
+      "to": "n320"
+    },
+    {
+      "id": "c371",
+      "from": "n320",
+      "to": "n321"
+    },
+    {
+      "id": "c372",
+      "from": "n321",
+      "to": "n322"
+    },
+    {
+      "id": "c373",
+      "from": "n322",
+      "to": "n323"
+    },
+    {
+      "id": "c374",
+      "from": "n323",
+      "to": "n324"
+    },
+    {
+      "id": "c375",
+      "from": "n318",
+      "to": "n324"
+    },
+    {
+      "id": "c376",
+      "from": "n324",
+      "to": "n325"
+    },
+    {
+      "id": "c377",
+      "from": "n325",
+      "to": "n326"
+    },
+    {
+      "id": "c378",
+      "from": "n326",
+      "to": "n327"
+    },
+    {
+      "id": "c379",
+      "from": "n327",
+      "to": "n328"
+    },
+    {
+      "id": "c380",
+      "from": "n328",
+      "to": "n329"
+    },
+    {
+      "id": "c381",
+      "from": "n329",
+      "to": "n330"
+    },
+    {
+      "id": "c382",
+      "from": "n324",
+      "to": "n330"
+    },
+    {
+      "id": "c383",
+      "from": "n330",
+      "to": "n331"
+    },
+    {
+      "id": "c384",
+      "from": "n331",
+      "to": "n332"
+    },
+    {
+      "id": "c385",
+      "from": "n332",
+      "to": "n333"
+    },
+    {
+      "id": "c386",
+      "from": "n333",
+      "to": "n334"
+    },
+    {
+      "id": "c387",
+      "from": "n334",
+      "to": "n335"
+    },
+    {
+      "id": "c388",
+      "from": "n335",
+      "to": "n336"
+    },
+    {
+      "id": "c389",
+      "from": "n330",
+      "to": "n336"
+    },
+    {
+      "id": "c390",
+      "from": "n336",
+      "to": "n337"
+    },
+    {
+      "id": "c391",
+      "from": "n337",
+      "to": "n338"
+    },
+    {
+      "id": "c392",
+      "from": "n338",
+      "to": "n339"
+    },
+    {
+      "id": "c393",
+      "from": "n339",
+      "to": "n340"
+    },
+    {
+      "id": "c394",
+      "from": "n340",
+      "to": "n341"
+    },
+    {
+      "id": "c395",
+      "from": "n341",
+      "to": "n342"
+    },
+    {
+      "id": "c396",
+      "from": "n336",
+      "to": "n342"
+    },
+    {
+      "id": "c397",
+      "from": "n342",
+      "to": "n343"
+    },
+    {
+      "id": "c398",
+      "from": "n343",
+      "to": "n344"
+    },
+    {
+      "id": "c399",
+      "from": "n344",
+      "to": "n345"
+    },
+    {
+      "id": "c400",
+      "from": "n345",
+      "to": "n346"
+    },
+    {
+      "id": "c401",
+      "from": "n346",
+      "to": "n347"
+    },
+    {
+      "id": "c402",
+      "from": "n347",
+      "to": "n348"
+    },
+    {
+      "id": "c403",
+      "from": "n342",
+      "to": "n348"
+    },
+    {
+      "id": "c404",
+      "from": "n348",
+      "to": "n349"
+    },
+    {
+      "id": "c405",
+      "from": "n349",
+      "to": "n350"
+    },
+    {
+      "id": "c406",
+      "from": "n350",
+      "to": "n351"
+    },
+    {
+      "id": "c407",
+      "from": "n351",
+      "to": "n352"
+    },
+    {
+      "id": "c408",
+      "from": "n352",
+      "to": "n353"
+    },
+    {
+      "id": "c409",
+      "from": "n353",
+      "to": "n354"
+    },
+    {
+      "id": "c410",
+      "from": "n348",
+      "to": "n354"
+    },
+    {
+      "id": "c411",
+      "from": "n354",
+      "to": "n355"
+    },
+    {
+      "id": "c412",
+      "from": "n355",
+      "to": "n356"
+    },
+    {
+      "id": "c413",
+      "from": "n356",
+      "to": "n357"
+    },
+    {
+      "id": "c414",
+      "from": "n357",
+      "to": "n358"
+    },
+    {
+      "id": "c415",
+      "from": "n358",
+      "to": "n359"
+    },
+    {
+      "id": "c416",
+      "from": "n359",
+      "to": "n360"
+    },
+    {
+      "id": "c417",
+      "from": "n354",
+      "to": "n360"
+    },
+    {
+      "id": "c418",
+      "from": "n360",
+      "to": "n361"
+    },
+    {
+      "id": "c419",
+      "from": "n361",
+      "to": "n362"
+    },
+    {
+      "id": "c420",
+      "from": "n362",
+      "to": "n363"
+    }
+  ]
+}

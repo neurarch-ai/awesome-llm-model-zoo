@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="264" height="2248" viewBox="0 0 264 2248" font-family="-apple-system, 'Segoe UI', Inter, Helvetica, Arial, sans-serif">
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#94a3b8"/></marker></defs>
+<rect x="0" y="0" width="264" height="2248" fill="#ffffff"/>
+<path d="M132.0,96.0 C132.0,121.0 132.0,121.0 132.0,146.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M132.0,200.0 C132.0,225.0 132.0,225.0 132.0,250.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M132.0,304.0 C132.0,329.0 132.0,329.0 132.0,354.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M132.0,408.0 C132.0,433.0 132.0,433.0 132.0,458.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M132.0,512.0 C132.0,537.0 132.0,537.0 132.0,562.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M132.0,616.0 C132.0,641.0 132.0,641.0 132.0,666.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M132.0,720.0 C132.0,745.0 132.0,745.0 132.0,770.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M132.0,824.0 C132.0,849.0 132.0,849.0 132.0,874.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M132.0,928.0 C132.0,953.0 132.0,953.0 132.0,978.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M132.0,1032.0 C132.0,1057.0 132.0,1057.0 132.0,1082.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M132.0,1136.0 C132.0,1161.0 132.0,1161.0 132.0,1186.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M132.0,1240.0 C132.0,1265.0 132.0,1265.0 132.0,1290.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M132.0,1344.0 C132.0,1369.0 132.0,1369.0 132.0,1394.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M132.0,1448.0 C132.0,1473.0 132.0,1473.0 132.0,1498.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M132.0,1552.0 C132.0,1577.0 132.0,1577.0 132.0,1602.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M132.0,1656.0 C132.0,1681.0 132.0,1681.0 132.0,1706.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M132.0,1760.0 C132.0,1785.0 132.0,1785.0 132.0,1810.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M132.0,1864.0 C132.0,1889.0 132.0,1889.0 132.0,1914.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M132.0,1968.0 C132.0,1993.0 132.0,1993.0 132.0,2018.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M132.0,2072.0 C132.0,2097.0 132.0,2097.0 132.0,2122.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
+<rect x="48.0" y="48.0" width="168" height="48" rx="10" fill="rgb(224, 247, 232)" stroke="#22c55e" stroke-width="1.5"/>
+<text x="132.0" y="76.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">waveform</text>
+<rect x="48.0" y="152.0" width="168" height="48" rx="10" fill="rgb(228, 238, 254)" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="132.0" y="180.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">enc_conv_1</text>
+<rect x="48.0" y="256.0" width="168" height="48" rx="10" fill="rgb(222, 245, 237)" stroke="#10b981" stroke-width="1.5"/>
+<text x="132.0" y="284.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">enc_act_1</text>
+<rect x="48.0" y="360.0" width="168" height="48" rx="10" fill="rgb(228, 238, 254)" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="132.0" y="388.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">enc_conv_2</text>
+<rect x="48.0" y="464.0" width="168" height="48" rx="10" fill="rgb(222, 245, 237)" stroke="#10b981" stroke-width="1.5"/>
+<text x="132.0" y="492.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">enc_act_2</text>
+<rect x="48.0" y="568.0" width="168" height="48" rx="10" fill="rgb(228, 238, 254)" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="132.0" y="596.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">enc_conv_3</text>
+<rect x="48.0" y="672.0" width="168" height="48" rx="10" fill="rgb(222, 245, 237)" stroke="#10b981" stroke-width="1.5"/>
+<text x="132.0" y="700.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">enc_act_3</text>
+<rect x="48.0" y="776.0" width="168" height="48" rx="10" fill="rgb(228, 238, 254)" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="132.0" y="804.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">enc_conv_4</text>
+<rect x="48.0" y="880.0" width="168" height="48" rx="10" fill="rgb(222, 245, 237)" stroke="#10b981" stroke-width="1.5"/>
+<text x="132.0" y="908.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">enc_act_4</text>
+<rect x="48.0" y="984.0" width="168" height="48" rx="10" fill="rgb(253, 228, 232)" stroke="#f43f5e" stroke-width="1.5"/>
+<text x="132.0" y="1012.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">enc_lstm</text>
+<rect x="48.0" y="1088.0" width="168" height="48" rx="10" fill="rgb(254, 241, 221)" stroke="#f59e0b" stroke-width="1.5"/>
+<text x="132.0" y="1116.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">residual_vq_codebook</text>
+<rect x="48.0" y="1192.0" width="168" height="48" rx="10" fill="rgb(228, 238, 254)" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="132.0" y="1220.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">dec_upconv_1</text>
+<rect x="48.0" y="1296.0" width="168" height="48" rx="10" fill="rgb(222, 245, 237)" stroke="#10b981" stroke-width="1.5"/>
+<text x="132.0" y="1324.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">dec_act_1</text>
+<rect x="48.0" y="1400.0" width="168" height="48" rx="10" fill="rgb(228, 238, 254)" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="132.0" y="1428.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">dec_upconv_2</text>
+<rect x="48.0" y="1504.0" width="168" height="48" rx="10" fill="rgb(222, 245, 237)" stroke="#10b981" stroke-width="1.5"/>
+<text x="132.0" y="1532.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">dec_act_2</text>
+<rect x="48.0" y="1608.0" width="168" height="48" rx="10" fill="rgb(228, 238, 254)" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="132.0" y="1636.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">dec_upconv_3</text>
+<rect x="48.0" y="1712.0" width="168" height="48" rx="10" fill="rgb(222, 245, 237)" stroke="#10b981" stroke-width="1.5"/>
+<text x="132.0" y="1740.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">dec_act_3</text>
+<rect x="48.0" y="1816.0" width="168" height="48" rx="10" fill="rgb(228, 238, 254)" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="132.0" y="1844.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">dec_upconv_4</text>
+<rect x="48.0" y="1920.0" width="168" height="48" rx="10" fill="rgb(222, 245, 237)" stroke="#10b981" stroke-width="1.5"/>
+<text x="132.0" y="1948.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">dec_act_4</text>
+<rect x="48.0" y="2024.0" width="168" height="48" rx="10" fill="rgb(228, 238, 254)" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="132.0" y="2052.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">dec_out_conv</text>
+<rect x="48.0" y="2128.0" width="168" height="48" rx="10" fill="rgb(253, 229, 229)" stroke="#ef4444" stroke-width="1.5"/>
+<text x="132.0" y="2156.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">reconstructed_audio</text>
+<text x="216.0" y="2237.0" text-anchor="end" font-size="11" fill="#9aa6b8">Made with Neurarch · neurarch.com</text>
+</svg>

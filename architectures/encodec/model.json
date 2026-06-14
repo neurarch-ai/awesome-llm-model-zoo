@@ -1,0 +1,505 @@
+{
+  "id": "encodec",
+  "name": "EnCodec",
+  "description": "EnCodec (Meta AI): full graph; dimensions verified against the official config.json.",
+  "components": [
+    {
+      "id": "n1",
+      "type": "input",
+      "name": "waveform",
+      "position": {
+        "x": 300,
+        "y": 50
+      },
+      "params": {
+        "shape": [
+          1,
+          24000
+        ]
+      },
+      "inputs": [],
+      "outputs": [
+        "n2"
+      ]
+    },
+    {
+      "id": "n2",
+      "type": "conv1d",
+      "name": "enc_conv_1",
+      "position": {
+        "x": 300,
+        "y": 200
+      },
+      "params": {
+        "inChannels": 1,
+        "outChannels": 32,
+        "kernelSize": 7,
+        "stride": 1,
+        "padding": 3
+      },
+      "inputs": [
+        "n1"
+      ],
+      "outputs": [
+        "n3"
+      ]
+    },
+    {
+      "id": "n3",
+      "type": "gelu",
+      "name": "enc_act_1",
+      "position": {
+        "x": 300,
+        "y": 350
+      },
+      "params": {},
+      "inputs": [
+        "n2"
+      ],
+      "outputs": [
+        "n4"
+      ]
+    },
+    {
+      "id": "n4",
+      "type": "conv1d",
+      "name": "enc_conv_2",
+      "position": {
+        "x": 300,
+        "y": 500
+      },
+      "params": {
+        "inChannels": 32,
+        "outChannels": 64,
+        "kernelSize": 7,
+        "stride": 2,
+        "padding": 3
+      },
+      "inputs": [
+        "n3"
+      ],
+      "outputs": [
+        "n5"
+      ]
+    },
+    {
+      "id": "n5",
+      "type": "gelu",
+      "name": "enc_act_2",
+      "position": {
+        "x": 300,
+        "y": 650
+      },
+      "params": {},
+      "inputs": [
+        "n4"
+      ],
+      "outputs": [
+        "n6"
+      ]
+    },
+    {
+      "id": "n6",
+      "type": "conv1d",
+      "name": "enc_conv_3",
+      "position": {
+        "x": 300,
+        "y": 800
+      },
+      "params": {
+        "inChannels": 64,
+        "outChannels": 128,
+        "kernelSize": 7,
+        "stride": 2,
+        "padding": 3
+      },
+      "inputs": [
+        "n5"
+      ],
+      "outputs": [
+        "n7"
+      ]
+    },
+    {
+      "id": "n7",
+      "type": "gelu",
+      "name": "enc_act_3",
+      "position": {
+        "x": 300,
+        "y": 950
+      },
+      "params": {},
+      "inputs": [
+        "n6"
+      ],
+      "outputs": [
+        "n8"
+      ]
+    },
+    {
+      "id": "n8",
+      "type": "conv1d",
+      "name": "enc_conv_4",
+      "position": {
+        "x": 300,
+        "y": 1100
+      },
+      "params": {
+        "inChannels": 128,
+        "outChannels": 256,
+        "kernelSize": 7,
+        "stride": 2,
+        "padding": 3
+      },
+      "inputs": [
+        "n7"
+      ],
+      "outputs": [
+        "n9"
+      ]
+    },
+    {
+      "id": "n9",
+      "type": "gelu",
+      "name": "enc_act_4",
+      "position": {
+        "x": 300,
+        "y": 1250
+      },
+      "params": {},
+      "inputs": [
+        "n8"
+      ],
+      "outputs": [
+        "n10"
+      ]
+    },
+    {
+      "id": "n10",
+      "type": "lstm",
+      "name": "enc_lstm",
+      "position": {
+        "x": 300,
+        "y": 1400
+      },
+      "params": {
+        "hiddenSize": 256,
+        "inputSize": 256
+      },
+      "inputs": [
+        "n9"
+      ],
+      "outputs": [
+        "n11"
+      ]
+    },
+    {
+      "id": "n11",
+      "type": "embedding",
+      "name": "residual_vq_codebook",
+      "position": {
+        "x": 300,
+        "y": 1550
+      },
+      "params": {
+        "numEmbeddings": 1024,
+        "embeddingDim": 128
+      },
+      "inputs": [
+        "n10"
+      ],
+      "outputs": [
+        "n12"
+      ]
+    },
+    {
+      "id": "n12",
+      "type": "transposeConv2d",
+      "name": "dec_upconv_1",
+      "position": {
+        "x": 300,
+        "y": 1700
+      },
+      "params": {
+        "inChannels": 128,
+        "outChannels": 256,
+        "kernelSize": 7,
+        "stride": 2,
+        "padding": 3
+      },
+      "inputs": [
+        "n11"
+      ],
+      "outputs": [
+        "n13"
+      ]
+    },
+    {
+      "id": "n13",
+      "type": "gelu",
+      "name": "dec_act_1",
+      "position": {
+        "x": 300,
+        "y": 1850
+      },
+      "params": {},
+      "inputs": [
+        "n12"
+      ],
+      "outputs": [
+        "n14"
+      ]
+    },
+    {
+      "id": "n14",
+      "type": "transposeConv2d",
+      "name": "dec_upconv_2",
+      "position": {
+        "x": 300,
+        "y": 2000
+      },
+      "params": {
+        "inChannels": 256,
+        "outChannels": 128,
+        "kernelSize": 7,
+        "stride": 2,
+        "padding": 3
+      },
+      "inputs": [
+        "n13"
+      ],
+      "outputs": [
+        "n15"
+      ]
+    },
+    {
+      "id": "n15",
+      "type": "gelu",
+      "name": "dec_act_2",
+      "position": {
+        "x": 300,
+        "y": 2150
+      },
+      "params": {},
+      "inputs": [
+        "n14"
+      ],
+      "outputs": [
+        "n16"
+      ]
+    },
+    {
+      "id": "n16",
+      "type": "transposeConv2d",
+      "name": "dec_upconv_3",
+      "position": {
+        "x": 300,
+        "y": 2300
+      },
+      "params": {
+        "inChannels": 128,
+        "outChannels": 64,
+        "kernelSize": 7,
+        "stride": 2,
+        "padding": 3
+      },
+      "inputs": [
+        "n15"
+      ],
+      "outputs": [
+        "n17"
+      ]
+    },
+    {
+      "id": "n17",
+      "type": "gelu",
+      "name": "dec_act_3",
+      "position": {
+        "x": 300,
+        "y": 2450
+      },
+      "params": {},
+      "inputs": [
+        "n16"
+      ],
+      "outputs": [
+        "n18"
+      ]
+    },
+    {
+      "id": "n18",
+      "type": "transposeConv2d",
+      "name": "dec_upconv_4",
+      "position": {
+        "x": 300,
+        "y": 2600
+      },
+      "params": {
+        "inChannels": 64,
+        "outChannels": 32,
+        "kernelSize": 7,
+        "stride": 2,
+        "padding": 3
+      },
+      "inputs": [
+        "n17"
+      ],
+      "outputs": [
+        "n19"
+      ]
+    },
+    {
+      "id": "n19",
+      "type": "gelu",
+      "name": "dec_act_4",
+      "position": {
+        "x": 300,
+        "y": 2750
+      },
+      "params": {},
+      "inputs": [
+        "n18"
+      ],
+      "outputs": [
+        "n20"
+      ]
+    },
+    {
+      "id": "n20",
+      "type": "conv1d",
+      "name": "dec_out_conv",
+      "position": {
+        "x": 300,
+        "y": 2900
+      },
+      "params": {
+        "inChannels": 32,
+        "outChannels": 1,
+        "kernelSize": 7,
+        "padding": 3
+      },
+      "inputs": [
+        "n19"
+      ],
+      "outputs": [
+        "n21"
+      ]
+    },
+    {
+      "id": "n21",
+      "type": "output",
+      "name": "reconstructed_audio",
+      "position": {
+        "x": 300,
+        "y": 3050
+      },
+      "params": {},
+      "inputs": [
+        "n20"
+      ],
+      "outputs": []
+    }
+  ],
+  "connections": [
+    {
+      "id": "c1",
+      "from": "n1",
+      "to": "n2"
+    },
+    {
+      "id": "c2",
+      "from": "n2",
+      "to": "n3"
+    },
+    {
+      "id": "c3",
+      "from": "n3",
+      "to": "n4"
+    },
+    {
+      "id": "c4",
+      "from": "n4",
+      "to": "n5"
+    },
+    {
+      "id": "c5",
+      "from": "n5",
+      "to": "n6"
+    },
+    {
+      "id": "c6",
+      "from": "n6",
+      "to": "n7"
+    },
+    {
+      "id": "c7",
+      "from": "n7",
+      "to": "n8"
+    },
+    {
+      "id": "c8",
+      "from": "n8",
+      "to": "n9"
+    },
+    {
+      "id": "c9",
+      "from": "n9",
+      "to": "n10"
+    },
+    {
+      "id": "c10",
+      "from": "n10",
+      "to": "n11"
+    },
+    {
+      "id": "c11",
+      "from": "n11",
+      "to": "n12"
+    },
+    {
+      "id": "c12",
+      "from": "n12",
+      "to": "n13"
+    },
+    {
+      "id": "c13",
+      "from": "n13",
+      "to": "n14"
+    },
+    {
+      "id": "c14",
+      "from": "n14",
+      "to": "n15"
+    },
+    {
+      "id": "c15",
+      "from": "n15",
+      "to": "n16"
+    },
+    {
+      "id": "c16",
+      "from": "n16",
+      "to": "n17"
+    },
+    {
+      "id": "c17",
+      "from": "n17",
+      "to": "n18"
+    },
+    {
+      "id": "c18",
+      "from": "n18",
+      "to": "n19"
+    },
+    {
+      "id": "c19",
+      "from": "n19",
+      "to": "n20"
+    },
+    {
+      "id": "c20",
+      "from": "n20",
+      "to": "n21"
+    }
+  ]
+}

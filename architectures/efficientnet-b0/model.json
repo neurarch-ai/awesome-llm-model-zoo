@@ -1,0 +1,1988 @@
+{
+  "id": "efficientnet-b0",
+  "name": "EfficientNet-B0",
+  "description": "EfficientNet-B0 (Google): full graph; dimensions verified against the official config.json.",
+  "components": [
+    {
+      "id": "n1",
+      "type": "input",
+      "name": "image",
+      "position": {
+        "x": 300,
+        "y": 50
+      },
+      "params": {
+        "shape": [
+          3,
+          224,
+          224
+        ]
+      },
+      "inputs": [],
+      "outputs": [
+        "n2"
+      ]
+    },
+    {
+      "id": "n2",
+      "type": "conv2d",
+      "name": "stem_3x3/2",
+      "position": {
+        "x": 300,
+        "y": 200
+      },
+      "params": {
+        "inChannels": 3,
+        "outChannels": 32,
+        "kernelSize": 3,
+        "stride": 2,
+        "padding": 1
+      },
+      "inputs": [
+        "n1"
+      ],
+      "outputs": [
+        "n3"
+      ]
+    },
+    {
+      "id": "n3",
+      "type": "depthwiseConv2d",
+      "name": "mb1_dw_3x3",
+      "position": {
+        "x": 300,
+        "y": 350
+      },
+      "params": {
+        "inChannels": 32,
+        "outChannels": 32,
+        "kernelSize": 3,
+        "stride": 1,
+        "padding": 1
+      },
+      "inputs": [
+        "n2"
+      ],
+      "outputs": [
+        "n4"
+      ]
+    },
+    {
+      "id": "n4",
+      "type": "seBlock",
+      "name": "mb1_squeeze_excite",
+      "position": {
+        "x": 300,
+        "y": 500
+      },
+      "params": {
+        "channels": 32,
+        "reduction": 4
+      },
+      "inputs": [
+        "n3"
+      ],
+      "outputs": [
+        "n5"
+      ]
+    },
+    {
+      "id": "n5",
+      "type": "conv2d",
+      "name": "mb1_project_1x1",
+      "position": {
+        "x": 300,
+        "y": 650
+      },
+      "params": {
+        "inChannels": 32,
+        "outChannels": 16,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n4"
+      ],
+      "outputs": [
+        "n6"
+      ]
+    },
+    {
+      "id": "n6",
+      "type": "conv2d",
+      "name": "mb2_expand_1x1",
+      "position": {
+        "x": 300,
+        "y": 800
+      },
+      "params": {
+        "inChannels": 16,
+        "outChannels": 96,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n5"
+      ],
+      "outputs": [
+        "n7"
+      ]
+    },
+    {
+      "id": "n7",
+      "type": "depthwiseConv2d",
+      "name": "mb2_dw_3x3",
+      "position": {
+        "x": 300,
+        "y": 950
+      },
+      "params": {
+        "inChannels": 96,
+        "outChannels": 96,
+        "kernelSize": 3,
+        "stride": 2,
+        "padding": 1
+      },
+      "inputs": [
+        "n6"
+      ],
+      "outputs": [
+        "n8"
+      ]
+    },
+    {
+      "id": "n8",
+      "type": "seBlock",
+      "name": "mb2_squeeze_excite",
+      "position": {
+        "x": 300,
+        "y": 1100
+      },
+      "params": {
+        "channels": 96,
+        "reduction": 4
+      },
+      "inputs": [
+        "n7"
+      ],
+      "outputs": [
+        "n9"
+      ]
+    },
+    {
+      "id": "n9",
+      "type": "conv2d",
+      "name": "mb2_project_1x1",
+      "position": {
+        "x": 300,
+        "y": 1250
+      },
+      "params": {
+        "inChannels": 96,
+        "outChannels": 24,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n8"
+      ],
+      "outputs": [
+        "n10",
+        "n14"
+      ]
+    },
+    {
+      "id": "n10",
+      "type": "conv2d",
+      "name": "mb3_expand_1x1",
+      "position": {
+        "x": 300,
+        "y": 1400
+      },
+      "params": {
+        "inChannels": 24,
+        "outChannels": 144,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n9"
+      ],
+      "outputs": [
+        "n11"
+      ]
+    },
+    {
+      "id": "n11",
+      "type": "depthwiseConv2d",
+      "name": "mb3_dw_3x3",
+      "position": {
+        "x": 300,
+        "y": 1550
+      },
+      "params": {
+        "inChannels": 144,
+        "outChannels": 144,
+        "kernelSize": 3,
+        "stride": 1,
+        "padding": 1
+      },
+      "inputs": [
+        "n10"
+      ],
+      "outputs": [
+        "n12"
+      ]
+    },
+    {
+      "id": "n12",
+      "type": "seBlock",
+      "name": "mb3_squeeze_excite",
+      "position": {
+        "x": 300,
+        "y": 1700
+      },
+      "params": {
+        "channels": 144,
+        "reduction": 4
+      },
+      "inputs": [
+        "n11"
+      ],
+      "outputs": [
+        "n13"
+      ]
+    },
+    {
+      "id": "n13",
+      "type": "conv2d",
+      "name": "mb3_project_1x1",
+      "position": {
+        "x": 300,
+        "y": 1850
+      },
+      "params": {
+        "inChannels": 144,
+        "outChannels": 24,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n12"
+      ],
+      "outputs": [
+        "n14"
+      ]
+    },
+    {
+      "id": "n14",
+      "type": "add",
+      "name": "mb3_residual",
+      "position": {
+        "x": 300,
+        "y": 2000
+      },
+      "params": {},
+      "inputs": [
+        "n13",
+        "n9"
+      ],
+      "outputs": [
+        "n15"
+      ]
+    },
+    {
+      "id": "n15",
+      "type": "conv2d",
+      "name": "mb4_expand_1x1",
+      "position": {
+        "x": 300,
+        "y": 2150
+      },
+      "params": {
+        "inChannels": 24,
+        "outChannels": 144,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n14"
+      ],
+      "outputs": [
+        "n16"
+      ]
+    },
+    {
+      "id": "n16",
+      "type": "depthwiseConv2d",
+      "name": "mb4_dw_5x5",
+      "position": {
+        "x": 300,
+        "y": 2300
+      },
+      "params": {
+        "inChannels": 144,
+        "outChannels": 144,
+        "kernelSize": 5,
+        "stride": 2,
+        "padding": 2
+      },
+      "inputs": [
+        "n15"
+      ],
+      "outputs": [
+        "n17"
+      ]
+    },
+    {
+      "id": "n17",
+      "type": "seBlock",
+      "name": "mb4_squeeze_excite",
+      "position": {
+        "x": 300,
+        "y": 2450
+      },
+      "params": {
+        "channels": 144,
+        "reduction": 4
+      },
+      "inputs": [
+        "n16"
+      ],
+      "outputs": [
+        "n18"
+      ]
+    },
+    {
+      "id": "n18",
+      "type": "conv2d",
+      "name": "mb4_project_1x1",
+      "position": {
+        "x": 300,
+        "y": 2600
+      },
+      "params": {
+        "inChannels": 144,
+        "outChannels": 40,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n17"
+      ],
+      "outputs": [
+        "n19",
+        "n23"
+      ]
+    },
+    {
+      "id": "n19",
+      "type": "conv2d",
+      "name": "mb5_expand_1x1",
+      "position": {
+        "x": 300,
+        "y": 2750
+      },
+      "params": {
+        "inChannels": 40,
+        "outChannels": 240,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n18"
+      ],
+      "outputs": [
+        "n20"
+      ]
+    },
+    {
+      "id": "n20",
+      "type": "depthwiseConv2d",
+      "name": "mb5_dw_5x5",
+      "position": {
+        "x": 300,
+        "y": 2900
+      },
+      "params": {
+        "inChannels": 240,
+        "outChannels": 240,
+        "kernelSize": 5,
+        "stride": 1,
+        "padding": 2
+      },
+      "inputs": [
+        "n19"
+      ],
+      "outputs": [
+        "n21"
+      ]
+    },
+    {
+      "id": "n21",
+      "type": "seBlock",
+      "name": "mb5_squeeze_excite",
+      "position": {
+        "x": 300,
+        "y": 3050
+      },
+      "params": {
+        "channels": 240,
+        "reduction": 4
+      },
+      "inputs": [
+        "n20"
+      ],
+      "outputs": [
+        "n22"
+      ]
+    },
+    {
+      "id": "n22",
+      "type": "conv2d",
+      "name": "mb5_project_1x1",
+      "position": {
+        "x": 300,
+        "y": 3200
+      },
+      "params": {
+        "inChannels": 240,
+        "outChannels": 40,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n21"
+      ],
+      "outputs": [
+        "n23"
+      ]
+    },
+    {
+      "id": "n23",
+      "type": "add",
+      "name": "mb5_residual",
+      "position": {
+        "x": 300,
+        "y": 3350
+      },
+      "params": {},
+      "inputs": [
+        "n22",
+        "n18"
+      ],
+      "outputs": [
+        "n24"
+      ]
+    },
+    {
+      "id": "n24",
+      "type": "conv2d",
+      "name": "mb6_expand_1x1",
+      "position": {
+        "x": 300,
+        "y": 3500
+      },
+      "params": {
+        "inChannels": 40,
+        "outChannels": 240,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n23"
+      ],
+      "outputs": [
+        "n25"
+      ]
+    },
+    {
+      "id": "n25",
+      "type": "depthwiseConv2d",
+      "name": "mb6_dw_3x3",
+      "position": {
+        "x": 300,
+        "y": 3650
+      },
+      "params": {
+        "inChannels": 240,
+        "outChannels": 240,
+        "kernelSize": 3,
+        "stride": 2,
+        "padding": 1
+      },
+      "inputs": [
+        "n24"
+      ],
+      "outputs": [
+        "n26"
+      ]
+    },
+    {
+      "id": "n26",
+      "type": "seBlock",
+      "name": "mb6_squeeze_excite",
+      "position": {
+        "x": 300,
+        "y": 3800
+      },
+      "params": {
+        "channels": 240,
+        "reduction": 4
+      },
+      "inputs": [
+        "n25"
+      ],
+      "outputs": [
+        "n27"
+      ]
+    },
+    {
+      "id": "n27",
+      "type": "conv2d",
+      "name": "mb6_project_1x1",
+      "position": {
+        "x": 300,
+        "y": 3950
+      },
+      "params": {
+        "inChannels": 240,
+        "outChannels": 80,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n26"
+      ],
+      "outputs": [
+        "n28",
+        "n32"
+      ]
+    },
+    {
+      "id": "n28",
+      "type": "conv2d",
+      "name": "mb7_expand_1x1",
+      "position": {
+        "x": 300,
+        "y": 4100
+      },
+      "params": {
+        "inChannels": 80,
+        "outChannels": 480,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n27"
+      ],
+      "outputs": [
+        "n29"
+      ]
+    },
+    {
+      "id": "n29",
+      "type": "depthwiseConv2d",
+      "name": "mb7_dw_3x3",
+      "position": {
+        "x": 300,
+        "y": 4250
+      },
+      "params": {
+        "inChannels": 480,
+        "outChannels": 480,
+        "kernelSize": 3,
+        "stride": 1,
+        "padding": 1
+      },
+      "inputs": [
+        "n28"
+      ],
+      "outputs": [
+        "n30"
+      ]
+    },
+    {
+      "id": "n30",
+      "type": "seBlock",
+      "name": "mb7_squeeze_excite",
+      "position": {
+        "x": 300,
+        "y": 4400
+      },
+      "params": {
+        "channels": 480,
+        "reduction": 4
+      },
+      "inputs": [
+        "n29"
+      ],
+      "outputs": [
+        "n31"
+      ]
+    },
+    {
+      "id": "n31",
+      "type": "conv2d",
+      "name": "mb7_project_1x1",
+      "position": {
+        "x": 300,
+        "y": 4550
+      },
+      "params": {
+        "inChannels": 480,
+        "outChannels": 80,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n30"
+      ],
+      "outputs": [
+        "n32"
+      ]
+    },
+    {
+      "id": "n32",
+      "type": "add",
+      "name": "mb7_residual",
+      "position": {
+        "x": 300,
+        "y": 4700
+      },
+      "params": {},
+      "inputs": [
+        "n31",
+        "n27"
+      ],
+      "outputs": [
+        "n33",
+        "n37"
+      ]
+    },
+    {
+      "id": "n33",
+      "type": "conv2d",
+      "name": "mb8_expand_1x1",
+      "position": {
+        "x": 300,
+        "y": 4850
+      },
+      "params": {
+        "inChannels": 80,
+        "outChannels": 480,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n32"
+      ],
+      "outputs": [
+        "n34"
+      ]
+    },
+    {
+      "id": "n34",
+      "type": "depthwiseConv2d",
+      "name": "mb8_dw_3x3",
+      "position": {
+        "x": 300,
+        "y": 5000
+      },
+      "params": {
+        "inChannels": 480,
+        "outChannels": 480,
+        "kernelSize": 3,
+        "stride": 1,
+        "padding": 1
+      },
+      "inputs": [
+        "n33"
+      ],
+      "outputs": [
+        "n35"
+      ]
+    },
+    {
+      "id": "n35",
+      "type": "seBlock",
+      "name": "mb8_squeeze_excite",
+      "position": {
+        "x": 300,
+        "y": 5150
+      },
+      "params": {
+        "channels": 480,
+        "reduction": 4
+      },
+      "inputs": [
+        "n34"
+      ],
+      "outputs": [
+        "n36"
+      ]
+    },
+    {
+      "id": "n36",
+      "type": "conv2d",
+      "name": "mb8_project_1x1",
+      "position": {
+        "x": 300,
+        "y": 5300
+      },
+      "params": {
+        "inChannels": 480,
+        "outChannels": 80,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n35"
+      ],
+      "outputs": [
+        "n37"
+      ]
+    },
+    {
+      "id": "n37",
+      "type": "add",
+      "name": "mb8_residual",
+      "position": {
+        "x": 300,
+        "y": 5450
+      },
+      "params": {},
+      "inputs": [
+        "n36",
+        "n32"
+      ],
+      "outputs": [
+        "n38"
+      ]
+    },
+    {
+      "id": "n38",
+      "type": "conv2d",
+      "name": "mb9_expand_1x1",
+      "position": {
+        "x": 300,
+        "y": 5600
+      },
+      "params": {
+        "inChannels": 80,
+        "outChannels": 480,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n37"
+      ],
+      "outputs": [
+        "n39"
+      ]
+    },
+    {
+      "id": "n39",
+      "type": "depthwiseConv2d",
+      "name": "mb9_dw_5x5",
+      "position": {
+        "x": 300,
+        "y": 5750
+      },
+      "params": {
+        "inChannels": 480,
+        "outChannels": 480,
+        "kernelSize": 5,
+        "stride": 1,
+        "padding": 2
+      },
+      "inputs": [
+        "n38"
+      ],
+      "outputs": [
+        "n40"
+      ]
+    },
+    {
+      "id": "n40",
+      "type": "seBlock",
+      "name": "mb9_squeeze_excite",
+      "position": {
+        "x": 300,
+        "y": 5900
+      },
+      "params": {
+        "channels": 480,
+        "reduction": 4
+      },
+      "inputs": [
+        "n39"
+      ],
+      "outputs": [
+        "n41"
+      ]
+    },
+    {
+      "id": "n41",
+      "type": "conv2d",
+      "name": "mb9_project_1x1",
+      "position": {
+        "x": 300,
+        "y": 6050
+      },
+      "params": {
+        "inChannels": 480,
+        "outChannels": 112,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n40"
+      ],
+      "outputs": [
+        "n42",
+        "n46"
+      ]
+    },
+    {
+      "id": "n42",
+      "type": "conv2d",
+      "name": "mb10_expand_1x1",
+      "position": {
+        "x": 300,
+        "y": 6200
+      },
+      "params": {
+        "inChannels": 112,
+        "outChannels": 672,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n41"
+      ],
+      "outputs": [
+        "n43"
+      ]
+    },
+    {
+      "id": "n43",
+      "type": "depthwiseConv2d",
+      "name": "mb10_dw_5x5",
+      "position": {
+        "x": 300,
+        "y": 6350
+      },
+      "params": {
+        "inChannels": 672,
+        "outChannels": 672,
+        "kernelSize": 5,
+        "stride": 1,
+        "padding": 2
+      },
+      "inputs": [
+        "n42"
+      ],
+      "outputs": [
+        "n44"
+      ]
+    },
+    {
+      "id": "n44",
+      "type": "seBlock",
+      "name": "mb10_squeeze_excite",
+      "position": {
+        "x": 300,
+        "y": 6500
+      },
+      "params": {
+        "channels": 672,
+        "reduction": 4
+      },
+      "inputs": [
+        "n43"
+      ],
+      "outputs": [
+        "n45"
+      ]
+    },
+    {
+      "id": "n45",
+      "type": "conv2d",
+      "name": "mb10_project_1x1",
+      "position": {
+        "x": 300,
+        "y": 6650
+      },
+      "params": {
+        "inChannels": 672,
+        "outChannels": 112,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n44"
+      ],
+      "outputs": [
+        "n46"
+      ]
+    },
+    {
+      "id": "n46",
+      "type": "add",
+      "name": "mb10_residual",
+      "position": {
+        "x": 300,
+        "y": 6800
+      },
+      "params": {},
+      "inputs": [
+        "n45",
+        "n41"
+      ],
+      "outputs": [
+        "n47",
+        "n51"
+      ]
+    },
+    {
+      "id": "n47",
+      "type": "conv2d",
+      "name": "mb11_expand_1x1",
+      "position": {
+        "x": 300,
+        "y": 6950
+      },
+      "params": {
+        "inChannels": 112,
+        "outChannels": 672,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n46"
+      ],
+      "outputs": [
+        "n48"
+      ]
+    },
+    {
+      "id": "n48",
+      "type": "depthwiseConv2d",
+      "name": "mb11_dw_5x5",
+      "position": {
+        "x": 300,
+        "y": 7100
+      },
+      "params": {
+        "inChannels": 672,
+        "outChannels": 672,
+        "kernelSize": 5,
+        "stride": 1,
+        "padding": 2
+      },
+      "inputs": [
+        "n47"
+      ],
+      "outputs": [
+        "n49"
+      ]
+    },
+    {
+      "id": "n49",
+      "type": "seBlock",
+      "name": "mb11_squeeze_excite",
+      "position": {
+        "x": 300,
+        "y": 7250
+      },
+      "params": {
+        "channels": 672,
+        "reduction": 4
+      },
+      "inputs": [
+        "n48"
+      ],
+      "outputs": [
+        "n50"
+      ]
+    },
+    {
+      "id": "n50",
+      "type": "conv2d",
+      "name": "mb11_project_1x1",
+      "position": {
+        "x": 300,
+        "y": 7400
+      },
+      "params": {
+        "inChannels": 672,
+        "outChannels": 112,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n49"
+      ],
+      "outputs": [
+        "n51"
+      ]
+    },
+    {
+      "id": "n51",
+      "type": "add",
+      "name": "mb11_residual",
+      "position": {
+        "x": 300,
+        "y": 7550
+      },
+      "params": {},
+      "inputs": [
+        "n50",
+        "n46"
+      ],
+      "outputs": [
+        "n52"
+      ]
+    },
+    {
+      "id": "n52",
+      "type": "conv2d",
+      "name": "mb12_expand_1x1",
+      "position": {
+        "x": 300,
+        "y": 7700
+      },
+      "params": {
+        "inChannels": 112,
+        "outChannels": 672,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n51"
+      ],
+      "outputs": [
+        "n53"
+      ]
+    },
+    {
+      "id": "n53",
+      "type": "depthwiseConv2d",
+      "name": "mb12_dw_5x5",
+      "position": {
+        "x": 300,
+        "y": 7850
+      },
+      "params": {
+        "inChannels": 672,
+        "outChannels": 672,
+        "kernelSize": 5,
+        "stride": 2,
+        "padding": 2
+      },
+      "inputs": [
+        "n52"
+      ],
+      "outputs": [
+        "n54"
+      ]
+    },
+    {
+      "id": "n54",
+      "type": "seBlock",
+      "name": "mb12_squeeze_excite",
+      "position": {
+        "x": 300,
+        "y": 8000
+      },
+      "params": {
+        "channels": 672,
+        "reduction": 4
+      },
+      "inputs": [
+        "n53"
+      ],
+      "outputs": [
+        "n55"
+      ]
+    },
+    {
+      "id": "n55",
+      "type": "conv2d",
+      "name": "mb12_project_1x1",
+      "position": {
+        "x": 300,
+        "y": 8150
+      },
+      "params": {
+        "inChannels": 672,
+        "outChannels": 192,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n54"
+      ],
+      "outputs": [
+        "n56",
+        "n60"
+      ]
+    },
+    {
+      "id": "n56",
+      "type": "conv2d",
+      "name": "mb13_expand_1x1",
+      "position": {
+        "x": 300,
+        "y": 8300
+      },
+      "params": {
+        "inChannels": 192,
+        "outChannels": 1152,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n55"
+      ],
+      "outputs": [
+        "n57"
+      ]
+    },
+    {
+      "id": "n57",
+      "type": "depthwiseConv2d",
+      "name": "mb13_dw_5x5",
+      "position": {
+        "x": 300,
+        "y": 8450
+      },
+      "params": {
+        "inChannels": 1152,
+        "outChannels": 1152,
+        "kernelSize": 5,
+        "stride": 1,
+        "padding": 2
+      },
+      "inputs": [
+        "n56"
+      ],
+      "outputs": [
+        "n58"
+      ]
+    },
+    {
+      "id": "n58",
+      "type": "seBlock",
+      "name": "mb13_squeeze_excite",
+      "position": {
+        "x": 300,
+        "y": 8600
+      },
+      "params": {
+        "channels": 1152,
+        "reduction": 4
+      },
+      "inputs": [
+        "n57"
+      ],
+      "outputs": [
+        "n59"
+      ]
+    },
+    {
+      "id": "n59",
+      "type": "conv2d",
+      "name": "mb13_project_1x1",
+      "position": {
+        "x": 300,
+        "y": 8750
+      },
+      "params": {
+        "inChannels": 1152,
+        "outChannels": 192,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n58"
+      ],
+      "outputs": [
+        "n60"
+      ]
+    },
+    {
+      "id": "n60",
+      "type": "add",
+      "name": "mb13_residual",
+      "position": {
+        "x": 300,
+        "y": 8900
+      },
+      "params": {},
+      "inputs": [
+        "n59",
+        "n55"
+      ],
+      "outputs": [
+        "n61",
+        "n65"
+      ]
+    },
+    {
+      "id": "n61",
+      "type": "conv2d",
+      "name": "mb14_expand_1x1",
+      "position": {
+        "x": 300,
+        "y": 9050
+      },
+      "params": {
+        "inChannels": 192,
+        "outChannels": 1152,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n60"
+      ],
+      "outputs": [
+        "n62"
+      ]
+    },
+    {
+      "id": "n62",
+      "type": "depthwiseConv2d",
+      "name": "mb14_dw_5x5",
+      "position": {
+        "x": 300,
+        "y": 9200
+      },
+      "params": {
+        "inChannels": 1152,
+        "outChannels": 1152,
+        "kernelSize": 5,
+        "stride": 1,
+        "padding": 2
+      },
+      "inputs": [
+        "n61"
+      ],
+      "outputs": [
+        "n63"
+      ]
+    },
+    {
+      "id": "n63",
+      "type": "seBlock",
+      "name": "mb14_squeeze_excite",
+      "position": {
+        "x": 300,
+        "y": 9350
+      },
+      "params": {
+        "channels": 1152,
+        "reduction": 4
+      },
+      "inputs": [
+        "n62"
+      ],
+      "outputs": [
+        "n64"
+      ]
+    },
+    {
+      "id": "n64",
+      "type": "conv2d",
+      "name": "mb14_project_1x1",
+      "position": {
+        "x": 300,
+        "y": 9500
+      },
+      "params": {
+        "inChannels": 1152,
+        "outChannels": 192,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n63"
+      ],
+      "outputs": [
+        "n65"
+      ]
+    },
+    {
+      "id": "n65",
+      "type": "add",
+      "name": "mb14_residual",
+      "position": {
+        "x": 300,
+        "y": 9650
+      },
+      "params": {},
+      "inputs": [
+        "n64",
+        "n60"
+      ],
+      "outputs": [
+        "n66",
+        "n70"
+      ]
+    },
+    {
+      "id": "n66",
+      "type": "conv2d",
+      "name": "mb15_expand_1x1",
+      "position": {
+        "x": 300,
+        "y": 9800
+      },
+      "params": {
+        "inChannels": 192,
+        "outChannels": 1152,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n65"
+      ],
+      "outputs": [
+        "n67"
+      ]
+    },
+    {
+      "id": "n67",
+      "type": "depthwiseConv2d",
+      "name": "mb15_dw_5x5",
+      "position": {
+        "x": 300,
+        "y": 9950
+      },
+      "params": {
+        "inChannels": 1152,
+        "outChannels": 1152,
+        "kernelSize": 5,
+        "stride": 1,
+        "padding": 2
+      },
+      "inputs": [
+        "n66"
+      ],
+      "outputs": [
+        "n68"
+      ]
+    },
+    {
+      "id": "n68",
+      "type": "seBlock",
+      "name": "mb15_squeeze_excite",
+      "position": {
+        "x": 300,
+        "y": 10100
+      },
+      "params": {
+        "channels": 1152,
+        "reduction": 4
+      },
+      "inputs": [
+        "n67"
+      ],
+      "outputs": [
+        "n69"
+      ]
+    },
+    {
+      "id": "n69",
+      "type": "conv2d",
+      "name": "mb15_project_1x1",
+      "position": {
+        "x": 300,
+        "y": 10250
+      },
+      "params": {
+        "inChannels": 1152,
+        "outChannels": 192,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n68"
+      ],
+      "outputs": [
+        "n70"
+      ]
+    },
+    {
+      "id": "n70",
+      "type": "add",
+      "name": "mb15_residual",
+      "position": {
+        "x": 300,
+        "y": 10400
+      },
+      "params": {},
+      "inputs": [
+        "n69",
+        "n65"
+      ],
+      "outputs": [
+        "n71"
+      ]
+    },
+    {
+      "id": "n71",
+      "type": "conv2d",
+      "name": "mb16_expand_1x1",
+      "position": {
+        "x": 300,
+        "y": 10550
+      },
+      "params": {
+        "inChannels": 192,
+        "outChannels": 1152,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n70"
+      ],
+      "outputs": [
+        "n72"
+      ]
+    },
+    {
+      "id": "n72",
+      "type": "depthwiseConv2d",
+      "name": "mb16_dw_3x3",
+      "position": {
+        "x": 300,
+        "y": 10700
+      },
+      "params": {
+        "inChannels": 1152,
+        "outChannels": 1152,
+        "kernelSize": 3,
+        "stride": 1,
+        "padding": 1
+      },
+      "inputs": [
+        "n71"
+      ],
+      "outputs": [
+        "n73"
+      ]
+    },
+    {
+      "id": "n73",
+      "type": "seBlock",
+      "name": "mb16_squeeze_excite",
+      "position": {
+        "x": 300,
+        "y": 10850
+      },
+      "params": {
+        "channels": 1152,
+        "reduction": 4
+      },
+      "inputs": [
+        "n72"
+      ],
+      "outputs": [
+        "n74"
+      ]
+    },
+    {
+      "id": "n74",
+      "type": "conv2d",
+      "name": "mb16_project_1x1",
+      "position": {
+        "x": 300,
+        "y": 11000
+      },
+      "params": {
+        "inChannels": 1152,
+        "outChannels": 320,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n73"
+      ],
+      "outputs": [
+        "n75"
+      ]
+    },
+    {
+      "id": "n75",
+      "type": "conv2d",
+      "name": "head_1x1",
+      "position": {
+        "x": 300,
+        "y": 11150
+      },
+      "params": {
+        "inChannels": 320,
+        "outChannels": 1280,
+        "kernelSize": 1
+      },
+      "inputs": [
+        "n74"
+      ],
+      "outputs": [
+        "n76"
+      ]
+    },
+    {
+      "id": "n76",
+      "type": "globalAvgPool2d",
+      "name": "avgpool",
+      "position": {
+        "x": 300,
+        "y": 11300
+      },
+      "params": {},
+      "inputs": [
+        "n75"
+      ],
+      "outputs": [
+        "n77"
+      ]
+    },
+    {
+      "id": "n77",
+      "type": "linear",
+      "name": "classifier",
+      "position": {
+        "x": 300,
+        "y": 11450
+      },
+      "params": {
+        "inFeatures": 1280,
+        "outFeatures": 1000
+      },
+      "inputs": [
+        "n76"
+      ],
+      "outputs": [
+        "n78"
+      ]
+    },
+    {
+      "id": "n78",
+      "type": "output",
+      "name": "class_logits",
+      "position": {
+        "x": 300,
+        "y": 11600
+      },
+      "params": {},
+      "inputs": [
+        "n77"
+      ],
+      "outputs": []
+    }
+  ],
+  "connections": [
+    {
+      "id": "c1",
+      "from": "n1",
+      "to": "n2"
+    },
+    {
+      "id": "c2",
+      "from": "n2",
+      "to": "n3"
+    },
+    {
+      "id": "c3",
+      "from": "n3",
+      "to": "n4"
+    },
+    {
+      "id": "c4",
+      "from": "n4",
+      "to": "n5"
+    },
+    {
+      "id": "c5",
+      "from": "n5",
+      "to": "n6"
+    },
+    {
+      "id": "c6",
+      "from": "n6",
+      "to": "n7"
+    },
+    {
+      "id": "c7",
+      "from": "n7",
+      "to": "n8"
+    },
+    {
+      "id": "c8",
+      "from": "n8",
+      "to": "n9"
+    },
+    {
+      "id": "c9",
+      "from": "n9",
+      "to": "n10"
+    },
+    {
+      "id": "c10",
+      "from": "n10",
+      "to": "n11"
+    },
+    {
+      "id": "c11",
+      "from": "n11",
+      "to": "n12"
+    },
+    {
+      "id": "c12",
+      "from": "n12",
+      "to": "n13"
+    },
+    {
+      "id": "c13",
+      "from": "n13",
+      "to": "n14"
+    },
+    {
+      "id": "c14",
+      "from": "n9",
+      "to": "n14"
+    },
+    {
+      "id": "c15",
+      "from": "n14",
+      "to": "n15"
+    },
+    {
+      "id": "c16",
+      "from": "n15",
+      "to": "n16"
+    },
+    {
+      "id": "c17",
+      "from": "n16",
+      "to": "n17"
+    },
+    {
+      "id": "c18",
+      "from": "n17",
+      "to": "n18"
+    },
+    {
+      "id": "c19",
+      "from": "n18",
+      "to": "n19"
+    },
+    {
+      "id": "c20",
+      "from": "n19",
+      "to": "n20"
+    },
+    {
+      "id": "c21",
+      "from": "n20",
+      "to": "n21"
+    },
+    {
+      "id": "c22",
+      "from": "n21",
+      "to": "n22"
+    },
+    {
+      "id": "c23",
+      "from": "n22",
+      "to": "n23"
+    },
+    {
+      "id": "c24",
+      "from": "n18",
+      "to": "n23"
+    },
+    {
+      "id": "c25",
+      "from": "n23",
+      "to": "n24"
+    },
+    {
+      "id": "c26",
+      "from": "n24",
+      "to": "n25"
+    },
+    {
+      "id": "c27",
+      "from": "n25",
+      "to": "n26"
+    },
+    {
+      "id": "c28",
+      "from": "n26",
+      "to": "n27"
+    },
+    {
+      "id": "c29",
+      "from": "n27",
+      "to": "n28"
+    },
+    {
+      "id": "c30",
+      "from": "n28",
+      "to": "n29"
+    },
+    {
+      "id": "c31",
+      "from": "n29",
+      "to": "n30"
+    },
+    {
+      "id": "c32",
+      "from": "n30",
+      "to": "n31"
+    },
+    {
+      "id": "c33",
+      "from": "n31",
+      "to": "n32"
+    },
+    {
+      "id": "c34",
+      "from": "n27",
+      "to": "n32"
+    },
+    {
+      "id": "c35",
+      "from": "n32",
+      "to": "n33"
+    },
+    {
+      "id": "c36",
+      "from": "n33",
+      "to": "n34"
+    },
+    {
+      "id": "c37",
+      "from": "n34",
+      "to": "n35"
+    },
+    {
+      "id": "c38",
+      "from": "n35",
+      "to": "n36"
+    },
+    {
+      "id": "c39",
+      "from": "n36",
+      "to": "n37"
+    },
+    {
+      "id": "c40",
+      "from": "n32",
+      "to": "n37"
+    },
+    {
+      "id": "c41",
+      "from": "n37",
+      "to": "n38"
+    },
+    {
+      "id": "c42",
+      "from": "n38",
+      "to": "n39"
+    },
+    {
+      "id": "c43",
+      "from": "n39",
+      "to": "n40"
+    },
+    {
+      "id": "c44",
+      "from": "n40",
+      "to": "n41"
+    },
+    {
+      "id": "c45",
+      "from": "n41",
+      "to": "n42"
+    },
+    {
+      "id": "c46",
+      "from": "n42",
+      "to": "n43"
+    },
+    {
+      "id": "c47",
+      "from": "n43",
+      "to": "n44"
+    },
+    {
+      "id": "c48",
+      "from": "n44",
+      "to": "n45"
+    },
+    {
+      "id": "c49",
+      "from": "n45",
+      "to": "n46"
+    },
+    {
+      "id": "c50",
+      "from": "n41",
+      "to": "n46"
+    },
+    {
+      "id": "c51",
+      "from": "n46",
+      "to": "n47"
+    },
+    {
+      "id": "c52",
+      "from": "n47",
+      "to": "n48"
+    },
+    {
+      "id": "c53",
+      "from": "n48",
+      "to": "n49"
+    },
+    {
+      "id": "c54",
+      "from": "n49",
+      "to": "n50"
+    },
+    {
+      "id": "c55",
+      "from": "n50",
+      "to": "n51"
+    },
+    {
+      "id": "c56",
+      "from": "n46",
+      "to": "n51"
+    },
+    {
+      "id": "c57",
+      "from": "n51",
+      "to": "n52"
+    },
+    {
+      "id": "c58",
+      "from": "n52",
+      "to": "n53"
+    },
+    {
+      "id": "c59",
+      "from": "n53",
+      "to": "n54"
+    },
+    {
+      "id": "c60",
+      "from": "n54",
+      "to": "n55"
+    },
+    {
+      "id": "c61",
+      "from": "n55",
+      "to": "n56"
+    },
+    {
+      "id": "c62",
+      "from": "n56",
+      "to": "n57"
+    },
+    {
+      "id": "c63",
+      "from": "n57",
+      "to": "n58"
+    },
+    {
+      "id": "c64",
+      "from": "n58",
+      "to": "n59"
+    },
+    {
+      "id": "c65",
+      "from": "n59",
+      "to": "n60"
+    },
+    {
+      "id": "c66",
+      "from": "n55",
+      "to": "n60"
+    },
+    {
+      "id": "c67",
+      "from": "n60",
+      "to": "n61"
+    },
+    {
+      "id": "c68",
+      "from": "n61",
+      "to": "n62"
+    },
+    {
+      "id": "c69",
+      "from": "n62",
+      "to": "n63"
+    },
+    {
+      "id": "c70",
+      "from": "n63",
+      "to": "n64"
+    },
+    {
+      "id": "c71",
+      "from": "n64",
+      "to": "n65"
+    },
+    {
+      "id": "c72",
+      "from": "n60",
+      "to": "n65"
+    },
+    {
+      "id": "c73",
+      "from": "n65",
+      "to": "n66"
+    },
+    {
+      "id": "c74",
+      "from": "n66",
+      "to": "n67"
+    },
+    {
+      "id": "c75",
+      "from": "n67",
+      "to": "n68"
+    },
+    {
+      "id": "c76",
+      "from": "n68",
+      "to": "n69"
+    },
+    {
+      "id": "c77",
+      "from": "n69",
+      "to": "n70"
+    },
+    {
+      "id": "c78",
+      "from": "n65",
+      "to": "n70"
+    },
+    {
+      "id": "c79",
+      "from": "n70",
+      "to": "n71"
+    },
+    {
+      "id": "c80",
+      "from": "n71",
+      "to": "n72"
+    },
+    {
+      "id": "c81",
+      "from": "n72",
+      "to": "n73"
+    },
+    {
+      "id": "c82",
+      "from": "n73",
+      "to": "n74"
+    },
+    {
+      "id": "c83",
+      "from": "n74",
+      "to": "n75"
+    },
+    {
+      "id": "c84",
+      "from": "n75",
+      "to": "n76"
+    },
+    {
+      "id": "c85",
+      "from": "n76",
+      "to": "n77"
+    },
+    {
+      "id": "c86",
+      "from": "n77",
+      "to": "n78"
+    }
+  ]
+}

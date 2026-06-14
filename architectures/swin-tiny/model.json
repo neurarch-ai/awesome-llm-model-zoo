@@ -1,0 +1,2014 @@
+{
+  "id": "swin-tiny",
+  "name": "Swin Transformer (Tiny)",
+  "description": "Swin Transformer (Tiny) (Microsoft Research Asia): full graph; dimensions verified against the official config.json.",
+  "components": [
+    {
+      "id": "n1",
+      "type": "input",
+      "name": "image",
+      "position": {
+        "x": 300,
+        "y": 50
+      },
+      "params": {
+        "shape": [
+          3,
+          224,
+          224
+        ]
+      },
+      "inputs": [],
+      "outputs": [
+        "n2"
+      ]
+    },
+    {
+      "id": "n2",
+      "type": "patchEmbed",
+      "name": "patch_embed_4x4",
+      "position": {
+        "x": 300,
+        "y": 200
+      },
+      "params": {
+        "imgSize": 224,
+        "patchSize": 4,
+        "embedDim": 96,
+        "inChans": 3
+      },
+      "inputs": [
+        "n1"
+      ],
+      "outputs": [
+        "n3",
+        "n5"
+      ]
+    },
+    {
+      "id": "n3",
+      "type": "layerNorm",
+      "name": "s1b1_norm1",
+      "position": {
+        "x": 300,
+        "y": 350
+      },
+      "params": {
+        "normalizedShape": 96
+      },
+      "inputs": [
+        "n2"
+      ],
+      "outputs": [
+        "n4"
+      ]
+    },
+    {
+      "id": "n4",
+      "type": "multiHeadAttention",
+      "name": "s1b1_window_attn",
+      "position": {
+        "x": 300,
+        "y": 500
+      },
+      "params": {
+        "embedDim": 96,
+        "numHeads": 3
+      },
+      "inputs": [
+        "n3"
+      ],
+      "outputs": [
+        "n5"
+      ]
+    },
+    {
+      "id": "n5",
+      "type": "add",
+      "name": "s1b1_res1",
+      "position": {
+        "x": 300,
+        "y": 650
+      },
+      "params": {},
+      "inputs": [
+        "n4",
+        "n2"
+      ],
+      "outputs": [
+        "n6",
+        "n8"
+      ]
+    },
+    {
+      "id": "n6",
+      "type": "layerNorm",
+      "name": "s1b1_norm2",
+      "position": {
+        "x": 300,
+        "y": 800
+      },
+      "params": {
+        "normalizedShape": 96
+      },
+      "inputs": [
+        "n5"
+      ],
+      "outputs": [
+        "n7"
+      ]
+    },
+    {
+      "id": "n7",
+      "type": "feedForward",
+      "name": "s1b1_mlp",
+      "position": {
+        "x": 300,
+        "y": 950
+      },
+      "params": {
+        "embedDim": 96,
+        "ffDim": 384
+      },
+      "inputs": [
+        "n6"
+      ],
+      "outputs": [
+        "n8"
+      ]
+    },
+    {
+      "id": "n8",
+      "type": "add",
+      "name": "s1b1_res2",
+      "position": {
+        "x": 300,
+        "y": 1100
+      },
+      "params": {},
+      "inputs": [
+        "n7",
+        "n5"
+      ],
+      "outputs": [
+        "n9",
+        "n11"
+      ]
+    },
+    {
+      "id": "n9",
+      "type": "layerNorm",
+      "name": "s1b2_norm1",
+      "position": {
+        "x": 300,
+        "y": 1250
+      },
+      "params": {
+        "normalizedShape": 96
+      },
+      "inputs": [
+        "n8"
+      ],
+      "outputs": [
+        "n10"
+      ]
+    },
+    {
+      "id": "n10",
+      "type": "multiHeadAttention",
+      "name": "s1b2_shifted_window_attn",
+      "position": {
+        "x": 300,
+        "y": 1400
+      },
+      "params": {
+        "embedDim": 96,
+        "numHeads": 3
+      },
+      "inputs": [
+        "n9"
+      ],
+      "outputs": [
+        "n11"
+      ]
+    },
+    {
+      "id": "n11",
+      "type": "add",
+      "name": "s1b2_res1",
+      "position": {
+        "x": 300,
+        "y": 1550
+      },
+      "params": {},
+      "inputs": [
+        "n10",
+        "n8"
+      ],
+      "outputs": [
+        "n12",
+        "n14"
+      ]
+    },
+    {
+      "id": "n12",
+      "type": "layerNorm",
+      "name": "s1b2_norm2",
+      "position": {
+        "x": 300,
+        "y": 1700
+      },
+      "params": {
+        "normalizedShape": 96
+      },
+      "inputs": [
+        "n11"
+      ],
+      "outputs": [
+        "n13"
+      ]
+    },
+    {
+      "id": "n13",
+      "type": "feedForward",
+      "name": "s1b2_mlp",
+      "position": {
+        "x": 300,
+        "y": 1850
+      },
+      "params": {
+        "embedDim": 96,
+        "ffDim": 384
+      },
+      "inputs": [
+        "n12"
+      ],
+      "outputs": [
+        "n14"
+      ]
+    },
+    {
+      "id": "n14",
+      "type": "add",
+      "name": "s1b2_res2",
+      "position": {
+        "x": 300,
+        "y": 2000
+      },
+      "params": {},
+      "inputs": [
+        "n13",
+        "n11"
+      ],
+      "outputs": [
+        "n15"
+      ]
+    },
+    {
+      "id": "n15",
+      "type": "linear",
+      "name": "patch_merging_2",
+      "position": {
+        "x": 300,
+        "y": 2150
+      },
+      "params": {
+        "inFeatures": 384,
+        "outFeatures": 192
+      },
+      "inputs": [
+        "n14"
+      ],
+      "outputs": [
+        "n16",
+        "n18"
+      ]
+    },
+    {
+      "id": "n16",
+      "type": "layerNorm",
+      "name": "s2b1_norm1",
+      "position": {
+        "x": 300,
+        "y": 2300
+      },
+      "params": {
+        "normalizedShape": 192
+      },
+      "inputs": [
+        "n15"
+      ],
+      "outputs": [
+        "n17"
+      ]
+    },
+    {
+      "id": "n17",
+      "type": "multiHeadAttention",
+      "name": "s2b1_window_attn",
+      "position": {
+        "x": 300,
+        "y": 2450
+      },
+      "params": {
+        "embedDim": 192,
+        "numHeads": 6
+      },
+      "inputs": [
+        "n16"
+      ],
+      "outputs": [
+        "n18"
+      ]
+    },
+    {
+      "id": "n18",
+      "type": "add",
+      "name": "s2b1_res1",
+      "position": {
+        "x": 300,
+        "y": 2600
+      },
+      "params": {},
+      "inputs": [
+        "n17",
+        "n15"
+      ],
+      "outputs": [
+        "n19",
+        "n21"
+      ]
+    },
+    {
+      "id": "n19",
+      "type": "layerNorm",
+      "name": "s2b1_norm2",
+      "position": {
+        "x": 300,
+        "y": 2750
+      },
+      "params": {
+        "normalizedShape": 192
+      },
+      "inputs": [
+        "n18"
+      ],
+      "outputs": [
+        "n20"
+      ]
+    },
+    {
+      "id": "n20",
+      "type": "feedForward",
+      "name": "s2b1_mlp",
+      "position": {
+        "x": 300,
+        "y": 2900
+      },
+      "params": {
+        "embedDim": 192,
+        "ffDim": 768
+      },
+      "inputs": [
+        "n19"
+      ],
+      "outputs": [
+        "n21"
+      ]
+    },
+    {
+      "id": "n21",
+      "type": "add",
+      "name": "s2b1_res2",
+      "position": {
+        "x": 300,
+        "y": 3050
+      },
+      "params": {},
+      "inputs": [
+        "n20",
+        "n18"
+      ],
+      "outputs": [
+        "n22",
+        "n24"
+      ]
+    },
+    {
+      "id": "n22",
+      "type": "layerNorm",
+      "name": "s2b2_norm1",
+      "position": {
+        "x": 300,
+        "y": 3200
+      },
+      "params": {
+        "normalizedShape": 192
+      },
+      "inputs": [
+        "n21"
+      ],
+      "outputs": [
+        "n23"
+      ]
+    },
+    {
+      "id": "n23",
+      "type": "multiHeadAttention",
+      "name": "s2b2_shifted_window_attn",
+      "position": {
+        "x": 300,
+        "y": 3350
+      },
+      "params": {
+        "embedDim": 192,
+        "numHeads": 6
+      },
+      "inputs": [
+        "n22"
+      ],
+      "outputs": [
+        "n24"
+      ]
+    },
+    {
+      "id": "n24",
+      "type": "add",
+      "name": "s2b2_res1",
+      "position": {
+        "x": 300,
+        "y": 3500
+      },
+      "params": {},
+      "inputs": [
+        "n23",
+        "n21"
+      ],
+      "outputs": [
+        "n25",
+        "n27"
+      ]
+    },
+    {
+      "id": "n25",
+      "type": "layerNorm",
+      "name": "s2b2_norm2",
+      "position": {
+        "x": 300,
+        "y": 3650
+      },
+      "params": {
+        "normalizedShape": 192
+      },
+      "inputs": [
+        "n24"
+      ],
+      "outputs": [
+        "n26"
+      ]
+    },
+    {
+      "id": "n26",
+      "type": "feedForward",
+      "name": "s2b2_mlp",
+      "position": {
+        "x": 300,
+        "y": 3800
+      },
+      "params": {
+        "embedDim": 192,
+        "ffDim": 768
+      },
+      "inputs": [
+        "n25"
+      ],
+      "outputs": [
+        "n27"
+      ]
+    },
+    {
+      "id": "n27",
+      "type": "add",
+      "name": "s2b2_res2",
+      "position": {
+        "x": 300,
+        "y": 3950
+      },
+      "params": {},
+      "inputs": [
+        "n26",
+        "n24"
+      ],
+      "outputs": [
+        "n28"
+      ]
+    },
+    {
+      "id": "n28",
+      "type": "linear",
+      "name": "patch_merging_3",
+      "position": {
+        "x": 300,
+        "y": 4100
+      },
+      "params": {
+        "inFeatures": 768,
+        "outFeatures": 384
+      },
+      "inputs": [
+        "n27"
+      ],
+      "outputs": [
+        "n29",
+        "n31"
+      ]
+    },
+    {
+      "id": "n29",
+      "type": "layerNorm",
+      "name": "s3b1_norm1",
+      "position": {
+        "x": 300,
+        "y": 4250
+      },
+      "params": {
+        "normalizedShape": 384
+      },
+      "inputs": [
+        "n28"
+      ],
+      "outputs": [
+        "n30"
+      ]
+    },
+    {
+      "id": "n30",
+      "type": "multiHeadAttention",
+      "name": "s3b1_window_attn",
+      "position": {
+        "x": 300,
+        "y": 4400
+      },
+      "params": {
+        "embedDim": 384,
+        "numHeads": 12
+      },
+      "inputs": [
+        "n29"
+      ],
+      "outputs": [
+        "n31"
+      ]
+    },
+    {
+      "id": "n31",
+      "type": "add",
+      "name": "s3b1_res1",
+      "position": {
+        "x": 300,
+        "y": 4550
+      },
+      "params": {},
+      "inputs": [
+        "n30",
+        "n28"
+      ],
+      "outputs": [
+        "n32",
+        "n34"
+      ]
+    },
+    {
+      "id": "n32",
+      "type": "layerNorm",
+      "name": "s3b1_norm2",
+      "position": {
+        "x": 300,
+        "y": 4700
+      },
+      "params": {
+        "normalizedShape": 384
+      },
+      "inputs": [
+        "n31"
+      ],
+      "outputs": [
+        "n33"
+      ]
+    },
+    {
+      "id": "n33",
+      "type": "feedForward",
+      "name": "s3b1_mlp",
+      "position": {
+        "x": 300,
+        "y": 4850
+      },
+      "params": {
+        "embedDim": 384,
+        "ffDim": 1536
+      },
+      "inputs": [
+        "n32"
+      ],
+      "outputs": [
+        "n34"
+      ]
+    },
+    {
+      "id": "n34",
+      "type": "add",
+      "name": "s3b1_res2",
+      "position": {
+        "x": 300,
+        "y": 5000
+      },
+      "params": {},
+      "inputs": [
+        "n33",
+        "n31"
+      ],
+      "outputs": [
+        "n35",
+        "n37"
+      ]
+    },
+    {
+      "id": "n35",
+      "type": "layerNorm",
+      "name": "s3b2_norm1",
+      "position": {
+        "x": 300,
+        "y": 5150
+      },
+      "params": {
+        "normalizedShape": 384
+      },
+      "inputs": [
+        "n34"
+      ],
+      "outputs": [
+        "n36"
+      ]
+    },
+    {
+      "id": "n36",
+      "type": "multiHeadAttention",
+      "name": "s3b2_shifted_window_attn",
+      "position": {
+        "x": 300,
+        "y": 5300
+      },
+      "params": {
+        "embedDim": 384,
+        "numHeads": 12
+      },
+      "inputs": [
+        "n35"
+      ],
+      "outputs": [
+        "n37"
+      ]
+    },
+    {
+      "id": "n37",
+      "type": "add",
+      "name": "s3b2_res1",
+      "position": {
+        "x": 300,
+        "y": 5450
+      },
+      "params": {},
+      "inputs": [
+        "n36",
+        "n34"
+      ],
+      "outputs": [
+        "n38",
+        "n40"
+      ]
+    },
+    {
+      "id": "n38",
+      "type": "layerNorm",
+      "name": "s3b2_norm2",
+      "position": {
+        "x": 300,
+        "y": 5600
+      },
+      "params": {
+        "normalizedShape": 384
+      },
+      "inputs": [
+        "n37"
+      ],
+      "outputs": [
+        "n39"
+      ]
+    },
+    {
+      "id": "n39",
+      "type": "feedForward",
+      "name": "s3b2_mlp",
+      "position": {
+        "x": 300,
+        "y": 5750
+      },
+      "params": {
+        "embedDim": 384,
+        "ffDim": 1536
+      },
+      "inputs": [
+        "n38"
+      ],
+      "outputs": [
+        "n40"
+      ]
+    },
+    {
+      "id": "n40",
+      "type": "add",
+      "name": "s3b2_res2",
+      "position": {
+        "x": 300,
+        "y": 5900
+      },
+      "params": {},
+      "inputs": [
+        "n39",
+        "n37"
+      ],
+      "outputs": [
+        "n41",
+        "n43"
+      ]
+    },
+    {
+      "id": "n41",
+      "type": "layerNorm",
+      "name": "s3b3_norm1",
+      "position": {
+        "x": 300,
+        "y": 6050
+      },
+      "params": {
+        "normalizedShape": 384
+      },
+      "inputs": [
+        "n40"
+      ],
+      "outputs": [
+        "n42"
+      ]
+    },
+    {
+      "id": "n42",
+      "type": "multiHeadAttention",
+      "name": "s3b3_window_attn",
+      "position": {
+        "x": 300,
+        "y": 6200
+      },
+      "params": {
+        "embedDim": 384,
+        "numHeads": 12
+      },
+      "inputs": [
+        "n41"
+      ],
+      "outputs": [
+        "n43"
+      ]
+    },
+    {
+      "id": "n43",
+      "type": "add",
+      "name": "s3b3_res1",
+      "position": {
+        "x": 300,
+        "y": 6350
+      },
+      "params": {},
+      "inputs": [
+        "n42",
+        "n40"
+      ],
+      "outputs": [
+        "n44",
+        "n46"
+      ]
+    },
+    {
+      "id": "n44",
+      "type": "layerNorm",
+      "name": "s3b3_norm2",
+      "position": {
+        "x": 300,
+        "y": 6500
+      },
+      "params": {
+        "normalizedShape": 384
+      },
+      "inputs": [
+        "n43"
+      ],
+      "outputs": [
+        "n45"
+      ]
+    },
+    {
+      "id": "n45",
+      "type": "feedForward",
+      "name": "s3b3_mlp",
+      "position": {
+        "x": 300,
+        "y": 6650
+      },
+      "params": {
+        "embedDim": 384,
+        "ffDim": 1536
+      },
+      "inputs": [
+        "n44"
+      ],
+      "outputs": [
+        "n46"
+      ]
+    },
+    {
+      "id": "n46",
+      "type": "add",
+      "name": "s3b3_res2",
+      "position": {
+        "x": 300,
+        "y": 6800
+      },
+      "params": {},
+      "inputs": [
+        "n45",
+        "n43"
+      ],
+      "outputs": [
+        "n47",
+        "n49"
+      ]
+    },
+    {
+      "id": "n47",
+      "type": "layerNorm",
+      "name": "s3b4_norm1",
+      "position": {
+        "x": 300,
+        "y": 6950
+      },
+      "params": {
+        "normalizedShape": 384
+      },
+      "inputs": [
+        "n46"
+      ],
+      "outputs": [
+        "n48"
+      ]
+    },
+    {
+      "id": "n48",
+      "type": "multiHeadAttention",
+      "name": "s3b4_shifted_window_attn",
+      "position": {
+        "x": 300,
+        "y": 7100
+      },
+      "params": {
+        "embedDim": 384,
+        "numHeads": 12
+      },
+      "inputs": [
+        "n47"
+      ],
+      "outputs": [
+        "n49"
+      ]
+    },
+    {
+      "id": "n49",
+      "type": "add",
+      "name": "s3b4_res1",
+      "position": {
+        "x": 300,
+        "y": 7250
+      },
+      "params": {},
+      "inputs": [
+        "n48",
+        "n46"
+      ],
+      "outputs": [
+        "n50",
+        "n52"
+      ]
+    },
+    {
+      "id": "n50",
+      "type": "layerNorm",
+      "name": "s3b4_norm2",
+      "position": {
+        "x": 300,
+        "y": 7400
+      },
+      "params": {
+        "normalizedShape": 384
+      },
+      "inputs": [
+        "n49"
+      ],
+      "outputs": [
+        "n51"
+      ]
+    },
+    {
+      "id": "n51",
+      "type": "feedForward",
+      "name": "s3b4_mlp",
+      "position": {
+        "x": 300,
+        "y": 7550
+      },
+      "params": {
+        "embedDim": 384,
+        "ffDim": 1536
+      },
+      "inputs": [
+        "n50"
+      ],
+      "outputs": [
+        "n52"
+      ]
+    },
+    {
+      "id": "n52",
+      "type": "add",
+      "name": "s3b4_res2",
+      "position": {
+        "x": 300,
+        "y": 7700
+      },
+      "params": {},
+      "inputs": [
+        "n51",
+        "n49"
+      ],
+      "outputs": [
+        "n53",
+        "n55"
+      ]
+    },
+    {
+      "id": "n53",
+      "type": "layerNorm",
+      "name": "s3b5_norm1",
+      "position": {
+        "x": 300,
+        "y": 7850
+      },
+      "params": {
+        "normalizedShape": 384
+      },
+      "inputs": [
+        "n52"
+      ],
+      "outputs": [
+        "n54"
+      ]
+    },
+    {
+      "id": "n54",
+      "type": "multiHeadAttention",
+      "name": "s3b5_window_attn",
+      "position": {
+        "x": 300,
+        "y": 8000
+      },
+      "params": {
+        "embedDim": 384,
+        "numHeads": 12
+      },
+      "inputs": [
+        "n53"
+      ],
+      "outputs": [
+        "n55"
+      ]
+    },
+    {
+      "id": "n55",
+      "type": "add",
+      "name": "s3b5_res1",
+      "position": {
+        "x": 300,
+        "y": 8150
+      },
+      "params": {},
+      "inputs": [
+        "n54",
+        "n52"
+      ],
+      "outputs": [
+        "n56",
+        "n58"
+      ]
+    },
+    {
+      "id": "n56",
+      "type": "layerNorm",
+      "name": "s3b5_norm2",
+      "position": {
+        "x": 300,
+        "y": 8300
+      },
+      "params": {
+        "normalizedShape": 384
+      },
+      "inputs": [
+        "n55"
+      ],
+      "outputs": [
+        "n57"
+      ]
+    },
+    {
+      "id": "n57",
+      "type": "feedForward",
+      "name": "s3b5_mlp",
+      "position": {
+        "x": 300,
+        "y": 8450
+      },
+      "params": {
+        "embedDim": 384,
+        "ffDim": 1536
+      },
+      "inputs": [
+        "n56"
+      ],
+      "outputs": [
+        "n58"
+      ]
+    },
+    {
+      "id": "n58",
+      "type": "add",
+      "name": "s3b5_res2",
+      "position": {
+        "x": 300,
+        "y": 8600
+      },
+      "params": {},
+      "inputs": [
+        "n57",
+        "n55"
+      ],
+      "outputs": [
+        "n59",
+        "n61"
+      ]
+    },
+    {
+      "id": "n59",
+      "type": "layerNorm",
+      "name": "s3b6_norm1",
+      "position": {
+        "x": 300,
+        "y": 8750
+      },
+      "params": {
+        "normalizedShape": 384
+      },
+      "inputs": [
+        "n58"
+      ],
+      "outputs": [
+        "n60"
+      ]
+    },
+    {
+      "id": "n60",
+      "type": "multiHeadAttention",
+      "name": "s3b6_shifted_window_attn",
+      "position": {
+        "x": 300,
+        "y": 8900
+      },
+      "params": {
+        "embedDim": 384,
+        "numHeads": 12
+      },
+      "inputs": [
+        "n59"
+      ],
+      "outputs": [
+        "n61"
+      ]
+    },
+    {
+      "id": "n61",
+      "type": "add",
+      "name": "s3b6_res1",
+      "position": {
+        "x": 300,
+        "y": 9050
+      },
+      "params": {},
+      "inputs": [
+        "n60",
+        "n58"
+      ],
+      "outputs": [
+        "n62",
+        "n64"
+      ]
+    },
+    {
+      "id": "n62",
+      "type": "layerNorm",
+      "name": "s3b6_norm2",
+      "position": {
+        "x": 300,
+        "y": 9200
+      },
+      "params": {
+        "normalizedShape": 384
+      },
+      "inputs": [
+        "n61"
+      ],
+      "outputs": [
+        "n63"
+      ]
+    },
+    {
+      "id": "n63",
+      "type": "feedForward",
+      "name": "s3b6_mlp",
+      "position": {
+        "x": 300,
+        "y": 9350
+      },
+      "params": {
+        "embedDim": 384,
+        "ffDim": 1536
+      },
+      "inputs": [
+        "n62"
+      ],
+      "outputs": [
+        "n64"
+      ]
+    },
+    {
+      "id": "n64",
+      "type": "add",
+      "name": "s3b6_res2",
+      "position": {
+        "x": 300,
+        "y": 9500
+      },
+      "params": {},
+      "inputs": [
+        "n63",
+        "n61"
+      ],
+      "outputs": [
+        "n65"
+      ]
+    },
+    {
+      "id": "n65",
+      "type": "linear",
+      "name": "patch_merging_4",
+      "position": {
+        "x": 300,
+        "y": 9650
+      },
+      "params": {
+        "inFeatures": 1536,
+        "outFeatures": 768
+      },
+      "inputs": [
+        "n64"
+      ],
+      "outputs": [
+        "n66",
+        "n68"
+      ]
+    },
+    {
+      "id": "n66",
+      "type": "layerNorm",
+      "name": "s4b1_norm1",
+      "position": {
+        "x": 300,
+        "y": 9800
+      },
+      "params": {
+        "normalizedShape": 768
+      },
+      "inputs": [
+        "n65"
+      ],
+      "outputs": [
+        "n67"
+      ]
+    },
+    {
+      "id": "n67",
+      "type": "multiHeadAttention",
+      "name": "s4b1_window_attn",
+      "position": {
+        "x": 300,
+        "y": 9950
+      },
+      "params": {
+        "embedDim": 768,
+        "numHeads": 24
+      },
+      "inputs": [
+        "n66"
+      ],
+      "outputs": [
+        "n68"
+      ]
+    },
+    {
+      "id": "n68",
+      "type": "add",
+      "name": "s4b1_res1",
+      "position": {
+        "x": 300,
+        "y": 10100
+      },
+      "params": {},
+      "inputs": [
+        "n67",
+        "n65"
+      ],
+      "outputs": [
+        "n69",
+        "n71"
+      ]
+    },
+    {
+      "id": "n69",
+      "type": "layerNorm",
+      "name": "s4b1_norm2",
+      "position": {
+        "x": 300,
+        "y": 10250
+      },
+      "params": {
+        "normalizedShape": 768
+      },
+      "inputs": [
+        "n68"
+      ],
+      "outputs": [
+        "n70"
+      ]
+    },
+    {
+      "id": "n70",
+      "type": "feedForward",
+      "name": "s4b1_mlp",
+      "position": {
+        "x": 300,
+        "y": 10400
+      },
+      "params": {
+        "embedDim": 768,
+        "ffDim": 3072
+      },
+      "inputs": [
+        "n69"
+      ],
+      "outputs": [
+        "n71"
+      ]
+    },
+    {
+      "id": "n71",
+      "type": "add",
+      "name": "s4b1_res2",
+      "position": {
+        "x": 300,
+        "y": 10550
+      },
+      "params": {},
+      "inputs": [
+        "n70",
+        "n68"
+      ],
+      "outputs": [
+        "n72",
+        "n74"
+      ]
+    },
+    {
+      "id": "n72",
+      "type": "layerNorm",
+      "name": "s4b2_norm1",
+      "position": {
+        "x": 300,
+        "y": 10700
+      },
+      "params": {
+        "normalizedShape": 768
+      },
+      "inputs": [
+        "n71"
+      ],
+      "outputs": [
+        "n73"
+      ]
+    },
+    {
+      "id": "n73",
+      "type": "multiHeadAttention",
+      "name": "s4b2_shifted_window_attn",
+      "position": {
+        "x": 300,
+        "y": 10850
+      },
+      "params": {
+        "embedDim": 768,
+        "numHeads": 24
+      },
+      "inputs": [
+        "n72"
+      ],
+      "outputs": [
+        "n74"
+      ]
+    },
+    {
+      "id": "n74",
+      "type": "add",
+      "name": "s4b2_res1",
+      "position": {
+        "x": 300,
+        "y": 11000
+      },
+      "params": {},
+      "inputs": [
+        "n73",
+        "n71"
+      ],
+      "outputs": [
+        "n75",
+        "n77"
+      ]
+    },
+    {
+      "id": "n75",
+      "type": "layerNorm",
+      "name": "s4b2_norm2",
+      "position": {
+        "x": 300,
+        "y": 11150
+      },
+      "params": {
+        "normalizedShape": 768
+      },
+      "inputs": [
+        "n74"
+      ],
+      "outputs": [
+        "n76"
+      ]
+    },
+    {
+      "id": "n76",
+      "type": "feedForward",
+      "name": "s4b2_mlp",
+      "position": {
+        "x": 300,
+        "y": 11300
+      },
+      "params": {
+        "embedDim": 768,
+        "ffDim": 3072
+      },
+      "inputs": [
+        "n75"
+      ],
+      "outputs": [
+        "n77"
+      ]
+    },
+    {
+      "id": "n77",
+      "type": "add",
+      "name": "s4b2_res2",
+      "position": {
+        "x": 300,
+        "y": 11450
+      },
+      "params": {},
+      "inputs": [
+        "n76",
+        "n74"
+      ],
+      "outputs": [
+        "n78"
+      ]
+    },
+    {
+      "id": "n78",
+      "type": "layerNorm",
+      "name": "final_norm",
+      "position": {
+        "x": 300,
+        "y": 11600
+      },
+      "params": {
+        "normalizedShape": 768
+      },
+      "inputs": [
+        "n77"
+      ],
+      "outputs": [
+        "n79"
+      ]
+    },
+    {
+      "id": "n79",
+      "type": "globalAvgPool1d",
+      "name": "avgpool",
+      "position": {
+        "x": 300,
+        "y": 11750
+      },
+      "params": {},
+      "inputs": [
+        "n78"
+      ],
+      "outputs": [
+        "n80"
+      ]
+    },
+    {
+      "id": "n80",
+      "type": "linear",
+      "name": "classifier",
+      "position": {
+        "x": 300,
+        "y": 11900
+      },
+      "params": {
+        "inFeatures": 768,
+        "outFeatures": 1000
+      },
+      "inputs": [
+        "n79"
+      ],
+      "outputs": [
+        "n81"
+      ]
+    },
+    {
+      "id": "n81",
+      "type": "output",
+      "name": "class_logits",
+      "position": {
+        "x": 300,
+        "y": 12050
+      },
+      "params": {},
+      "inputs": [
+        "n80"
+      ],
+      "outputs": []
+    }
+  ],
+  "connections": [
+    {
+      "id": "c1",
+      "from": "n1",
+      "to": "n2"
+    },
+    {
+      "id": "c2",
+      "from": "n2",
+      "to": "n3"
+    },
+    {
+      "id": "c3",
+      "from": "n3",
+      "to": "n4"
+    },
+    {
+      "id": "c4",
+      "from": "n4",
+      "to": "n5"
+    },
+    {
+      "id": "c5",
+      "from": "n2",
+      "to": "n5"
+    },
+    {
+      "id": "c6",
+      "from": "n5",
+      "to": "n6"
+    },
+    {
+      "id": "c7",
+      "from": "n6",
+      "to": "n7"
+    },
+    {
+      "id": "c8",
+      "from": "n7",
+      "to": "n8"
+    },
+    {
+      "id": "c9",
+      "from": "n5",
+      "to": "n8"
+    },
+    {
+      "id": "c10",
+      "from": "n8",
+      "to": "n9"
+    },
+    {
+      "id": "c11",
+      "from": "n9",
+      "to": "n10"
+    },
+    {
+      "id": "c12",
+      "from": "n10",
+      "to": "n11"
+    },
+    {
+      "id": "c13",
+      "from": "n8",
+      "to": "n11"
+    },
+    {
+      "id": "c14",
+      "from": "n11",
+      "to": "n12"
+    },
+    {
+      "id": "c15",
+      "from": "n12",
+      "to": "n13"
+    },
+    {
+      "id": "c16",
+      "from": "n13",
+      "to": "n14"
+    },
+    {
+      "id": "c17",
+      "from": "n11",
+      "to": "n14"
+    },
+    {
+      "id": "c18",
+      "from": "n14",
+      "to": "n15"
+    },
+    {
+      "id": "c19",
+      "from": "n15",
+      "to": "n16"
+    },
+    {
+      "id": "c20",
+      "from": "n16",
+      "to": "n17"
+    },
+    {
+      "id": "c21",
+      "from": "n17",
+      "to": "n18"
+    },
+    {
+      "id": "c22",
+      "from": "n15",
+      "to": "n18"
+    },
+    {
+      "id": "c23",
+      "from": "n18",
+      "to": "n19"
+    },
+    {
+      "id": "c24",
+      "from": "n19",
+      "to": "n20"
+    },
+    {
+      "id": "c25",
+      "from": "n20",
+      "to": "n21"
+    },
+    {
+      "id": "c26",
+      "from": "n18",
+      "to": "n21"
+    },
+    {
+      "id": "c27",
+      "from": "n21",
+      "to": "n22"
+    },
+    {
+      "id": "c28",
+      "from": "n22",
+      "to": "n23"
+    },
+    {
+      "id": "c29",
+      "from": "n23",
+      "to": "n24"
+    },
+    {
+      "id": "c30",
+      "from": "n21",
+      "to": "n24"
+    },
+    {
+      "id": "c31",
+      "from": "n24",
+      "to": "n25"
+    },
+    {
+      "id": "c32",
+      "from": "n25",
+      "to": "n26"
+    },
+    {
+      "id": "c33",
+      "from": "n26",
+      "to": "n27"
+    },
+    {
+      "id": "c34",
+      "from": "n24",
+      "to": "n27"
+    },
+    {
+      "id": "c35",
+      "from": "n27",
+      "to": "n28"
+    },
+    {
+      "id": "c36",
+      "from": "n28",
+      "to": "n29"
+    },
+    {
+      "id": "c37",
+      "from": "n29",
+      "to": "n30"
+    },
+    {
+      "id": "c38",
+      "from": "n30",
+      "to": "n31"
+    },
+    {
+      "id": "c39",
+      "from": "n28",
+      "to": "n31"
+    },
+    {
+      "id": "c40",
+      "from": "n31",
+      "to": "n32"
+    },
+    {
+      "id": "c41",
+      "from": "n32",
+      "to": "n33"
+    },
+    {
+      "id": "c42",
+      "from": "n33",
+      "to": "n34"
+    },
+    {
+      "id": "c43",
+      "from": "n31",
+      "to": "n34"
+    },
+    {
+      "id": "c44",
+      "from": "n34",
+      "to": "n35"
+    },
+    {
+      "id": "c45",
+      "from": "n35",
+      "to": "n36"
+    },
+    {
+      "id": "c46",
+      "from": "n36",
+      "to": "n37"
+    },
+    {
+      "id": "c47",
+      "from": "n34",
+      "to": "n37"
+    },
+    {
+      "id": "c48",
+      "from": "n37",
+      "to": "n38"
+    },
+    {
+      "id": "c49",
+      "from": "n38",
+      "to": "n39"
+    },
+    {
+      "id": "c50",
+      "from": "n39",
+      "to": "n40"
+    },
+    {
+      "id": "c51",
+      "from": "n37",
+      "to": "n40"
+    },
+    {
+      "id": "c52",
+      "from": "n40",
+      "to": "n41"
+    },
+    {
+      "id": "c53",
+      "from": "n41",
+      "to": "n42"
+    },
+    {
+      "id": "c54",
+      "from": "n42",
+      "to": "n43"
+    },
+    {
+      "id": "c55",
+      "from": "n40",
+      "to": "n43"
+    },
+    {
+      "id": "c56",
+      "from": "n43",
+      "to": "n44"
+    },
+    {
+      "id": "c57",
+      "from": "n44",
+      "to": "n45"
+    },
+    {
+      "id": "c58",
+      "from": "n45",
+      "to": "n46"
+    },
+    {
+      "id": "c59",
+      "from": "n43",
+      "to": "n46"
+    },
+    {
+      "id": "c60",
+      "from": "n46",
+      "to": "n47"
+    },
+    {
+      "id": "c61",
+      "from": "n47",
+      "to": "n48"
+    },
+    {
+      "id": "c62",
+      "from": "n48",
+      "to": "n49"
+    },
+    {
+      "id": "c63",
+      "from": "n46",
+      "to": "n49"
+    },
+    {
+      "id": "c64",
+      "from": "n49",
+      "to": "n50"
+    },
+    {
+      "id": "c65",
+      "from": "n50",
+      "to": "n51"
+    },
+    {
+      "id": "c66",
+      "from": "n51",
+      "to": "n52"
+    },
+    {
+      "id": "c67",
+      "from": "n49",
+      "to": "n52"
+    },
+    {
+      "id": "c68",
+      "from": "n52",
+      "to": "n53"
+    },
+    {
+      "id": "c69",
+      "from": "n53",
+      "to": "n54"
+    },
+    {
+      "id": "c70",
+      "from": "n54",
+      "to": "n55"
+    },
+    {
+      "id": "c71",
+      "from": "n52",
+      "to": "n55"
+    },
+    {
+      "id": "c72",
+      "from": "n55",
+      "to": "n56"
+    },
+    {
+      "id": "c73",
+      "from": "n56",
+      "to": "n57"
+    },
+    {
+      "id": "c74",
+      "from": "n57",
+      "to": "n58"
+    },
+    {
+      "id": "c75",
+      "from": "n55",
+      "to": "n58"
+    },
+    {
+      "id": "c76",
+      "from": "n58",
+      "to": "n59"
+    },
+    {
+      "id": "c77",
+      "from": "n59",
+      "to": "n60"
+    },
+    {
+      "id": "c78",
+      "from": "n60",
+      "to": "n61"
+    },
+    {
+      "id": "c79",
+      "from": "n58",
+      "to": "n61"
+    },
+    {
+      "id": "c80",
+      "from": "n61",
+      "to": "n62"
+    },
+    {
+      "id": "c81",
+      "from": "n62",
+      "to": "n63"
+    },
+    {
+      "id": "c82",
+      "from": "n63",
+      "to": "n64"
+    },
+    {
+      "id": "c83",
+      "from": "n61",
+      "to": "n64"
+    },
+    {
+      "id": "c84",
+      "from": "n64",
+      "to": "n65"
+    },
+    {
+      "id": "c85",
+      "from": "n65",
+      "to": "n66"
+    },
+    {
+      "id": "c86",
+      "from": "n66",
+      "to": "n67"
+    },
+    {
+      "id": "c87",
+      "from": "n67",
+      "to": "n68"
+    },
+    {
+      "id": "c88",
+      "from": "n65",
+      "to": "n68"
+    },
+    {
+      "id": "c89",
+      "from": "n68",
+      "to": "n69"
+    },
+    {
+      "id": "c90",
+      "from": "n69",
+      "to": "n70"
+    },
+    {
+      "id": "c91",
+      "from": "n70",
+      "to": "n71"
+    },
+    {
+      "id": "c92",
+      "from": "n68",
+      "to": "n71"
+    },
+    {
+      "id": "c93",
+      "from": "n71",
+      "to": "n72"
+    },
+    {
+      "id": "c94",
+      "from": "n72",
+      "to": "n73"
+    },
+    {
+      "id": "c95",
+      "from": "n73",
+      "to": "n74"
+    },
+    {
+      "id": "c96",
+      "from": "n71",
+      "to": "n74"
+    },
+    {
+      "id": "c97",
+      "from": "n74",
+      "to": "n75"
+    },
+    {
+      "id": "c98",
+      "from": "n75",
+      "to": "n76"
+    },
+    {
+      "id": "c99",
+      "from": "n76",
+      "to": "n77"
+    },
+    {
+      "id": "c100",
+      "from": "n74",
+      "to": "n77"
+    },
+    {
+      "id": "c101",
+      "from": "n77",
+      "to": "n78"
+    },
+    {
+      "id": "c102",
+      "from": "n78",
+      "to": "n79"
+    },
+    {
+      "id": "c103",
+      "from": "n79",
+      "to": "n80"
+    },
+    {
+      "id": "c104",
+      "from": "n80",
+      "to": "n81"
+    }
+  ]
+}
