@@ -6,7 +6,7 @@ The 12B of Google's Gemma 4 generation, the strongest permissively-distributed d
 
 | Where | URL |
 |---|---|
-| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/neurarch-model-zoo/main/architectures/gemma-4-12b/model.json |
+| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/gemma-4-12b/model.json |
 | Hugging Face | https://huggingface.co/google/gemma-4-12b |
 | GitHub | https://github.com/google-deepmind/gemma |
 

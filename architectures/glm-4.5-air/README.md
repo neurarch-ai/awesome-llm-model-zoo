@@ -6,7 +6,7 @@ Zhipu AI's agent-focused MoE in its deployable Air size. Distinctive for spendin
 
 | Where | URL |
 |---|---|
-| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/neurarch-model-zoo/main/architectures/glm-4.5-air/model.json |
+| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/glm-4.5-air/model.json |
 | Hugging Face | https://huggingface.co/zai-org/GLM-4.5-Air |
 | GitHub | https://github.com/zai-org/GLM-4.5 |
 

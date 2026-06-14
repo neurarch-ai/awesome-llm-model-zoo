@@ -6,7 +6,7 @@ The dense 8B from the Qwen3 generation, the default open model of 2025 by downlo
 
 | Where | URL |
 |---|---|
-| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/neurarch-model-zoo/main/architectures/qwen3-8b/model.json |
+| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/qwen3-8b/model.json |
 | Hugging Face | https://huggingface.co/Qwen/Qwen3-8B |
 | GitHub | https://github.com/QwenLM/Qwen3 |
 

@@ -1,0 +1,255 @@
+{
+  "id": "deepfm",
+  "name": "DeepFM",
+  "description": "DeepFM (Huawei Noah's Ark Lab): full graph; dimensions verified against the official config.json.",
+  "components": [
+    {
+      "id": "n1",
+      "type": "input",
+      "name": "sparse_fields",
+      "position": {
+        "x": 300,
+        "y": 50
+      },
+      "params": {
+        "shape": [
+          1,
+          39
+        ]
+      },
+      "inputs": [],
+      "outputs": [
+        "n2"
+      ]
+    },
+    {
+      "id": "n2",
+      "type": "embedding",
+      "name": "shared_embed",
+      "position": {
+        "x": 300,
+        "y": 200
+      },
+      "params": {
+        "numEmbeddings": 1000000,
+        "embeddingDim": 10
+      },
+      "inputs": [
+        "n1"
+      ],
+      "outputs": [
+        "n3",
+        "n5"
+      ]
+    },
+    {
+      "id": "n3",
+      "type": "multiply",
+      "name": "fm_interactions",
+      "position": {
+        "x": 80,
+        "y": 400
+      },
+      "params": {},
+      "inputs": [
+        "n2"
+      ],
+      "outputs": [
+        "n4"
+      ]
+    },
+    {
+      "id": "n4",
+      "type": "linear",
+      "name": "fm_logit",
+      "position": {
+        "x": 80,
+        "y": 550
+      },
+      "params": {
+        "inFeatures": 10,
+        "outFeatures": 1
+      },
+      "inputs": [
+        "n3"
+      ],
+      "outputs": [
+        "n9"
+      ]
+    },
+    {
+      "id": "n5",
+      "type": "flatten",
+      "name": "flatten",
+      "position": {
+        "x": 520,
+        "y": 400
+      },
+      "params": {},
+      "inputs": [
+        "n2"
+      ],
+      "outputs": [
+        "n6"
+      ]
+    },
+    {
+      "id": "n6",
+      "type": "linear",
+      "name": "deep_1",
+      "position": {
+        "x": 520,
+        "y": 550
+      },
+      "params": {
+        "outFeatures": 400,
+        "inFeatures": 10
+      },
+      "inputs": [
+        "n5"
+      ],
+      "outputs": [
+        "n7"
+      ]
+    },
+    {
+      "id": "n7",
+      "type": "relu",
+      "name": "relu_1",
+      "position": {
+        "x": 520,
+        "y": 700
+      },
+      "params": {},
+      "inputs": [
+        "n6"
+      ],
+      "outputs": [
+        "n8"
+      ]
+    },
+    {
+      "id": "n8",
+      "type": "linear",
+      "name": "deep_2",
+      "position": {
+        "x": 520,
+        "y": 850
+      },
+      "params": {
+        "inFeatures": 400,
+        "outFeatures": 1
+      },
+      "inputs": [
+        "n7"
+      ],
+      "outputs": [
+        "n9"
+      ]
+    },
+    {
+      "id": "n9",
+      "type": "add",
+      "name": "fm_plus_deep",
+      "position": {
+        "x": 300,
+        "y": 1000
+      },
+      "params": {},
+      "inputs": [
+        "n4",
+        "n8"
+      ],
+      "outputs": [
+        "n10"
+      ]
+    },
+    {
+      "id": "n10",
+      "type": "sigmoid",
+      "name": "ctr",
+      "position": {
+        "x": 300,
+        "y": 1150
+      },
+      "params": {},
+      "inputs": [
+        "n9"
+      ],
+      "outputs": [
+        "n11"
+      ]
+    },
+    {
+      "id": "n11",
+      "type": "output",
+      "name": "click_prob",
+      "position": {
+        "x": 300,
+        "y": 1300
+      },
+      "params": {},
+      "inputs": [
+        "n10"
+      ],
+      "outputs": []
+    }
+  ],
+  "connections": [
+    {
+      "id": "c1",
+      "from": "n1",
+      "to": "n2"
+    },
+    {
+      "id": "c2",
+      "from": "n2",
+      "to": "n3"
+    },
+    {
+      "id": "c3",
+      "from": "n3",
+      "to": "n4"
+    },
+    {
+      "id": "c4",
+      "from": "n2",
+      "to": "n5"
+    },
+    {
+      "id": "c5",
+      "from": "n5",
+      "to": "n6"
+    },
+    {
+      "id": "c6",
+      "from": "n6",
+      "to": "n7"
+    },
+    {
+      "id": "c7",
+      "from": "n7",
+      "to": "n8"
+    },
+    {
+      "id": "c8",
+      "from": "n4",
+      "to": "n9"
+    },
+    {
+      "id": "c9",
+      "from": "n8",
+      "to": "n9"
+    },
+    {
+      "id": "c10",
+      "from": "n9",
+      "to": "n10"
+    },
+    {
+      "id": "c11",
+      "from": "n10",
+      "to": "n11"
+    }
+  ]
+}

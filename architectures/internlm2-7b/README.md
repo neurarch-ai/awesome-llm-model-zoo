@@ -6,7 +6,7 @@ Shanghai AI Laboratory's second-generation 7B base model. A pre-norm decoder wit
 
 | Where | URL |
 |---|---|
-| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/neurarch-model-zoo/main/architectures/internlm2-7b/model.json |
+| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/internlm2-7b/model.json |
 | Hugging Face | https://huggingface.co/internlm/internlm2-7b |
 | GitHub | https://github.com/InternLM/InternLM |
 

@@ -1,0 +1,163 @@
+{
+  "id": "gru4rec",
+  "name": "GRU4Rec",
+  "description": "GRU4Rec (Gravity R&D / Telefonica): full graph; dimensions verified against the official config.json.",
+  "components": [
+    {
+      "id": "n1",
+      "type": "input",
+      "name": "item_session",
+      "position": {
+        "x": 300,
+        "y": 50
+      },
+      "params": {
+        "shape": [
+          1,
+          50
+        ]
+      },
+      "inputs": [],
+      "outputs": [
+        "n2"
+      ]
+    },
+    {
+      "id": "n2",
+      "type": "embedding",
+      "name": "item_embed",
+      "position": {
+        "x": 300,
+        "y": 200
+      },
+      "params": {
+        "numEmbeddings": 50000,
+        "embeddingDim": 100
+      },
+      "inputs": [
+        "n1"
+      ],
+      "outputs": [
+        "n3"
+      ]
+    },
+    {
+      "id": "n3",
+      "type": "dropout",
+      "name": "embed_drop",
+      "position": {
+        "x": 300,
+        "y": 350
+      },
+      "params": {
+        "p": 0.25
+      },
+      "inputs": [
+        "n2"
+      ],
+      "outputs": [
+        "n4"
+      ]
+    },
+    {
+      "id": "n4",
+      "type": "gru",
+      "name": "gru",
+      "position": {
+        "x": 300,
+        "y": 500
+      },
+      "params": {
+        "hiddenSize": 100,
+        "inputSize": 100
+      },
+      "inputs": [
+        "n3"
+      ],
+      "outputs": [
+        "n5"
+      ]
+    },
+    {
+      "id": "n5",
+      "type": "linear",
+      "name": "item_scores",
+      "position": {
+        "x": 300,
+        "y": 650
+      },
+      "params": {
+        "inFeatures": 100,
+        "outFeatures": 50000
+      },
+      "inputs": [
+        "n4"
+      ],
+      "outputs": [
+        "n6"
+      ]
+    },
+    {
+      "id": "n6",
+      "type": "softmax",
+      "name": "softmax",
+      "position": {
+        "x": 300,
+        "y": 800
+      },
+      "params": {},
+      "inputs": [
+        "n5"
+      ],
+      "outputs": [
+        "n7"
+      ]
+    },
+    {
+      "id": "n7",
+      "type": "output",
+      "name": "next_item",
+      "position": {
+        "x": 300,
+        "y": 950
+      },
+      "params": {},
+      "inputs": [
+        "n6"
+      ],
+      "outputs": []
+    }
+  ],
+  "connections": [
+    {
+      "id": "c1",
+      "from": "n1",
+      "to": "n2"
+    },
+    {
+      "id": "c2",
+      "from": "n2",
+      "to": "n3"
+    },
+    {
+      "id": "c3",
+      "from": "n3",
+      "to": "n4"
+    },
+    {
+      "id": "c4",
+      "from": "n4",
+      "to": "n5"
+    },
+    {
+      "id": "c5",
+      "from": "n5",
+      "to": "n6"
+    },
+    {
+      "id": "c6",
+      "from": "n6",
+      "to": "n7"
+    }
+  ]
+}

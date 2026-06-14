@@ -6,7 +6,7 @@ The 20B mixture-of-experts OpenAI released under Apache 2.0 in 2025. Small slidi
 
 | Where | URL |
 |---|---|
-| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/neurarch-model-zoo/main/architectures/gpt-oss-20b/model.json |
+| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/gpt-oss-20b/model.json |
 | Hugging Face | https://huggingface.co/openai/gpt-oss-20b |
 | GitHub | https://github.com/openai/gpt-oss |
 

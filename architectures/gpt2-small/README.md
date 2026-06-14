@@ -6,7 +6,7 @@ The 124M-parameter GPT-2 configuration from OpenAI, the classic decoder-only tra
 
 | Where | URL |
 |---|---|
-| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/neurarch-model-zoo/main/architectures/gpt2-small/model.json |
+| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/gpt2-small/model.json |
 | Hugging Face | https://huggingface.co/openai-community/gpt2 |
 | GitHub | https://github.com/openai/gpt-2 |
 

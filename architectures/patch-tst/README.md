@@ -6,7 +6,7 @@ The Transformer that made long-horizon time-series forecasting work: each variab
 
 | Where | URL |
 |---|---|
-| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/neurarch-model-zoo/main/architectures/patch-tst/model.json |
+| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/patch-tst/model.json |
 | Paper (Nie et al. 2023) | https://arxiv.org/abs/2211.14730 |
 | GitHub | https://github.com/yuqinie98/PatchTST |
 

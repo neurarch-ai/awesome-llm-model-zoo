@@ -6,7 +6,7 @@ Convolution meets attention for EEG decoding: an EEGNet-style conv stem tokenize
 
 | Where | URL |
 |---|---|
-| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/neurarch-model-zoo/main/architectures/eeg-conformer/model.json |
+| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/eeg-conformer/model.json |
 | Paper (Song et al. 2022, IEEE TNSRE) | https://ieeexplore.ieee.org/document/9991178 |
 | GitHub | https://github.com/eeyhsong/EEG-Conformer |
 

@@ -6,7 +6,7 @@ The third generation of the ChatGLM series from Zhipu AI and Tsinghua, historica
 
 | Where | URL |
 |---|---|
-| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/neurarch-model-zoo/main/architectures/chatglm3-6b/model.json |
+| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/chatglm3-6b/model.json |
 | Hugging Face | https://huggingface.co/THUDM/chatglm3-6b |
 | GitHub | https://github.com/THUDM/ChatGLM3 |
 

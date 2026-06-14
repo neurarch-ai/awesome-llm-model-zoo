@@ -6,7 +6,7 @@ The original dense 7B model from DeepSeek, trained on 2T bilingual tokens. A cle
 
 | Where | URL |
 |---|---|
-| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/neurarch-model-zoo/main/architectures/deepseek-llm-7b/model.json |
+| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/deepseek-llm-7b/model.json |
 | Hugging Face | https://huggingface.co/deepseek-ai/deepseek-llm-7b-base |
 | GitHub | https://github.com/deepseek-ai/DeepSeek-LLM |
 

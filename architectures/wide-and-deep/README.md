@@ -6,7 +6,7 @@ Google's Play-store ranking model that joint-trains a wide linear path (memoriza
 
 | Where | URL |
 |---|---|
-| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/neurarch-model-zoo/main/architectures/wide-and-deep/model.json |
+| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/wide-and-deep/model.json |
 | Paper (Cheng et al. 2016) | https://arxiv.org/abs/1606.07792 |
 
 ## Architecture

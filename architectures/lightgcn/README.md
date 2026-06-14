@@ -6,7 +6,7 @@ Graph convolution for collaborative filtering stripped to its minimum: no featur
 
 | Where | URL |
 |---|---|
-| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/neurarch-model-zoo/main/architectures/lightgcn/model.json |
+| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/lightgcn/model.json |
 | Paper (He et al. 2020) | https://arxiv.org/abs/2002.02126 |
 | GitHub | https://github.com/gusye1234/LightGCN-PyTorch |
 

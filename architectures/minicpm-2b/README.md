@@ -6,7 +6,7 @@ OpenBMB's flagship small LLM, a 2.4B deep-and-thin decoder that punches above it
 
 | Where | URL |
 |---|---|
-| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/neurarch-model-zoo/main/architectures/minicpm-2b/model.json |
+| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/minicpm-2b/model.json |
 | Hugging Face | https://huggingface.co/openbmb/MiniCPM-2B-sft-bf16 |
 | GitHub | https://github.com/OpenBMB/MiniCPM |
 

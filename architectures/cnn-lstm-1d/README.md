@@ -6,7 +6,7 @@ The standard hybrid for long 1D physiological signals (ECG, PPG, IMU): a Conv1D 
 
 | Where | URL |
 |---|---|
-| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/neurarch-model-zoo/main/architectures/cnn-lstm-1d/model.json |
+| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/cnn-lstm-1d/model.json |
 | Survey (deep learning for ECG, Hong et al. 2020) | https://arxiv.org/abs/2001.00254 |
 
 ## Architecture

@@ -6,7 +6,7 @@ Meta's production recommendation architecture: a bottom MLP for dense features, 
 
 | Where | URL |
 |---|---|
-| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/neurarch-model-zoo/main/architectures/dlrm/model.json |
+| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/dlrm/model.json |
 | Paper (Naumov et al. 2019) | https://arxiv.org/abs/1906.00091 |
 | GitHub | https://github.com/facebookresearch/dlrm |
 

@@ -6,7 +6,7 @@ Baidu's workhorse Chinese encoder, the base-size distillation of the ERNIE 3.0 f
 
 | Where | URL |
 |---|---|
-| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/neurarch-model-zoo/main/architectures/ernie-3.0-base-zh/model.json |
+| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/ernie-3.0-base-zh/model.json |
 | Hugging Face | https://huggingface.co/nghuyong/ernie-3.0-base-zh |
 | GitHub | https://github.com/PaddlePaddle/PaddleNLP/tree/develop/model_zoo/ernie-3.0 |
 

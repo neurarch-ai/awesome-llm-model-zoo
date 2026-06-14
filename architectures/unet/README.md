@@ -6,7 +6,7 @@ The encoder-decoder with skip connections that owns biomedical and dense-predict
 
 | Where | URL |
 |---|---|
-| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/neurarch-model-zoo/main/architectures/unet/model.json |
+| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/unet/model.json |
 | Paper (Ronneberger et al. 2015) | https://arxiv.org/abs/1505.04597 |
 
 ## Architecture

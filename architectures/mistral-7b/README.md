@@ -6,7 +6,7 @@ The 7B model from Mistral AI that beat Llama-2-13B at release, built on grouped-
 
 | Where | URL |
 |---|---|
-| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/neurarch-model-zoo/main/architectures/mistral-7b/model.json |
+| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/mistral-7b/model.json |
 | Hugging Face | https://huggingface.co/mistralai/Mistral-7B-v0.1 |
 | GitHub | https://github.com/mistralai/mistral-inference |
 

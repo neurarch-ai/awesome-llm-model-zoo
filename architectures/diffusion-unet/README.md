@@ -6,7 +6,7 @@ The latent-diffusion noise predictor behind Stable Diffusion: a U-Net operating 
 
 | Where | URL |
 |---|---|
-| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/neurarch-model-zoo/main/architectures/diffusion-unet/model.json |
+| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/diffusion-unet/model.json |
 | Paper (Rombach et al. 2022) | https://arxiv.org/abs/2112.10752 |
 | GitHub | https://github.com/CompVis/stable-diffusion |
 | Hugging Face | https://huggingface.co/CompVis/stable-diffusion-v1-4 |

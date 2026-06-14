@@ -6,7 +6,7 @@ The dual-encoder retrieval architecture behind virtually every industrial recomm
 
 | Where | URL |
 |---|---|
-| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/neurarch-model-zoo/main/architectures/two-tower/model.json |
+| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/two-tower/model.json |
 | Paper (Covington et al. 2016) | https://dl.acm.org/doi/10.1145/2959100.2959190 |
 | Paper (Yi et al. 2019, sampling-bias-corrected) | https://dl.acm.org/doi/10.1145/3298689.3346996 |
 

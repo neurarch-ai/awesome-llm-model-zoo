@@ -6,7 +6,7 @@ The compact CNN that became the universal baseline for EEG brain-computer interf
 
 | Where | URL |
 |---|---|
-| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/neurarch-model-zoo/main/architectures/eegnet/model.json |
+| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/eegnet/model.json |
 | Paper (Lawhern et al. 2018) | https://arxiv.org/abs/1611.08024 |
 | GitHub | https://github.com/vlawhern/arl-eegmodels |
 

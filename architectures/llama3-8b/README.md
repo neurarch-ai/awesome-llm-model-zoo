@@ -6,7 +6,7 @@ Meta's 8B dense decoder, the de facto baseline architecture that most current op
 
 | Where | URL |
 |---|---|
-| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/neurarch-model-zoo/main/architectures/llama3-8b/model.json |
+| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/llama3-8b/model.json |
 | Hugging Face | https://huggingface.co/meta-llama/Meta-Llama-3-8B |
 | GitHub | https://github.com/meta-llama/llama3 |
 

@@ -6,7 +6,7 @@ The most-cited convolutional network ever and the ILSVRC 2015 winner. This is th
 
 | Where | URL |
 |---|---|
-| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/neurarch-model-zoo/main/architectures/resnet-50/model.json |
+| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/resnet-50/model.json |
 | Paper (He et al. 2015) | https://arxiv.org/abs/1512.03385 |
 | Hugging Face | https://huggingface.co/microsoft/resnet-50 |
 

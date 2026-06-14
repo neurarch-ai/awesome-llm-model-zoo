@@ -6,7 +6,7 @@ Neural Collaborative Filtering in its simplest form: user and item embeddings co
 
 | Where | URL |
 |---|---|
-| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/neurarch-model-zoo/main/architectures/ncf/model.json |
+| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/ncf/model.json |
 | Paper (He et al. 2017) | https://arxiv.org/abs/1708.05031 |
 | GitHub | https://github.com/hexiangnan/neural_collaborative_filtering |
 

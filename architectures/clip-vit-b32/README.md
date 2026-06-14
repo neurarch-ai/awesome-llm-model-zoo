@@ -6,7 +6,7 @@ The contrastive image-text model that underpins modern multimodality: a full 12-
 
 | Where | URL |
 |---|---|
-| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/neurarch-model-zoo/main/architectures/clip-vit-b32/model.json |
+| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/clip-vit-b32/model.json |
 | Paper (Radford et al. 2021) | https://arxiv.org/abs/2103.00020 |
 | GitHub | https://github.com/openai/CLIP |
 | Hugging Face | https://huggingface.co/openai/clip-vit-base-patch32 |

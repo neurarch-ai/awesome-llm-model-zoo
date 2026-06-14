@@ -1,0 +1,283 @@
+{
+  "id": "din",
+  "name": "DIN (Deep Interest Network)",
+  "description": "DIN (Deep Interest Network) (Alibaba): full graph; dimensions verified against the official config.json.",
+  "components": [
+    {
+      "id": "n1",
+      "type": "input",
+      "name": "behavior_seq",
+      "position": {
+        "x": 150,
+        "y": 50
+      },
+      "params": {
+        "shape": [
+          1,
+          100
+        ]
+      },
+      "inputs": [],
+      "outputs": [
+        "n3"
+      ]
+    },
+    {
+      "id": "n2",
+      "type": "input",
+      "name": "candidate_item",
+      "position": {
+        "x": 600,
+        "y": 50
+      },
+      "params": {
+        "shape": [
+          1,
+          1
+        ]
+      },
+      "inputs": [],
+      "outputs": [
+        "n4"
+      ]
+    },
+    {
+      "id": "n3",
+      "type": "embedding",
+      "name": "behavior_embed",
+      "position": {
+        "x": 150,
+        "y": 200
+      },
+      "params": {
+        "numEmbeddings": 1000000,
+        "embeddingDim": 64
+      },
+      "inputs": [
+        "n1"
+      ],
+      "outputs": [
+        "n5"
+      ]
+    },
+    {
+      "id": "n4",
+      "type": "embedding",
+      "name": "item_embed",
+      "position": {
+        "x": 600,
+        "y": 200
+      },
+      "params": {
+        "numEmbeddings": 1000000,
+        "embeddingDim": 64
+      },
+      "inputs": [
+        "n2"
+      ],
+      "outputs": [
+        "n5",
+        "n7"
+      ]
+    },
+    {
+      "id": "n5",
+      "type": "multiHeadAttention",
+      "name": "activation_unit",
+      "position": {
+        "x": 300,
+        "y": 400
+      },
+      "params": {
+        "embedDim": 64,
+        "numHeads": 1
+      },
+      "inputs": [
+        "n3",
+        "n4"
+      ],
+      "outputs": [
+        "n6"
+      ]
+    },
+    {
+      "id": "n6",
+      "type": "globalAvgPool1d",
+      "name": "weighted_sum",
+      "position": {
+        "x": 300,
+        "y": 550
+      },
+      "params": {},
+      "inputs": [
+        "n5"
+      ],
+      "outputs": [
+        "n7"
+      ]
+    },
+    {
+      "id": "n7",
+      "type": "concatenate",
+      "name": "concat",
+      "position": {
+        "x": 450,
+        "y": 700
+      },
+      "params": {},
+      "inputs": [
+        "n6",
+        "n4"
+      ],
+      "outputs": [
+        "n8"
+      ]
+    },
+    {
+      "id": "n8",
+      "type": "linear",
+      "name": "fc_1",
+      "position": {
+        "x": 450,
+        "y": 850
+      },
+      "params": {
+        "outFeatures": 200,
+        "inFeatures": 2
+      },
+      "inputs": [
+        "n7"
+      ],
+      "outputs": [
+        "n9"
+      ]
+    },
+    {
+      "id": "n9",
+      "type": "relu",
+      "name": "prelu_1",
+      "position": {
+        "x": 450,
+        "y": 1000
+      },
+      "params": {},
+      "inputs": [
+        "n8"
+      ],
+      "outputs": [
+        "n10"
+      ]
+    },
+    {
+      "id": "n10",
+      "type": "linear",
+      "name": "fc_2",
+      "position": {
+        "x": 450,
+        "y": 1150
+      },
+      "params": {
+        "inFeatures": 200,
+        "outFeatures": 1
+      },
+      "inputs": [
+        "n9"
+      ],
+      "outputs": [
+        "n11"
+      ]
+    },
+    {
+      "id": "n11",
+      "type": "sigmoid",
+      "name": "ctr",
+      "position": {
+        "x": 450,
+        "y": 1300
+      },
+      "params": {},
+      "inputs": [
+        "n10"
+      ],
+      "outputs": [
+        "n12"
+      ]
+    },
+    {
+      "id": "n12",
+      "type": "output",
+      "name": "click_prob",
+      "position": {
+        "x": 450,
+        "y": 1450
+      },
+      "params": {},
+      "inputs": [
+        "n11"
+      ],
+      "outputs": []
+    }
+  ],
+  "connections": [
+    {
+      "id": "c1",
+      "from": "n1",
+      "to": "n3"
+    },
+    {
+      "id": "c2",
+      "from": "n2",
+      "to": "n4"
+    },
+    {
+      "id": "c3",
+      "from": "n3",
+      "to": "n5"
+    },
+    {
+      "id": "c4",
+      "from": "n4",
+      "to": "n5"
+    },
+    {
+      "id": "c5",
+      "from": "n5",
+      "to": "n6"
+    },
+    {
+      "id": "c6",
+      "from": "n6",
+      "to": "n7"
+    },
+    {
+      "id": "c7",
+      "from": "n4",
+      "to": "n7"
+    },
+    {
+      "id": "c8",
+      "from": "n7",
+      "to": "n8"
+    },
+    {
+      "id": "c9",
+      "from": "n8",
+      "to": "n9"
+    },
+    {
+      "id": "c10",
+      "from": "n9",
+      "to": "n10"
+    },
+    {
+      "id": "c11",
+      "from": "n10",
+      "to": "n11"
+    },
+    {
+      "id": "c12",
+      "from": "n11",
+      "to": "n12"
+    }
+  ]
+}

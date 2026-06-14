@@ -2,11 +2,11 @@
 
 # 🧠 Neurarch Model Zoo
 
-### 51 reference architectures you can actually open, edit, validate, and train. From DeepSeek-V3's latent attention to ResNet's first skip connection. Not pictures. Graphs.
+### 64 reference architectures you can actually open, edit, validate, and train. From DeepSeek-V3's latent attention to ResNet's first skip connection. Not pictures. Graphs.
 
-[![architectures](https://img.shields.io/badge/architectures-51-6366f1)](#catalog)
+[![architectures](https://img.shields.io/badge/architectures-64-6366f1)](#catalog)
 [![shape-checked](https://img.shields.io/badge/shape--checked-100%25%20passing-22c55e)](#every-entry-is-validated)
-[![domains](https://img.shields.io/badge/domains-10-f59e0b)](#catalog)
+[![domains](https://img.shields.io/badge/domains-11-f59e0b)](#catalog)
 [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)](CONTRIBUTING.md)
 
@@ -18,7 +18,7 @@
 
 Every diagram of Qwen or Mixtral you have ever seen is a dead image. The entries here are live, structurally validated model graphs:
 
-- **Shape-checked end to end**: tensor shapes, attention head divisibility, GQA constraints. All 42 graphs pass with zero errors.
+- **Shape-checked end to end**: tensor shapes, attention head divisibility, GQA constraints. All 64 graphs pass with zero errors.
 - **Verified numbers**: LLM hyperparameters are taken from each model's official `config.json`, not from blog posts.
 - **One click to editable**: every entry opens straight onto the [Neurarch](https://www.neurarch.com/) canvas, where you can fork it, swap the attention, and re-validate before you ever launch a run.
 - **Exportable to runnable training code**: TRL, torchtune, Unsloth, plain PyTorch.
@@ -45,7 +45,7 @@ The full expanded graph (every one of those 371 / 300 / … nodes) is one click 
 Every entry has an **Open in Neurarch** link that loads its graph straight onto the canvas, no download step:
 
 ```
-https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/neurarch-model-zoo/main/architectures/<id>/model.json
+https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/<id>/model.json
 ```
 
 From there you have a live, validated graph you can fork, edit, re-validate, or export to training code.
@@ -73,6 +73,8 @@ The MoE generation. Every hyperparameter below is read from the model's official
 | [gpt-oss-20b](architectures/gpt-oss-20b/) | OpenAI | 21B / 3.6B | GQA 64:8 | Sliding(128)/full alternation, attention sinks |
 | [qwen3-8b](architectures/qwen3-8b/) | Alibaba Cloud | 8.2B (dense) | GQA 32:8 + QK-Norm | The default open dense model of 2025 |
 | [gemma-4-12b](architectures/gemma-4-12b/) | Google DeepMind | 12B (dense) | GQA 16:8, 256-dim heads | 5:1 local:global attention, 262K vocab |
+| [gpt-oss-120b](architectures/gpt-oss-120b/) | OpenAI | 117B / 5.1B | GQA 64:8 | 128 experts top-4, the bigger gpt-oss |
+| [deepseek-v2-lite](architectures/deepseek-v2-lite/) | DeepSeek | 15.7B / 2.4B | MLA, 16 heads | The runnable way to study MLA + MoE |
 
 Side quest: open [deepseek-v3](architectures/deepseek-v3/) and [llama-4-scout](architectures/llama-4-scout/) side by side. Same problem, opposite expert-granularity bets.
 
@@ -104,6 +106,14 @@ Selection informed by [awesome-pretrained-chinese-nlp-models](https://github.com
 | [phi3-mini](architectures/phi3-mini/) | Microsoft | block | 3.8B-class compact decoder block |
 | [transformer-block](architectures/transformer-block/) | Vaswani et al. | block | The original 2017 post-norm encoder block |
 
+### 🔬 Open & research LLMs (distinct architectures)
+
+| Architecture | Org | Params | Notable |
+|--------------|-----|--------|---------|
+| [phi-2](architectures/phi-2/) | Microsoft | 2.78B | Parallel residual + partial RoPE; data-over-scale |
+| [pythia-1.4b](architectures/pythia-1.4b/) | EleutherAI | 1.4B | GPT-NeoX parallel attn; the controlled training-dynamics suite |
+| [olmo-7b](architectures/olmo-7b/) | Ai2 | 6.9B | Fully open (Dolma data + code); non-parametric LayerNorm |
+
 ### 📝 NLP encoders and seq2seq
 
 | Architecture | Org | Params | Notable |
@@ -114,6 +124,13 @@ Selection informed by [awesome-pretrained-chinese-nlp-models](https://github.com
 | [ernie-3.0-base-zh](architectures/ernie-3.0-base-zh/) | Baidu | 118M | 40K vocab, 2048 positions, knowledge-enhanced |
 | [t5-small](architectures/t5-small/) | Google | 60M | Text-to-text encoder-decoder, full two-stream graph |
 | [simple-rnn](architectures/simple-rnn/) | Elman lineage | starter | The smallest sequential model in the zoo |
+
+### 🔎 Embeddings and retrieval
+
+| Architecture | Org | Params | Notable |
+|--------------|-----|--------|---------|
+| [all-minilm-l6](architectures/all-minilm-l6/) | Microsoft / SBERT | 22.7M | The default RAG/semantic-search encoder; mean-pooled 384-dim |
+| [bge-base-en](architectures/bge-base-en/) | BAAI | 109M | Long-time MTEB retrieval leader; CLS-pooled |
 
 ### 👁️ Computer vision
 
@@ -157,6 +174,12 @@ Selection informed by [awesome-pretrained-chinese-nlp-models](https://github.com
 | [graph-sage-rec](architectures/graph-sage-rec/) | Stanford | Inductive sample-and-aggregate embeddings |
 | [bst](architectures/bst/) | Alibaba | Transformer over user behavior sequences |
 | [sli-rec](architectures/sli-rec/) | Microsoft Research | Time-aware LSTM + long-term attentive fusion |
+| [deepfm](architectures/deepfm/) | Huawei | FM + deep MLP under one shared embedding (CTR) |
+| [dcn](architectures/dcn/) | Google | Explicit feature crosses ∥ deep MLP |
+| [din](architectures/din/) | Alibaba | Target-aware attention over behavior history (CTR) |
+| [sasrec](architectures/sasrec/) | UCSD | Causal self-attention over item history (GPT-style) |
+| [bert4rec](architectures/bert4rec/) | Alibaba | Bidirectional masked-item Transformer |
+| [gru4rec](architectures/gru4rec/) | Gravity R&D | GRU over session clicks (the RNN baseline) |
 
 ### 📈 Time series and biosignals
 
@@ -192,7 +215,7 @@ MIT. See [LICENSE](LICENSE). Use the architectures freely, attribution appreciat
 
 <div align="center">
 
-**If a graph here saved you a paper-reading session, [⭐ star the repo](https://github.com/neurarch-ai/neurarch-model-zoo) so the next person finds it.**
+**If a graph here saved you a paper-reading session, [⭐ star the repo](https://github.com/neurarch-ai/awesome-llm-model-zoo) so the next person finds it.**
 
 Built with [Neurarch](https://www.neurarch.com/), a graph-native design environment for ML model architectures.
 

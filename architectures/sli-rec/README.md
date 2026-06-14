@@ -6,7 +6,7 @@ Short- and Long-term interest Recommender: a Time-aware LSTM models the evolving
 
 | Where | URL |
 |---|---|
-| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/neurarch-model-zoo/main/architectures/sli-rec/model.json |
+| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/sli-rec/model.json |
 | Paper (Yu et al. 2019, IJCAI) | https://www.ijcai.org/proceedings/2019/585 |
 | GitHub (microsoft/recommenders) | https://github.com/recommenders-team/recommenders |
 

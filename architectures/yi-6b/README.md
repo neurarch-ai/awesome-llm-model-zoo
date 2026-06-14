@@ -6,7 +6,7 @@ The 6B base model from 01.AI (founded by Kai-Fu Lee), trained on 3.1T bilingual 
 
 | Where | URL |
 |---|---|
-| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/neurarch-model-zoo/main/architectures/yi-6b/model.json |
+| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/yi-6b/model.json |
 | Hugging Face | https://huggingface.co/01-ai/Yi-6B |
 | GitHub | https://github.com/01-ai/Yi |
 

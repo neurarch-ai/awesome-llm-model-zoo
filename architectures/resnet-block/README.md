@@ -6,7 +6,7 @@ The residual unit from ResNet: conv-BN-ReLU twice, plus the identity skip connec
 
 | Where | URL |
 |---|---|
-| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/neurarch-model-zoo/main/architectures/resnet-block/model.json |
+| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/resnet-block/model.json |
 | Paper (He et al. 2015) | https://arxiv.org/abs/1512.03385 |
 
 ## Architecture

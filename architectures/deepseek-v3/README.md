@@ -6,7 +6,7 @@ The 671B-parameter MoE that made frontier-scale open weights real, and the archi
 
 | Where | URL |
 |---|---|
-| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/neurarch-model-zoo/main/architectures/deepseek-v3/model.json |
+| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/deepseek-v3/model.json |
 | Hugging Face | https://huggingface.co/deepseek-ai/DeepSeek-V3 |
 | GitHub | https://github.com/deepseek-ai/DeepSeek-V3 |
 

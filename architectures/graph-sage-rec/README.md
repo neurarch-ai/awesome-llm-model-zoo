@@ -6,7 +6,7 @@ Inductive node embeddings by sampling and aggregating neighborhoods, wired here 
 
 | Where | URL |
 |---|---|
-| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/neurarch-model-zoo/main/architectures/graph-sage-rec/model.json |
+| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/graph-sage-rec/model.json |
 | Paper (Hamilton et al. 2017) | https://arxiv.org/abs/1706.02216 |
 
 ## Architecture

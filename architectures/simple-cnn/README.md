@@ -6,7 +6,7 @@ A LeNet-style starter CNN for image classification: conv-pool stacks into a dens
 
 | Where | URL |
 |---|---|
-| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/neurarch-model-zoo/main/architectures/simple-cnn/model.json |
+| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/simple-cnn/model.json |
 | Paper (LeCun et al. 1998, LeNet) | https://ieeexplore.ieee.org/document/726791 |
 
 ## Architecture

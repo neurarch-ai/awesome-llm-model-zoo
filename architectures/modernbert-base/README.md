@@ -6,7 +6,7 @@ The 2024 rebuild of BERT with a decade of decoder-side lessons applied: RoPE, Ge
 
 | Where | URL |
 |---|---|
-| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/neurarch-model-zoo/main/architectures/modernbert-base/model.json |
+| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/modernbert-base/model.json |
 | Paper (Warner et al. 2024) | https://arxiv.org/abs/2412.13663 |
 | Hugging Face | https://huggingface.co/answerdotai/ModernBERT-base |
 | GitHub | https://github.com/AnswerDotAI/ModernBERT |

@@ -6,7 +6,7 @@ A 7.6B-parameter decoder-only transformer from the Qwen2.5 family, one of the mo
 
 | Where | URL |
 |---|---|
-| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/neurarch-model-zoo/main/architectures/qwen2.5-7b/model.json |
+| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/qwen2.5-7b/model.json |
 | Hugging Face | https://huggingface.co/Qwen/Qwen2.5-7B |
 | GitHub | https://github.com/QwenLM/Qwen2.5 |
 

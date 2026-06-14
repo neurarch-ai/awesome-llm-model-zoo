@@ -6,7 +6,7 @@ The architecture that proved depth plus uniform 3x3 convolutions beats clever fi
 
 | Where | URL |
 |---|---|
-| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/neurarch-model-zoo/main/architectures/vgg-16/model.json |
+| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/vgg-16/model.json |
 | Paper (Simonyan and Zisserman 2014) | https://arxiv.org/abs/1409.1556 |
 
 ## Architecture

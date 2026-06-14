@@ -6,7 +6,7 @@ Moonshot AI's trillion-parameter-class MoE, the largest architecture in this zoo
 
 | Where | URL |
 |---|---|
-| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/neurarch-model-zoo/main/architectures/kimi-k2.6/model.json |
+| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/kimi-k2.6/model.json |
 | Hugging Face | https://huggingface.co/moonshotai/Kimi-K2.6 |
 | GitHub | https://github.com/MoonshotAI/Kimi-K2 |
 

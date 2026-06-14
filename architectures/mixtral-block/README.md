@@ -6,7 +6,7 @@ The Mixtral 8x7B decoder block: the Mistral-7B block with its dense FFN swapped 
 
 | Where | URL |
 |---|---|
-| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/neurarch-model-zoo/main/architectures/mixtral-block/model.json |
+| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/mixtral-block/model.json |
 | Paper (Jiang et al. 2024) | https://arxiv.org/abs/2401.04088 |
 | Hugging Face | https://huggingface.co/mistralai/Mixtral-8x7B-v0.1 |
 

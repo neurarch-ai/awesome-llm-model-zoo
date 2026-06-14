@@ -6,7 +6,7 @@ A minimal Elman-style recurrent network for sequence processing. Four nodes: the
 
 | Where | URL |
 |---|---|
-| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/neurarch-model-zoo/main/architectures/simple-rnn/model.json |
+| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/simple-rnn/model.json |
 | Paper (Elman 1990, Finding Structure in Time) | https://onlinelibrary.wiley.com/doi/10.1207/s15516709cog1402_1 |
 
 ## Architecture

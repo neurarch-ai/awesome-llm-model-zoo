@@ -6,7 +6,7 @@ OpenAI's speech recognition encoder-decoder: log-mel spectrogram through a two-l
 
 | Where | URL |
 |---|---|
-| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/neurarch-model-zoo/main/architectures/whisper-small/model.json |
+| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/whisper-small/model.json |
 | Paper (Radford et al. 2022) | https://arxiv.org/abs/2212.04356 |
 | GitHub | https://github.com/openai/whisper |
 | Hugging Face | https://huggingface.co/openai/whisper-small |

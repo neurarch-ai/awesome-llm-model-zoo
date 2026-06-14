@@ -6,7 +6,7 @@ The Phi-3 Mini (3.8B) decoder block: a compact Llama-style block at 3072 hidden,
 
 | Where | URL |
 |---|---|
-| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/neurarch-model-zoo/main/architectures/phi3-mini/model.json |
+| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/phi3-mini/model.json |
 | Paper (Abdin et al. 2024) | https://arxiv.org/abs/2404.14219 |
 | Hugging Face | https://huggingface.co/microsoft/Phi-3-mini-4k-instruct |
 

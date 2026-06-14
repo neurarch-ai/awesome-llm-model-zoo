@@ -6,7 +6,7 @@ The standard Chinese encoder from HFL: BERT-base architecture trained RoBERTa-st
 
 | Where | URL |
 |---|---|
-| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/neurarch-model-zoo/main/architectures/chinese-roberta-wwm-ext/model.json |
+| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/chinese-roberta-wwm-ext/model.json |
 | Hugging Face | https://huggingface.co/hfl/chinese-roberta-wwm-ext |
 | GitHub | https://github.com/ymcui/Chinese-BERT-wwm |
 

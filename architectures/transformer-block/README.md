@@ -6,7 +6,7 @@ The original "Attention Is All You Need" encoder block: multi-head self-attentio
 
 | Where | URL |
 |---|---|
-| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/neurarch-model-zoo/main/architectures/transformer-block/model.json |
+| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/transformer-block/model.json |
 | Paper (Vaswani et al. 2017) | https://arxiv.org/abs/1706.03762 |
 
 ## Architecture

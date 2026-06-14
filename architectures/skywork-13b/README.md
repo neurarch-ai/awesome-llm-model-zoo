@@ -6,7 +6,7 @@ Kunlun Tech's 13B bilingual base model, notable for an explicitly ablated deep-a
 
 | Where | URL |
 |---|---|
-| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/neurarch-model-zoo/main/architectures/skywork-13b/model.json |
+| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/skywork-13b/model.json |
 | Hugging Face | https://huggingface.co/Skywork/Skywork-13B-base |
 | GitHub | https://github.com/SkyworkAI/Skywork |
 

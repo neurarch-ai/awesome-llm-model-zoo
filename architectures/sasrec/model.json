@@ -1,0 +1,396 @@
+{
+  "id": "sasrec",
+  "name": "SASRec",
+  "description": "SASRec (UCSD (Kang and McAuley)): full graph; dimensions verified against the official config.json.",
+  "components": [
+    {
+      "id": "n1",
+      "type": "input",
+      "name": "item_history",
+      "position": {
+        "x": 300,
+        "y": 50
+      },
+      "params": {
+        "shape": [
+          1,
+          200
+        ]
+      },
+      "inputs": [],
+      "outputs": [
+        "n2"
+      ]
+    },
+    {
+      "id": "n2",
+      "type": "embedding",
+      "name": "item_embed",
+      "position": {
+        "x": 300,
+        "y": 200
+      },
+      "params": {
+        "numEmbeddings": 50000,
+        "embeddingDim": 64
+      },
+      "inputs": [
+        "n1"
+      ],
+      "outputs": [
+        "n3"
+      ]
+    },
+    {
+      "id": "n3",
+      "type": "positionalEncoding",
+      "name": "pos_embed",
+      "position": {
+        "x": 300,
+        "y": 350
+      },
+      "params": {
+        "maxLen": 200,
+        "embedDim": 64
+      },
+      "inputs": [
+        "n2"
+      ],
+      "outputs": [
+        "n4"
+      ]
+    },
+    {
+      "id": "n4",
+      "type": "dropout",
+      "name": "embed_drop",
+      "position": {
+        "x": 300,
+        "y": 500
+      },
+      "params": {
+        "p": 0.2
+      },
+      "inputs": [
+        "n3"
+      ],
+      "outputs": [
+        "n5",
+        "n7"
+      ]
+    },
+    {
+      "id": "n5",
+      "type": "layerNorm",
+      "name": "norm_1",
+      "position": {
+        "x": 300,
+        "y": 650
+      },
+      "params": {
+        "normalizedShape": 64
+      },
+      "inputs": [
+        "n4"
+      ],
+      "outputs": [
+        "n6"
+      ]
+    },
+    {
+      "id": "n6",
+      "type": "causalAttention",
+      "name": "self_attn_1",
+      "position": {
+        "x": 300,
+        "y": 800
+      },
+      "params": {
+        "embedDim": 64,
+        "numHeads": 1
+      },
+      "inputs": [
+        "n5"
+      ],
+      "outputs": [
+        "n7"
+      ]
+    },
+    {
+      "id": "n7",
+      "type": "add",
+      "name": "residual_1",
+      "position": {
+        "x": 300,
+        "y": 950
+      },
+      "params": {},
+      "inputs": [
+        "n6",
+        "n4"
+      ],
+      "outputs": [
+        "n8",
+        "n9"
+      ]
+    },
+    {
+      "id": "n8",
+      "type": "feedForward",
+      "name": "ffn_1",
+      "position": {
+        "x": 300,
+        "y": 1100
+      },
+      "params": {
+        "embedDim": 64,
+        "ffDim": 64
+      },
+      "inputs": [
+        "n7"
+      ],
+      "outputs": [
+        "n9"
+      ]
+    },
+    {
+      "id": "n9",
+      "type": "add",
+      "name": "ffn_residual_1",
+      "position": {
+        "x": 300,
+        "y": 1250
+      },
+      "params": {},
+      "inputs": [
+        "n8",
+        "n7"
+      ],
+      "outputs": [
+        "n10",
+        "n12"
+      ]
+    },
+    {
+      "id": "n10",
+      "type": "layerNorm",
+      "name": "norm_2",
+      "position": {
+        "x": 300,
+        "y": 1400
+      },
+      "params": {
+        "normalizedShape": 64
+      },
+      "inputs": [
+        "n9"
+      ],
+      "outputs": [
+        "n11"
+      ]
+    },
+    {
+      "id": "n11",
+      "type": "causalAttention",
+      "name": "self_attn_2",
+      "position": {
+        "x": 300,
+        "y": 1550
+      },
+      "params": {
+        "embedDim": 64,
+        "numHeads": 1
+      },
+      "inputs": [
+        "n10"
+      ],
+      "outputs": [
+        "n12"
+      ]
+    },
+    {
+      "id": "n12",
+      "type": "add",
+      "name": "residual_2",
+      "position": {
+        "x": 300,
+        "y": 1700
+      },
+      "params": {},
+      "inputs": [
+        "n11",
+        "n9"
+      ],
+      "outputs": [
+        "n13",
+        "n14"
+      ]
+    },
+    {
+      "id": "n13",
+      "type": "feedForward",
+      "name": "ffn_2",
+      "position": {
+        "x": 300,
+        "y": 1850
+      },
+      "params": {
+        "embedDim": 64,
+        "ffDim": 64
+      },
+      "inputs": [
+        "n12"
+      ],
+      "outputs": [
+        "n14"
+      ]
+    },
+    {
+      "id": "n14",
+      "type": "add",
+      "name": "ffn_residual_2",
+      "position": {
+        "x": 300,
+        "y": 2000
+      },
+      "params": {},
+      "inputs": [
+        "n13",
+        "n12"
+      ],
+      "outputs": [
+        "n15"
+      ]
+    },
+    {
+      "id": "n15",
+      "type": "linear",
+      "name": "item_scores",
+      "position": {
+        "x": 300,
+        "y": 2150
+      },
+      "params": {
+        "inFeatures": 64,
+        "outFeatures": 50000
+      },
+      "inputs": [
+        "n14"
+      ],
+      "outputs": [
+        "n16"
+      ]
+    },
+    {
+      "id": "n16",
+      "type": "output",
+      "name": "next_item",
+      "position": {
+        "x": 300,
+        "y": 2300
+      },
+      "params": {},
+      "inputs": [
+        "n15"
+      ],
+      "outputs": []
+    }
+  ],
+  "connections": [
+    {
+      "id": "c1",
+      "from": "n1",
+      "to": "n2"
+    },
+    {
+      "id": "c2",
+      "from": "n2",
+      "to": "n3"
+    },
+    {
+      "id": "c3",
+      "from": "n3",
+      "to": "n4"
+    },
+    {
+      "id": "c4",
+      "from": "n4",
+      "to": "n5"
+    },
+    {
+      "id": "c5",
+      "from": "n5",
+      "to": "n6"
+    },
+    {
+      "id": "c6",
+      "from": "n6",
+      "to": "n7"
+    },
+    {
+      "id": "c7",
+      "from": "n4",
+      "to": "n7"
+    },
+    {
+      "id": "c8",
+      "from": "n7",
+      "to": "n8"
+    },
+    {
+      "id": "c9",
+      "from": "n8",
+      "to": "n9"
+    },
+    {
+      "id": "c10",
+      "from": "n7",
+      "to": "n9"
+    },
+    {
+      "id": "c11",
+      "from": "n9",
+      "to": "n10"
+    },
+    {
+      "id": "c12",
+      "from": "n10",
+      "to": "n11"
+    },
+    {
+      "id": "c13",
+      "from": "n11",
+      "to": "n12"
+    },
+    {
+      "id": "c14",
+      "from": "n9",
+      "to": "n12"
+    },
+    {
+      "id": "c15",
+      "from": "n12",
+      "to": "n13"
+    },
+    {
+      "id": "c16",
+      "from": "n13",
+      "to": "n14"
+    },
+    {
+      "id": "c17",
+      "from": "n12",
+      "to": "n14"
+    },
+    {
+      "id": "c18",
+      "from": "n14",
+      "to": "n15"
+    },
+    {
+      "id": "c19",
+      "from": "n15",
+      "to": "n16"
+    }
+  ]
+}

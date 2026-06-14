@@ -6,7 +6,7 @@ A single Llama-3 decoder block at 8B dimensions, expanded to individual operatio
 
 | Where | URL |
 |---|---|
-| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/neurarch-model-zoo/main/architectures/llama3-block/model.json |
+| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/llama3-block/model.json |
 | Paper (Llama 3 Herd of Models, 2024) | https://arxiv.org/abs/2407.21783 |
 | GitHub | https://github.com/meta-llama/llama3 |
 | Hugging Face | https://huggingface.co/meta-llama/Meta-Llama-3-8B |

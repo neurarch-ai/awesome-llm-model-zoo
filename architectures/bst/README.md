@@ -6,7 +6,7 @@ Alibaba's CTR model that replaced sum-pooled user history with a Transformer enc
 
 | Where | URL |
 |---|---|
-| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/neurarch-model-zoo/main/architectures/bst/model.json |
+| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/bst/model.json |
 | Paper (Chen et al. 2019) | https://arxiv.org/abs/1905.06874 |
 
 ## Architecture

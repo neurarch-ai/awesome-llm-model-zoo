@@ -6,7 +6,7 @@ The Vision Transformer that ended CNN hegemony in image classification: 16x16 pa
 
 | Where | URL |
 |---|---|
-| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/neurarch-model-zoo/main/architectures/vit-b16/model.json |
+| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/vit-b16/model.json |
 | Paper (Dosovitskiy et al. 2020) | https://arxiv.org/abs/2010.11929 |
 | Hugging Face | https://huggingface.co/google/vit-base-patch16-224 |
 

@@ -6,7 +6,7 @@ The Mamba selective state-space block: causal conv plus gated selective SSM in p
 
 | Where | URL |
 |---|---|
-| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/neurarch-model-zoo/main/architectures/mamba-block/model.json |
+| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/mamba-block/model.json |
 | Paper (Gu and Dao 2023) | https://arxiv.org/abs/2312.00752 |
 | GitHub | https://github.com/state-spaces/mamba |
 

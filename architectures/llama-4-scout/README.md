@@ -6,7 +6,7 @@ Meta's first MoE and first 10M-context model. Architecturally the interesting bi
 
 | Where | URL |
 |---|---|
-| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/neurarch-model-zoo/main/architectures/llama-4-scout/model.json |
+| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/llama-4-scout/model.json |
 | Hugging Face | https://huggingface.co/meta-llama/Llama-4-Scout-17B-16E |
 | GitHub | https://github.com/meta-llama/llama-models |
 

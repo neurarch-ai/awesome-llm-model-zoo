@@ -6,7 +6,7 @@ The bidirectional encoder that started the transfer-learning era in NLP. Twelve 
 
 | Where | URL |
 |---|---|
-| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/neurarch-model-zoo/main/architectures/bert-base/model.json |
+| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/bert-base/model.json |
 | Hugging Face | https://huggingface.co/google-bert/bert-base-uncased |
 | GitHub | https://github.com/google-research/bert |
 

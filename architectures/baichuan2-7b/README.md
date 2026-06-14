@@ -6,7 +6,7 @@ Baichuan Inc.'s second-generation 7B base model, a Llama-shaped pre-norm decoder
 
 | Where | URL |
 |---|---|
-| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/neurarch-model-zoo/main/architectures/baichuan2-7b/model.json |
+| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/baichuan2-7b/model.json |
 | Hugging Face | https://huggingface.co/baichuan-inc/Baichuan2-7B-Base |
 | GitHub | https://github.com/baichuan-inc/Baichuan2 |
 

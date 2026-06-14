@@ -677,6 +677,140 @@ function buildResNet50Full(): Graph {
   };
 }
 
+// ── Recommendation models (hand-built reference graphs) ─────────────────────
+// Recsys architectures aren't published as HF configs and their real param
+// counts are dominated by user/item embedding tables that vary by dataset, so
+// like two-tower / DLRM these are topology references (no param gate).
+function rsGraph(id: string, name: string, description: string, build: (h: {
+  add: (type: string, nm: string, params: Record<string, unknown>, x: number, y: number) => Comp;
+  wire: (a: Comp, b: Comp) => void;
+}) => void): Graph {
+  const comps: Comp[] = []; const conns: Conn[] = []; let ci = 0;
+  const add = (type: string, nm: string, params: Record<string, unknown>, x: number, y: number): Comp => {
+    const c: Comp = { id: `${type}-${comps.length + 1}`, type, name: nm, position: { x, y }, params, inputs: [], outputs: [] };
+    comps.push(c); return c;
+  };
+  const wire = (a: Comp, b: Comp) => { conns.push({ id: `c${++ci}`, from: a.id, to: b.id }); };
+  build({ add, wire });
+  return { id, name, description, components: comps, connections: conns };
+}
+
+function buildGRU4Rec(): Graph {
+  return rsGraph('gru4rec', 'GRU4Rec', 'GRU4Rec (Hidasi et al. 2016): GRU over a session\'s item-click sequence, scored against the item catalogue. The model that brought RNNs to session-based recommendation.', ({ add, wire }) => {
+    let y = 50;
+    const inp = add('input', 'item_session', { shape: [1, 50] }, 300, y); y += 150;
+    const emb = add('embedding', 'item_embed', { numEmbeddings: 50000, embeddingDim: 100 }, 300, y); wire(inp, emb); y += 150;
+    const drop = add('dropout', 'embed_drop', { p: 0.25 }, 300, y); wire(emb, drop); y += 150;
+    const gru = add('gru', 'gru', { hiddenSize: 100, inputSize: 100 }, 300, y); wire(drop, gru); y += 150;
+    const scores = add('linear', 'item_scores', { inFeatures: 100, outFeatures: 50000 }, 300, y); wire(gru, scores); y += 150;
+    const sm = add('softmax', 'softmax', {}, 300, y); wire(scores, sm); y += 150;
+    const out = add('output', 'next_item', {}, 300, y); wire(sm, out);
+  });
+}
+
+function buildSASRec(): Graph {
+  return rsGraph('sasrec', 'SASRec', 'SASRec (Kang and McAuley 2018): a causal self-attention stack over the user\'s item history, predicting the next item. GPT for sequential recommendation, one of the most-built recsys baselines.', ({ add, wire }) => {
+    let y = 50;
+    const inp = add('input', 'item_history', { shape: [1, 200] }, 300, y); y += 150;
+    const emb = add('embedding', 'item_embed', { numEmbeddings: 50000, embeddingDim: 64 }, 300, y); wire(inp, emb); y += 150;
+    const pos = add('positionalEncoding', 'pos_embed', { maxLen: 200, embedDim: 64 }, 300, y); wire(emb, pos); y += 150;
+    const drop = add('dropout', 'embed_drop', { p: 0.2 }, 300, y); wire(pos, drop); y += 150;
+    let prev = drop;
+    for (let i = 0; i < 2; i++) {
+      const norm = add('layerNorm', `norm_${i + 1}`, { normalizedShape: 64 }, 300, y); wire(prev, norm); y += 150;
+      const attn = add('causalAttention', `self_attn_${i + 1}`, { embedDim: 64, numHeads: 1 }, 300, y); wire(norm, attn); y += 150;
+      const addr = add('add', `residual_${i + 1}`, {}, 300, y); wire(attn, addr); wire(prev, addr); y += 150;
+      const ffn = add('feedForward', `ffn_${i + 1}`, { embedDim: 64, ffDim: 64 }, 300, y); wire(addr, ffn); y += 150;
+      const add2 = add('add', `ffn_residual_${i + 1}`, {}, 300, y); wire(ffn, add2); wire(addr, add2); y += 150;
+      prev = add2;
+    }
+    const scores = add('linear', 'item_scores', { inFeatures: 64, outFeatures: 50000 }, 300, y); wire(prev, scores); y += 150;
+    const out = add('output', 'next_item', {}, 300, y); wire(scores, out);
+  });
+}
+
+function buildBERT4Rec(): Graph {
+  return rsGraph('bert4rec', 'BERT4Rec', 'BERT4Rec (Sun et al. 2019): a bidirectional Transformer over the item sequence trained with masked-item prediction, the recsys answer to BERT. Sees both past and future context, unlike causal SASRec.', ({ add, wire }) => {
+    let y = 50;
+    const inp = add('input', 'masked_item_seq', { shape: [1, 200] }, 300, y); y += 150;
+    const emb = add('embedding', 'item_embed', { numEmbeddings: 50000, embeddingDim: 256 }, 300, y); wire(inp, emb); y += 150;
+    const pos = add('positionalEncoding', 'pos_embed', { maxLen: 200, embedDim: 256 }, 300, y); wire(emb, pos); y += 150;
+    let prev = pos;
+    for (let i = 0; i < 2; i++) {
+      const attn = add('multiHeadAttention', `bidir_attn_${i + 1}`, { embedDim: 256, numHeads: 8 }, 300, y); wire(prev, attn); y += 150;
+      const addr = add('add', `residual_${i + 1}`, {}, 300, y); wire(attn, addr); wire(prev, addr); y += 150;
+      const norm = add('layerNorm', `norm_${i + 1}`, { normalizedShape: 256 }, 300, y); wire(addr, norm); y += 150;
+      const ffn = add('feedForward', `ffn_${i + 1}`, { embedDim: 256, ffDim: 1024 }, 300, y); wire(norm, ffn); y += 150;
+      const add2 = add('add', `ffn_residual_${i + 1}`, {}, 300, y); wire(ffn, add2); wire(norm, add2); y += 150;
+      const norm2 = add('layerNorm', `ffn_norm_${i + 1}`, { normalizedShape: 256 }, 300, y); wire(add2, norm2); y += 150;
+      prev = norm2;
+    }
+    const head = add('linear', 'item_scores', { inFeatures: 256, outFeatures: 50000 }, 300, y); wire(prev, head); y += 150;
+    const out = add('output', 'masked_items', {}, 300, y); wire(head, out);
+  });
+}
+
+function buildDeepFM(): Graph {
+  return rsGraph('deepfm', 'DeepFM', 'DeepFM (Guo et al. 2017): a factorization machine (low-order feature interactions) and a deep MLP (high-order), sharing one embedding table and summed at the logit. No manual feature engineering, unlike Wide & Deep.', ({ add, wire }) => {
+    const inp = add('input', 'sparse_fields', { shape: [1, 39] }, 300, 50);
+    const emb = add('embedding', 'shared_embed', { numEmbeddings: 1000000, embeddingDim: 10 }, 300, 200); wire(inp, emb);
+    // FM branch (left): explicit pairwise interactions
+    const fm = add('multiply', 'fm_interactions', {}, 80, 400); wire(emb, fm);
+    const fmOut = add('linear', 'fm_logit', { inFeatures: 10, outFeatures: 1 }, 80, 550); wire(fm, fmOut);
+    // Deep branch (right): MLP over the same embeddings
+    const flat = add('flatten', 'flatten', {}, 520, 400); wire(emb, flat);
+    const d1 = add('linear', 'deep_1', { outFeatures: 400 }, 520, 550); wire(flat, d1);
+    const r1 = add('relu', 'relu_1', {}, 520, 700); wire(d1, r1);
+    const d2 = add('linear', 'deep_2', { inFeatures: 400, outFeatures: 1 }, 520, 850); wire(r1, d2);
+    // sum the two logits
+    const sum = add('add', 'fm_plus_deep', {}, 300, 1000); wire(fmOut, sum); wire(d2, sum);
+    const sig = add('sigmoid', 'ctr', {}, 300, 1150); wire(sum, sig);
+    const out = add('output', 'click_prob', {}, 300, 1300); wire(sig, out);
+  });
+}
+
+function buildDCN(): Graph {
+  return rsGraph('dcn', 'DCN (Deep & Cross)', 'DCN (Wang et al. 2017): a cross network that learns bounded-degree feature crosses explicitly, run in parallel with a deep MLP and concatenated. Replaces DeepFM\'s second-order FM with arbitrary-order crosses.', ({ add, wire }) => {
+    const inp = add('input', 'features', { shape: [1, 39] }, 300, 50);
+    const emb = add('embedding', 'embed', { numEmbeddings: 1000000, embeddingDim: 10 }, 300, 200); wire(inp, emb);
+    const flat = add('flatten', 'stack', {}, 300, 350); wire(emb, flat);
+    // Cross network (left): stacked explicit feature crosses
+    let cross = add('multiply', 'cross_1', {}, 80, 500); wire(flat, cross);
+    const cadd1 = add('add', 'cross_res_1', {}, 80, 650); wire(cross, cadd1); wire(flat, cadd1);
+    let cross2 = add('multiply', 'cross_2', {}, 80, 800); wire(cadd1, cross2);
+    const cadd2 = add('add', 'cross_res_2', {}, 80, 950); wire(cross2, cadd2); wire(cadd1, cadd2);
+    // Deep network (right)
+    const d1 = add('linear', 'deep_1', { outFeatures: 256 }, 520, 500); wire(flat, d1);
+    const r1 = add('relu', 'relu_1', {}, 520, 650); wire(d1, r1);
+    const d2 = add('linear', 'deep_2', { inFeatures: 256, outFeatures: 256 }, 520, 800); wire(r1, d2);
+    const r2 = add('relu', 'relu_2', {}, 520, 950); wire(d2, r2);
+    // concat + head
+    const cat = add('concatenate', 'concat', {}, 300, 1100); wire(cadd2, cat); wire(r2, cat);
+    const head = add('linear', 'logit', { outFeatures: 1 }, 300, 1250); wire(cat, head);
+    const sig = add('sigmoid', 'ctr', {}, 300, 1400); wire(head, sig);
+    const out = add('output', 'click_prob', {}, 300, 1550); wire(sig, out);
+  });
+}
+
+function buildDIN(): Graph {
+  return rsGraph('din', 'DIN (Deep Interest Network)', 'DIN (Zhou et al. 2018, Alibaba): an attention "activation unit" weights a user\'s historical behaviours by their relevance to the candidate item, instead of sum-pooling them. Production CTR with target-aware interest.', ({ add, wire }) => {
+    const hist = add('input', 'behavior_seq', { shape: [1, 100] }, 150, 50);
+    const target = add('input', 'candidate_item', { shape: [1, 1] }, 600, 50);
+    const histEmb = add('embedding', 'behavior_embed', { numEmbeddings: 1000000, embeddingDim: 64 }, 150, 200); wire(hist, histEmb);
+    const targetEmb = add('embedding', 'item_embed', { numEmbeddings: 1000000, embeddingDim: 64 }, 600, 200); wire(target, targetEmb);
+    // activation unit: attention of behaviors w.r.t. the target
+    const attn = add('multiHeadAttention', 'activation_unit', { embedDim: 64, numHeads: 1 }, 300, 400); wire(histEmb, attn); wire(targetEmb, attn);
+    const pool = add('globalAvgPool1d', 'weighted_sum', {}, 300, 550); wire(attn, pool);
+    // concat pooled interest with target embedding
+    const cat = add('concatenate', 'concat', {}, 450, 700); wire(pool, cat); wire(targetEmb, cat);
+    const d1 = add('linear', 'fc_1', { outFeatures: 200 }, 450, 850); wire(cat, d1);
+    const r1 = add('relu', 'prelu_1', {}, 450, 1000); wire(d1, r1);
+    const d2 = add('linear', 'fc_2', { inFeatures: 200, outFeatures: 1 }, 450, 1150); wire(r1, d2);
+    const sig = add('sigmoid', 'ctr', {}, 450, 1300); wire(d2, sig);
+    const out = add('output', 'click_prob', {}, 450, 1450); wire(sig, out);
+  });
+}
+
 const HFFULL: HFFullEntry[] = [
   {
     kind: 'hffull', id: 'resnet-50', displayName: 'ResNet-50', org: 'Microsoft Research (He et al.)',
@@ -847,6 +981,264 @@ const HFFULL: HFFullEntry[] = [
       'Alternating attention: 2 of every 3 layers use a 128-token local window; every 3rd layer is global. That is how 22 layers reach 8192 tokens cheaply.',
       'Deeper and thinner than BERT-base (22 layers vs 12, FFN 1152 paired for GeGLU) at a comparable 149M parameters.',
       'Compare with [bert-base](../bert-base/) side by side: same job, nine years of architecture evolution.',
+    ],
+  },
+  {
+    kind: 'hffull', id: 'phi-2', displayName: 'Phi-2', org: 'Microsoft',
+    paramsLabel: '2.78B', hfId: 'microsoft/phi-2',
+    links: [
+      ['Paper / blog (Textbooks Are All You Need II)', 'https://arxiv.org/abs/2309.05463'],
+      ['Hugging Face', 'https://huggingface.co/microsoft/phi-2'],
+    ],
+    license: 'MIT',
+    archRows: [
+      ['Type', 'Decoder-only transformer (causal LM)'], ['Parameters', '2.78B'],
+      ['Layers', '32'], ['Hidden size', '2560'], ['Attention', 'Multi-head: 32 heads, head dim 80'],
+      ['Block', 'Parallel residual (attention and MLP share one input)'],
+      ['FFN', 'Dense MLP, 10240, GeLU'], ['Normalization', 'LayerNorm, pre-norm'],
+      ['Positions', 'Partial RoPE (40% of each head)'], ['Vocabulary', '51,200'], ['Max context', '2,048'],
+    ],
+    blurb: 'Microsoft\'s 2.7B "small model, textbook-quality data" flagship. Architecturally a GPT-NeoX-style parallel-residual decoder with partial rotary embeddings, included as the canonical example of the Phi data-over-scale thesis.',
+    notes: [
+      'Parallel residual: attention and the MLP both read the same pre-norm input and their outputs are summed into the residual, so the two run side by side instead of in series (saves a norm, slightly faster).',
+      'Partial RoPE: rotary embeddings are applied to only 40% of each 80-dim head; the rest is position-free, a GPT-NeoX inheritance.',
+      'Plain dense GeLU MLP at 4x hidden, no GQA, no SwiGLU: the architecture is deliberately conventional. The Phi result is about data curation, not architecture.',
+      'Untied input/output embeddings.',
+    ],
+  },
+  {
+    kind: 'hffull', id: 'pythia-1.4b', displayName: 'Pythia-1.4B', org: 'EleutherAI',
+    paramsLabel: '1.4B', hfId: 'EleutherAI/pythia-1.4b',
+    links: [
+      ['Paper (Biderman et al. 2023)', 'https://arxiv.org/abs/2304.01373'],
+      ['Hugging Face', 'https://huggingface.co/EleutherAI/pythia-1.4b'],
+      ['GitHub', 'https://github.com/EleutherAI/pythia'],
+    ],
+    license: 'Apache 2.0',
+    archRows: [
+      ['Type', 'Decoder-only transformer (causal LM)'], ['Parameters', '1.4B'],
+      ['Layers', '24'], ['Hidden size', '2048'], ['Attention', 'Multi-head: 16 heads, head dim 128'],
+      ['Block', 'Parallel residual (GPT-NeoX)'],
+      ['FFN', 'Dense MLP, 8192, GeLU'], ['Normalization', 'LayerNorm, pre-norm'],
+      ['Positions', 'RoPE (full)'], ['Vocabulary', '50,304'], ['Max context', '2,048'],
+    ],
+    blurb: 'One rung of EleutherAI\'s Pythia suite, the interpretability-and-training-dynamics workhorse: an identical GPT-NeoX architecture trained at 8 sizes on the exact same data order, with 154 checkpoints each. The 1.4B is the popular mid-size.',
+    notes: [
+      'GPT-NeoX parallel-residual block: attention and MLP both consume the same normed input and sum into the residual.',
+      'Full RoPE on 128-dim heads; untied embeddings; 50304-token GPT-NeoX BPE vocabulary (padded for efficiency).',
+      'The value is the controlled suite, not the architecture: same data, same order, every size and checkpoint released, so you can study how a fixed architecture learns.',
+    ],
+  },
+  {
+    kind: 'hffull', id: 'olmo-7b', displayName: 'OLMo-7B', org: 'Allen Institute for AI (Ai2)',
+    paramsLabel: '6.9B', hfId: 'allenai/OLMo-7B-0724-hf',
+    links: [
+      ['Paper (Groeneveld et al. 2024)', 'https://arxiv.org/abs/2402.00838'],
+      ['Hugging Face', 'https://huggingface.co/allenai/OLMo-7B-0724-hf'],
+      ['GitHub', 'https://github.com/allenai/OLMo'],
+    ],
+    license: 'Apache 2.0',
+    archRows: [
+      ['Type', 'Decoder-only transformer (causal LM)'], ['Parameters', '6.9B'],
+      ['Layers', '32'], ['Hidden size', '4096'], ['Attention', 'Multi-head: 32 heads'],
+      ['FFN', 'SwiGLU, intermediate size 11008'],
+      ['Normalization', 'Non-parametric LayerNorm (no weight / bias)'],
+      ['Positions', 'RoPE'], ['Vocabulary', '50,304'], ['Max context', '4,096'],
+    ],
+    blurb: 'Ai2\'s fully-open 7B: not just open weights but open training data (Dolma), code, and logs. A Llama-shaped decoder with one signature twist, non-parametric LayerNorm, included as the reference for reproducible LLM research.',
+    notes: [
+      'Non-parametric LayerNorm: the norm has no learnable gain or bias at all, just the normalization, which the OLMo report found improved stability.',
+      'Otherwise a clean Llama-style decoder: RoPE, SwiGLU, no biases, untied embeddings.',
+      'The point is end-to-end openness (Dolma corpus + training code + checkpoints), making it the model to use when you need to know exactly what went in.',
+    ],
+  },
+  {
+    kind: 'hffull', id: 'deepseek-v2-lite', displayName: 'DeepSeek-V2-Lite', org: 'DeepSeek',
+    paramsLabel: '15.7B total, 2.4B active', hfId: 'deepseek-ai/DeepSeek-V2-Lite',
+    links: [
+      ['Paper (DeepSeek-V2, Liu et al. 2024)', 'https://arxiv.org/abs/2405.04434'],
+      ['Hugging Face', 'https://huggingface.co/deepseek-ai/DeepSeek-V2-Lite'],
+    ],
+    license: 'Code MIT; weights under the DeepSeek Model License',
+    archRows: [
+      ['Type', 'Decoder-only transformer, sparse MoE (causal LM)'], ['Parameters', '15.7B total, 2.4B active'],
+      ['Layers', '27'], ['Hidden size', '2048'],
+      ['Attention', 'Multi-head latent (MLA): 16 heads, KV latent 512 (no Q latent at this size)'],
+      ['FFN', 'MoE: 64 routed experts, top-6 + 2 shared, expert dim 1408; first layer dense'],
+      ['Normalization', 'RMSNorm, pre-norm'], ['Positions', 'Decoupled RoPE'],
+      ['Vocabulary', '102,400'], ['Max context', '163,840'],
+    ],
+    blurb: 'The small, runnable member of the DeepSeek-V2 family and the most accessible way to study multi-head latent attention. Same MLA + fine-grained-MoE recipe as DeepSeek-V3, shrunk to 16B total / 2.4B active so it fits on one GPU.',
+    notes: [
+      'Multi-head latent attention (MLA): keys and values are compressed to a 512-dim latent per token; at this scale queries skip the extra Q-latent that the 236B V2 and 671B V3 use.',
+      'Fine-grained MoE: 64 routed experts (top-6) plus 2 always-on shared experts, slim 1408-dim each; the first layer stays dense.',
+      'The cheapest entry point to the architecture that defined the DeepSeek line, see [deepseek-v3](../deepseek-v3/) for the full-scale version.',
+    ],
+  },
+  {
+    kind: 'hffull', id: 'gpt-oss-120b', displayName: 'gpt-oss-120b', org: 'OpenAI',
+    paramsLabel: '117B total, 5.1B active', hfId: 'openai/gpt-oss-120b',
+    links: [
+      ['GitHub', 'https://github.com/openai/gpt-oss'],
+      ['Hugging Face', 'https://huggingface.co/openai/gpt-oss-120b'],
+    ],
+    license: 'Apache 2.0',
+    archRows: [
+      ['Type', 'Decoder-only transformer, sparse MoE (causal LM)'], ['Parameters', '117B total, 5.1B active'],
+      ['Layers', '36'], ['Hidden size', '2880'], ['Attention', 'GQA 64:8, head dim 64'],
+      ['FFN', 'MoE: 128 experts, top-4 (no shared)'],
+      ['Normalization', 'RMSNorm, pre-norm'],
+      ['Positions', 'RoPE + YaRN; alternating sliding-window (128) and full attention'],
+      ['Vocabulary', '201,088'], ['Max context', '131,072'],
+    ],
+    blurb: 'The larger of OpenAI\'s two 2025 open-weight MoEs, sized to run on a single 80GB GPU at MXFP4. Same recipe as [gpt-oss-20b](../gpt-oss-20b/) but 128 experts and 36 layers: 117B total, 5.1B active.',
+    notes: [
+      '128 experts, top-4 routed, no shared expert; 5.1B of 117B parameters active per token.',
+      'Alternating attention: odd layers a 128-token sliding window, even layers full attention, plus learned attention-sink logits.',
+      'Ships MXFP4-quantized; trained with the harmony response format for tool use and chain-of-thought.',
+    ],
+  },
+  {
+    kind: 'hffull', id: 'all-minilm-l6', displayName: 'all-MiniLM-L6-v2', org: 'Microsoft / sentence-transformers',
+    paramsLabel: '22.7M', hfId: 'sentence-transformers/all-MiniLM-L6-v2',
+    links: [
+      ['Paper (MiniLM, Wang et al. 2020)', 'https://arxiv.org/abs/2002.10957'],
+      ['Hugging Face', 'https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2'],
+    ],
+    license: 'Apache 2.0',
+    archRows: [
+      ['Type', 'Bidirectional encoder, sentence embedding'], ['Parameters', '22.7M'],
+      ['Layers', '6'], ['Hidden size', '384'], ['Attention', 'Multi-head: 12 heads'],
+      ['FFN', 'Dense, 1536, GeLU'], ['Normalization', 'LayerNorm, post-norm'],
+      ['Pooling', 'Mean over tokens → 384-dim sentence vector'],
+      ['Vocabulary', '30,522'], ['Max context', '256 (trained), 512 (max)'],
+    ],
+    blurb: 'The most-downloaded sentence-embedding model in the world: a 6-layer MiniLM distilled from BERT, mean-pooled into a 384-dim vector. The default workhorse for semantic search, RAG retrieval, and clustering when you want fast and small.',
+    notes: [
+      'Tiny BERT encoder (6 layers, 384 hidden) distilled via MiniLM\'s deep-self-attention distillation, then fine-tuned on 1B+ sentence pairs with a contrastive objective.',
+      'The embedding is a mean pool over the token outputs (not the CLS token), then L2-normalized, so cosine similarity ranks relevance.',
+      'At ~80MB and 384 dims it is the cheap retriever most RAG stacks start with.',
+    ],
+  },
+  {
+    kind: 'hffull', id: 'bge-base-en', displayName: 'BGE-base-en-v1.5', org: 'BAAI',
+    paramsLabel: '109M', hfId: 'BAAI/bge-base-en-v1.5',
+    links: [
+      ['Paper (C-Pack, Xiao et al. 2023)', 'https://arxiv.org/abs/2309.07597'],
+      ['Hugging Face', 'https://huggingface.co/BAAI/bge-base-en-v1.5'],
+      ['GitHub (FlagEmbedding)', 'https://github.com/FlagOpen/FlagEmbedding'],
+    ],
+    license: 'MIT',
+    archRows: [
+      ['Type', 'Bidirectional encoder, retrieval embedding'], ['Parameters', '109M'],
+      ['Layers', '12'], ['Hidden size', '768'], ['Attention', 'Multi-head: 12 heads'],
+      ['FFN', 'Dense, 3072, GeLU'], ['Normalization', 'LayerNorm, post-norm'],
+      ['Pooling', 'CLS token → 768-dim embedding'],
+      ['Vocabulary', '30,522'], ['Max context', '512'],
+    ],
+    blurb: 'BAAI\'s BGE retriever, for a long stretch the top open English embedding model on the MTEB leaderboard. A BERT-base encoder fine-tuned with large-scale contrastive pretraining + instruction tuning; the CLS token is the embedding.',
+    notes: [
+      'Architecturally plain BERT-base; all the lift is the C-Pack training recipe (contrastive pretraining on curated pairs, then task fine-tuning).',
+      'Uses the CLS token as the sentence embedding (unlike all-MiniLM\'s mean pool), and recommends an instruction prefix for queries.',
+      'The "base" tier balances quality and cost; -small and -large siblings trade the two.',
+    ],
+  },
+  {
+    kind: 'hffull', id: 'deepfm', displayName: 'DeepFM', org: 'Huawei Noah\'s Ark Lab',
+    paramsLabel: 'Reference graph', fullBuild: buildDeepFM,
+    links: [['Paper (Guo et al. 2017)', 'https://arxiv.org/abs/1703.04247']],
+    archRows: [
+      ['Type', 'CTR / click prediction'], ['FM branch', 'Shared embeddings → pairwise (2nd-order) interactions'],
+      ['Deep branch', 'Same embeddings flattened → MLP (high-order)'], ['Fusion', 'Sum of the two logits → sigmoid'],
+      ['Key idea', 'No manual feature crosses (vs Wide & Deep)'],
+    ],
+    blurb: 'The CTR model that fused a factorization machine with a deep network under one shared embedding table. FM captures low-order feature interactions, the MLP captures high-order, and unlike Wide & Deep neither path needs hand-engineered crosses.',
+    notes: [
+      'Both branches read the SAME embedding table, so the FM and deep components are trained jointly without separate feature engineering.',
+      'The FM branch models explicit second-order (pairwise) interactions; the deep MLP models higher-order ones implicitly.',
+      'The ancestor of a whole family (xDeepFM, AutoInt, DCN); pairs with [wide-and-deep](../wide-and-deep/) as the "learned vs hand-crafted crosses" comparison.',
+    ],
+  },
+  {
+    kind: 'hffull', id: 'dcn', displayName: 'DCN (Deep & Cross)', org: 'Google / Stanford',
+    paramsLabel: 'Reference graph', fullBuild: buildDCN,
+    links: [['Paper (Wang et al. 2017)', 'https://arxiv.org/abs/1708.05123']],
+    archRows: [
+      ['Type', 'CTR / click prediction'], ['Cross network', 'Stacked layers, each an explicit feature cross + residual'],
+      ['Deep network', 'Parallel MLP'], ['Fusion', 'Concatenate cross + deep → logit → sigmoid'],
+      ['Key idea', 'Bounded-degree feature crosses learned explicitly'],
+    ],
+    blurb: 'Google\'s Deep & Cross Network: a cross network that applies an explicit feature-crossing formula at every layer (so L layers give degree-L crosses), run alongside a deep MLP and concatenated. Generalizes DeepFM\'s fixed second-order FM to arbitrary order.',
+    notes: [
+      'Each cross layer computes x0 · xl^T · w + xl (a residual feature cross), so stacking k layers yields explicit crosses up to degree k+1 with very few parameters.',
+      'The cross and deep networks run in parallel and are concatenated before the final logit.',
+      'DCN-v2 later swapped the rank-1 cross for a low-rank matrix; this is the original formulation.',
+    ],
+  },
+  {
+    kind: 'hffull', id: 'din', displayName: 'DIN (Deep Interest Network)', org: 'Alibaba',
+    paramsLabel: 'Reference graph', fullBuild: buildDIN,
+    links: [['Paper (Zhou et al. 2018)', 'https://arxiv.org/abs/1706.06978']],
+    archRows: [
+      ['Type', 'CTR with user-behavior sequence'],
+      ['Activation unit', 'Attention of behaviours w.r.t. the candidate item'],
+      ['Interest', 'Relevance-weighted sum of behaviours (not mean pool)'],
+      ['Head', 'Concat interest + candidate → MLP → sigmoid'],
+      ['Key idea', 'Target-aware interest representation'],
+    ],
+    blurb: 'Alibaba\'s production CTR model that replaced fixed sum-pooling of a user\'s behaviour history with an attention "activation unit": each past behaviour is weighted by how relevant it is to the candidate item, so the user\'s interest vector is target-aware.',
+    notes: [
+      'The activation unit is a local attention between the candidate item and each historical behaviour; high-relevance behaviours dominate the pooled interest.',
+      'This is the recsys insight that "a user\'s interest is multi-modal, attend to the part relevant to what you are scoring".',
+      'Followed by DIEN (adds a GRU-based interest-evolution layer); compare with [bst](../bst/), which instead runs a full Transformer over the behaviour sequence.',
+    ],
+  },
+  {
+    kind: 'hffull', id: 'sasrec', displayName: 'SASRec', org: 'UCSD (Kang and McAuley)',
+    paramsLabel: 'Reference graph', fullBuild: buildSASRec,
+    links: [['Paper (Kang and McAuley 2018)', 'https://arxiv.org/abs/1808.09781']],
+    archRows: [
+      ['Type', 'Sequential recommendation'], ['Embedding', 'Item + learned positional'],
+      ['Backbone', 'Causal (left-to-right) self-attention blocks'], ['Objective', 'Next-item prediction'],
+      ['Key idea', 'Self-attention over history, GPT-style'],
+    ],
+    blurb: 'Self-Attentive Sequential Recommendation: a causal Transformer over the user\'s item history that predicts the next item, GPT for recommendation. One of the most-cited and most-reimplemented sequential-recsys baselines.',
+    notes: [
+      'Causal self-attention means position t attends only to items up to t, exactly like a language-model decoder.',
+      'Adaptively weights which past items matter for the next click, instead of the fixed recency bias of an RNN.',
+      'Pairs with [bert4rec](../bert4rec/): same item-sequence setup, causal (SASRec) vs bidirectional masked (BERT4Rec).',
+    ],
+  },
+  {
+    kind: 'hffull', id: 'bert4rec', displayName: 'BERT4Rec', org: 'Alibaba',
+    paramsLabel: 'Reference graph', fullBuild: buildBERT4Rec,
+    links: [['Paper (Sun et al. 2019)', 'https://arxiv.org/abs/1904.06690']],
+    archRows: [
+      ['Type', 'Sequential recommendation'], ['Embedding', 'Item + learned positional'],
+      ['Backbone', 'Bidirectional Transformer encoder'], ['Objective', 'Masked-item (Cloze) prediction'],
+      ['Key idea', 'Both-directions context, BERT-style'],
+    ],
+    blurb: 'The recsys answer to BERT: a bidirectional Transformer over the item sequence trained with masked-item (Cloze) prediction. Each item sees both its past and future neighbours, unlike causal SASRec.',
+    notes: [
+      'Bidirectional self-attention plus a masked-item training objective (randomly mask items, predict them from both sides).',
+      'The both-directions context can capture patterns a left-to-right model misses, at the cost of the Cloze-style training/serving mismatch.',
+      'Directly comparable to [sasrec](../sasrec/): same inputs, bidirectional-masked vs causal.',
+    ],
+  },
+  {
+    kind: 'hffull', id: 'gru4rec', displayName: 'GRU4Rec', org: 'Gravity R&D / Telefonica',
+    paramsLabel: 'Reference graph', fullBuild: buildGRU4Rec,
+    links: [['Paper (Hidasi et al. 2016)', 'https://arxiv.org/abs/1511.06939']],
+    archRows: [
+      ['Type', 'Session-based recommendation'], ['Embedding', 'Item embedding'],
+      ['Backbone', 'GRU over the click sequence'], ['Head', 'Linear to item catalogue → softmax'],
+      ['Key idea', 'RNN for anonymous session sequences'],
+    ],
+    blurb: 'The paper that brought recurrent networks to session-based recommendation: a GRU consumes the sequence of clicks in an anonymous session and scores the next item. The RNN baseline every later sequential-recsys model compares against.',
+    notes: [
+      'Built for session data (no long-term user profile): the GRU\'s hidden state is the running session intent.',
+      'Introduced session-parallel mini-batching and a ranking loss (BPR / TOP1) tailored to recommendation.',
+      'The recurrent counterpart to the attention-based [sasrec](../sasrec/) and [bert4rec](../bert4rec/).',
     ],
   },
 ];
@@ -1307,7 +1699,7 @@ function buildEncoderBlockView(s: EncoderSpec): Graph {
 // Shared pipeline helpers
 // ---------------------------------------------------------------------------
 
-const RAW_BASE = 'https://raw.githubusercontent.com/neurarch-ai/neurarch-model-zoo/main/architectures';
+const RAW_BASE = 'https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures';
 const openUrl = (id: string) => `https://www.neurarch.com/?import=${RAW_BASE}/${id}/model.json`;
 const fmtP = (n: number) => n >= 1e12 ? (n / 1e12).toFixed(2) + 'T' : n >= 1e9 ? (n / 1e9).toFixed(2) + 'B' : n >= 1e6 ? (n / 1e6).toFixed(1) + 'M' : (n / 1e3).toFixed(1) + 'K';
 

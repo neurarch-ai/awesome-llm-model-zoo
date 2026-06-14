@@ -6,7 +6,7 @@ The text-to-text encoder-decoder that reframed every NLP task as sequence genera
 
 | Where | URL |
 |---|---|
-| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/neurarch-model-zoo/main/architectures/t5-small/model.json |
+| **Open in Neurarch** (live, editable graph) | https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/t5-small/model.json |
 | Paper (Raffel et al. 2019) | https://arxiv.org/abs/1910.10683 |
 | Hugging Face | https://huggingface.co/google-t5/t5-small |
 

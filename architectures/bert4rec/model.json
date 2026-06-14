@@ -1,0 +1,419 @@
+{
+  "id": "bert4rec",
+  "name": "BERT4Rec",
+  "description": "BERT4Rec (Alibaba): full graph; dimensions verified against the official config.json.",
+  "components": [
+    {
+      "id": "n1",
+      "type": "input",
+      "name": "masked_item_seq",
+      "position": {
+        "x": 300,
+        "y": 50
+      },
+      "params": {
+        "shape": [
+          1,
+          200
+        ]
+      },
+      "inputs": [],
+      "outputs": [
+        "n2"
+      ]
+    },
+    {
+      "id": "n2",
+      "type": "embedding",
+      "name": "item_embed",
+      "position": {
+        "x": 300,
+        "y": 200
+      },
+      "params": {
+        "numEmbeddings": 50000,
+        "embeddingDim": 256
+      },
+      "inputs": [
+        "n1"
+      ],
+      "outputs": [
+        "n3"
+      ]
+    },
+    {
+      "id": "n3",
+      "type": "positionalEncoding",
+      "name": "pos_embed",
+      "position": {
+        "x": 300,
+        "y": 350
+      },
+      "params": {
+        "maxLen": 200,
+        "embedDim": 256
+      },
+      "inputs": [
+        "n2"
+      ],
+      "outputs": [
+        "n4",
+        "n5"
+      ]
+    },
+    {
+      "id": "n4",
+      "type": "multiHeadAttention",
+      "name": "bidir_attn_1",
+      "position": {
+        "x": 300,
+        "y": 500
+      },
+      "params": {
+        "embedDim": 256,
+        "numHeads": 8
+      },
+      "inputs": [
+        "n3"
+      ],
+      "outputs": [
+        "n5"
+      ]
+    },
+    {
+      "id": "n5",
+      "type": "add",
+      "name": "residual_1",
+      "position": {
+        "x": 300,
+        "y": 650
+      },
+      "params": {},
+      "inputs": [
+        "n4",
+        "n3"
+      ],
+      "outputs": [
+        "n6"
+      ]
+    },
+    {
+      "id": "n6",
+      "type": "layerNorm",
+      "name": "norm_1",
+      "position": {
+        "x": 300,
+        "y": 800
+      },
+      "params": {
+        "normalizedShape": 256
+      },
+      "inputs": [
+        "n5"
+      ],
+      "outputs": [
+        "n7",
+        "n8"
+      ]
+    },
+    {
+      "id": "n7",
+      "type": "feedForward",
+      "name": "ffn_1",
+      "position": {
+        "x": 300,
+        "y": 950
+      },
+      "params": {
+        "embedDim": 256,
+        "ffDim": 1024
+      },
+      "inputs": [
+        "n6"
+      ],
+      "outputs": [
+        "n8"
+      ]
+    },
+    {
+      "id": "n8",
+      "type": "add",
+      "name": "ffn_residual_1",
+      "position": {
+        "x": 300,
+        "y": 1100
+      },
+      "params": {},
+      "inputs": [
+        "n7",
+        "n6"
+      ],
+      "outputs": [
+        "n9"
+      ]
+    },
+    {
+      "id": "n9",
+      "type": "layerNorm",
+      "name": "ffn_norm_1",
+      "position": {
+        "x": 300,
+        "y": 1250
+      },
+      "params": {
+        "normalizedShape": 256
+      },
+      "inputs": [
+        "n8"
+      ],
+      "outputs": [
+        "n10",
+        "n11"
+      ]
+    },
+    {
+      "id": "n10",
+      "type": "multiHeadAttention",
+      "name": "bidir_attn_2",
+      "position": {
+        "x": 300,
+        "y": 1400
+      },
+      "params": {
+        "embedDim": 256,
+        "numHeads": 8
+      },
+      "inputs": [
+        "n9"
+      ],
+      "outputs": [
+        "n11"
+      ]
+    },
+    {
+      "id": "n11",
+      "type": "add",
+      "name": "residual_2",
+      "position": {
+        "x": 300,
+        "y": 1550
+      },
+      "params": {},
+      "inputs": [
+        "n10",
+        "n9"
+      ],
+      "outputs": [
+        "n12"
+      ]
+    },
+    {
+      "id": "n12",
+      "type": "layerNorm",
+      "name": "norm_2",
+      "position": {
+        "x": 300,
+        "y": 1700
+      },
+      "params": {
+        "normalizedShape": 256
+      },
+      "inputs": [
+        "n11"
+      ],
+      "outputs": [
+        "n13",
+        "n14"
+      ]
+    },
+    {
+      "id": "n13",
+      "type": "feedForward",
+      "name": "ffn_2",
+      "position": {
+        "x": 300,
+        "y": 1850
+      },
+      "params": {
+        "embedDim": 256,
+        "ffDim": 1024
+      },
+      "inputs": [
+        "n12"
+      ],
+      "outputs": [
+        "n14"
+      ]
+    },
+    {
+      "id": "n14",
+      "type": "add",
+      "name": "ffn_residual_2",
+      "position": {
+        "x": 300,
+        "y": 2000
+      },
+      "params": {},
+      "inputs": [
+        "n13",
+        "n12"
+      ],
+      "outputs": [
+        "n15"
+      ]
+    },
+    {
+      "id": "n15",
+      "type": "layerNorm",
+      "name": "ffn_norm_2",
+      "position": {
+        "x": 300,
+        "y": 2150
+      },
+      "params": {
+        "normalizedShape": 256
+      },
+      "inputs": [
+        "n14"
+      ],
+      "outputs": [
+        "n16"
+      ]
+    },
+    {
+      "id": "n16",
+      "type": "linear",
+      "name": "item_scores",
+      "position": {
+        "x": 300,
+        "y": 2300
+      },
+      "params": {
+        "inFeatures": 256,
+        "outFeatures": 50000
+      },
+      "inputs": [
+        "n15"
+      ],
+      "outputs": [
+        "n17"
+      ]
+    },
+    {
+      "id": "n17",
+      "type": "output",
+      "name": "masked_items",
+      "position": {
+        "x": 300,
+        "y": 2450
+      },
+      "params": {},
+      "inputs": [
+        "n16"
+      ],
+      "outputs": []
+    }
+  ],
+  "connections": [
+    {
+      "id": "c1",
+      "from": "n1",
+      "to": "n2"
+    },
+    {
+      "id": "c2",
+      "from": "n2",
+      "to": "n3"
+    },
+    {
+      "id": "c3",
+      "from": "n3",
+      "to": "n4"
+    },
+    {
+      "id": "c4",
+      "from": "n4",
+      "to": "n5"
+    },
+    {
+      "id": "c5",
+      "from": "n3",
+      "to": "n5"
+    },
+    {
+      "id": "c6",
+      "from": "n5",
+      "to": "n6"
+    },
+    {
+      "id": "c7",
+      "from": "n6",
+      "to": "n7"
+    },
+    {
+      "id": "c8",
+      "from": "n7",
+      "to": "n8"
+    },
+    {
+      "id": "c9",
+      "from": "n6",
+      "to": "n8"
+    },
+    {
+      "id": "c10",
+      "from": "n8",
+      "to": "n9"
+    },
+    {
+      "id": "c11",
+      "from": "n9",
+      "to": "n10"
+    },
+    {
+      "id": "c12",
+      "from": "n10",
+      "to": "n11"
+    },
+    {
+      "id": "c13",
+      "from": "n9",
+      "to": "n11"
+    },
+    {
+      "id": "c14",
+      "from": "n11",
+      "to": "n12"
+    },
+    {
+      "id": "c15",
+      "from": "n12",
+      "to": "n13"
+    },
+    {
+      "id": "c16",
+      "from": "n13",
+      "to": "n14"
+    },
+    {
+      "id": "c17",
+      "from": "n12",
+      "to": "n14"
+    },
+    {
+      "id": "c18",
+      "from": "n14",
+      "to": "n15"
+    },
+    {
+      "id": "c19",
+      "from": "n15",
+      "to": "n16"
+    },
+    {
+      "id": "c20",
+      "from": "n16",
+      "to": "n17"
+    }
+  ]
+}
