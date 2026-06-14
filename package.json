@@ -4,7 +4,9 @@
   "type": "module",
   "description": "Maintainer tooling for regenerating zoo entries. Requires the Neurarch source checkout as a sibling directory (../Neurarch).",
   "scripts": {
-    "generate": "tsx --tsconfig ../Neurarch/tsconfig.json scripts/generate.mts"
+    "generate": "tsx --tsconfig ../Neurarch/tsconfig.json scripts/generate.mts",
+    "validate": "node scripts/validate.mjs",
+    "catalog": "node scripts/generate-catalog.mjs"
   },
   "devDependencies": {
     "@resvg/resvg-js": "^2.6.2",

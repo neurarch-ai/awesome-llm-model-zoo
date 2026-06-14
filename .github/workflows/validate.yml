@@ -1,0 +1,21 @@
+name: validate
+
+# Re-runs the structural validation that backs the "100% passing" badge, on
+# every push and PR. No app/private-repo dependency — it checks the published
+# model.json graphs and entry files directly, so contributors get a green (or
+# red) check on their PR before a maintainer looks.
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Validate every architecture entry
+        run: node scripts/validate.mjs

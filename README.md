@@ -4,13 +4,23 @@
 
 ### 78 reference architectures you can actually open, edit, validate, and train. From DeepSeek-V3's latent attention to ResNet's first skip connection. Not pictures. Graphs.
 
-[![architectures](https://img.shields.io/badge/architectures-78-6366f1)](#catalog)
-[![shape-checked](https://img.shields.io/badge/shape--checked-100%25%20passing-22c55e)](#every-entry-is-validated)
+[![architectures](https://img.shields.io/badge/architectures-78-6366f1)](CATALOG.md)
+[![validate](https://github.com/neurarch-ai/awesome-llm-model-zoo/actions/workflows/validate.yml/badge.svg)](https://github.com/neurarch-ai/awesome-llm-model-zoo/actions/workflows/validate.yml)
 [![domains](https://img.shields.io/badge/domains-11-f59e0b)](#catalog)
 [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)](CONTRIBUTING.md)
 
-**[Browse the catalog](#catalog)** · **[Open one in your browser](#open-any-architecture-in-one-click)** · **[Contribute](CONTRIBUTING.md)**
+**[Full catalog](CATALOG.md)** · **[Browse by domain](#catalog)** · **[Open one in your browser](#open-any-architecture-in-one-click)** · **[Contribute](CONTRIBUTING.md)**
+
+<br/>
+
+<!-- Demo: this is the video poster frame, linked to the live app. To upgrade
+     to an inline autoplaying GIF (GitHub strips <video> in READMEs), run:
+       ffmpeg -i assets/demo.webm -vf "fps=12,scale=720:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" -loop 0 assets/demo.gif
+     then replace the <img src="assets/demo-poster.jpg" ...> below with assets/demo.gif. -->
+<a href="https://www.neurarch.com/" title="Try Neurarch live"><img src="assets/demo-poster.jpg" width="680" alt="Import a checkpoint, fold the repeated blocks, export runnable training code"/></a>
+
+▶ **[Watch the 30-second demo](assets/demo.webm)** — import a checkpoint → fold the repeated blocks → export runnable training code. Or **[try it live](https://www.neurarch.com/)**.
 
 </div>
 
@@ -208,8 +218,8 @@ Selection informed by [awesome-pretrained-chinese-nlp-models](https://github.com
 
 This zoo has one bar, and it is not "looks right":
 
-1. Every graph passes Neurarch's shape propagation with **zero errors** (the generator script fails the build otherwise).
-2. Every full-model `model.json` is the **complete layer stack**, built with the same import path the Neurarch app uses for "load from Hugging Face", and must pass a **parameter gate**: Neurarch's per-layer parameter estimate over the graph has to land within 10% of the real count (HF safetensors metadata or the official figure), or the build fails. Most entries land at 0%; every entry README shows its own parameter check, and the few deviations (weight tying in GPT-2/T5/Whisper) are explained inline.
+1. Every graph passes **structural validation with zero errors** — well-formed, fully connected, acyclic. A standalone, dependency-free checker ([`npm run validate`](scripts/validate.mjs)) re-runs this across all 78 entries and gates every push in [CI](../../actions/workflows/validate.yml), so the badge above is a live check, not a claim. The generator additionally runs Neurarch's full shape propagation (tensor shapes, attention head divisibility, GQA constraints).
+2. Every full-model `model.json` is the **complete layer stack**, built with the same import path the Neurarch app uses for "load from Hugging Face", and carries a **parameter check**: Neurarch's per-layer estimate vs. the real weight count (HF safetensors metadata or the official figure). 35 of the 36 checked checkpoints land within 10%, most within a couple of percent. The one large outlier is **T5-Small at +44%**: its encoder, decoder, and output head share a single embedding matrix (weight tying), which a per-layer count triple-counts and cannot net out. Every deviation, that one included, is shown in the entry README and in [CATALOG.md](CATALOG.md), sorted worst-first. Nothing is rounded away.
 3. Every full LLM entry's hyperparameters are pulled from the model's **official `config.json`**, with quirks (Qwen's QKV bias, Baichuan's NormHead, ChatGLM's 2 KV groups) called out in the entry README instead of papered over.
 4. Every entry **exports to runnable training code** from the Neurarch canvas.
 
