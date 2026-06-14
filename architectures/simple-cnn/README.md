@@ -19,13 +19,13 @@ A LeNet-style starter CNN for image classification: conv-pool stacks into a dens
 | # | Layer | Type | Params |
 |---|---|---|---|
 | 1 | Input | `input` | shape: [1, 28, 28] |
-| 2 | Conv2D_1 | `conv2d` | outChannels: 32, kernelSize: 3, stride: 1, padding: 1 |
+| 2 | Conv2D_1 | `conv2d` | outChannels: 32, kernelSize: 3, stride: 1, padding: 1, inChannels: 1 |
 | 3 | ReLU_1 | `relu` |   |
 | 4 | MaxPool2D_1 | `maxpool2d` | kernelSize: 2, stride: 2 |
 | 5 | Flatten | `flatten` |   |
-| 6 | Linear_1 | `linear` | outFeatures: 128 |
+| 6 | Linear_1 | `linear` | outFeatures: 128, inFeatures: 6272 |
 | 7 | ReLU_2 | `relu` |   |
-| 8 | Linear_2 | `linear` | outFeatures: 10 |
+| 8 | Linear_2 | `linear` | outFeatures: 10, inFeatures: 128 |
 | 9 | Output | `output` |   |
 
 </details>

@@ -21,19 +21,19 @@ The latent-diffusion noise predictor behind Stable Diffusion: a U-Net operating 
 | # | Layer | Type | Params |
 |---|---|---|---|
 | 1 | noisy_latent | `input` | shape: [4, 64, 64] |
-| 2 | conv_in | `conv2d` | outChannels: 320, kernelSize: 3, stride: 1, padding: 1 |
+| 2 | conv_in | `conv2d` | outChannels: 320, kernelSize: 3, stride: 1, padding: 1, inChannels: 4 |
 | 3 | down1_norm | `groupNorm` | numGroups: 32, numChannels: 320 |
-| 4 | down1_conv | `conv2d` | outChannels: 320, kernelSize: 3, stride: 1, padding: 1 |
+| 4 | down1_conv | `conv2d` | outChannels: 320, kernelSize: 3, stride: 1, padding: 1, inChannels: 320 |
 | 5 | down1_silu | `swish` |   |
 | 6 | down1_text_attn | `crossAttention` | embedDim: 320, numHeads: 8, kvDim: 768 |
-| 7 | downsample_1 | `conv2d` | outChannels: 640, kernelSize: 3, stride: 2, padding: 1 |
+| 7 | downsample_1 | `conv2d` | outChannels: 640, kernelSize: 3, stride: 2, padding: 1, inChannels: 320 |
 | 8 | mid_norm | `groupNorm` | numGroups: 32, numChannels: 640 |
 | 9 | mid_text_attn | `crossAttention` | embedDim: 640, numHeads: 8, kvDim: 768 |
 | 10 | upsample_1 | `upsample` | scaleFactor: 2, mode: nearest |
-| 11 | up1_conv | `conv2d` | outChannels: 320, kernelSize: 3, stride: 1, padding: 1 |
+| 11 | up1_conv | `conv2d` | outChannels: 320, kernelSize: 3, stride: 1, padding: 1, inChannels: 640 |
 | 12 | up1_silu | `swish` |   |
 | 13 | conv_out_norm | `groupNorm` | numGroups: 32, numChannels: 320 |
-| 14 | conv_out | `conv2d` | outChannels: 4, kernelSize: 3, stride: 1, padding: 1 |
+| 14 | conv_out | `conv2d` | outChannels: 4, kernelSize: 3, stride: 1, padding: 1, inChannels: 320 |
 | 15 | predicted_noise | `output` |   |
 
 </details>

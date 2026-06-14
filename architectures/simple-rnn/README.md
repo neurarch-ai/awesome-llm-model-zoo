@@ -20,7 +20,7 @@ A minimal Elman-style recurrent network for sequence processing. Four nodes: the
 |---|---|---|---|
 | 1 | Input | `input` | shape: [128, 300] |
 | 2 | LSTM | `lstm` | hiddenSize: 256, numLayers: 2 |
-| 3 | Linear | `linear` | outFeatures: 10 |
+| 3 | Linear | `linear` | outFeatures: 10, inFeatures: 256 |
 | 4 | Output | `output` |   |
 
 </details>

@@ -1671,6 +1671,15 @@ for (const s of ALL) {
     const model: Graph = JSON.parse(fs.readFileSync(src, 'utf8'));
     model.id = s.id;
     s.patch?.(model);
+    // Some block templates ship with no connections[] (simple-cnn, simple-rnn,
+    // transformer-block, resnet-block, diffusion-unet); Neurarch's templateLoader
+    // auto-connects those sequentially on load, so mirror that here or the
+    // diagram has nodes but no edges.
+    if (!model.connections || model.connections.length === 0) {
+      model.connections = model.components.slice(0, -1).map((c, i) => ({
+        id: `seq-${i + 1}`, from: c.id, to: model.components[i + 1].id, fromPort: 'bottom', toPort: 'top',
+      }));
+    }
     wireGraph(model);
     fillShapeDerivedParams(model);
     const warnings = validateShapes(model);

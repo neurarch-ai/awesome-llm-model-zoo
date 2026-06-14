@@ -19,10 +19,10 @@ The residual unit from ResNet: conv-BN-ReLU twice, plus the identity skip connec
 | # | Layer | Type | Params |
 |---|---|---|---|
 | 1 | Input | `input` | shape: [64, 32, 32] |
-| 2 | Conv2D_1 | `conv2d` | outChannels: 64, kernelSize: 3, stride: 1, padding: 1 |
+| 2 | Conv2D_1 | `conv2d` | outChannels: 64, kernelSize: 3, stride: 1, padding: 1, inChannels: 64 |
 | 3 | BatchNorm_1 | `batchNorm` |   |
 | 4 | ReLU_1 | `relu` |   |
-| 5 | Conv2D_2 | `conv2d` | outChannels: 64, kernelSize: 3, stride: 1, padding: 1 |
+| 5 | Conv2D_2 | `conv2d` | outChannels: 64, kernelSize: 3, stride: 1, padding: 1, inChannels: 64 |
 | 6 | BatchNorm_2 | `batchNorm` |   |
 | 7 | Add | `add` |   |
 | 8 | ReLU_2 | `relu` |   |

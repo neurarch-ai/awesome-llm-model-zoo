@@ -21,7 +21,9 @@
         ]
       },
       "inputs": [],
-      "outputs": []
+      "outputs": [
+        "conv-in"
+      ]
     },
     {
       "id": "conv-in",
@@ -36,10 +38,15 @@
         "outChannels": 320,
         "kernelSize": 3,
         "stride": 1,
-        "padding": 1
+        "padding": 1,
+        "inChannels": 4
       },
-      "inputs": [],
-      "outputs": []
+      "inputs": [
+        "input-1"
+      ],
+      "outputs": [
+        "down1-norm"
+      ]
     },
     {
       "id": "down1-norm",
@@ -54,8 +61,12 @@
         "numGroups": 32,
         "numChannels": 320
       },
-      "inputs": [],
-      "outputs": []
+      "inputs": [
+        "conv-in"
+      ],
+      "outputs": [
+        "down1-conv"
+      ]
     },
     {
       "id": "down1-conv",
@@ -70,10 +81,15 @@
         "outChannels": 320,
         "kernelSize": 3,
         "stride": 1,
-        "padding": 1
+        "padding": 1,
+        "inChannels": 320
       },
-      "inputs": [],
-      "outputs": []
+      "inputs": [
+        "down1-norm"
+      ],
+      "outputs": [
+        "down1-silu"
+      ]
     },
     {
       "id": "down1-silu",
@@ -85,8 +101,12 @@
         "y": 730
       },
       "params": {},
-      "inputs": [],
-      "outputs": []
+      "inputs": [
+        "down1-conv"
+      ],
+      "outputs": [
+        "down1-xattn"
+      ]
     },
     {
       "id": "down1-xattn",
@@ -102,8 +122,12 @@
         "numHeads": 8,
         "kvDim": 768
       },
-      "inputs": [],
-      "outputs": []
+      "inputs": [
+        "down1-silu"
+      ],
+      "outputs": [
+        "downsample-1"
+      ]
     },
     {
       "id": "downsample-1",
@@ -118,10 +142,15 @@
         "outChannels": 640,
         "kernelSize": 3,
         "stride": 2,
-        "padding": 1
+        "padding": 1,
+        "inChannels": 320
       },
-      "inputs": [],
-      "outputs": []
+      "inputs": [
+        "down1-xattn"
+      ],
+      "outputs": [
+        "mid-norm"
+      ]
     },
     {
       "id": "mid-norm",
@@ -136,8 +165,12 @@
         "numGroups": 32,
         "numChannels": 640
       },
-      "inputs": [],
-      "outputs": []
+      "inputs": [
+        "downsample-1"
+      ],
+      "outputs": [
+        "mid-xattn"
+      ]
     },
     {
       "id": "mid-xattn",
@@ -153,8 +186,12 @@
         "numHeads": 8,
         "kvDim": 768
       },
-      "inputs": [],
-      "outputs": []
+      "inputs": [
+        "mid-norm"
+      ],
+      "outputs": [
+        "upsample-1"
+      ]
     },
     {
       "id": "upsample-1",
@@ -169,8 +206,12 @@
         "scaleFactor": 2,
         "mode": "nearest"
       },
-      "inputs": [],
-      "outputs": []
+      "inputs": [
+        "mid-xattn"
+      ],
+      "outputs": [
+        "up1-conv"
+      ]
     },
     {
       "id": "up1-conv",
@@ -185,10 +226,15 @@
         "outChannels": 320,
         "kernelSize": 3,
         "stride": 1,
-        "padding": 1
+        "padding": 1,
+        "inChannels": 640
       },
-      "inputs": [],
-      "outputs": []
+      "inputs": [
+        "upsample-1"
+      ],
+      "outputs": [
+        "up1-silu"
+      ]
     },
     {
       "id": "up1-silu",
@@ -200,8 +246,12 @@
         "y": 1960
       },
       "params": {},
-      "inputs": [],
-      "outputs": []
+      "inputs": [
+        "up1-conv"
+      ],
+      "outputs": [
+        "conv-out-norm"
+      ]
     },
     {
       "id": "conv-out-norm",
@@ -216,8 +266,12 @@
         "numGroups": 32,
         "numChannels": 320
       },
-      "inputs": [],
-      "outputs": []
+      "inputs": [
+        "up1-silu"
+      ],
+      "outputs": [
+        "conv-out"
+      ]
     },
     {
       "id": "conv-out",
@@ -232,10 +286,15 @@
         "outChannels": 4,
         "kernelSize": 3,
         "stride": 1,
-        "padding": 1
+        "padding": 1,
+        "inChannels": 320
       },
-      "inputs": [],
-      "outputs": []
+      "inputs": [
+        "conv-out-norm"
+      ],
+      "outputs": [
+        "output-1"
+      ]
     },
     {
       "id": "output-1",
@@ -246,9 +305,110 @@
         "y": 2470
       },
       "params": {},
-      "inputs": [],
+      "inputs": [
+        "conv-out"
+      ],
       "outputs": []
     }
   ],
-  "connections": []
+  "connections": [
+    {
+      "id": "seq-1",
+      "from": "input-1",
+      "to": "conv-in",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "seq-2",
+      "from": "conv-in",
+      "to": "down1-norm",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "seq-3",
+      "from": "down1-norm",
+      "to": "down1-conv",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "seq-4",
+      "from": "down1-conv",
+      "to": "down1-silu",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "seq-5",
+      "from": "down1-silu",
+      "to": "down1-xattn",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "seq-6",
+      "from": "down1-xattn",
+      "to": "downsample-1",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "seq-7",
+      "from": "downsample-1",
+      "to": "mid-norm",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "seq-8",
+      "from": "mid-norm",
+      "to": "mid-xattn",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "seq-9",
+      "from": "mid-xattn",
+      "to": "upsample-1",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "seq-10",
+      "from": "upsample-1",
+      "to": "up1-conv",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "seq-11",
+      "from": "up1-conv",
+      "to": "up1-silu",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "seq-12",
+      "from": "up1-silu",
+      "to": "conv-out-norm",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "seq-13",
+      "from": "conv-out-norm",
+      "to": "conv-out",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "seq-14",
+      "from": "conv-out",
+      "to": "output-1",
+      "fromPort": "bottom",
+      "toPort": "top"
+    }
+  ]
 }

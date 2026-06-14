@@ -21,7 +21,9 @@
         ]
       },
       "inputs": [],
-      "outputs": []
+      "outputs": [
+        "conv2d-1"
+      ]
     },
     {
       "id": "conv2d-1",
@@ -36,10 +38,15 @@
         "outChannels": 32,
         "kernelSize": 3,
         "stride": 1,
-        "padding": 1
+        "padding": 1,
+        "inChannels": 1
       },
-      "inputs": [],
-      "outputs": []
+      "inputs": [
+        "input-1"
+      ],
+      "outputs": [
+        "relu-1"
+      ]
     },
     {
       "id": "relu-1",
@@ -51,8 +58,12 @@
         "y": 450
       },
       "params": {},
-      "inputs": [],
-      "outputs": []
+      "inputs": [
+        "conv2d-1"
+      ],
+      "outputs": [
+        "maxpool2d-1"
+      ]
     },
     {
       "id": "maxpool2d-1",
@@ -67,8 +78,12 @@
         "kernelSize": 2,
         "stride": 2
       },
-      "inputs": [],
-      "outputs": []
+      "inputs": [
+        "relu-1"
+      ],
+      "outputs": [
+        "flatten-1"
+      ]
     },
     {
       "id": "flatten-1",
@@ -80,8 +95,12 @@
         "y": 850
       },
       "params": {},
-      "inputs": [],
-      "outputs": []
+      "inputs": [
+        "maxpool2d-1"
+      ],
+      "outputs": [
+        "linear-1"
+      ]
     },
     {
       "id": "linear-1",
@@ -93,10 +112,15 @@
         "y": 1050
       },
       "params": {
-        "outFeatures": 128
+        "outFeatures": 128,
+        "inFeatures": 6272
       },
-      "inputs": [],
-      "outputs": []
+      "inputs": [
+        "flatten-1"
+      ],
+      "outputs": [
+        "relu-2"
+      ]
     },
     {
       "id": "relu-2",
@@ -108,8 +132,12 @@
         "y": 1250
       },
       "params": {},
-      "inputs": [],
-      "outputs": []
+      "inputs": [
+        "linear-1"
+      ],
+      "outputs": [
+        "linear-2"
+      ]
     },
     {
       "id": "linear-2",
@@ -121,10 +149,15 @@
         "y": 1450
       },
       "params": {
-        "outFeatures": 10
+        "outFeatures": 10,
+        "inFeatures": 128
       },
-      "inputs": [],
-      "outputs": []
+      "inputs": [
+        "relu-2"
+      ],
+      "outputs": [
+        "output-1"
+      ]
     },
     {
       "id": "output-1",
@@ -135,9 +168,68 @@
         "y": 1650
       },
       "params": {},
-      "inputs": [],
+      "inputs": [
+        "linear-2"
+      ],
       "outputs": []
     }
   ],
-  "connections": []
+  "connections": [
+    {
+      "id": "seq-1",
+      "from": "input-1",
+      "to": "conv2d-1",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "seq-2",
+      "from": "conv2d-1",
+      "to": "relu-1",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "seq-3",
+      "from": "relu-1",
+      "to": "maxpool2d-1",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "seq-4",
+      "from": "maxpool2d-1",
+      "to": "flatten-1",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "seq-5",
+      "from": "flatten-1",
+      "to": "linear-1",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "seq-6",
+      "from": "linear-1",
+      "to": "relu-2",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "seq-7",
+      "from": "relu-2",
+      "to": "linear-2",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "seq-8",
+      "from": "linear-2",
+      "to": "output-1",
+      "fromPort": "bottom",
+      "toPort": "top"
+    }
+  ]
 }

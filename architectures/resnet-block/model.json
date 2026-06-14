@@ -18,7 +18,9 @@
         ]
       },
       "inputs": [],
-      "outputs": []
+      "outputs": [
+        "conv2d-1"
+      ]
     },
     {
       "id": "conv2d-1",
@@ -33,10 +35,15 @@
         "outChannels": 64,
         "kernelSize": 3,
         "stride": 1,
-        "padding": 1
+        "padding": 1,
+        "inChannels": 64
       },
-      "inputs": [],
-      "outputs": []
+      "inputs": [
+        "input-1"
+      ],
+      "outputs": [
+        "batchNorm-1"
+      ]
     },
     {
       "id": "batchNorm-1",
@@ -48,8 +55,12 @@
         "y": 450
       },
       "params": {},
-      "inputs": [],
-      "outputs": []
+      "inputs": [
+        "conv2d-1"
+      ],
+      "outputs": [
+        "relu-1"
+      ]
     },
     {
       "id": "relu-1",
@@ -61,8 +72,12 @@
         "y": 650
       },
       "params": {},
-      "inputs": [],
-      "outputs": []
+      "inputs": [
+        "batchNorm-1"
+      ],
+      "outputs": [
+        "conv2d-2"
+      ]
     },
     {
       "id": "conv2d-2",
@@ -77,10 +92,15 @@
         "outChannels": 64,
         "kernelSize": 3,
         "stride": 1,
-        "padding": 1
+        "padding": 1,
+        "inChannels": 64
       },
-      "inputs": [],
-      "outputs": []
+      "inputs": [
+        "relu-1"
+      ],
+      "outputs": [
+        "batchNorm-2"
+      ]
     },
     {
       "id": "batchNorm-2",
@@ -92,8 +112,12 @@
         "y": 1050
       },
       "params": {},
-      "inputs": [],
-      "outputs": []
+      "inputs": [
+        "conv2d-2"
+      ],
+      "outputs": [
+        "add-1"
+      ]
     },
     {
       "id": "add-1",
@@ -105,8 +129,12 @@
         "y": 1250
       },
       "params": {},
-      "inputs": [],
-      "outputs": []
+      "inputs": [
+        "batchNorm-2"
+      ],
+      "outputs": [
+        "relu-2"
+      ]
     },
     {
       "id": "relu-2",
@@ -118,8 +146,12 @@
         "y": 1450
       },
       "params": {},
-      "inputs": [],
-      "outputs": []
+      "inputs": [
+        "add-1"
+      ],
+      "outputs": [
+        "output-1"
+      ]
     },
     {
       "id": "output-1",
@@ -130,9 +162,68 @@
         "y": 1650
       },
       "params": {},
-      "inputs": [],
+      "inputs": [
+        "relu-2"
+      ],
       "outputs": []
     }
   ],
-  "connections": []
+  "connections": [
+    {
+      "id": "seq-1",
+      "from": "input-1",
+      "to": "conv2d-1",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "seq-2",
+      "from": "conv2d-1",
+      "to": "batchNorm-1",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "seq-3",
+      "from": "batchNorm-1",
+      "to": "relu-1",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "seq-4",
+      "from": "relu-1",
+      "to": "conv2d-2",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "seq-5",
+      "from": "conv2d-2",
+      "to": "batchNorm-2",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "seq-6",
+      "from": "batchNorm-2",
+      "to": "add-1",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "seq-7",
+      "from": "add-1",
+      "to": "relu-2",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "seq-8",
+      "from": "relu-2",
+      "to": "output-1",
+      "fromPort": "bottom",
+      "toPort": "top"
+    }
+  ]
 }

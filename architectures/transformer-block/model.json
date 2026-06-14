@@ -17,7 +17,9 @@
         ]
       },
       "inputs": [],
-      "outputs": []
+      "outputs": [
+        "multiHeadAttention-1"
+      ]
     },
     {
       "id": "multiHeadAttention-1",
@@ -32,8 +34,12 @@
         "numHeads": 8,
         "hiddenDim": 768
       },
-      "inputs": [],
-      "outputs": []
+      "inputs": [
+        "input-1"
+      ],
+      "outputs": [
+        "add-1"
+      ]
     },
     {
       "id": "add-1",
@@ -45,8 +51,12 @@
         "y": 450
       },
       "params": {},
-      "inputs": [],
-      "outputs": []
+      "inputs": [
+        "multiHeadAttention-1"
+      ],
+      "outputs": [
+        "layerNorm-1"
+      ]
     },
     {
       "id": "layerNorm-1",
@@ -58,8 +68,12 @@
         "y": 650
       },
       "params": {},
-      "inputs": [],
-      "outputs": []
+      "inputs": [
+        "add-1"
+      ],
+      "outputs": [
+        "feedForward-1"
+      ]
     },
     {
       "id": "feedForward-1",
@@ -74,8 +88,12 @@
         "hiddenDim": 768,
         "ffDim": 3072
       },
-      "inputs": [],
-      "outputs": []
+      "inputs": [
+        "layerNorm-1"
+      ],
+      "outputs": [
+        "add-2"
+      ]
     },
     {
       "id": "add-2",
@@ -87,8 +105,12 @@
         "y": 1050
       },
       "params": {},
-      "inputs": [],
-      "outputs": []
+      "inputs": [
+        "feedForward-1"
+      ],
+      "outputs": [
+        "layerNorm-2"
+      ]
     },
     {
       "id": "layerNorm-2",
@@ -100,8 +122,12 @@
         "y": 1250
       },
       "params": {},
-      "inputs": [],
-      "outputs": []
+      "inputs": [
+        "add-2"
+      ],
+      "outputs": [
+        "output-1"
+      ]
     },
     {
       "id": "output-1",
@@ -112,9 +138,61 @@
         "y": 1450
       },
       "params": {},
-      "inputs": [],
+      "inputs": [
+        "layerNorm-2"
+      ],
       "outputs": []
     }
   ],
-  "connections": []
+  "connections": [
+    {
+      "id": "seq-1",
+      "from": "input-1",
+      "to": "multiHeadAttention-1",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "seq-2",
+      "from": "multiHeadAttention-1",
+      "to": "add-1",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "seq-3",
+      "from": "add-1",
+      "to": "layerNorm-1",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "seq-4",
+      "from": "layerNorm-1",
+      "to": "feedForward-1",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "seq-5",
+      "from": "feedForward-1",
+      "to": "add-2",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "seq-6",
+      "from": "add-2",
+      "to": "layerNorm-2",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "seq-7",
+      "from": "layerNorm-2",
+      "to": "output-1",
+      "fromPort": "bottom",
+      "toPort": "top"
+    }
+  ]
 }

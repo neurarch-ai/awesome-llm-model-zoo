@@ -17,7 +17,9 @@
         ]
       },
       "inputs": [],
-      "outputs": []
+      "outputs": [
+        "lstm-1"
+      ]
     },
     {
       "id": "lstm-1",
@@ -32,8 +34,12 @@
         "hiddenSize": 256,
         "numLayers": 2
       },
-      "inputs": [],
-      "outputs": []
+      "inputs": [
+        "input-1"
+      ],
+      "outputs": [
+        "linear-1"
+      ]
     },
     {
       "id": "linear-1",
@@ -45,10 +51,15 @@
         "y": 450
       },
       "params": {
-        "outFeatures": 10
+        "outFeatures": 10,
+        "inFeatures": 256
       },
-      "inputs": [],
-      "outputs": []
+      "inputs": [
+        "lstm-1"
+      ],
+      "outputs": [
+        "output-1"
+      ]
     },
     {
       "id": "output-1",
@@ -59,9 +70,33 @@
         "y": 650
       },
       "params": {},
-      "inputs": [],
+      "inputs": [
+        "linear-1"
+      ],
       "outputs": []
     }
   ],
-  "connections": []
+  "connections": [
+    {
+      "id": "seq-1",
+      "from": "input-1",
+      "to": "lstm-1",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "seq-2",
+      "from": "lstm-1",
+      "to": "linear-1",
+      "fromPort": "bottom",
+      "toPort": "top"
+    },
+    {
+      "id": "seq-3",
+      "from": "linear-1",
+      "to": "output-1",
+      "fromPort": "bottom",
+      "toPort": "top"
+    }
+  ]
 }
