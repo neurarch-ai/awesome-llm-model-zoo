@@ -811,6 +811,145 @@ function buildDIN(): Graph {
   });
 }
 
+// ── Hand-built distinct architectures (vision / multimodal / diffusion / audio) ──
+// The HF importer / parser can't reconstruct these faithfully, so they are built
+// by hand. They are topology references (the real param counts depend on the
+// exact config); the canonical size is noted per entry.
+
+function buildDiT(): Graph {
+  return rsGraph('dit-xl2', 'DiT-XL/2', 'DiT (Peebles and Xie 2023): the diffusion model with a Transformer backbone instead of a U-Net. Latent patches go through adaLN-conditioned Transformer blocks; the architecture behind Stable Diffusion 3 and Sora-style models.', ({ add, wire }) => {
+    let y = 50;
+    const lat = add('input', 'noisy_latent', { shape: [4, 32, 32] }, 300, y);
+    const cond = add('input', 'timestep_+_class', { shape: [1, 2] }, 640, y); y += 150;
+    const patch = add('patchEmbed', 'patchify_2x2', { imgSize: 32, patchSize: 2, embedDim: 1152, inChans: 4 }, 300, y); wire(lat, patch);
+    const condEmb = add('embedding', 'cond_embed', { numEmbeddings: 1000, embeddingDim: 1152 }, 640, y); wire(cond, condEmb); y += 150;
+    const pos = add('positionalEncoding', 'pos_embed', { maxLen: 256, embedDim: 1152 }, 300, y); wire(patch, pos); y += 150;
+    let prev = pos;
+    for (let i = 0; i < 28; i++) {
+      const ada = add('linear', `adaLN_${i + 1}`, { inFeatures: 1152, outFeatures: 6912 }, 640, y); wire(condEmb, ada);
+      const n1 = add('layerNorm', `norm1_${i + 1}`, { normalizedShape: 1152 }, 300, y); wire(prev, n1); y += 150;
+      const attn = add('multiHeadAttention', `self_attn_${i + 1}`, { embedDim: 1152, numHeads: 16 }, 300, y); wire(n1, attn); wire(ada, attn); y += 150;
+      const a1 = add('add', `residual1_${i + 1}`, {}, 300, y); wire(attn, a1); wire(prev, a1); y += 150;
+      const n2 = add('layerNorm', `norm2_${i + 1}`, { normalizedShape: 1152 }, 300, y); wire(a1, n2); y += 150;
+      const ff = add('feedForward', `mlp_${i + 1}`, { embedDim: 1152, ffDim: 4608 }, 300, y); wire(n2, ff); y += 150;
+      const a2 = add('add', `residual2_${i + 1}`, {}, 300, y); wire(ff, a2); wire(a1, a2); y += 150;
+      prev = a2;
+    }
+    const fn = add('layerNorm', 'final_norm', { normalizedShape: 1152 }, 300, y); wire(prev, fn); y += 150;
+    const head = add('linear', 'unpatchify', { inFeatures: 1152, outFeatures: 32 }, 300, y); wire(fn, head); y += 150;
+    const out = add('output', 'predicted_noise', {}, 300, y); wire(head, out);
+  });
+}
+
+function buildSigLIP(): Graph {
+  return rsGraph('siglip-base', 'SigLIP base', 'SigLIP (Zhai et al. 2023): CLIP with a sigmoid loss instead of softmax contrastive, which removes the global normalization and trains far better at small batch sizes. The vision encoder of choice for many 2024+ multimodal LLMs.', ({ add, wire }) => {
+    // vision tower
+    let y = 50;
+    const img = add('input', 'image', { shape: [1, 3, 224, 224] }, 150, y); y += 150;
+    const patch = add('patchEmbed', 'patch_embed_16', { imgSize: 224, patchSize: 16, embedDim: 768, inChans: 3 }, 150, y); wire(img, patch); y += 150;
+    const vpos = add('positionalEncoding', 'vis_pos', { maxLen: 196, embedDim: 768 }, 150, y); wire(patch, vpos); y += 150;
+    let vp = vpos;
+    for (let i = 0; i < 12; i++) { const b = add('transformerBlock', `vis_block_${i + 1}`, { embedDim: 768, numHeads: 12, ffDim: 3072 }, 150, y); wire(vp, b); vp = b; y += 150; }
+    const vn = add('layerNorm', 'vis_norm', { normalizedShape: 768 }, 150, y); wire(vp, vn); y += 150;
+    const vpool = add('globalAvgPool1d', 'vis_pool', {}, 150, y); wire(vn, vpool); y += 150;
+    // text tower
+    let yt = 50;
+    const tok = add('input', 'tokens', { shape: [1, 64] }, 650, yt); yt += 150;
+    const temb = add('embedding', 'tok_embed', { numEmbeddings: 32000, embeddingDim: 768 }, 650, yt); wire(tok, temb); yt += 150;
+    const tpos = add('positionalEncoding', 'txt_pos', { maxLen: 64, embedDim: 768 }, 650, yt); wire(temb, tpos); yt += 150;
+    let tp = tpos;
+    for (let i = 0; i < 12; i++) { const b = add('transformerBlock', `txt_block_${i + 1}`, { embedDim: 768, numHeads: 12, ffDim: 3072 }, 650, yt); wire(tp, b); tp = b; yt += 150; }
+    const tn = add('layerNorm', 'txt_norm', { normalizedShape: 768 }, 650, yt); wire(tp, tn); yt += 150;
+    const tpool = add('globalAvgPool1d', 'txt_pool', {}, 650, yt); wire(tn, tpool); yt += 150;
+    const my = Math.max(y, yt);
+    const sim = add('matmul', 'sigmoid_similarity', {}, 400, my); wire(vpool, sim); wire(tpool, sim);
+    const out = add('output', 'logits', {}, 400, my + 150); wire(sim, out);
+  });
+}
+
+function buildLLaVA(): Graph {
+  return rsGraph('llava-1.5-7b', 'LLaVA-1.5-7B', 'LLaVA (Liu et al. 2023): the canonical recipe for turning an LLM multimodal: a frozen CLIP vision encoder, a small MLP projector that maps image patches into the LLM token space, and a Vicuna/Llama decoder that attends to image and text tokens together.', ({ add, wire }) => {
+    // vision encoder (CLIP-ViT-L/14)
+    let y = 50;
+    const img = add('input', 'image', { shape: [1, 3, 336, 336] }, 150, y); y += 150;
+    const patch = add('patchEmbed', 'clip_patch_14', { imgSize: 336, patchSize: 14, embedDim: 1024, inChans: 3 }, 150, y); wire(img, patch); y += 150;
+    const vpos = add('positionalEncoding', 'vis_pos', { maxLen: 576, embedDim: 1024 }, 150, y); wire(patch, vpos); y += 150;
+    let vp = vpos;
+    for (let i = 0; i < 24; i++) { const b = add('transformerBlock', `clip_block_${i + 1}`, { embedDim: 1024, numHeads: 16, ffDim: 4096 }, 150, y); wire(vp, b); vp = b; y += 150; }
+    // MLP projector (the bridge)
+    const p1 = add('linear', 'projector_1', { inFeatures: 1024, outFeatures: 4096 }, 150, y); wire(vp, p1); y += 150;
+    const pg = add('gelu', 'projector_gelu', {}, 150, y); wire(p1, pg); y += 150;
+    const p2 = add('linear', 'projector_2', { inFeatures: 4096, outFeatures: 4096 }, 150, y); wire(pg, p2); y += 150;
+    // text tokens
+    const tok = add('input', 'text_tokens', { shape: [1, 2048] }, 600, 50);
+    const temb = add('embedding', 'token_embed', { numEmbeddings: 32000, embeddingDim: 4096 }, 600, 200); wire(tok, temb);
+    // fuse visual + text tokens, then the Llama decoder
+    const fuse = add('concatenate', 'image+text_tokens', {}, 380, y); wire(p2, fuse); wire(temb, fuse); y += 150;
+    let prev = fuse;
+    for (let i = 0; i < 32; i++) {
+      const n1 = add('rmsNorm', `llm_attn_norm_${i + 1}`, { normalizedShape: 4096 }, 380, y); wire(prev, n1); y += 150;
+      const at = add('groupedQueryAttention', `llm_attn_${i + 1}`, { embedDim: 4096, numHeads: 32, numKVHeads: 32 }, 380, y); wire(n1, at); y += 150;
+      const a1 = add('add', `llm_res1_${i + 1}`, {}, 380, y); wire(at, a1); wire(prev, a1); y += 150;
+      const n2 = add('rmsNorm', `llm_ffn_norm_${i + 1}`, { normalizedShape: 4096 }, 380, y); wire(a1, n2); y += 150;
+      const sw = add('swiglu', `llm_ffn_${i + 1}`, { embedDim: 4096, intermediateSize: 11008 }, 380, y); wire(n2, sw); y += 150;
+      const a2 = add('add', `llm_res2_${i + 1}`, {}, 380, y); wire(sw, a2); wire(a1, a2); y += 150;
+      prev = a2;
+    }
+    const fn = add('rmsNorm', 'final_norm', { normalizedShape: 4096 }, 380, y); wire(prev, fn); y += 150;
+    const head = add('linear', 'lm_head', { inFeatures: 4096, outFeatures: 32000 }, 380, y); wire(fn, head); y += 150;
+    const out = add('output', 'logits', {}, 380, y); wire(head, out);
+  });
+}
+
+function buildWav2Vec2(): Graph {
+  return rsGraph('wav2vec2-base', 'Wav2Vec2 base', 'Wav2Vec2 (Baevski et al. 2020): self-supervised speech. A 7-layer convolutional feature extractor turns the raw waveform into latent frames, which a Transformer encoder contextualizes; pretrained by contrastive masked prediction.', ({ add, wire }) => {
+    let y = 50;
+    const wav = add('input', 'raw_waveform', { shape: [1, 16000] }, 300, y); y += 150;
+    // conv feature extractor (7 layers)
+    const convDims = [512, 512, 512, 512, 512, 512, 512];
+    let prev = wav;
+    for (let i = 0; i < 7; i++) {
+      const inC = i === 0 ? 1 : 512;
+      const c = add('conv1d', `feat_conv_${i + 1}`, { inChannels: inC, outChannels: convDims[i], kernelSize: i < 1 ? 10 : 3, stride: i < 1 ? 5 : 2 }, 300, y); wire(prev, c); y += 150;
+      const g = add('gelu', `feat_gelu_${i + 1}`, {}, 300, y); wire(c, g); y += 150;
+      prev = g;
+    }
+    const proj = add('linear', 'feature_projection', { inFeatures: 512, outFeatures: 768 }, 300, y); wire(prev, proj); y += 150;
+    const pos = add('conv1d', 'pos_conv_embed', { inChannels: 768, outChannels: 768, kernelSize: 128, padding: 64 }, 300, y); wire(proj, pos); y += 150;
+    let tp = pos;
+    for (let i = 0; i < 12; i++) { const b = add('transformerBlock', `enc_block_${i + 1}`, { embedDim: 768, numHeads: 12, ffDim: 3072 }, 300, y); wire(tp, b); tp = b; y += 150; }
+    const out = add('output', 'speech_features', {}, 300, y); wire(tp, out);
+  });
+}
+
+function buildMobileNetV2(): Graph {
+  return rsGraph('mobilenet-v2', 'MobileNetV2', 'MobileNetV2 (Sandler et al. 2018): the efficient-vision workhorse. Inverted residual blocks (expand 1x1 → depthwise 3x3 → project 1x1) with linear bottlenecks keep it tiny enough for phones, the staple of the CoreML / on-device model zoo.', ({ add, wire }) => {
+    let y = 50;
+    const inp = add('input', 'image', { shape: [3, 224, 224] }, 300, y); y += 150;
+    const stem = add('conv2d', 'conv1_stem', { inChannels: 3, outChannels: 32, kernelSize: 3, stride: 2, padding: 1 }, 300, y); wire(inp, stem); y += 150;
+    // 17 inverted-residual blocks (t=expand, c=out, the canonical MobileNetV2 1.0 schedule)
+    const blocks: Array<[expand: number, inC: number, outC: number, stride: number]> = [
+      [1, 32, 16, 1], [6, 16, 24, 2], [6, 24, 24, 1], [6, 24, 32, 2], [6, 32, 32, 1], [6, 32, 32, 1],
+      [6, 32, 64, 2], [6, 64, 64, 1], [6, 64, 64, 1], [6, 64, 64, 1], [6, 64, 96, 1], [6, 96, 96, 1],
+      [6, 96, 96, 1], [6, 96, 160, 2], [6, 160, 160, 1], [6, 160, 160, 1], [6, 160, 320, 1],
+    ];
+    let prev = stem; let bi = 0;
+    for (const [t, inC, outC, stride] of blocks) {
+      bi++;
+      const expC = inC * t;
+      const exp = add('conv2d', `b${bi}_expand_1x1`, { inChannels: inC, outChannels: expC, kernelSize: 1 }, 300, y); wire(prev, exp); y += 150;
+      const dw = add('depthwiseConv2d', `b${bi}_depthwise_3x3`, { inChannels: expC, outChannels: expC, kernelSize: 3, stride, padding: 1 }, 300, y); wire(exp, dw); y += 150;
+      const pj = add('conv2d', `b${bi}_project_1x1`, { inChannels: expC, outChannels: outC, kernelSize: 1 }, 300, y); wire(dw, pj); y += 150;
+      if (inC === outC && stride === 1) { const r = add('add', `b${bi}_residual`, {}, 300, y); wire(pj, r); wire(prev, r); y += 150; prev = r; }
+      else prev = pj;
+    }
+    const head = add('conv2d', 'conv_head_1x1', { inChannels: 320, outChannels: 1280, kernelSize: 1 }, 300, y); wire(prev, head); y += 150;
+    const gap = add('globalAvgPool2d', 'avgpool', {}, 300, y); wire(head, gap); y += 150;
+    const fc = add('linear', 'classifier', { inFeatures: 1280, outFeatures: 1000 }, 300, y); wire(gap, fc); y += 150;
+    const out = add('output', 'class_logits', {}, 300, y); wire(fc, out);
+  });
+}
+
 const HFFULL: HFFullEntry[] = [
   {
     kind: 'hffull', id: 'resnet-50', displayName: 'ResNet-50', org: 'Microsoft Research (He et al.)',
@@ -1239,6 +1378,95 @@ const HFFULL: HFFullEntry[] = [
       'Built for session data (no long-term user profile): the GRU\'s hidden state is the running session intent.',
       'Introduced session-parallel mini-batching and a ranking loss (BPR / TOP1) tailored to recommendation.',
       'The recurrent counterpart to the attention-based [sasrec](../sasrec/) and [bert4rec](../bert4rec/).',
+    ],
+  },
+  {
+    kind: 'hffull', id: 'dit-xl2', displayName: 'DiT-XL/2', org: 'UC Berkeley / Meta (Peebles and Xie)',
+    paramsLabel: 'Reference graph (DiT-XL/2: 675M)', fullBuild: buildDiT,
+    links: [['Paper (Peebles and Xie 2023)', 'https://arxiv.org/abs/2212.09748'], ['GitHub', 'https://github.com/facebookresearch/DiT']],
+    license: 'CC-BY-NC (weights)',
+    archRows: [
+      ['Type', 'Diffusion model, Transformer backbone'], ['Parameters', '675M (XL/2)'],
+      ['Layers', '28 DiT blocks'], ['Hidden size', '1152'], ['Attention', 'Multi-head: 16 heads'],
+      ['Conditioning', 'adaLN-zero from timestep + class embedding'], ['Patches', '2x2 over a 32x32x4 latent'],
+      ['FFN', 'Dense MLP, 4608, GeLU'],
+    ],
+    blurb: 'The model that replaced the diffusion U-Net with a plain Transformer over latent patches, conditioned by adaptive LayerNorm. DiT scaled cleanly and became the backbone of Stable Diffusion 3, PixArt, and Sora-class video models.',
+    notes: [
+      'adaLN-zero: each block\'s LayerNorm scale/shift (and residual gates) are produced by a linear from the timestep + class embedding, so conditioning enters through normalization rather than cross-attention.',
+      'Operates in VAE latent space (4x32x32) on 2x2 patches, exactly the ViT recipe applied to a denoiser.',
+      'Replacing the U-Net (see [diffusion-unet](../diffusion-unet/)) with a Transformer is why diffusion now scales like LLMs do.',
+    ],
+  },
+  {
+    kind: 'hffull', id: 'siglip-base', displayName: 'SigLIP base', org: 'Google',
+    paramsLabel: 'Reference graph (SigLIP-B/16: 203M)', fullBuild: buildSigLIP,
+    links: [['Paper (Zhai et al. 2023)', 'https://arxiv.org/abs/2303.15343'], ['Hugging Face', 'https://huggingface.co/google/siglip-base-patch16-224']],
+    license: 'Apache 2.0',
+    archRows: [
+      ['Type', 'Contrastive image-text dual encoder'], ['Parameters', '203M'],
+      ['Vision tower', 'ViT-B/16: 12 blocks, 768 hidden, 12 heads'],
+      ['Text tower', '12 blocks, 768 hidden (no causal mask)'],
+      ['Loss', 'Pairwise sigmoid (not softmax contrastive)'], ['Pooling', 'Attention/mean pool per tower'],
+    ],
+    blurb: 'CLIP with one change that matters: a pairwise sigmoid loss instead of the softmax-contrastive one. Dropping the batch-global normalization lets it train well at any batch size, and its vision tower is the encoder many 2024+ multimodal LLMs (including PaliGemma) build on.',
+    notes: [
+      'The architecture is a CLIP-style dual encoder; the contribution is the sigmoid loss, which treats every image-text pair as an independent binary problem.',
+      'No softmax over the batch means no need for the huge batches CLIP relied on, and the text tower drops the causal mask CLIP inherited from GPT.',
+      'Compare with [clip-vit-b32](../clip-vit-b32/): same two-tower shape, different objective.',
+    ],
+  },
+  {
+    kind: 'hffull', id: 'llava-1.5-7b', displayName: 'LLaVA-1.5-7B', org: 'Microsoft / UW-Madison',
+    paramsLabel: 'Reference graph (~7B, LLM-dominated)', fullBuild: buildLLaVA,
+    links: [['Paper (Liu et al. 2023)', 'https://arxiv.org/abs/2310.03744'], ['GitHub', 'https://github.com/haotian-liu/LLaVA']],
+    license: 'Llama 2 Community License (LLM); Apache 2.0 (code)',
+    archRows: [
+      ['Type', 'Multimodal LLM (vision + language)'], ['Vision encoder', 'CLIP ViT-L/14-336 (frozen): 24 blocks, 1024 hidden'],
+      ['Projector', '2-layer MLP, 1024 → 4096 (the bridge)'], ['LLM', 'Vicuna/Llama-7B: 32 decoder blocks, 4096 hidden'],
+      ['Fusion', 'Image tokens prepended to text tokens'], ['Parameters', '~7B (mostly the LLM)'],
+    ],
+    blurb: 'The canonical recipe for making an LLM see: a frozen CLIP vision encoder, a tiny MLP projector that maps image-patch features into the LLM\'s token embedding space, and a Llama decoder that attends over image and text tokens jointly. Simple, and it defined the open multimodal-LLM playbook.',
+    notes: [
+      'The whole trick is the projector: just a 2-layer MLP turning 576 image-patch vectors into 576 "visual tokens" the LLM can read; only it (and the LLM) are trained, the vision encoder stays frozen.',
+      'Visual tokens are concatenated in front of the text tokens, so the unmodified Llama decoder treats the image as a prefix.',
+      'This bridge-into-the-LLM pattern is what most open MLLMs (Qwen-VL, InternVL, ...) still follow.',
+    ],
+  },
+  {
+    kind: 'hffull', id: 'wav2vec2-base', displayName: 'Wav2Vec2 base', org: 'Meta AI',
+    paramsLabel: 'Reference graph (Wav2Vec2-base: 95M)', fullBuild: buildWav2Vec2,
+    links: [['Paper (Baevski et al. 2020)', 'https://arxiv.org/abs/2006.11477'], ['Hugging Face', 'https://huggingface.co/facebook/wav2vec2-base-960h']],
+    license: 'Apache 2.0',
+    archRows: [
+      ['Type', 'Self-supervised speech encoder'], ['Parameters', '95M'],
+      ['Feature extractor', '7 Conv1D layers (raw waveform → 20ms frames)'],
+      ['Encoder', '12 Transformer blocks, 768 hidden, 12 heads'],
+      ['Positions', 'Convolutional positional embedding'], ['Pretraining', 'Contrastive masked prediction over quantized latents'],
+    ],
+    blurb: 'The model that made self-supervised speech work: a convolutional feature extractor turns the raw 16kHz waveform into latent frames, a Transformer contextualizes them, and contrastive masked prediction over a learned codebook does the pretraining. Fine-tune with a tiny head and it beats systems trained on 100x the labels.',
+    notes: [
+      'The 7-layer conv stack is the audio analogue of patch embedding: it downsamples raw audio to ~50 frames/sec before the Transformer ever sees it.',
+      'Positions come from a depthwise conv over the sequence (a convolutional positional embedding), not sinusoids.',
+      'Compare with [whisper-small](../whisper-small/): both put a conv stem before a Transformer, but Whisper is supervised seq2seq while Wav2Vec2 is self-supervised representation learning.',
+    ],
+  },
+  {
+    kind: 'hffull', id: 'mobilenet-v2', displayName: 'MobileNetV2', org: 'Google',
+    paramsLabel: '3.5M', fullBuild: buildMobileNetV2,
+    links: [['Paper (Sandler et al. 2018)', 'https://arxiv.org/abs/1801.04381'], ['Hugging Face', 'https://huggingface.co/google/mobilenet_v2_1.0_224']],
+    license: 'Apache 2.0',
+    archRows: [
+      ['Type', 'Efficient convolutional network'], ['Parameters', '3.5M'],
+      ['Stem', '3x3/2 conv (32 channels)'], ['Body', '17 inverted-residual blocks'],
+      ['Inverted residual', 'expand 1x1 → depthwise 3x3 → project 1x1 (linear bottleneck)'],
+      ['Head', '1x1 conv (1280) → global avg pool → FC-1000'], ['Input', '3x224x224'],
+    ],
+    blurb: 'The on-device vision workhorse. Its inverted residual block expands to a wide intermediate, does a cheap depthwise 3x3 there, then projects back down through a linear bottleneck, packing accuracy into 3.5M parameters and the staple of mobile / CoreML model zoos.',
+    notes: [
+      'Inverted residual: unlike ResNet (wide → narrow → wide), MobileNetV2 goes narrow → wide → narrow, and the skip connects the narrow bottlenecks (where the information lives).',
+      'Linear bottleneck: the projection has no ReLU, because ReLU destroys information in low-dimensional space.',
+      'Depthwise-separable convs (the 3x3 acts per-channel) are what make it cheap; full graph with every block expanded.',
     ],
   },
 ];

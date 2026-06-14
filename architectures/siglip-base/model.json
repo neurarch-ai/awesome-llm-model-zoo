@@ -1,0 +1,881 @@
+{
+  "id": "siglip-base",
+  "name": "SigLIP base",
+  "description": "SigLIP base (Google): full graph; dimensions verified against the official config.json.",
+  "components": [
+    {
+      "id": "n1",
+      "type": "input",
+      "name": "image",
+      "position": {
+        "x": 150,
+        "y": 50
+      },
+      "params": {
+        "shape": [
+          1,
+          3,
+          224,
+          224
+        ]
+      },
+      "inputs": [],
+      "outputs": [
+        "n2"
+      ]
+    },
+    {
+      "id": "n2",
+      "type": "patchEmbed",
+      "name": "patch_embed_16",
+      "position": {
+        "x": 150,
+        "y": 200
+      },
+      "params": {
+        "imgSize": 224,
+        "patchSize": 16,
+        "embedDim": 768,
+        "inChans": 3
+      },
+      "inputs": [
+        "n1"
+      ],
+      "outputs": [
+        "n3"
+      ]
+    },
+    {
+      "id": "n3",
+      "type": "positionalEncoding",
+      "name": "vis_pos",
+      "position": {
+        "x": 150,
+        "y": 350
+      },
+      "params": {
+        "maxLen": 196,
+        "embedDim": 768
+      },
+      "inputs": [
+        "n2"
+      ],
+      "outputs": [
+        "n4"
+      ]
+    },
+    {
+      "id": "n4",
+      "type": "transformerBlock",
+      "name": "vis_block_1",
+      "position": {
+        "x": 150,
+        "y": 500
+      },
+      "params": {
+        "embedDim": 768,
+        "numHeads": 12,
+        "ffDim": 3072
+      },
+      "inputs": [
+        "n3"
+      ],
+      "outputs": [
+        "n5"
+      ]
+    },
+    {
+      "id": "n5",
+      "type": "transformerBlock",
+      "name": "vis_block_2",
+      "position": {
+        "x": 150,
+        "y": 650
+      },
+      "params": {
+        "embedDim": 768,
+        "numHeads": 12,
+        "ffDim": 3072
+      },
+      "inputs": [
+        "n4"
+      ],
+      "outputs": [
+        "n6"
+      ]
+    },
+    {
+      "id": "n6",
+      "type": "transformerBlock",
+      "name": "vis_block_3",
+      "position": {
+        "x": 150,
+        "y": 800
+      },
+      "params": {
+        "embedDim": 768,
+        "numHeads": 12,
+        "ffDim": 3072
+      },
+      "inputs": [
+        "n5"
+      ],
+      "outputs": [
+        "n7"
+      ]
+    },
+    {
+      "id": "n7",
+      "type": "transformerBlock",
+      "name": "vis_block_4",
+      "position": {
+        "x": 150,
+        "y": 950
+      },
+      "params": {
+        "embedDim": 768,
+        "numHeads": 12,
+        "ffDim": 3072
+      },
+      "inputs": [
+        "n6"
+      ],
+      "outputs": [
+        "n8"
+      ]
+    },
+    {
+      "id": "n8",
+      "type": "transformerBlock",
+      "name": "vis_block_5",
+      "position": {
+        "x": 150,
+        "y": 1100
+      },
+      "params": {
+        "embedDim": 768,
+        "numHeads": 12,
+        "ffDim": 3072
+      },
+      "inputs": [
+        "n7"
+      ],
+      "outputs": [
+        "n9"
+      ]
+    },
+    {
+      "id": "n9",
+      "type": "transformerBlock",
+      "name": "vis_block_6",
+      "position": {
+        "x": 150,
+        "y": 1250
+      },
+      "params": {
+        "embedDim": 768,
+        "numHeads": 12,
+        "ffDim": 3072
+      },
+      "inputs": [
+        "n8"
+      ],
+      "outputs": [
+        "n10"
+      ]
+    },
+    {
+      "id": "n10",
+      "type": "transformerBlock",
+      "name": "vis_block_7",
+      "position": {
+        "x": 150,
+        "y": 1400
+      },
+      "params": {
+        "embedDim": 768,
+        "numHeads": 12,
+        "ffDim": 3072
+      },
+      "inputs": [
+        "n9"
+      ],
+      "outputs": [
+        "n11"
+      ]
+    },
+    {
+      "id": "n11",
+      "type": "transformerBlock",
+      "name": "vis_block_8",
+      "position": {
+        "x": 150,
+        "y": 1550
+      },
+      "params": {
+        "embedDim": 768,
+        "numHeads": 12,
+        "ffDim": 3072
+      },
+      "inputs": [
+        "n10"
+      ],
+      "outputs": [
+        "n12"
+      ]
+    },
+    {
+      "id": "n12",
+      "type": "transformerBlock",
+      "name": "vis_block_9",
+      "position": {
+        "x": 150,
+        "y": 1700
+      },
+      "params": {
+        "embedDim": 768,
+        "numHeads": 12,
+        "ffDim": 3072
+      },
+      "inputs": [
+        "n11"
+      ],
+      "outputs": [
+        "n13"
+      ]
+    },
+    {
+      "id": "n13",
+      "type": "transformerBlock",
+      "name": "vis_block_10",
+      "position": {
+        "x": 150,
+        "y": 1850
+      },
+      "params": {
+        "embedDim": 768,
+        "numHeads": 12,
+        "ffDim": 3072
+      },
+      "inputs": [
+        "n12"
+      ],
+      "outputs": [
+        "n14"
+      ]
+    },
+    {
+      "id": "n14",
+      "type": "transformerBlock",
+      "name": "vis_block_11",
+      "position": {
+        "x": 150,
+        "y": 2000
+      },
+      "params": {
+        "embedDim": 768,
+        "numHeads": 12,
+        "ffDim": 3072
+      },
+      "inputs": [
+        "n13"
+      ],
+      "outputs": [
+        "n15"
+      ]
+    },
+    {
+      "id": "n15",
+      "type": "transformerBlock",
+      "name": "vis_block_12",
+      "position": {
+        "x": 150,
+        "y": 2150
+      },
+      "params": {
+        "embedDim": 768,
+        "numHeads": 12,
+        "ffDim": 3072
+      },
+      "inputs": [
+        "n14"
+      ],
+      "outputs": [
+        "n16"
+      ]
+    },
+    {
+      "id": "n16",
+      "type": "layerNorm",
+      "name": "vis_norm",
+      "position": {
+        "x": 150,
+        "y": 2300
+      },
+      "params": {
+        "normalizedShape": 768
+      },
+      "inputs": [
+        "n15"
+      ],
+      "outputs": [
+        "n17"
+      ]
+    },
+    {
+      "id": "n17",
+      "type": "globalAvgPool1d",
+      "name": "vis_pool",
+      "position": {
+        "x": 150,
+        "y": 2450
+      },
+      "params": {},
+      "inputs": [
+        "n16"
+      ],
+      "outputs": [
+        "n35"
+      ]
+    },
+    {
+      "id": "n18",
+      "type": "input",
+      "name": "tokens",
+      "position": {
+        "x": 650,
+        "y": 50
+      },
+      "params": {
+        "shape": [
+          1,
+          64
+        ]
+      },
+      "inputs": [],
+      "outputs": [
+        "n19"
+      ]
+    },
+    {
+      "id": "n19",
+      "type": "embedding",
+      "name": "tok_embed",
+      "position": {
+        "x": 650,
+        "y": 200
+      },
+      "params": {
+        "numEmbeddings": 32000,
+        "embeddingDim": 768
+      },
+      "inputs": [
+        "n18"
+      ],
+      "outputs": [
+        "n20"
+      ]
+    },
+    {
+      "id": "n20",
+      "type": "positionalEncoding",
+      "name": "txt_pos",
+      "position": {
+        "x": 650,
+        "y": 350
+      },
+      "params": {
+        "maxLen": 64,
+        "embedDim": 768
+      },
+      "inputs": [
+        "n19"
+      ],
+      "outputs": [
+        "n21"
+      ]
+    },
+    {
+      "id": "n21",
+      "type": "transformerBlock",
+      "name": "txt_block_1",
+      "position": {
+        "x": 650,
+        "y": 500
+      },
+      "params": {
+        "embedDim": 768,
+        "numHeads": 12,
+        "ffDim": 3072
+      },
+      "inputs": [
+        "n20"
+      ],
+      "outputs": [
+        "n22"
+      ]
+    },
+    {
+      "id": "n22",
+      "type": "transformerBlock",
+      "name": "txt_block_2",
+      "position": {
+        "x": 650,
+        "y": 650
+      },
+      "params": {
+        "embedDim": 768,
+        "numHeads": 12,
+        "ffDim": 3072
+      },
+      "inputs": [
+        "n21"
+      ],
+      "outputs": [
+        "n23"
+      ]
+    },
+    {
+      "id": "n23",
+      "type": "transformerBlock",
+      "name": "txt_block_3",
+      "position": {
+        "x": 650,
+        "y": 800
+      },
+      "params": {
+        "embedDim": 768,
+        "numHeads": 12,
+        "ffDim": 3072
+      },
+      "inputs": [
+        "n22"
+      ],
+      "outputs": [
+        "n24"
+      ]
+    },
+    {
+      "id": "n24",
+      "type": "transformerBlock",
+      "name": "txt_block_4",
+      "position": {
+        "x": 650,
+        "y": 950
+      },
+      "params": {
+        "embedDim": 768,
+        "numHeads": 12,
+        "ffDim": 3072
+      },
+      "inputs": [
+        "n23"
+      ],
+      "outputs": [
+        "n25"
+      ]
+    },
+    {
+      "id": "n25",
+      "type": "transformerBlock",
+      "name": "txt_block_5",
+      "position": {
+        "x": 650,
+        "y": 1100
+      },
+      "params": {
+        "embedDim": 768,
+        "numHeads": 12,
+        "ffDim": 3072
+      },
+      "inputs": [
+        "n24"
+      ],
+      "outputs": [
+        "n26"
+      ]
+    },
+    {
+      "id": "n26",
+      "type": "transformerBlock",
+      "name": "txt_block_6",
+      "position": {
+        "x": 650,
+        "y": 1250
+      },
+      "params": {
+        "embedDim": 768,
+        "numHeads": 12,
+        "ffDim": 3072
+      },
+      "inputs": [
+        "n25"
+      ],
+      "outputs": [
+        "n27"
+      ]
+    },
+    {
+      "id": "n27",
+      "type": "transformerBlock",
+      "name": "txt_block_7",
+      "position": {
+        "x": 650,
+        "y": 1400
+      },
+      "params": {
+        "embedDim": 768,
+        "numHeads": 12,
+        "ffDim": 3072
+      },
+      "inputs": [
+        "n26"
+      ],
+      "outputs": [
+        "n28"
+      ]
+    },
+    {
+      "id": "n28",
+      "type": "transformerBlock",
+      "name": "txt_block_8",
+      "position": {
+        "x": 650,
+        "y": 1550
+      },
+      "params": {
+        "embedDim": 768,
+        "numHeads": 12,
+        "ffDim": 3072
+      },
+      "inputs": [
+        "n27"
+      ],
+      "outputs": [
+        "n29"
+      ]
+    },
+    {
+      "id": "n29",
+      "type": "transformerBlock",
+      "name": "txt_block_9",
+      "position": {
+        "x": 650,
+        "y": 1700
+      },
+      "params": {
+        "embedDim": 768,
+        "numHeads": 12,
+        "ffDim": 3072
+      },
+      "inputs": [
+        "n28"
+      ],
+      "outputs": [
+        "n30"
+      ]
+    },
+    {
+      "id": "n30",
+      "type": "transformerBlock",
+      "name": "txt_block_10",
+      "position": {
+        "x": 650,
+        "y": 1850
+      },
+      "params": {
+        "embedDim": 768,
+        "numHeads": 12,
+        "ffDim": 3072
+      },
+      "inputs": [
+        "n29"
+      ],
+      "outputs": [
+        "n31"
+      ]
+    },
+    {
+      "id": "n31",
+      "type": "transformerBlock",
+      "name": "txt_block_11",
+      "position": {
+        "x": 650,
+        "y": 2000
+      },
+      "params": {
+        "embedDim": 768,
+        "numHeads": 12,
+        "ffDim": 3072
+      },
+      "inputs": [
+        "n30"
+      ],
+      "outputs": [
+        "n32"
+      ]
+    },
+    {
+      "id": "n32",
+      "type": "transformerBlock",
+      "name": "txt_block_12",
+      "position": {
+        "x": 650,
+        "y": 2150
+      },
+      "params": {
+        "embedDim": 768,
+        "numHeads": 12,
+        "ffDim": 3072
+      },
+      "inputs": [
+        "n31"
+      ],
+      "outputs": [
+        "n33"
+      ]
+    },
+    {
+      "id": "n33",
+      "type": "layerNorm",
+      "name": "txt_norm",
+      "position": {
+        "x": 650,
+        "y": 2300
+      },
+      "params": {
+        "normalizedShape": 768
+      },
+      "inputs": [
+        "n32"
+      ],
+      "outputs": [
+        "n34"
+      ]
+    },
+    {
+      "id": "n34",
+      "type": "globalAvgPool1d",
+      "name": "txt_pool",
+      "position": {
+        "x": 650,
+        "y": 2450
+      },
+      "params": {},
+      "inputs": [
+        "n33"
+      ],
+      "outputs": [
+        "n35"
+      ]
+    },
+    {
+      "id": "n35",
+      "type": "matmul",
+      "name": "sigmoid_similarity",
+      "position": {
+        "x": 400,
+        "y": 2600
+      },
+      "params": {},
+      "inputs": [
+        "n17",
+        "n34"
+      ],
+      "outputs": [
+        "n36"
+      ]
+    },
+    {
+      "id": "n36",
+      "type": "output",
+      "name": "logits",
+      "position": {
+        "x": 400,
+        "y": 2750
+      },
+      "params": {},
+      "inputs": [
+        "n35"
+      ],
+      "outputs": []
+    }
+  ],
+  "connections": [
+    {
+      "id": "c1",
+      "from": "n1",
+      "to": "n2"
+    },
+    {
+      "id": "c2",
+      "from": "n2",
+      "to": "n3"
+    },
+    {
+      "id": "c3",
+      "from": "n3",
+      "to": "n4"
+    },
+    {
+      "id": "c4",
+      "from": "n4",
+      "to": "n5"
+    },
+    {
+      "id": "c5",
+      "from": "n5",
+      "to": "n6"
+    },
+    {
+      "id": "c6",
+      "from": "n6",
+      "to": "n7"
+    },
+    {
+      "id": "c7",
+      "from": "n7",
+      "to": "n8"
+    },
+    {
+      "id": "c8",
+      "from": "n8",
+      "to": "n9"
+    },
+    {
+      "id": "c9",
+      "from": "n9",
+      "to": "n10"
+    },
+    {
+      "id": "c10",
+      "from": "n10",
+      "to": "n11"
+    },
+    {
+      "id": "c11",
+      "from": "n11",
+      "to": "n12"
+    },
+    {
+      "id": "c12",
+      "from": "n12",
+      "to": "n13"
+    },
+    {
+      "id": "c13",
+      "from": "n13",
+      "to": "n14"
+    },
+    {
+      "id": "c14",
+      "from": "n14",
+      "to": "n15"
+    },
+    {
+      "id": "c15",
+      "from": "n15",
+      "to": "n16"
+    },
+    {
+      "id": "c16",
+      "from": "n16",
+      "to": "n17"
+    },
+    {
+      "id": "c17",
+      "from": "n18",
+      "to": "n19"
+    },
+    {
+      "id": "c18",
+      "from": "n19",
+      "to": "n20"
+    },
+    {
+      "id": "c19",
+      "from": "n20",
+      "to": "n21"
+    },
+    {
+      "id": "c20",
+      "from": "n21",
+      "to": "n22"
+    },
+    {
+      "id": "c21",
+      "from": "n22",
+      "to": "n23"
+    },
+    {
+      "id": "c22",
+      "from": "n23",
+      "to": "n24"
+    },
+    {
+      "id": "c23",
+      "from": "n24",
+      "to": "n25"
+    },
+    {
+      "id": "c24",
+      "from": "n25",
+      "to": "n26"
+    },
+    {
+      "id": "c25",
+      "from": "n26",
+      "to": "n27"
+    },
+    {
+      "id": "c26",
+      "from": "n27",
+      "to": "n28"
+    },
+    {
+      "id": "c27",
+      "from": "n28",
+      "to": "n29"
+    },
+    {
+      "id": "c28",
+      "from": "n29",
+      "to": "n30"
+    },
+    {
+      "id": "c29",
+      "from": "n30",
+      "to": "n31"
+    },
+    {
+      "id": "c30",
+      "from": "n31",
+      "to": "n32"
+    },
+    {
+      "id": "c31",
+      "from": "n32",
+      "to": "n33"
+    },
+    {
+      "id": "c32",
+      "from": "n33",
+      "to": "n34"
+    },
+    {
+      "id": "c33",
+      "from": "n17",
+      "to": "n35"
+    },
+    {
+      "id": "c34",
+      "from": "n34",
+      "to": "n35"
+    },
+    {
+      "id": "c35",
+      "from": "n35",
+      "to": "n36"
+    }
+  ]
+}

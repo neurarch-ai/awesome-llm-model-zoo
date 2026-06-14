@@ -2,9 +2,9 @@
 
 # 🧠 Neurarch Model Zoo
 
-### 64 reference architectures you can actually open, edit, validate, and train. From DeepSeek-V3's latent attention to ResNet's first skip connection. Not pictures. Graphs.
+### 69 reference architectures you can actually open, edit, validate, and train. From DeepSeek-V3's latent attention to ResNet's first skip connection. Not pictures. Graphs.
 
-[![architectures](https://img.shields.io/badge/architectures-64-6366f1)](#catalog)
+[![architectures](https://img.shields.io/badge/architectures-69-6366f1)](#catalog)
 [![shape-checked](https://img.shields.io/badge/shape--checked-100%25%20passing-22c55e)](#every-entry-is-validated)
 [![domains](https://img.shields.io/badge/domains-11-f59e0b)](#catalog)
 [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
@@ -18,7 +18,7 @@
 
 Every diagram of Qwen or Mixtral you have ever seen is a dead image. The entries here are live, structurally validated model graphs:
 
-- **Shape-checked end to end**: tensor shapes, attention head divisibility, GQA constraints. All 64 graphs pass with zero errors.
+- **Shape-checked end to end**: tensor shapes, attention head divisibility, GQA constraints. All 69 graphs pass with zero errors.
 - **Verified numbers**: LLM hyperparameters are taken from each model's official `config.json`, not from blog posts.
 - **One click to editable**: every entry opens straight onto the [Neurarch](https://www.neurarch.com/) canvas, where you can fork it, swap the attention, and re-validate before you ever launch a run.
 - **Exportable to runnable training code**: TRL, torchtune, Unsloth, plain PyTorch.
@@ -140,6 +140,7 @@ Selection informed by [awesome-pretrained-chinese-nlp-models](https://github.com
 | [vgg-16](architectures/vgg-16/) | Oxford VGG | 138M | Depth + uniform 3x3 convs |
 | [vit-b16](architectures/vit-b16/) | Google | 86M | Patch embedding + Transformer encoder |
 | [unet](architectures/unet/) | Ronneberger et al. | 31M | Encoder-decoder with skip connections |
+| [mobilenet-v2](architectures/mobilenet-v2/) | Google | 3.5M | Inverted residual blocks; the on-device / CoreML staple |
 | [resnet-block](architectures/resnet-block/) | He et al. | block | The residual unit itself |
 | [simple-cnn](architectures/simple-cnn/) | LeNet lineage | starter | The hello-world of computer vision |
 
@@ -148,11 +149,14 @@ Selection informed by [awesome-pretrained-chinese-nlp-models](https://github.com
 | Architecture | Org | Params | Notable |
 |--------------|-----|--------|---------|
 | [clip-vit-b32](architectures/clip-vit-b32/) | OpenAI | 151M | The contrastive dual encoder behind modern multimodality |
+| [siglip-base](architectures/siglip-base/) | Google | 203M | CLIP with a sigmoid loss; the vision encoder of 2024+ MLLMs |
+| [llava-1.5-7b](architectures/llava-1.5-7b/) | Microsoft / UW | ~7B | The canonical MLLM: vision encoder → MLP projector → LLM |
 
 ### 🎨 Generative
 
 | Architecture | Org | Params | Notable |
 |--------------|-----|--------|---------|
+| [dit-xl2](architectures/dit-xl2/) | Berkeley / Meta | 675M | Diffusion with a Transformer backbone (SD3 / Sora-class) |
 | [diffusion-unet](architectures/diffusion-unet/) | CompVis / Stability | ~860M | Stable-Diffusion latent UNet with text cross-attention |
 
 ### 🎙️ Audio and speech
@@ -160,6 +164,7 @@ Selection informed by [awesome-pretrained-chinese-nlp-models](https://github.com
 | Architecture | Org | Params | Notable |
 |--------------|-----|--------|---------|
 | [whisper-small](architectures/whisper-small/) | OpenAI | 244M | Mel spectrogram, conv stem, enc-dec with cross-attention |
+| [wav2vec2-base](architectures/wav2vec2-base/) | Meta AI | 95M | Conv feature extractor + Transformer; self-supervised speech |
 
 ### 🛒 Recommendation and ranking
 

@@ -1,0 +1,5255 @@
+{
+  "id": "dit-xl2",
+  "name": "DiT-XL/2",
+  "description": "DiT-XL/2 (UC Berkeley / Meta (Peebles and Xie)): full graph; dimensions verified against the official config.json.",
+  "components": [
+    {
+      "id": "n1",
+      "type": "input",
+      "name": "noisy_latent",
+      "position": {
+        "x": 300,
+        "y": 50
+      },
+      "params": {
+        "shape": [
+          4,
+          32,
+          32
+        ]
+      },
+      "inputs": [],
+      "outputs": [
+        "n3"
+      ]
+    },
+    {
+      "id": "n2",
+      "type": "input",
+      "name": "timestep_+_class",
+      "position": {
+        "x": 640,
+        "y": 50
+      },
+      "params": {
+        "shape": [
+          1,
+          2
+        ]
+      },
+      "inputs": [],
+      "outputs": [
+        "n4"
+      ]
+    },
+    {
+      "id": "n3",
+      "type": "patchEmbed",
+      "name": "patchify_2x2",
+      "position": {
+        "x": 300,
+        "y": 200
+      },
+      "params": {
+        "imgSize": 32,
+        "patchSize": 2,
+        "embedDim": 1152,
+        "inChans": 4
+      },
+      "inputs": [
+        "n1"
+      ],
+      "outputs": [
+        "n5"
+      ]
+    },
+    {
+      "id": "n4",
+      "type": "embedding",
+      "name": "cond_embed",
+      "position": {
+        "x": 640,
+        "y": 200
+      },
+      "params": {
+        "numEmbeddings": 1000,
+        "embeddingDim": 1152
+      },
+      "inputs": [
+        "n2"
+      ],
+      "outputs": [
+        "n6",
+        "n13",
+        "n20",
+        "n27",
+        "n34",
+        "n41",
+        "n48",
+        "n55",
+        "n62",
+        "n69",
+        "n76",
+        "n83",
+        "n90",
+        "n97",
+        "n104",
+        "n111",
+        "n118",
+        "n125",
+        "n132",
+        "n139",
+        "n146",
+        "n153",
+        "n160",
+        "n167",
+        "n174",
+        "n181",
+        "n188",
+        "n195"
+      ]
+    },
+    {
+      "id": "n5",
+      "type": "positionalEncoding",
+      "name": "pos_embed",
+      "position": {
+        "x": 300,
+        "y": 350
+      },
+      "params": {
+        "maxLen": 256,
+        "embedDim": 1152
+      },
+      "inputs": [
+        "n3"
+      ],
+      "outputs": [
+        "n7",
+        "n9"
+      ]
+    },
+    {
+      "id": "n6",
+      "type": "linear",
+      "name": "adaLN_1",
+      "position": {
+        "x": 640,
+        "y": 500
+      },
+      "params": {
+        "inFeatures": 1152,
+        "outFeatures": 6912
+      },
+      "inputs": [
+        "n4"
+      ],
+      "outputs": [
+        "n8"
+      ]
+    },
+    {
+      "id": "n7",
+      "type": "layerNorm",
+      "name": "norm1_1",
+      "position": {
+        "x": 300,
+        "y": 500
+      },
+      "params": {
+        "normalizedShape": 1152
+      },
+      "inputs": [
+        "n5"
+      ],
+      "outputs": [
+        "n8"
+      ]
+    },
+    {
+      "id": "n8",
+      "type": "multiHeadAttention",
+      "name": "self_attn_1",
+      "position": {
+        "x": 300,
+        "y": 650
+      },
+      "params": {
+        "embedDim": 1152,
+        "numHeads": 16
+      },
+      "inputs": [
+        "n7",
+        "n6"
+      ],
+      "outputs": [
+        "n9"
+      ]
+    },
+    {
+      "id": "n9",
+      "type": "add",
+      "name": "residual1_1",
+      "position": {
+        "x": 300,
+        "y": 800
+      },
+      "params": {},
+      "inputs": [
+        "n8",
+        "n5"
+      ],
+      "outputs": [
+        "n10",
+        "n12"
+      ]
+    },
+    {
+      "id": "n10",
+      "type": "layerNorm",
+      "name": "norm2_1",
+      "position": {
+        "x": 300,
+        "y": 950
+      },
+      "params": {
+        "normalizedShape": 1152
+      },
+      "inputs": [
+        "n9"
+      ],
+      "outputs": [
+        "n11"
+      ]
+    },
+    {
+      "id": "n11",
+      "type": "feedForward",
+      "name": "mlp_1",
+      "position": {
+        "x": 300,
+        "y": 1100
+      },
+      "params": {
+        "embedDim": 1152,
+        "ffDim": 4608
+      },
+      "inputs": [
+        "n10"
+      ],
+      "outputs": [
+        "n12"
+      ]
+    },
+    {
+      "id": "n12",
+      "type": "add",
+      "name": "residual2_1",
+      "position": {
+        "x": 300,
+        "y": 1250
+      },
+      "params": {},
+      "inputs": [
+        "n11",
+        "n9"
+      ],
+      "outputs": [
+        "n14",
+        "n16"
+      ]
+    },
+    {
+      "id": "n13",
+      "type": "linear",
+      "name": "adaLN_2",
+      "position": {
+        "x": 640,
+        "y": 1400
+      },
+      "params": {
+        "inFeatures": 1152,
+        "outFeatures": 6912
+      },
+      "inputs": [
+        "n4"
+      ],
+      "outputs": [
+        "n15"
+      ]
+    },
+    {
+      "id": "n14",
+      "type": "layerNorm",
+      "name": "norm1_2",
+      "position": {
+        "x": 300,
+        "y": 1400
+      },
+      "params": {
+        "normalizedShape": 1152
+      },
+      "inputs": [
+        "n12"
+      ],
+      "outputs": [
+        "n15"
+      ]
+    },
+    {
+      "id": "n15",
+      "type": "multiHeadAttention",
+      "name": "self_attn_2",
+      "position": {
+        "x": 300,
+        "y": 1550
+      },
+      "params": {
+        "embedDim": 1152,
+        "numHeads": 16
+      },
+      "inputs": [
+        "n14",
+        "n13"
+      ],
+      "outputs": [
+        "n16"
+      ]
+    },
+    {
+      "id": "n16",
+      "type": "add",
+      "name": "residual1_2",
+      "position": {
+        "x": 300,
+        "y": 1700
+      },
+      "params": {},
+      "inputs": [
+        "n15",
+        "n12"
+      ],
+      "outputs": [
+        "n17",
+        "n19"
+      ]
+    },
+    {
+      "id": "n17",
+      "type": "layerNorm",
+      "name": "norm2_2",
+      "position": {
+        "x": 300,
+        "y": 1850
+      },
+      "params": {
+        "normalizedShape": 1152
+      },
+      "inputs": [
+        "n16"
+      ],
+      "outputs": [
+        "n18"
+      ]
+    },
+    {
+      "id": "n18",
+      "type": "feedForward",
+      "name": "mlp_2",
+      "position": {
+        "x": 300,
+        "y": 2000
+      },
+      "params": {
+        "embedDim": 1152,
+        "ffDim": 4608
+      },
+      "inputs": [
+        "n17"
+      ],
+      "outputs": [
+        "n19"
+      ]
+    },
+    {
+      "id": "n19",
+      "type": "add",
+      "name": "residual2_2",
+      "position": {
+        "x": 300,
+        "y": 2150
+      },
+      "params": {},
+      "inputs": [
+        "n18",
+        "n16"
+      ],
+      "outputs": [
+        "n21",
+        "n23"
+      ]
+    },
+    {
+      "id": "n20",
+      "type": "linear",
+      "name": "adaLN_3",
+      "position": {
+        "x": 640,
+        "y": 2300
+      },
+      "params": {
+        "inFeatures": 1152,
+        "outFeatures": 6912
+      },
+      "inputs": [
+        "n4"
+      ],
+      "outputs": [
+        "n22"
+      ]
+    },
+    {
+      "id": "n21",
+      "type": "layerNorm",
+      "name": "norm1_3",
+      "position": {
+        "x": 300,
+        "y": 2300
+      },
+      "params": {
+        "normalizedShape": 1152
+      },
+      "inputs": [
+        "n19"
+      ],
+      "outputs": [
+        "n22"
+      ]
+    },
+    {
+      "id": "n22",
+      "type": "multiHeadAttention",
+      "name": "self_attn_3",
+      "position": {
+        "x": 300,
+        "y": 2450
+      },
+      "params": {
+        "embedDim": 1152,
+        "numHeads": 16
+      },
+      "inputs": [
+        "n21",
+        "n20"
+      ],
+      "outputs": [
+        "n23"
+      ]
+    },
+    {
+      "id": "n23",
+      "type": "add",
+      "name": "residual1_3",
+      "position": {
+        "x": 300,
+        "y": 2600
+      },
+      "params": {},
+      "inputs": [
+        "n22",
+        "n19"
+      ],
+      "outputs": [
+        "n24",
+        "n26"
+      ]
+    },
+    {
+      "id": "n24",
+      "type": "layerNorm",
+      "name": "norm2_3",
+      "position": {
+        "x": 300,
+        "y": 2750
+      },
+      "params": {
+        "normalizedShape": 1152
+      },
+      "inputs": [
+        "n23"
+      ],
+      "outputs": [
+        "n25"
+      ]
+    },
+    {
+      "id": "n25",
+      "type": "feedForward",
+      "name": "mlp_3",
+      "position": {
+        "x": 300,
+        "y": 2900
+      },
+      "params": {
+        "embedDim": 1152,
+        "ffDim": 4608
+      },
+      "inputs": [
+        "n24"
+      ],
+      "outputs": [
+        "n26"
+      ]
+    },
+    {
+      "id": "n26",
+      "type": "add",
+      "name": "residual2_3",
+      "position": {
+        "x": 300,
+        "y": 3050
+      },
+      "params": {},
+      "inputs": [
+        "n25",
+        "n23"
+      ],
+      "outputs": [
+        "n28",
+        "n30"
+      ]
+    },
+    {
+      "id": "n27",
+      "type": "linear",
+      "name": "adaLN_4",
+      "position": {
+        "x": 640,
+        "y": 3200
+      },
+      "params": {
+        "inFeatures": 1152,
+        "outFeatures": 6912
+      },
+      "inputs": [
+        "n4"
+      ],
+      "outputs": [
+        "n29"
+      ]
+    },
+    {
+      "id": "n28",
+      "type": "layerNorm",
+      "name": "norm1_4",
+      "position": {
+        "x": 300,
+        "y": 3200
+      },
+      "params": {
+        "normalizedShape": 1152
+      },
+      "inputs": [
+        "n26"
+      ],
+      "outputs": [
+        "n29"
+      ]
+    },
+    {
+      "id": "n29",
+      "type": "multiHeadAttention",
+      "name": "self_attn_4",
+      "position": {
+        "x": 300,
+        "y": 3350
+      },
+      "params": {
+        "embedDim": 1152,
+        "numHeads": 16
+      },
+      "inputs": [
+        "n28",
+        "n27"
+      ],
+      "outputs": [
+        "n30"
+      ]
+    },
+    {
+      "id": "n30",
+      "type": "add",
+      "name": "residual1_4",
+      "position": {
+        "x": 300,
+        "y": 3500
+      },
+      "params": {},
+      "inputs": [
+        "n29",
+        "n26"
+      ],
+      "outputs": [
+        "n31",
+        "n33"
+      ]
+    },
+    {
+      "id": "n31",
+      "type": "layerNorm",
+      "name": "norm2_4",
+      "position": {
+        "x": 300,
+        "y": 3650
+      },
+      "params": {
+        "normalizedShape": 1152
+      },
+      "inputs": [
+        "n30"
+      ],
+      "outputs": [
+        "n32"
+      ]
+    },
+    {
+      "id": "n32",
+      "type": "feedForward",
+      "name": "mlp_4",
+      "position": {
+        "x": 300,
+        "y": 3800
+      },
+      "params": {
+        "embedDim": 1152,
+        "ffDim": 4608
+      },
+      "inputs": [
+        "n31"
+      ],
+      "outputs": [
+        "n33"
+      ]
+    },
+    {
+      "id": "n33",
+      "type": "add",
+      "name": "residual2_4",
+      "position": {
+        "x": 300,
+        "y": 3950
+      },
+      "params": {},
+      "inputs": [
+        "n32",
+        "n30"
+      ],
+      "outputs": [
+        "n35",
+        "n37"
+      ]
+    },
+    {
+      "id": "n34",
+      "type": "linear",
+      "name": "adaLN_5",
+      "position": {
+        "x": 640,
+        "y": 4100
+      },
+      "params": {
+        "inFeatures": 1152,
+        "outFeatures": 6912
+      },
+      "inputs": [
+        "n4"
+      ],
+      "outputs": [
+        "n36"
+      ]
+    },
+    {
+      "id": "n35",
+      "type": "layerNorm",
+      "name": "norm1_5",
+      "position": {
+        "x": 300,
+        "y": 4100
+      },
+      "params": {
+        "normalizedShape": 1152
+      },
+      "inputs": [
+        "n33"
+      ],
+      "outputs": [
+        "n36"
+      ]
+    },
+    {
+      "id": "n36",
+      "type": "multiHeadAttention",
+      "name": "self_attn_5",
+      "position": {
+        "x": 300,
+        "y": 4250
+      },
+      "params": {
+        "embedDim": 1152,
+        "numHeads": 16
+      },
+      "inputs": [
+        "n35",
+        "n34"
+      ],
+      "outputs": [
+        "n37"
+      ]
+    },
+    {
+      "id": "n37",
+      "type": "add",
+      "name": "residual1_5",
+      "position": {
+        "x": 300,
+        "y": 4400
+      },
+      "params": {},
+      "inputs": [
+        "n36",
+        "n33"
+      ],
+      "outputs": [
+        "n38",
+        "n40"
+      ]
+    },
+    {
+      "id": "n38",
+      "type": "layerNorm",
+      "name": "norm2_5",
+      "position": {
+        "x": 300,
+        "y": 4550
+      },
+      "params": {
+        "normalizedShape": 1152
+      },
+      "inputs": [
+        "n37"
+      ],
+      "outputs": [
+        "n39"
+      ]
+    },
+    {
+      "id": "n39",
+      "type": "feedForward",
+      "name": "mlp_5",
+      "position": {
+        "x": 300,
+        "y": 4700
+      },
+      "params": {
+        "embedDim": 1152,
+        "ffDim": 4608
+      },
+      "inputs": [
+        "n38"
+      ],
+      "outputs": [
+        "n40"
+      ]
+    },
+    {
+      "id": "n40",
+      "type": "add",
+      "name": "residual2_5",
+      "position": {
+        "x": 300,
+        "y": 4850
+      },
+      "params": {},
+      "inputs": [
+        "n39",
+        "n37"
+      ],
+      "outputs": [
+        "n42",
+        "n44"
+      ]
+    },
+    {
+      "id": "n41",
+      "type": "linear",
+      "name": "adaLN_6",
+      "position": {
+        "x": 640,
+        "y": 5000
+      },
+      "params": {
+        "inFeatures": 1152,
+        "outFeatures": 6912
+      },
+      "inputs": [
+        "n4"
+      ],
+      "outputs": [
+        "n43"
+      ]
+    },
+    {
+      "id": "n42",
+      "type": "layerNorm",
+      "name": "norm1_6",
+      "position": {
+        "x": 300,
+        "y": 5000
+      },
+      "params": {
+        "normalizedShape": 1152
+      },
+      "inputs": [
+        "n40"
+      ],
+      "outputs": [
+        "n43"
+      ]
+    },
+    {
+      "id": "n43",
+      "type": "multiHeadAttention",
+      "name": "self_attn_6",
+      "position": {
+        "x": 300,
+        "y": 5150
+      },
+      "params": {
+        "embedDim": 1152,
+        "numHeads": 16
+      },
+      "inputs": [
+        "n42",
+        "n41"
+      ],
+      "outputs": [
+        "n44"
+      ]
+    },
+    {
+      "id": "n44",
+      "type": "add",
+      "name": "residual1_6",
+      "position": {
+        "x": 300,
+        "y": 5300
+      },
+      "params": {},
+      "inputs": [
+        "n43",
+        "n40"
+      ],
+      "outputs": [
+        "n45",
+        "n47"
+      ]
+    },
+    {
+      "id": "n45",
+      "type": "layerNorm",
+      "name": "norm2_6",
+      "position": {
+        "x": 300,
+        "y": 5450
+      },
+      "params": {
+        "normalizedShape": 1152
+      },
+      "inputs": [
+        "n44"
+      ],
+      "outputs": [
+        "n46"
+      ]
+    },
+    {
+      "id": "n46",
+      "type": "feedForward",
+      "name": "mlp_6",
+      "position": {
+        "x": 300,
+        "y": 5600
+      },
+      "params": {
+        "embedDim": 1152,
+        "ffDim": 4608
+      },
+      "inputs": [
+        "n45"
+      ],
+      "outputs": [
+        "n47"
+      ]
+    },
+    {
+      "id": "n47",
+      "type": "add",
+      "name": "residual2_6",
+      "position": {
+        "x": 300,
+        "y": 5750
+      },
+      "params": {},
+      "inputs": [
+        "n46",
+        "n44"
+      ],
+      "outputs": [
+        "n49",
+        "n51"
+      ]
+    },
+    {
+      "id": "n48",
+      "type": "linear",
+      "name": "adaLN_7",
+      "position": {
+        "x": 640,
+        "y": 5900
+      },
+      "params": {
+        "inFeatures": 1152,
+        "outFeatures": 6912
+      },
+      "inputs": [
+        "n4"
+      ],
+      "outputs": [
+        "n50"
+      ]
+    },
+    {
+      "id": "n49",
+      "type": "layerNorm",
+      "name": "norm1_7",
+      "position": {
+        "x": 300,
+        "y": 5900
+      },
+      "params": {
+        "normalizedShape": 1152
+      },
+      "inputs": [
+        "n47"
+      ],
+      "outputs": [
+        "n50"
+      ]
+    },
+    {
+      "id": "n50",
+      "type": "multiHeadAttention",
+      "name": "self_attn_7",
+      "position": {
+        "x": 300,
+        "y": 6050
+      },
+      "params": {
+        "embedDim": 1152,
+        "numHeads": 16
+      },
+      "inputs": [
+        "n49",
+        "n48"
+      ],
+      "outputs": [
+        "n51"
+      ]
+    },
+    {
+      "id": "n51",
+      "type": "add",
+      "name": "residual1_7",
+      "position": {
+        "x": 300,
+        "y": 6200
+      },
+      "params": {},
+      "inputs": [
+        "n50",
+        "n47"
+      ],
+      "outputs": [
+        "n52",
+        "n54"
+      ]
+    },
+    {
+      "id": "n52",
+      "type": "layerNorm",
+      "name": "norm2_7",
+      "position": {
+        "x": 300,
+        "y": 6350
+      },
+      "params": {
+        "normalizedShape": 1152
+      },
+      "inputs": [
+        "n51"
+      ],
+      "outputs": [
+        "n53"
+      ]
+    },
+    {
+      "id": "n53",
+      "type": "feedForward",
+      "name": "mlp_7",
+      "position": {
+        "x": 300,
+        "y": 6500
+      },
+      "params": {
+        "embedDim": 1152,
+        "ffDim": 4608
+      },
+      "inputs": [
+        "n52"
+      ],
+      "outputs": [
+        "n54"
+      ]
+    },
+    {
+      "id": "n54",
+      "type": "add",
+      "name": "residual2_7",
+      "position": {
+        "x": 300,
+        "y": 6650
+      },
+      "params": {},
+      "inputs": [
+        "n53",
+        "n51"
+      ],
+      "outputs": [
+        "n56",
+        "n58"
+      ]
+    },
+    {
+      "id": "n55",
+      "type": "linear",
+      "name": "adaLN_8",
+      "position": {
+        "x": 640,
+        "y": 6800
+      },
+      "params": {
+        "inFeatures": 1152,
+        "outFeatures": 6912
+      },
+      "inputs": [
+        "n4"
+      ],
+      "outputs": [
+        "n57"
+      ]
+    },
+    {
+      "id": "n56",
+      "type": "layerNorm",
+      "name": "norm1_8",
+      "position": {
+        "x": 300,
+        "y": 6800
+      },
+      "params": {
+        "normalizedShape": 1152
+      },
+      "inputs": [
+        "n54"
+      ],
+      "outputs": [
+        "n57"
+      ]
+    },
+    {
+      "id": "n57",
+      "type": "multiHeadAttention",
+      "name": "self_attn_8",
+      "position": {
+        "x": 300,
+        "y": 6950
+      },
+      "params": {
+        "embedDim": 1152,
+        "numHeads": 16
+      },
+      "inputs": [
+        "n56",
+        "n55"
+      ],
+      "outputs": [
+        "n58"
+      ]
+    },
+    {
+      "id": "n58",
+      "type": "add",
+      "name": "residual1_8",
+      "position": {
+        "x": 300,
+        "y": 7100
+      },
+      "params": {},
+      "inputs": [
+        "n57",
+        "n54"
+      ],
+      "outputs": [
+        "n59",
+        "n61"
+      ]
+    },
+    {
+      "id": "n59",
+      "type": "layerNorm",
+      "name": "norm2_8",
+      "position": {
+        "x": 300,
+        "y": 7250
+      },
+      "params": {
+        "normalizedShape": 1152
+      },
+      "inputs": [
+        "n58"
+      ],
+      "outputs": [
+        "n60"
+      ]
+    },
+    {
+      "id": "n60",
+      "type": "feedForward",
+      "name": "mlp_8",
+      "position": {
+        "x": 300,
+        "y": 7400
+      },
+      "params": {
+        "embedDim": 1152,
+        "ffDim": 4608
+      },
+      "inputs": [
+        "n59"
+      ],
+      "outputs": [
+        "n61"
+      ]
+    },
+    {
+      "id": "n61",
+      "type": "add",
+      "name": "residual2_8",
+      "position": {
+        "x": 300,
+        "y": 7550
+      },
+      "params": {},
+      "inputs": [
+        "n60",
+        "n58"
+      ],
+      "outputs": [
+        "n63",
+        "n65"
+      ]
+    },
+    {
+      "id": "n62",
+      "type": "linear",
+      "name": "adaLN_9",
+      "position": {
+        "x": 640,
+        "y": 7700
+      },
+      "params": {
+        "inFeatures": 1152,
+        "outFeatures": 6912
+      },
+      "inputs": [
+        "n4"
+      ],
+      "outputs": [
+        "n64"
+      ]
+    },
+    {
+      "id": "n63",
+      "type": "layerNorm",
+      "name": "norm1_9",
+      "position": {
+        "x": 300,
+        "y": 7700
+      },
+      "params": {
+        "normalizedShape": 1152
+      },
+      "inputs": [
+        "n61"
+      ],
+      "outputs": [
+        "n64"
+      ]
+    },
+    {
+      "id": "n64",
+      "type": "multiHeadAttention",
+      "name": "self_attn_9",
+      "position": {
+        "x": 300,
+        "y": 7850
+      },
+      "params": {
+        "embedDim": 1152,
+        "numHeads": 16
+      },
+      "inputs": [
+        "n63",
+        "n62"
+      ],
+      "outputs": [
+        "n65"
+      ]
+    },
+    {
+      "id": "n65",
+      "type": "add",
+      "name": "residual1_9",
+      "position": {
+        "x": 300,
+        "y": 8000
+      },
+      "params": {},
+      "inputs": [
+        "n64",
+        "n61"
+      ],
+      "outputs": [
+        "n66",
+        "n68"
+      ]
+    },
+    {
+      "id": "n66",
+      "type": "layerNorm",
+      "name": "norm2_9",
+      "position": {
+        "x": 300,
+        "y": 8150
+      },
+      "params": {
+        "normalizedShape": 1152
+      },
+      "inputs": [
+        "n65"
+      ],
+      "outputs": [
+        "n67"
+      ]
+    },
+    {
+      "id": "n67",
+      "type": "feedForward",
+      "name": "mlp_9",
+      "position": {
+        "x": 300,
+        "y": 8300
+      },
+      "params": {
+        "embedDim": 1152,
+        "ffDim": 4608
+      },
+      "inputs": [
+        "n66"
+      ],
+      "outputs": [
+        "n68"
+      ]
+    },
+    {
+      "id": "n68",
+      "type": "add",
+      "name": "residual2_9",
+      "position": {
+        "x": 300,
+        "y": 8450
+      },
+      "params": {},
+      "inputs": [
+        "n67",
+        "n65"
+      ],
+      "outputs": [
+        "n70",
+        "n72"
+      ]
+    },
+    {
+      "id": "n69",
+      "type": "linear",
+      "name": "adaLN_10",
+      "position": {
+        "x": 640,
+        "y": 8600
+      },
+      "params": {
+        "inFeatures": 1152,
+        "outFeatures": 6912
+      },
+      "inputs": [
+        "n4"
+      ],
+      "outputs": [
+        "n71"
+      ]
+    },
+    {
+      "id": "n70",
+      "type": "layerNorm",
+      "name": "norm1_10",
+      "position": {
+        "x": 300,
+        "y": 8600
+      },
+      "params": {
+        "normalizedShape": 1152
+      },
+      "inputs": [
+        "n68"
+      ],
+      "outputs": [
+        "n71"
+      ]
+    },
+    {
+      "id": "n71",
+      "type": "multiHeadAttention",
+      "name": "self_attn_10",
+      "position": {
+        "x": 300,
+        "y": 8750
+      },
+      "params": {
+        "embedDim": 1152,
+        "numHeads": 16
+      },
+      "inputs": [
+        "n70",
+        "n69"
+      ],
+      "outputs": [
+        "n72"
+      ]
+    },
+    {
+      "id": "n72",
+      "type": "add",
+      "name": "residual1_10",
+      "position": {
+        "x": 300,
+        "y": 8900
+      },
+      "params": {},
+      "inputs": [
+        "n71",
+        "n68"
+      ],
+      "outputs": [
+        "n73",
+        "n75"
+      ]
+    },
+    {
+      "id": "n73",
+      "type": "layerNorm",
+      "name": "norm2_10",
+      "position": {
+        "x": 300,
+        "y": 9050
+      },
+      "params": {
+        "normalizedShape": 1152
+      },
+      "inputs": [
+        "n72"
+      ],
+      "outputs": [
+        "n74"
+      ]
+    },
+    {
+      "id": "n74",
+      "type": "feedForward",
+      "name": "mlp_10",
+      "position": {
+        "x": 300,
+        "y": 9200
+      },
+      "params": {
+        "embedDim": 1152,
+        "ffDim": 4608
+      },
+      "inputs": [
+        "n73"
+      ],
+      "outputs": [
+        "n75"
+      ]
+    },
+    {
+      "id": "n75",
+      "type": "add",
+      "name": "residual2_10",
+      "position": {
+        "x": 300,
+        "y": 9350
+      },
+      "params": {},
+      "inputs": [
+        "n74",
+        "n72"
+      ],
+      "outputs": [
+        "n77",
+        "n79"
+      ]
+    },
+    {
+      "id": "n76",
+      "type": "linear",
+      "name": "adaLN_11",
+      "position": {
+        "x": 640,
+        "y": 9500
+      },
+      "params": {
+        "inFeatures": 1152,
+        "outFeatures": 6912
+      },
+      "inputs": [
+        "n4"
+      ],
+      "outputs": [
+        "n78"
+      ]
+    },
+    {
+      "id": "n77",
+      "type": "layerNorm",
+      "name": "norm1_11",
+      "position": {
+        "x": 300,
+        "y": 9500
+      },
+      "params": {
+        "normalizedShape": 1152
+      },
+      "inputs": [
+        "n75"
+      ],
+      "outputs": [
+        "n78"
+      ]
+    },
+    {
+      "id": "n78",
+      "type": "multiHeadAttention",
+      "name": "self_attn_11",
+      "position": {
+        "x": 300,
+        "y": 9650
+      },
+      "params": {
+        "embedDim": 1152,
+        "numHeads": 16
+      },
+      "inputs": [
+        "n77",
+        "n76"
+      ],
+      "outputs": [
+        "n79"
+      ]
+    },
+    {
+      "id": "n79",
+      "type": "add",
+      "name": "residual1_11",
+      "position": {
+        "x": 300,
+        "y": 9800
+      },
+      "params": {},
+      "inputs": [
+        "n78",
+        "n75"
+      ],
+      "outputs": [
+        "n80",
+        "n82"
+      ]
+    },
+    {
+      "id": "n80",
+      "type": "layerNorm",
+      "name": "norm2_11",
+      "position": {
+        "x": 300,
+        "y": 9950
+      },
+      "params": {
+        "normalizedShape": 1152
+      },
+      "inputs": [
+        "n79"
+      ],
+      "outputs": [
+        "n81"
+      ]
+    },
+    {
+      "id": "n81",
+      "type": "feedForward",
+      "name": "mlp_11",
+      "position": {
+        "x": 300,
+        "y": 10100
+      },
+      "params": {
+        "embedDim": 1152,
+        "ffDim": 4608
+      },
+      "inputs": [
+        "n80"
+      ],
+      "outputs": [
+        "n82"
+      ]
+    },
+    {
+      "id": "n82",
+      "type": "add",
+      "name": "residual2_11",
+      "position": {
+        "x": 300,
+        "y": 10250
+      },
+      "params": {},
+      "inputs": [
+        "n81",
+        "n79"
+      ],
+      "outputs": [
+        "n84",
+        "n86"
+      ]
+    },
+    {
+      "id": "n83",
+      "type": "linear",
+      "name": "adaLN_12",
+      "position": {
+        "x": 640,
+        "y": 10400
+      },
+      "params": {
+        "inFeatures": 1152,
+        "outFeatures": 6912
+      },
+      "inputs": [
+        "n4"
+      ],
+      "outputs": [
+        "n85"
+      ]
+    },
+    {
+      "id": "n84",
+      "type": "layerNorm",
+      "name": "norm1_12",
+      "position": {
+        "x": 300,
+        "y": 10400
+      },
+      "params": {
+        "normalizedShape": 1152
+      },
+      "inputs": [
+        "n82"
+      ],
+      "outputs": [
+        "n85"
+      ]
+    },
+    {
+      "id": "n85",
+      "type": "multiHeadAttention",
+      "name": "self_attn_12",
+      "position": {
+        "x": 300,
+        "y": 10550
+      },
+      "params": {
+        "embedDim": 1152,
+        "numHeads": 16
+      },
+      "inputs": [
+        "n84",
+        "n83"
+      ],
+      "outputs": [
+        "n86"
+      ]
+    },
+    {
+      "id": "n86",
+      "type": "add",
+      "name": "residual1_12",
+      "position": {
+        "x": 300,
+        "y": 10700
+      },
+      "params": {},
+      "inputs": [
+        "n85",
+        "n82"
+      ],
+      "outputs": [
+        "n87",
+        "n89"
+      ]
+    },
+    {
+      "id": "n87",
+      "type": "layerNorm",
+      "name": "norm2_12",
+      "position": {
+        "x": 300,
+        "y": 10850
+      },
+      "params": {
+        "normalizedShape": 1152
+      },
+      "inputs": [
+        "n86"
+      ],
+      "outputs": [
+        "n88"
+      ]
+    },
+    {
+      "id": "n88",
+      "type": "feedForward",
+      "name": "mlp_12",
+      "position": {
+        "x": 300,
+        "y": 11000
+      },
+      "params": {
+        "embedDim": 1152,
+        "ffDim": 4608
+      },
+      "inputs": [
+        "n87"
+      ],
+      "outputs": [
+        "n89"
+      ]
+    },
+    {
+      "id": "n89",
+      "type": "add",
+      "name": "residual2_12",
+      "position": {
+        "x": 300,
+        "y": 11150
+      },
+      "params": {},
+      "inputs": [
+        "n88",
+        "n86"
+      ],
+      "outputs": [
+        "n91",
+        "n93"
+      ]
+    },
+    {
+      "id": "n90",
+      "type": "linear",
+      "name": "adaLN_13",
+      "position": {
+        "x": 640,
+        "y": 11300
+      },
+      "params": {
+        "inFeatures": 1152,
+        "outFeatures": 6912
+      },
+      "inputs": [
+        "n4"
+      ],
+      "outputs": [
+        "n92"
+      ]
+    },
+    {
+      "id": "n91",
+      "type": "layerNorm",
+      "name": "norm1_13",
+      "position": {
+        "x": 300,
+        "y": 11300
+      },
+      "params": {
+        "normalizedShape": 1152
+      },
+      "inputs": [
+        "n89"
+      ],
+      "outputs": [
+        "n92"
+      ]
+    },
+    {
+      "id": "n92",
+      "type": "multiHeadAttention",
+      "name": "self_attn_13",
+      "position": {
+        "x": 300,
+        "y": 11450
+      },
+      "params": {
+        "embedDim": 1152,
+        "numHeads": 16
+      },
+      "inputs": [
+        "n91",
+        "n90"
+      ],
+      "outputs": [
+        "n93"
+      ]
+    },
+    {
+      "id": "n93",
+      "type": "add",
+      "name": "residual1_13",
+      "position": {
+        "x": 300,
+        "y": 11600
+      },
+      "params": {},
+      "inputs": [
+        "n92",
+        "n89"
+      ],
+      "outputs": [
+        "n94",
+        "n96"
+      ]
+    },
+    {
+      "id": "n94",
+      "type": "layerNorm",
+      "name": "norm2_13",
+      "position": {
+        "x": 300,
+        "y": 11750
+      },
+      "params": {
+        "normalizedShape": 1152
+      },
+      "inputs": [
+        "n93"
+      ],
+      "outputs": [
+        "n95"
+      ]
+    },
+    {
+      "id": "n95",
+      "type": "feedForward",
+      "name": "mlp_13",
+      "position": {
+        "x": 300,
+        "y": 11900
+      },
+      "params": {
+        "embedDim": 1152,
+        "ffDim": 4608
+      },
+      "inputs": [
+        "n94"
+      ],
+      "outputs": [
+        "n96"
+      ]
+    },
+    {
+      "id": "n96",
+      "type": "add",
+      "name": "residual2_13",
+      "position": {
+        "x": 300,
+        "y": 12050
+      },
+      "params": {},
+      "inputs": [
+        "n95",
+        "n93"
+      ],
+      "outputs": [
+        "n98",
+        "n100"
+      ]
+    },
+    {
+      "id": "n97",
+      "type": "linear",
+      "name": "adaLN_14",
+      "position": {
+        "x": 640,
+        "y": 12200
+      },
+      "params": {
+        "inFeatures": 1152,
+        "outFeatures": 6912
+      },
+      "inputs": [
+        "n4"
+      ],
+      "outputs": [
+        "n99"
+      ]
+    },
+    {
+      "id": "n98",
+      "type": "layerNorm",
+      "name": "norm1_14",
+      "position": {
+        "x": 300,
+        "y": 12200
+      },
+      "params": {
+        "normalizedShape": 1152
+      },
+      "inputs": [
+        "n96"
+      ],
+      "outputs": [
+        "n99"
+      ]
+    },
+    {
+      "id": "n99",
+      "type": "multiHeadAttention",
+      "name": "self_attn_14",
+      "position": {
+        "x": 300,
+        "y": 12350
+      },
+      "params": {
+        "embedDim": 1152,
+        "numHeads": 16
+      },
+      "inputs": [
+        "n98",
+        "n97"
+      ],
+      "outputs": [
+        "n100"
+      ]
+    },
+    {
+      "id": "n100",
+      "type": "add",
+      "name": "residual1_14",
+      "position": {
+        "x": 300,
+        "y": 12500
+      },
+      "params": {},
+      "inputs": [
+        "n99",
+        "n96"
+      ],
+      "outputs": [
+        "n101",
+        "n103"
+      ]
+    },
+    {
+      "id": "n101",
+      "type": "layerNorm",
+      "name": "norm2_14",
+      "position": {
+        "x": 300,
+        "y": 12650
+      },
+      "params": {
+        "normalizedShape": 1152
+      },
+      "inputs": [
+        "n100"
+      ],
+      "outputs": [
+        "n102"
+      ]
+    },
+    {
+      "id": "n102",
+      "type": "feedForward",
+      "name": "mlp_14",
+      "position": {
+        "x": 300,
+        "y": 12800
+      },
+      "params": {
+        "embedDim": 1152,
+        "ffDim": 4608
+      },
+      "inputs": [
+        "n101"
+      ],
+      "outputs": [
+        "n103"
+      ]
+    },
+    {
+      "id": "n103",
+      "type": "add",
+      "name": "residual2_14",
+      "position": {
+        "x": 300,
+        "y": 12950
+      },
+      "params": {},
+      "inputs": [
+        "n102",
+        "n100"
+      ],
+      "outputs": [
+        "n105",
+        "n107"
+      ]
+    },
+    {
+      "id": "n104",
+      "type": "linear",
+      "name": "adaLN_15",
+      "position": {
+        "x": 640,
+        "y": 13100
+      },
+      "params": {
+        "inFeatures": 1152,
+        "outFeatures": 6912
+      },
+      "inputs": [
+        "n4"
+      ],
+      "outputs": [
+        "n106"
+      ]
+    },
+    {
+      "id": "n105",
+      "type": "layerNorm",
+      "name": "norm1_15",
+      "position": {
+        "x": 300,
+        "y": 13100
+      },
+      "params": {
+        "normalizedShape": 1152
+      },
+      "inputs": [
+        "n103"
+      ],
+      "outputs": [
+        "n106"
+      ]
+    },
+    {
+      "id": "n106",
+      "type": "multiHeadAttention",
+      "name": "self_attn_15",
+      "position": {
+        "x": 300,
+        "y": 13250
+      },
+      "params": {
+        "embedDim": 1152,
+        "numHeads": 16
+      },
+      "inputs": [
+        "n105",
+        "n104"
+      ],
+      "outputs": [
+        "n107"
+      ]
+    },
+    {
+      "id": "n107",
+      "type": "add",
+      "name": "residual1_15",
+      "position": {
+        "x": 300,
+        "y": 13400
+      },
+      "params": {},
+      "inputs": [
+        "n106",
+        "n103"
+      ],
+      "outputs": [
+        "n108",
+        "n110"
+      ]
+    },
+    {
+      "id": "n108",
+      "type": "layerNorm",
+      "name": "norm2_15",
+      "position": {
+        "x": 300,
+        "y": 13550
+      },
+      "params": {
+        "normalizedShape": 1152
+      },
+      "inputs": [
+        "n107"
+      ],
+      "outputs": [
+        "n109"
+      ]
+    },
+    {
+      "id": "n109",
+      "type": "feedForward",
+      "name": "mlp_15",
+      "position": {
+        "x": 300,
+        "y": 13700
+      },
+      "params": {
+        "embedDim": 1152,
+        "ffDim": 4608
+      },
+      "inputs": [
+        "n108"
+      ],
+      "outputs": [
+        "n110"
+      ]
+    },
+    {
+      "id": "n110",
+      "type": "add",
+      "name": "residual2_15",
+      "position": {
+        "x": 300,
+        "y": 13850
+      },
+      "params": {},
+      "inputs": [
+        "n109",
+        "n107"
+      ],
+      "outputs": [
+        "n112",
+        "n114"
+      ]
+    },
+    {
+      "id": "n111",
+      "type": "linear",
+      "name": "adaLN_16",
+      "position": {
+        "x": 640,
+        "y": 14000
+      },
+      "params": {
+        "inFeatures": 1152,
+        "outFeatures": 6912
+      },
+      "inputs": [
+        "n4"
+      ],
+      "outputs": [
+        "n113"
+      ]
+    },
+    {
+      "id": "n112",
+      "type": "layerNorm",
+      "name": "norm1_16",
+      "position": {
+        "x": 300,
+        "y": 14000
+      },
+      "params": {
+        "normalizedShape": 1152
+      },
+      "inputs": [
+        "n110"
+      ],
+      "outputs": [
+        "n113"
+      ]
+    },
+    {
+      "id": "n113",
+      "type": "multiHeadAttention",
+      "name": "self_attn_16",
+      "position": {
+        "x": 300,
+        "y": 14150
+      },
+      "params": {
+        "embedDim": 1152,
+        "numHeads": 16
+      },
+      "inputs": [
+        "n112",
+        "n111"
+      ],
+      "outputs": [
+        "n114"
+      ]
+    },
+    {
+      "id": "n114",
+      "type": "add",
+      "name": "residual1_16",
+      "position": {
+        "x": 300,
+        "y": 14300
+      },
+      "params": {},
+      "inputs": [
+        "n113",
+        "n110"
+      ],
+      "outputs": [
+        "n115",
+        "n117"
+      ]
+    },
+    {
+      "id": "n115",
+      "type": "layerNorm",
+      "name": "norm2_16",
+      "position": {
+        "x": 300,
+        "y": 14450
+      },
+      "params": {
+        "normalizedShape": 1152
+      },
+      "inputs": [
+        "n114"
+      ],
+      "outputs": [
+        "n116"
+      ]
+    },
+    {
+      "id": "n116",
+      "type": "feedForward",
+      "name": "mlp_16",
+      "position": {
+        "x": 300,
+        "y": 14600
+      },
+      "params": {
+        "embedDim": 1152,
+        "ffDim": 4608
+      },
+      "inputs": [
+        "n115"
+      ],
+      "outputs": [
+        "n117"
+      ]
+    },
+    {
+      "id": "n117",
+      "type": "add",
+      "name": "residual2_16",
+      "position": {
+        "x": 300,
+        "y": 14750
+      },
+      "params": {},
+      "inputs": [
+        "n116",
+        "n114"
+      ],
+      "outputs": [
+        "n119",
+        "n121"
+      ]
+    },
+    {
+      "id": "n118",
+      "type": "linear",
+      "name": "adaLN_17",
+      "position": {
+        "x": 640,
+        "y": 14900
+      },
+      "params": {
+        "inFeatures": 1152,
+        "outFeatures": 6912
+      },
+      "inputs": [
+        "n4"
+      ],
+      "outputs": [
+        "n120"
+      ]
+    },
+    {
+      "id": "n119",
+      "type": "layerNorm",
+      "name": "norm1_17",
+      "position": {
+        "x": 300,
+        "y": 14900
+      },
+      "params": {
+        "normalizedShape": 1152
+      },
+      "inputs": [
+        "n117"
+      ],
+      "outputs": [
+        "n120"
+      ]
+    },
+    {
+      "id": "n120",
+      "type": "multiHeadAttention",
+      "name": "self_attn_17",
+      "position": {
+        "x": 300,
+        "y": 15050
+      },
+      "params": {
+        "embedDim": 1152,
+        "numHeads": 16
+      },
+      "inputs": [
+        "n119",
+        "n118"
+      ],
+      "outputs": [
+        "n121"
+      ]
+    },
+    {
+      "id": "n121",
+      "type": "add",
+      "name": "residual1_17",
+      "position": {
+        "x": 300,
+        "y": 15200
+      },
+      "params": {},
+      "inputs": [
+        "n120",
+        "n117"
+      ],
+      "outputs": [
+        "n122",
+        "n124"
+      ]
+    },
+    {
+      "id": "n122",
+      "type": "layerNorm",
+      "name": "norm2_17",
+      "position": {
+        "x": 300,
+        "y": 15350
+      },
+      "params": {
+        "normalizedShape": 1152
+      },
+      "inputs": [
+        "n121"
+      ],
+      "outputs": [
+        "n123"
+      ]
+    },
+    {
+      "id": "n123",
+      "type": "feedForward",
+      "name": "mlp_17",
+      "position": {
+        "x": 300,
+        "y": 15500
+      },
+      "params": {
+        "embedDim": 1152,
+        "ffDim": 4608
+      },
+      "inputs": [
+        "n122"
+      ],
+      "outputs": [
+        "n124"
+      ]
+    },
+    {
+      "id": "n124",
+      "type": "add",
+      "name": "residual2_17",
+      "position": {
+        "x": 300,
+        "y": 15650
+      },
+      "params": {},
+      "inputs": [
+        "n123",
+        "n121"
+      ],
+      "outputs": [
+        "n126",
+        "n128"
+      ]
+    },
+    {
+      "id": "n125",
+      "type": "linear",
+      "name": "adaLN_18",
+      "position": {
+        "x": 640,
+        "y": 15800
+      },
+      "params": {
+        "inFeatures": 1152,
+        "outFeatures": 6912
+      },
+      "inputs": [
+        "n4"
+      ],
+      "outputs": [
+        "n127"
+      ]
+    },
+    {
+      "id": "n126",
+      "type": "layerNorm",
+      "name": "norm1_18",
+      "position": {
+        "x": 300,
+        "y": 15800
+      },
+      "params": {
+        "normalizedShape": 1152
+      },
+      "inputs": [
+        "n124"
+      ],
+      "outputs": [
+        "n127"
+      ]
+    },
+    {
+      "id": "n127",
+      "type": "multiHeadAttention",
+      "name": "self_attn_18",
+      "position": {
+        "x": 300,
+        "y": 15950
+      },
+      "params": {
+        "embedDim": 1152,
+        "numHeads": 16
+      },
+      "inputs": [
+        "n126",
+        "n125"
+      ],
+      "outputs": [
+        "n128"
+      ]
+    },
+    {
+      "id": "n128",
+      "type": "add",
+      "name": "residual1_18",
+      "position": {
+        "x": 300,
+        "y": 16100
+      },
+      "params": {},
+      "inputs": [
+        "n127",
+        "n124"
+      ],
+      "outputs": [
+        "n129",
+        "n131"
+      ]
+    },
+    {
+      "id": "n129",
+      "type": "layerNorm",
+      "name": "norm2_18",
+      "position": {
+        "x": 300,
+        "y": 16250
+      },
+      "params": {
+        "normalizedShape": 1152
+      },
+      "inputs": [
+        "n128"
+      ],
+      "outputs": [
+        "n130"
+      ]
+    },
+    {
+      "id": "n130",
+      "type": "feedForward",
+      "name": "mlp_18",
+      "position": {
+        "x": 300,
+        "y": 16400
+      },
+      "params": {
+        "embedDim": 1152,
+        "ffDim": 4608
+      },
+      "inputs": [
+        "n129"
+      ],
+      "outputs": [
+        "n131"
+      ]
+    },
+    {
+      "id": "n131",
+      "type": "add",
+      "name": "residual2_18",
+      "position": {
+        "x": 300,
+        "y": 16550
+      },
+      "params": {},
+      "inputs": [
+        "n130",
+        "n128"
+      ],
+      "outputs": [
+        "n133",
+        "n135"
+      ]
+    },
+    {
+      "id": "n132",
+      "type": "linear",
+      "name": "adaLN_19",
+      "position": {
+        "x": 640,
+        "y": 16700
+      },
+      "params": {
+        "inFeatures": 1152,
+        "outFeatures": 6912
+      },
+      "inputs": [
+        "n4"
+      ],
+      "outputs": [
+        "n134"
+      ]
+    },
+    {
+      "id": "n133",
+      "type": "layerNorm",
+      "name": "norm1_19",
+      "position": {
+        "x": 300,
+        "y": 16700
+      },
+      "params": {
+        "normalizedShape": 1152
+      },
+      "inputs": [
+        "n131"
+      ],
+      "outputs": [
+        "n134"
+      ]
+    },
+    {
+      "id": "n134",
+      "type": "multiHeadAttention",
+      "name": "self_attn_19",
+      "position": {
+        "x": 300,
+        "y": 16850
+      },
+      "params": {
+        "embedDim": 1152,
+        "numHeads": 16
+      },
+      "inputs": [
+        "n133",
+        "n132"
+      ],
+      "outputs": [
+        "n135"
+      ]
+    },
+    {
+      "id": "n135",
+      "type": "add",
+      "name": "residual1_19",
+      "position": {
+        "x": 300,
+        "y": 17000
+      },
+      "params": {},
+      "inputs": [
+        "n134",
+        "n131"
+      ],
+      "outputs": [
+        "n136",
+        "n138"
+      ]
+    },
+    {
+      "id": "n136",
+      "type": "layerNorm",
+      "name": "norm2_19",
+      "position": {
+        "x": 300,
+        "y": 17150
+      },
+      "params": {
+        "normalizedShape": 1152
+      },
+      "inputs": [
+        "n135"
+      ],
+      "outputs": [
+        "n137"
+      ]
+    },
+    {
+      "id": "n137",
+      "type": "feedForward",
+      "name": "mlp_19",
+      "position": {
+        "x": 300,
+        "y": 17300
+      },
+      "params": {
+        "embedDim": 1152,
+        "ffDim": 4608
+      },
+      "inputs": [
+        "n136"
+      ],
+      "outputs": [
+        "n138"
+      ]
+    },
+    {
+      "id": "n138",
+      "type": "add",
+      "name": "residual2_19",
+      "position": {
+        "x": 300,
+        "y": 17450
+      },
+      "params": {},
+      "inputs": [
+        "n137",
+        "n135"
+      ],
+      "outputs": [
+        "n140",
+        "n142"
+      ]
+    },
+    {
+      "id": "n139",
+      "type": "linear",
+      "name": "adaLN_20",
+      "position": {
+        "x": 640,
+        "y": 17600
+      },
+      "params": {
+        "inFeatures": 1152,
+        "outFeatures": 6912
+      },
+      "inputs": [
+        "n4"
+      ],
+      "outputs": [
+        "n141"
+      ]
+    },
+    {
+      "id": "n140",
+      "type": "layerNorm",
+      "name": "norm1_20",
+      "position": {
+        "x": 300,
+        "y": 17600
+      },
+      "params": {
+        "normalizedShape": 1152
+      },
+      "inputs": [
+        "n138"
+      ],
+      "outputs": [
+        "n141"
+      ]
+    },
+    {
+      "id": "n141",
+      "type": "multiHeadAttention",
+      "name": "self_attn_20",
+      "position": {
+        "x": 300,
+        "y": 17750
+      },
+      "params": {
+        "embedDim": 1152,
+        "numHeads": 16
+      },
+      "inputs": [
+        "n140",
+        "n139"
+      ],
+      "outputs": [
+        "n142"
+      ]
+    },
+    {
+      "id": "n142",
+      "type": "add",
+      "name": "residual1_20",
+      "position": {
+        "x": 300,
+        "y": 17900
+      },
+      "params": {},
+      "inputs": [
+        "n141",
+        "n138"
+      ],
+      "outputs": [
+        "n143",
+        "n145"
+      ]
+    },
+    {
+      "id": "n143",
+      "type": "layerNorm",
+      "name": "norm2_20",
+      "position": {
+        "x": 300,
+        "y": 18050
+      },
+      "params": {
+        "normalizedShape": 1152
+      },
+      "inputs": [
+        "n142"
+      ],
+      "outputs": [
+        "n144"
+      ]
+    },
+    {
+      "id": "n144",
+      "type": "feedForward",
+      "name": "mlp_20",
+      "position": {
+        "x": 300,
+        "y": 18200
+      },
+      "params": {
+        "embedDim": 1152,
+        "ffDim": 4608
+      },
+      "inputs": [
+        "n143"
+      ],
+      "outputs": [
+        "n145"
+      ]
+    },
+    {
+      "id": "n145",
+      "type": "add",
+      "name": "residual2_20",
+      "position": {
+        "x": 300,
+        "y": 18350
+      },
+      "params": {},
+      "inputs": [
+        "n144",
+        "n142"
+      ],
+      "outputs": [
+        "n147",
+        "n149"
+      ]
+    },
+    {
+      "id": "n146",
+      "type": "linear",
+      "name": "adaLN_21",
+      "position": {
+        "x": 640,
+        "y": 18500
+      },
+      "params": {
+        "inFeatures": 1152,
+        "outFeatures": 6912
+      },
+      "inputs": [
+        "n4"
+      ],
+      "outputs": [
+        "n148"
+      ]
+    },
+    {
+      "id": "n147",
+      "type": "layerNorm",
+      "name": "norm1_21",
+      "position": {
+        "x": 300,
+        "y": 18500
+      },
+      "params": {
+        "normalizedShape": 1152
+      },
+      "inputs": [
+        "n145"
+      ],
+      "outputs": [
+        "n148"
+      ]
+    },
+    {
+      "id": "n148",
+      "type": "multiHeadAttention",
+      "name": "self_attn_21",
+      "position": {
+        "x": 300,
+        "y": 18650
+      },
+      "params": {
+        "embedDim": 1152,
+        "numHeads": 16
+      },
+      "inputs": [
+        "n147",
+        "n146"
+      ],
+      "outputs": [
+        "n149"
+      ]
+    },
+    {
+      "id": "n149",
+      "type": "add",
+      "name": "residual1_21",
+      "position": {
+        "x": 300,
+        "y": 18800
+      },
+      "params": {},
+      "inputs": [
+        "n148",
+        "n145"
+      ],
+      "outputs": [
+        "n150",
+        "n152"
+      ]
+    },
+    {
+      "id": "n150",
+      "type": "layerNorm",
+      "name": "norm2_21",
+      "position": {
+        "x": 300,
+        "y": 18950
+      },
+      "params": {
+        "normalizedShape": 1152
+      },
+      "inputs": [
+        "n149"
+      ],
+      "outputs": [
+        "n151"
+      ]
+    },
+    {
+      "id": "n151",
+      "type": "feedForward",
+      "name": "mlp_21",
+      "position": {
+        "x": 300,
+        "y": 19100
+      },
+      "params": {
+        "embedDim": 1152,
+        "ffDim": 4608
+      },
+      "inputs": [
+        "n150"
+      ],
+      "outputs": [
+        "n152"
+      ]
+    },
+    {
+      "id": "n152",
+      "type": "add",
+      "name": "residual2_21",
+      "position": {
+        "x": 300,
+        "y": 19250
+      },
+      "params": {},
+      "inputs": [
+        "n151",
+        "n149"
+      ],
+      "outputs": [
+        "n154",
+        "n156"
+      ]
+    },
+    {
+      "id": "n153",
+      "type": "linear",
+      "name": "adaLN_22",
+      "position": {
+        "x": 640,
+        "y": 19400
+      },
+      "params": {
+        "inFeatures": 1152,
+        "outFeatures": 6912
+      },
+      "inputs": [
+        "n4"
+      ],
+      "outputs": [
+        "n155"
+      ]
+    },
+    {
+      "id": "n154",
+      "type": "layerNorm",
+      "name": "norm1_22",
+      "position": {
+        "x": 300,
+        "y": 19400
+      },
+      "params": {
+        "normalizedShape": 1152
+      },
+      "inputs": [
+        "n152"
+      ],
+      "outputs": [
+        "n155"
+      ]
+    },
+    {
+      "id": "n155",
+      "type": "multiHeadAttention",
+      "name": "self_attn_22",
+      "position": {
+        "x": 300,
+        "y": 19550
+      },
+      "params": {
+        "embedDim": 1152,
+        "numHeads": 16
+      },
+      "inputs": [
+        "n154",
+        "n153"
+      ],
+      "outputs": [
+        "n156"
+      ]
+    },
+    {
+      "id": "n156",
+      "type": "add",
+      "name": "residual1_22",
+      "position": {
+        "x": 300,
+        "y": 19700
+      },
+      "params": {},
+      "inputs": [
+        "n155",
+        "n152"
+      ],
+      "outputs": [
+        "n157",
+        "n159"
+      ]
+    },
+    {
+      "id": "n157",
+      "type": "layerNorm",
+      "name": "norm2_22",
+      "position": {
+        "x": 300,
+        "y": 19850
+      },
+      "params": {
+        "normalizedShape": 1152
+      },
+      "inputs": [
+        "n156"
+      ],
+      "outputs": [
+        "n158"
+      ]
+    },
+    {
+      "id": "n158",
+      "type": "feedForward",
+      "name": "mlp_22",
+      "position": {
+        "x": 300,
+        "y": 20000
+      },
+      "params": {
+        "embedDim": 1152,
+        "ffDim": 4608
+      },
+      "inputs": [
+        "n157"
+      ],
+      "outputs": [
+        "n159"
+      ]
+    },
+    {
+      "id": "n159",
+      "type": "add",
+      "name": "residual2_22",
+      "position": {
+        "x": 300,
+        "y": 20150
+      },
+      "params": {},
+      "inputs": [
+        "n158",
+        "n156"
+      ],
+      "outputs": [
+        "n161",
+        "n163"
+      ]
+    },
+    {
+      "id": "n160",
+      "type": "linear",
+      "name": "adaLN_23",
+      "position": {
+        "x": 640,
+        "y": 20300
+      },
+      "params": {
+        "inFeatures": 1152,
+        "outFeatures": 6912
+      },
+      "inputs": [
+        "n4"
+      ],
+      "outputs": [
+        "n162"
+      ]
+    },
+    {
+      "id": "n161",
+      "type": "layerNorm",
+      "name": "norm1_23",
+      "position": {
+        "x": 300,
+        "y": 20300
+      },
+      "params": {
+        "normalizedShape": 1152
+      },
+      "inputs": [
+        "n159"
+      ],
+      "outputs": [
+        "n162"
+      ]
+    },
+    {
+      "id": "n162",
+      "type": "multiHeadAttention",
+      "name": "self_attn_23",
+      "position": {
+        "x": 300,
+        "y": 20450
+      },
+      "params": {
+        "embedDim": 1152,
+        "numHeads": 16
+      },
+      "inputs": [
+        "n161",
+        "n160"
+      ],
+      "outputs": [
+        "n163"
+      ]
+    },
+    {
+      "id": "n163",
+      "type": "add",
+      "name": "residual1_23",
+      "position": {
+        "x": 300,
+        "y": 20600
+      },
+      "params": {},
+      "inputs": [
+        "n162",
+        "n159"
+      ],
+      "outputs": [
+        "n164",
+        "n166"
+      ]
+    },
+    {
+      "id": "n164",
+      "type": "layerNorm",
+      "name": "norm2_23",
+      "position": {
+        "x": 300,
+        "y": 20750
+      },
+      "params": {
+        "normalizedShape": 1152
+      },
+      "inputs": [
+        "n163"
+      ],
+      "outputs": [
+        "n165"
+      ]
+    },
+    {
+      "id": "n165",
+      "type": "feedForward",
+      "name": "mlp_23",
+      "position": {
+        "x": 300,
+        "y": 20900
+      },
+      "params": {
+        "embedDim": 1152,
+        "ffDim": 4608
+      },
+      "inputs": [
+        "n164"
+      ],
+      "outputs": [
+        "n166"
+      ]
+    },
+    {
+      "id": "n166",
+      "type": "add",
+      "name": "residual2_23",
+      "position": {
+        "x": 300,
+        "y": 21050
+      },
+      "params": {},
+      "inputs": [
+        "n165",
+        "n163"
+      ],
+      "outputs": [
+        "n168",
+        "n170"
+      ]
+    },
+    {
+      "id": "n167",
+      "type": "linear",
+      "name": "adaLN_24",
+      "position": {
+        "x": 640,
+        "y": 21200
+      },
+      "params": {
+        "inFeatures": 1152,
+        "outFeatures": 6912
+      },
+      "inputs": [
+        "n4"
+      ],
+      "outputs": [
+        "n169"
+      ]
+    },
+    {
+      "id": "n168",
+      "type": "layerNorm",
+      "name": "norm1_24",
+      "position": {
+        "x": 300,
+        "y": 21200
+      },
+      "params": {
+        "normalizedShape": 1152
+      },
+      "inputs": [
+        "n166"
+      ],
+      "outputs": [
+        "n169"
+      ]
+    },
+    {
+      "id": "n169",
+      "type": "multiHeadAttention",
+      "name": "self_attn_24",
+      "position": {
+        "x": 300,
+        "y": 21350
+      },
+      "params": {
+        "embedDim": 1152,
+        "numHeads": 16
+      },
+      "inputs": [
+        "n168",
+        "n167"
+      ],
+      "outputs": [
+        "n170"
+      ]
+    },
+    {
+      "id": "n170",
+      "type": "add",
+      "name": "residual1_24",
+      "position": {
+        "x": 300,
+        "y": 21500
+      },
+      "params": {},
+      "inputs": [
+        "n169",
+        "n166"
+      ],
+      "outputs": [
+        "n171",
+        "n173"
+      ]
+    },
+    {
+      "id": "n171",
+      "type": "layerNorm",
+      "name": "norm2_24",
+      "position": {
+        "x": 300,
+        "y": 21650
+      },
+      "params": {
+        "normalizedShape": 1152
+      },
+      "inputs": [
+        "n170"
+      ],
+      "outputs": [
+        "n172"
+      ]
+    },
+    {
+      "id": "n172",
+      "type": "feedForward",
+      "name": "mlp_24",
+      "position": {
+        "x": 300,
+        "y": 21800
+      },
+      "params": {
+        "embedDim": 1152,
+        "ffDim": 4608
+      },
+      "inputs": [
+        "n171"
+      ],
+      "outputs": [
+        "n173"
+      ]
+    },
+    {
+      "id": "n173",
+      "type": "add",
+      "name": "residual2_24",
+      "position": {
+        "x": 300,
+        "y": 21950
+      },
+      "params": {},
+      "inputs": [
+        "n172",
+        "n170"
+      ],
+      "outputs": [
+        "n175",
+        "n177"
+      ]
+    },
+    {
+      "id": "n174",
+      "type": "linear",
+      "name": "adaLN_25",
+      "position": {
+        "x": 640,
+        "y": 22100
+      },
+      "params": {
+        "inFeatures": 1152,
+        "outFeatures": 6912
+      },
+      "inputs": [
+        "n4"
+      ],
+      "outputs": [
+        "n176"
+      ]
+    },
+    {
+      "id": "n175",
+      "type": "layerNorm",
+      "name": "norm1_25",
+      "position": {
+        "x": 300,
+        "y": 22100
+      },
+      "params": {
+        "normalizedShape": 1152
+      },
+      "inputs": [
+        "n173"
+      ],
+      "outputs": [
+        "n176"
+      ]
+    },
+    {
+      "id": "n176",
+      "type": "multiHeadAttention",
+      "name": "self_attn_25",
+      "position": {
+        "x": 300,
+        "y": 22250
+      },
+      "params": {
+        "embedDim": 1152,
+        "numHeads": 16
+      },
+      "inputs": [
+        "n175",
+        "n174"
+      ],
+      "outputs": [
+        "n177"
+      ]
+    },
+    {
+      "id": "n177",
+      "type": "add",
+      "name": "residual1_25",
+      "position": {
+        "x": 300,
+        "y": 22400
+      },
+      "params": {},
+      "inputs": [
+        "n176",
+        "n173"
+      ],
+      "outputs": [
+        "n178",
+        "n180"
+      ]
+    },
+    {
+      "id": "n178",
+      "type": "layerNorm",
+      "name": "norm2_25",
+      "position": {
+        "x": 300,
+        "y": 22550
+      },
+      "params": {
+        "normalizedShape": 1152
+      },
+      "inputs": [
+        "n177"
+      ],
+      "outputs": [
+        "n179"
+      ]
+    },
+    {
+      "id": "n179",
+      "type": "feedForward",
+      "name": "mlp_25",
+      "position": {
+        "x": 300,
+        "y": 22700
+      },
+      "params": {
+        "embedDim": 1152,
+        "ffDim": 4608
+      },
+      "inputs": [
+        "n178"
+      ],
+      "outputs": [
+        "n180"
+      ]
+    },
+    {
+      "id": "n180",
+      "type": "add",
+      "name": "residual2_25",
+      "position": {
+        "x": 300,
+        "y": 22850
+      },
+      "params": {},
+      "inputs": [
+        "n179",
+        "n177"
+      ],
+      "outputs": [
+        "n182",
+        "n184"
+      ]
+    },
+    {
+      "id": "n181",
+      "type": "linear",
+      "name": "adaLN_26",
+      "position": {
+        "x": 640,
+        "y": 23000
+      },
+      "params": {
+        "inFeatures": 1152,
+        "outFeatures": 6912
+      },
+      "inputs": [
+        "n4"
+      ],
+      "outputs": [
+        "n183"
+      ]
+    },
+    {
+      "id": "n182",
+      "type": "layerNorm",
+      "name": "norm1_26",
+      "position": {
+        "x": 300,
+        "y": 23000
+      },
+      "params": {
+        "normalizedShape": 1152
+      },
+      "inputs": [
+        "n180"
+      ],
+      "outputs": [
+        "n183"
+      ]
+    },
+    {
+      "id": "n183",
+      "type": "multiHeadAttention",
+      "name": "self_attn_26",
+      "position": {
+        "x": 300,
+        "y": 23150
+      },
+      "params": {
+        "embedDim": 1152,
+        "numHeads": 16
+      },
+      "inputs": [
+        "n182",
+        "n181"
+      ],
+      "outputs": [
+        "n184"
+      ]
+    },
+    {
+      "id": "n184",
+      "type": "add",
+      "name": "residual1_26",
+      "position": {
+        "x": 300,
+        "y": 23300
+      },
+      "params": {},
+      "inputs": [
+        "n183",
+        "n180"
+      ],
+      "outputs": [
+        "n185",
+        "n187"
+      ]
+    },
+    {
+      "id": "n185",
+      "type": "layerNorm",
+      "name": "norm2_26",
+      "position": {
+        "x": 300,
+        "y": 23450
+      },
+      "params": {
+        "normalizedShape": 1152
+      },
+      "inputs": [
+        "n184"
+      ],
+      "outputs": [
+        "n186"
+      ]
+    },
+    {
+      "id": "n186",
+      "type": "feedForward",
+      "name": "mlp_26",
+      "position": {
+        "x": 300,
+        "y": 23600
+      },
+      "params": {
+        "embedDim": 1152,
+        "ffDim": 4608
+      },
+      "inputs": [
+        "n185"
+      ],
+      "outputs": [
+        "n187"
+      ]
+    },
+    {
+      "id": "n187",
+      "type": "add",
+      "name": "residual2_26",
+      "position": {
+        "x": 300,
+        "y": 23750
+      },
+      "params": {},
+      "inputs": [
+        "n186",
+        "n184"
+      ],
+      "outputs": [
+        "n189",
+        "n191"
+      ]
+    },
+    {
+      "id": "n188",
+      "type": "linear",
+      "name": "adaLN_27",
+      "position": {
+        "x": 640,
+        "y": 23900
+      },
+      "params": {
+        "inFeatures": 1152,
+        "outFeatures": 6912
+      },
+      "inputs": [
+        "n4"
+      ],
+      "outputs": [
+        "n190"
+      ]
+    },
+    {
+      "id": "n189",
+      "type": "layerNorm",
+      "name": "norm1_27",
+      "position": {
+        "x": 300,
+        "y": 23900
+      },
+      "params": {
+        "normalizedShape": 1152
+      },
+      "inputs": [
+        "n187"
+      ],
+      "outputs": [
+        "n190"
+      ]
+    },
+    {
+      "id": "n190",
+      "type": "multiHeadAttention",
+      "name": "self_attn_27",
+      "position": {
+        "x": 300,
+        "y": 24050
+      },
+      "params": {
+        "embedDim": 1152,
+        "numHeads": 16
+      },
+      "inputs": [
+        "n189",
+        "n188"
+      ],
+      "outputs": [
+        "n191"
+      ]
+    },
+    {
+      "id": "n191",
+      "type": "add",
+      "name": "residual1_27",
+      "position": {
+        "x": 300,
+        "y": 24200
+      },
+      "params": {},
+      "inputs": [
+        "n190",
+        "n187"
+      ],
+      "outputs": [
+        "n192",
+        "n194"
+      ]
+    },
+    {
+      "id": "n192",
+      "type": "layerNorm",
+      "name": "norm2_27",
+      "position": {
+        "x": 300,
+        "y": 24350
+      },
+      "params": {
+        "normalizedShape": 1152
+      },
+      "inputs": [
+        "n191"
+      ],
+      "outputs": [
+        "n193"
+      ]
+    },
+    {
+      "id": "n193",
+      "type": "feedForward",
+      "name": "mlp_27",
+      "position": {
+        "x": 300,
+        "y": 24500
+      },
+      "params": {
+        "embedDim": 1152,
+        "ffDim": 4608
+      },
+      "inputs": [
+        "n192"
+      ],
+      "outputs": [
+        "n194"
+      ]
+    },
+    {
+      "id": "n194",
+      "type": "add",
+      "name": "residual2_27",
+      "position": {
+        "x": 300,
+        "y": 24650
+      },
+      "params": {},
+      "inputs": [
+        "n193",
+        "n191"
+      ],
+      "outputs": [
+        "n196",
+        "n198"
+      ]
+    },
+    {
+      "id": "n195",
+      "type": "linear",
+      "name": "adaLN_28",
+      "position": {
+        "x": 640,
+        "y": 24800
+      },
+      "params": {
+        "inFeatures": 1152,
+        "outFeatures": 6912
+      },
+      "inputs": [
+        "n4"
+      ],
+      "outputs": [
+        "n197"
+      ]
+    },
+    {
+      "id": "n196",
+      "type": "layerNorm",
+      "name": "norm1_28",
+      "position": {
+        "x": 300,
+        "y": 24800
+      },
+      "params": {
+        "normalizedShape": 1152
+      },
+      "inputs": [
+        "n194"
+      ],
+      "outputs": [
+        "n197"
+      ]
+    },
+    {
+      "id": "n197",
+      "type": "multiHeadAttention",
+      "name": "self_attn_28",
+      "position": {
+        "x": 300,
+        "y": 24950
+      },
+      "params": {
+        "embedDim": 1152,
+        "numHeads": 16
+      },
+      "inputs": [
+        "n196",
+        "n195"
+      ],
+      "outputs": [
+        "n198"
+      ]
+    },
+    {
+      "id": "n198",
+      "type": "add",
+      "name": "residual1_28",
+      "position": {
+        "x": 300,
+        "y": 25100
+      },
+      "params": {},
+      "inputs": [
+        "n197",
+        "n194"
+      ],
+      "outputs": [
+        "n199",
+        "n201"
+      ]
+    },
+    {
+      "id": "n199",
+      "type": "layerNorm",
+      "name": "norm2_28",
+      "position": {
+        "x": 300,
+        "y": 25250
+      },
+      "params": {
+        "normalizedShape": 1152
+      },
+      "inputs": [
+        "n198"
+      ],
+      "outputs": [
+        "n200"
+      ]
+    },
+    {
+      "id": "n200",
+      "type": "feedForward",
+      "name": "mlp_28",
+      "position": {
+        "x": 300,
+        "y": 25400
+      },
+      "params": {
+        "embedDim": 1152,
+        "ffDim": 4608
+      },
+      "inputs": [
+        "n199"
+      ],
+      "outputs": [
+        "n201"
+      ]
+    },
+    {
+      "id": "n201",
+      "type": "add",
+      "name": "residual2_28",
+      "position": {
+        "x": 300,
+        "y": 25550
+      },
+      "params": {},
+      "inputs": [
+        "n200",
+        "n198"
+      ],
+      "outputs": [
+        "n202"
+      ]
+    },
+    {
+      "id": "n202",
+      "type": "layerNorm",
+      "name": "final_norm",
+      "position": {
+        "x": 300,
+        "y": 25700
+      },
+      "params": {
+        "normalizedShape": 1152
+      },
+      "inputs": [
+        "n201"
+      ],
+      "outputs": [
+        "n203"
+      ]
+    },
+    {
+      "id": "n203",
+      "type": "linear",
+      "name": "unpatchify",
+      "position": {
+        "x": 300,
+        "y": 25850
+      },
+      "params": {
+        "inFeatures": 1152,
+        "outFeatures": 32
+      },
+      "inputs": [
+        "n202"
+      ],
+      "outputs": [
+        "n204"
+      ]
+    },
+    {
+      "id": "n204",
+      "type": "output",
+      "name": "predicted_noise",
+      "position": {
+        "x": 300,
+        "y": 26000
+      },
+      "params": {},
+      "inputs": [
+        "n203"
+      ],
+      "outputs": []
+    }
+  ],
+  "connections": [
+    {
+      "id": "c1",
+      "from": "n1",
+      "to": "n3"
+    },
+    {
+      "id": "c2",
+      "from": "n2",
+      "to": "n4"
+    },
+    {
+      "id": "c3",
+      "from": "n3",
+      "to": "n5"
+    },
+    {
+      "id": "c4",
+      "from": "n4",
+      "to": "n6"
+    },
+    {
+      "id": "c5",
+      "from": "n5",
+      "to": "n7"
+    },
+    {
+      "id": "c6",
+      "from": "n7",
+      "to": "n8"
+    },
+    {
+      "id": "c7",
+      "from": "n6",
+      "to": "n8"
+    },
+    {
+      "id": "c8",
+      "from": "n8",
+      "to": "n9"
+    },
+    {
+      "id": "c9",
+      "from": "n5",
+      "to": "n9"
+    },
+    {
+      "id": "c10",
+      "from": "n9",
+      "to": "n10"
+    },
+    {
+      "id": "c11",
+      "from": "n10",
+      "to": "n11"
+    },
+    {
+      "id": "c12",
+      "from": "n11",
+      "to": "n12"
+    },
+    {
+      "id": "c13",
+      "from": "n9",
+      "to": "n12"
+    },
+    {
+      "id": "c14",
+      "from": "n4",
+      "to": "n13"
+    },
+    {
+      "id": "c15",
+      "from": "n12",
+      "to": "n14"
+    },
+    {
+      "id": "c16",
+      "from": "n14",
+      "to": "n15"
+    },
+    {
+      "id": "c17",
+      "from": "n13",
+      "to": "n15"
+    },
+    {
+      "id": "c18",
+      "from": "n15",
+      "to": "n16"
+    },
+    {
+      "id": "c19",
+      "from": "n12",
+      "to": "n16"
+    },
+    {
+      "id": "c20",
+      "from": "n16",
+      "to": "n17"
+    },
+    {
+      "id": "c21",
+      "from": "n17",
+      "to": "n18"
+    },
+    {
+      "id": "c22",
+      "from": "n18",
+      "to": "n19"
+    },
+    {
+      "id": "c23",
+      "from": "n16",
+      "to": "n19"
+    },
+    {
+      "id": "c24",
+      "from": "n4",
+      "to": "n20"
+    },
+    {
+      "id": "c25",
+      "from": "n19",
+      "to": "n21"
+    },
+    {
+      "id": "c26",
+      "from": "n21",
+      "to": "n22"
+    },
+    {
+      "id": "c27",
+      "from": "n20",
+      "to": "n22"
+    },
+    {
+      "id": "c28",
+      "from": "n22",
+      "to": "n23"
+    },
+    {
+      "id": "c29",
+      "from": "n19",
+      "to": "n23"
+    },
+    {
+      "id": "c30",
+      "from": "n23",
+      "to": "n24"
+    },
+    {
+      "id": "c31",
+      "from": "n24",
+      "to": "n25"
+    },
+    {
+      "id": "c32",
+      "from": "n25",
+      "to": "n26"
+    },
+    {
+      "id": "c33",
+      "from": "n23",
+      "to": "n26"
+    },
+    {
+      "id": "c34",
+      "from": "n4",
+      "to": "n27"
+    },
+    {
+      "id": "c35",
+      "from": "n26",
+      "to": "n28"
+    },
+    {
+      "id": "c36",
+      "from": "n28",
+      "to": "n29"
+    },
+    {
+      "id": "c37",
+      "from": "n27",
+      "to": "n29"
+    },
+    {
+      "id": "c38",
+      "from": "n29",
+      "to": "n30"
+    },
+    {
+      "id": "c39",
+      "from": "n26",
+      "to": "n30"
+    },
+    {
+      "id": "c40",
+      "from": "n30",
+      "to": "n31"
+    },
+    {
+      "id": "c41",
+      "from": "n31",
+      "to": "n32"
+    },
+    {
+      "id": "c42",
+      "from": "n32",
+      "to": "n33"
+    },
+    {
+      "id": "c43",
+      "from": "n30",
+      "to": "n33"
+    },
+    {
+      "id": "c44",
+      "from": "n4",
+      "to": "n34"
+    },
+    {
+      "id": "c45",
+      "from": "n33",
+      "to": "n35"
+    },
+    {
+      "id": "c46",
+      "from": "n35",
+      "to": "n36"
+    },
+    {
+      "id": "c47",
+      "from": "n34",
+      "to": "n36"
+    },
+    {
+      "id": "c48",
+      "from": "n36",
+      "to": "n37"
+    },
+    {
+      "id": "c49",
+      "from": "n33",
+      "to": "n37"
+    },
+    {
+      "id": "c50",
+      "from": "n37",
+      "to": "n38"
+    },
+    {
+      "id": "c51",
+      "from": "n38",
+      "to": "n39"
+    },
+    {
+      "id": "c52",
+      "from": "n39",
+      "to": "n40"
+    },
+    {
+      "id": "c53",
+      "from": "n37",
+      "to": "n40"
+    },
+    {
+      "id": "c54",
+      "from": "n4",
+      "to": "n41"
+    },
+    {
+      "id": "c55",
+      "from": "n40",
+      "to": "n42"
+    },
+    {
+      "id": "c56",
+      "from": "n42",
+      "to": "n43"
+    },
+    {
+      "id": "c57",
+      "from": "n41",
+      "to": "n43"
+    },
+    {
+      "id": "c58",
+      "from": "n43",
+      "to": "n44"
+    },
+    {
+      "id": "c59",
+      "from": "n40",
+      "to": "n44"
+    },
+    {
+      "id": "c60",
+      "from": "n44",
+      "to": "n45"
+    },
+    {
+      "id": "c61",
+      "from": "n45",
+      "to": "n46"
+    },
+    {
+      "id": "c62",
+      "from": "n46",
+      "to": "n47"
+    },
+    {
+      "id": "c63",
+      "from": "n44",
+      "to": "n47"
+    },
+    {
+      "id": "c64",
+      "from": "n4",
+      "to": "n48"
+    },
+    {
+      "id": "c65",
+      "from": "n47",
+      "to": "n49"
+    },
+    {
+      "id": "c66",
+      "from": "n49",
+      "to": "n50"
+    },
+    {
+      "id": "c67",
+      "from": "n48",
+      "to": "n50"
+    },
+    {
+      "id": "c68",
+      "from": "n50",
+      "to": "n51"
+    },
+    {
+      "id": "c69",
+      "from": "n47",
+      "to": "n51"
+    },
+    {
+      "id": "c70",
+      "from": "n51",
+      "to": "n52"
+    },
+    {
+      "id": "c71",
+      "from": "n52",
+      "to": "n53"
+    },
+    {
+      "id": "c72",
+      "from": "n53",
+      "to": "n54"
+    },
+    {
+      "id": "c73",
+      "from": "n51",
+      "to": "n54"
+    },
+    {
+      "id": "c74",
+      "from": "n4",
+      "to": "n55"
+    },
+    {
+      "id": "c75",
+      "from": "n54",
+      "to": "n56"
+    },
+    {
+      "id": "c76",
+      "from": "n56",
+      "to": "n57"
+    },
+    {
+      "id": "c77",
+      "from": "n55",
+      "to": "n57"
+    },
+    {
+      "id": "c78",
+      "from": "n57",
+      "to": "n58"
+    },
+    {
+      "id": "c79",
+      "from": "n54",
+      "to": "n58"
+    },
+    {
+      "id": "c80",
+      "from": "n58",
+      "to": "n59"
+    },
+    {
+      "id": "c81",
+      "from": "n59",
+      "to": "n60"
+    },
+    {
+      "id": "c82",
+      "from": "n60",
+      "to": "n61"
+    },
+    {
+      "id": "c83",
+      "from": "n58",
+      "to": "n61"
+    },
+    {
+      "id": "c84",
+      "from": "n4",
+      "to": "n62"
+    },
+    {
+      "id": "c85",
+      "from": "n61",
+      "to": "n63"
+    },
+    {
+      "id": "c86",
+      "from": "n63",
+      "to": "n64"
+    },
+    {
+      "id": "c87",
+      "from": "n62",
+      "to": "n64"
+    },
+    {
+      "id": "c88",
+      "from": "n64",
+      "to": "n65"
+    },
+    {
+      "id": "c89",
+      "from": "n61",
+      "to": "n65"
+    },
+    {
+      "id": "c90",
+      "from": "n65",
+      "to": "n66"
+    },
+    {
+      "id": "c91",
+      "from": "n66",
+      "to": "n67"
+    },
+    {
+      "id": "c92",
+      "from": "n67",
+      "to": "n68"
+    },
+    {
+      "id": "c93",
+      "from": "n65",
+      "to": "n68"
+    },
+    {
+      "id": "c94",
+      "from": "n4",
+      "to": "n69"
+    },
+    {
+      "id": "c95",
+      "from": "n68",
+      "to": "n70"
+    },
+    {
+      "id": "c96",
+      "from": "n70",
+      "to": "n71"
+    },
+    {
+      "id": "c97",
+      "from": "n69",
+      "to": "n71"
+    },
+    {
+      "id": "c98",
+      "from": "n71",
+      "to": "n72"
+    },
+    {
+      "id": "c99",
+      "from": "n68",
+      "to": "n72"
+    },
+    {
+      "id": "c100",
+      "from": "n72",
+      "to": "n73"
+    },
+    {
+      "id": "c101",
+      "from": "n73",
+      "to": "n74"
+    },
+    {
+      "id": "c102",
+      "from": "n74",
+      "to": "n75"
+    },
+    {
+      "id": "c103",
+      "from": "n72",
+      "to": "n75"
+    },
+    {
+      "id": "c104",
+      "from": "n4",
+      "to": "n76"
+    },
+    {
+      "id": "c105",
+      "from": "n75",
+      "to": "n77"
+    },
+    {
+      "id": "c106",
+      "from": "n77",
+      "to": "n78"
+    },
+    {
+      "id": "c107",
+      "from": "n76",
+      "to": "n78"
+    },
+    {
+      "id": "c108",
+      "from": "n78",
+      "to": "n79"
+    },
+    {
+      "id": "c109",
+      "from": "n75",
+      "to": "n79"
+    },
+    {
+      "id": "c110",
+      "from": "n79",
+      "to": "n80"
+    },
+    {
+      "id": "c111",
+      "from": "n80",
+      "to": "n81"
+    },
+    {
+      "id": "c112",
+      "from": "n81",
+      "to": "n82"
+    },
+    {
+      "id": "c113",
+      "from": "n79",
+      "to": "n82"
+    },
+    {
+      "id": "c114",
+      "from": "n4",
+      "to": "n83"
+    },
+    {
+      "id": "c115",
+      "from": "n82",
+      "to": "n84"
+    },
+    {
+      "id": "c116",
+      "from": "n84",
+      "to": "n85"
+    },
+    {
+      "id": "c117",
+      "from": "n83",
+      "to": "n85"
+    },
+    {
+      "id": "c118",
+      "from": "n85",
+      "to": "n86"
+    },
+    {
+      "id": "c119",
+      "from": "n82",
+      "to": "n86"
+    },
+    {
+      "id": "c120",
+      "from": "n86",
+      "to": "n87"
+    },
+    {
+      "id": "c121",
+      "from": "n87",
+      "to": "n88"
+    },
+    {
+      "id": "c122",
+      "from": "n88",
+      "to": "n89"
+    },
+    {
+      "id": "c123",
+      "from": "n86",
+      "to": "n89"
+    },
+    {
+      "id": "c124",
+      "from": "n4",
+      "to": "n90"
+    },
+    {
+      "id": "c125",
+      "from": "n89",
+      "to": "n91"
+    },
+    {
+      "id": "c126",
+      "from": "n91",
+      "to": "n92"
+    },
+    {
+      "id": "c127",
+      "from": "n90",
+      "to": "n92"
+    },
+    {
+      "id": "c128",
+      "from": "n92",
+      "to": "n93"
+    },
+    {
+      "id": "c129",
+      "from": "n89",
+      "to": "n93"
+    },
+    {
+      "id": "c130",
+      "from": "n93",
+      "to": "n94"
+    },
+    {
+      "id": "c131",
+      "from": "n94",
+      "to": "n95"
+    },
+    {
+      "id": "c132",
+      "from": "n95",
+      "to": "n96"
+    },
+    {
+      "id": "c133",
+      "from": "n93",
+      "to": "n96"
+    },
+    {
+      "id": "c134",
+      "from": "n4",
+      "to": "n97"
+    },
+    {
+      "id": "c135",
+      "from": "n96",
+      "to": "n98"
+    },
+    {
+      "id": "c136",
+      "from": "n98",
+      "to": "n99"
+    },
+    {
+      "id": "c137",
+      "from": "n97",
+      "to": "n99"
+    },
+    {
+      "id": "c138",
+      "from": "n99",
+      "to": "n100"
+    },
+    {
+      "id": "c139",
+      "from": "n96",
+      "to": "n100"
+    },
+    {
+      "id": "c140",
+      "from": "n100",
+      "to": "n101"
+    },
+    {
+      "id": "c141",
+      "from": "n101",
+      "to": "n102"
+    },
+    {
+      "id": "c142",
+      "from": "n102",
+      "to": "n103"
+    },
+    {
+      "id": "c143",
+      "from": "n100",
+      "to": "n103"
+    },
+    {
+      "id": "c144",
+      "from": "n4",
+      "to": "n104"
+    },
+    {
+      "id": "c145",
+      "from": "n103",
+      "to": "n105"
+    },
+    {
+      "id": "c146",
+      "from": "n105",
+      "to": "n106"
+    },
+    {
+      "id": "c147",
+      "from": "n104",
+      "to": "n106"
+    },
+    {
+      "id": "c148",
+      "from": "n106",
+      "to": "n107"
+    },
+    {
+      "id": "c149",
+      "from": "n103",
+      "to": "n107"
+    },
+    {
+      "id": "c150",
+      "from": "n107",
+      "to": "n108"
+    },
+    {
+      "id": "c151",
+      "from": "n108",
+      "to": "n109"
+    },
+    {
+      "id": "c152",
+      "from": "n109",
+      "to": "n110"
+    },
+    {
+      "id": "c153",
+      "from": "n107",
+      "to": "n110"
+    },
+    {
+      "id": "c154",
+      "from": "n4",
+      "to": "n111"
+    },
+    {
+      "id": "c155",
+      "from": "n110",
+      "to": "n112"
+    },
+    {
+      "id": "c156",
+      "from": "n112",
+      "to": "n113"
+    },
+    {
+      "id": "c157",
+      "from": "n111",
+      "to": "n113"
+    },
+    {
+      "id": "c158",
+      "from": "n113",
+      "to": "n114"
+    },
+    {
+      "id": "c159",
+      "from": "n110",
+      "to": "n114"
+    },
+    {
+      "id": "c160",
+      "from": "n114",
+      "to": "n115"
+    },
+    {
+      "id": "c161",
+      "from": "n115",
+      "to": "n116"
+    },
+    {
+      "id": "c162",
+      "from": "n116",
+      "to": "n117"
+    },
+    {
+      "id": "c163",
+      "from": "n114",
+      "to": "n117"
+    },
+    {
+      "id": "c164",
+      "from": "n4",
+      "to": "n118"
+    },
+    {
+      "id": "c165",
+      "from": "n117",
+      "to": "n119"
+    },
+    {
+      "id": "c166",
+      "from": "n119",
+      "to": "n120"
+    },
+    {
+      "id": "c167",
+      "from": "n118",
+      "to": "n120"
+    },
+    {
+      "id": "c168",
+      "from": "n120",
+      "to": "n121"
+    },
+    {
+      "id": "c169",
+      "from": "n117",
+      "to": "n121"
+    },
+    {
+      "id": "c170",
+      "from": "n121",
+      "to": "n122"
+    },
+    {
+      "id": "c171",
+      "from": "n122",
+      "to": "n123"
+    },
+    {
+      "id": "c172",
+      "from": "n123",
+      "to": "n124"
+    },
+    {
+      "id": "c173",
+      "from": "n121",
+      "to": "n124"
+    },
+    {
+      "id": "c174",
+      "from": "n4",
+      "to": "n125"
+    },
+    {
+      "id": "c175",
+      "from": "n124",
+      "to": "n126"
+    },
+    {
+      "id": "c176",
+      "from": "n126",
+      "to": "n127"
+    },
+    {
+      "id": "c177",
+      "from": "n125",
+      "to": "n127"
+    },
+    {
+      "id": "c178",
+      "from": "n127",
+      "to": "n128"
+    },
+    {
+      "id": "c179",
+      "from": "n124",
+      "to": "n128"
+    },
+    {
+      "id": "c180",
+      "from": "n128",
+      "to": "n129"
+    },
+    {
+      "id": "c181",
+      "from": "n129",
+      "to": "n130"
+    },
+    {
+      "id": "c182",
+      "from": "n130",
+      "to": "n131"
+    },
+    {
+      "id": "c183",
+      "from": "n128",
+      "to": "n131"
+    },
+    {
+      "id": "c184",
+      "from": "n4",
+      "to": "n132"
+    },
+    {
+      "id": "c185",
+      "from": "n131",
+      "to": "n133"
+    },
+    {
+      "id": "c186",
+      "from": "n133",
+      "to": "n134"
+    },
+    {
+      "id": "c187",
+      "from": "n132",
+      "to": "n134"
+    },
+    {
+      "id": "c188",
+      "from": "n134",
+      "to": "n135"
+    },
+    {
+      "id": "c189",
+      "from": "n131",
+      "to": "n135"
+    },
+    {
+      "id": "c190",
+      "from": "n135",
+      "to": "n136"
+    },
+    {
+      "id": "c191",
+      "from": "n136",
+      "to": "n137"
+    },
+    {
+      "id": "c192",
+      "from": "n137",
+      "to": "n138"
+    },
+    {
+      "id": "c193",
+      "from": "n135",
+      "to": "n138"
+    },
+    {
+      "id": "c194",
+      "from": "n4",
+      "to": "n139"
+    },
+    {
+      "id": "c195",
+      "from": "n138",
+      "to": "n140"
+    },
+    {
+      "id": "c196",
+      "from": "n140",
+      "to": "n141"
+    },
+    {
+      "id": "c197",
+      "from": "n139",
+      "to": "n141"
+    },
+    {
+      "id": "c198",
+      "from": "n141",
+      "to": "n142"
+    },
+    {
+      "id": "c199",
+      "from": "n138",
+      "to": "n142"
+    },
+    {
+      "id": "c200",
+      "from": "n142",
+      "to": "n143"
+    },
+    {
+      "id": "c201",
+      "from": "n143",
+      "to": "n144"
+    },
+    {
+      "id": "c202",
+      "from": "n144",
+      "to": "n145"
+    },
+    {
+      "id": "c203",
+      "from": "n142",
+      "to": "n145"
+    },
+    {
+      "id": "c204",
+      "from": "n4",
+      "to": "n146"
+    },
+    {
+      "id": "c205",
+      "from": "n145",
+      "to": "n147"
+    },
+    {
+      "id": "c206",
+      "from": "n147",
+      "to": "n148"
+    },
+    {
+      "id": "c207",
+      "from": "n146",
+      "to": "n148"
+    },
+    {
+      "id": "c208",
+      "from": "n148",
+      "to": "n149"
+    },
+    {
+      "id": "c209",
+      "from": "n145",
+      "to": "n149"
+    },
+    {
+      "id": "c210",
+      "from": "n149",
+      "to": "n150"
+    },
+    {
+      "id": "c211",
+      "from": "n150",
+      "to": "n151"
+    },
+    {
+      "id": "c212",
+      "from": "n151",
+      "to": "n152"
+    },
+    {
+      "id": "c213",
+      "from": "n149",
+      "to": "n152"
+    },
+    {
+      "id": "c214",
+      "from": "n4",
+      "to": "n153"
+    },
+    {
+      "id": "c215",
+      "from": "n152",
+      "to": "n154"
+    },
+    {
+      "id": "c216",
+      "from": "n154",
+      "to": "n155"
+    },
+    {
+      "id": "c217",
+      "from": "n153",
+      "to": "n155"
+    },
+    {
+      "id": "c218",
+      "from": "n155",
+      "to": "n156"
+    },
+    {
+      "id": "c219",
+      "from": "n152",
+      "to": "n156"
+    },
+    {
+      "id": "c220",
+      "from": "n156",
+      "to": "n157"
+    },
+    {
+      "id": "c221",
+      "from": "n157",
+      "to": "n158"
+    },
+    {
+      "id": "c222",
+      "from": "n158",
+      "to": "n159"
+    },
+    {
+      "id": "c223",
+      "from": "n156",
+      "to": "n159"
+    },
+    {
+      "id": "c224",
+      "from": "n4",
+      "to": "n160"
+    },
+    {
+      "id": "c225",
+      "from": "n159",
+      "to": "n161"
+    },
+    {
+      "id": "c226",
+      "from": "n161",
+      "to": "n162"
+    },
+    {
+      "id": "c227",
+      "from": "n160",
+      "to": "n162"
+    },
+    {
+      "id": "c228",
+      "from": "n162",
+      "to": "n163"
+    },
+    {
+      "id": "c229",
+      "from": "n159",
+      "to": "n163"
+    },
+    {
+      "id": "c230",
+      "from": "n163",
+      "to": "n164"
+    },
+    {
+      "id": "c231",
+      "from": "n164",
+      "to": "n165"
+    },
+    {
+      "id": "c232",
+      "from": "n165",
+      "to": "n166"
+    },
+    {
+      "id": "c233",
+      "from": "n163",
+      "to": "n166"
+    },
+    {
+      "id": "c234",
+      "from": "n4",
+      "to": "n167"
+    },
+    {
+      "id": "c235",
+      "from": "n166",
+      "to": "n168"
+    },
+    {
+      "id": "c236",
+      "from": "n168",
+      "to": "n169"
+    },
+    {
+      "id": "c237",
+      "from": "n167",
+      "to": "n169"
+    },
+    {
+      "id": "c238",
+      "from": "n169",
+      "to": "n170"
+    },
+    {
+      "id": "c239",
+      "from": "n166",
+      "to": "n170"
+    },
+    {
+      "id": "c240",
+      "from": "n170",
+      "to": "n171"
+    },
+    {
+      "id": "c241",
+      "from": "n171",
+      "to": "n172"
+    },
+    {
+      "id": "c242",
+      "from": "n172",
+      "to": "n173"
+    },
+    {
+      "id": "c243",
+      "from": "n170",
+      "to": "n173"
+    },
+    {
+      "id": "c244",
+      "from": "n4",
+      "to": "n174"
+    },
+    {
+      "id": "c245",
+      "from": "n173",
+      "to": "n175"
+    },
+    {
+      "id": "c246",
+      "from": "n175",
+      "to": "n176"
+    },
+    {
+      "id": "c247",
+      "from": "n174",
+      "to": "n176"
+    },
+    {
+      "id": "c248",
+      "from": "n176",
+      "to": "n177"
+    },
+    {
+      "id": "c249",
+      "from": "n173",
+      "to": "n177"
+    },
+    {
+      "id": "c250",
+      "from": "n177",
+      "to": "n178"
+    },
+    {
+      "id": "c251",
+      "from": "n178",
+      "to": "n179"
+    },
+    {
+      "id": "c252",
+      "from": "n179",
+      "to": "n180"
+    },
+    {
+      "id": "c253",
+      "from": "n177",
+      "to": "n180"
+    },
+    {
+      "id": "c254",
+      "from": "n4",
+      "to": "n181"
+    },
+    {
+      "id": "c255",
+      "from": "n180",
+      "to": "n182"
+    },
+    {
+      "id": "c256",
+      "from": "n182",
+      "to": "n183"
+    },
+    {
+      "id": "c257",
+      "from": "n181",
+      "to": "n183"
+    },
+    {
+      "id": "c258",
+      "from": "n183",
+      "to": "n184"
+    },
+    {
+      "id": "c259",
+      "from": "n180",
+      "to": "n184"
+    },
+    {
+      "id": "c260",
+      "from": "n184",
+      "to": "n185"
+    },
+    {
+      "id": "c261",
+      "from": "n185",
+      "to": "n186"
+    },
+    {
+      "id": "c262",
+      "from": "n186",
+      "to": "n187"
+    },
+    {
+      "id": "c263",
+      "from": "n184",
+      "to": "n187"
+    },
+    {
+      "id": "c264",
+      "from": "n4",
+      "to": "n188"
+    },
+    {
+      "id": "c265",
+      "from": "n187",
+      "to": "n189"
+    },
+    {
+      "id": "c266",
+      "from": "n189",
+      "to": "n190"
+    },
+    {
+      "id": "c267",
+      "from": "n188",
+      "to": "n190"
+    },
+    {
+      "id": "c268",
+      "from": "n190",
+      "to": "n191"
+    },
+    {
+      "id": "c269",
+      "from": "n187",
+      "to": "n191"
+    },
+    {
+      "id": "c270",
+      "from": "n191",
+      "to": "n192"
+    },
+    {
+      "id": "c271",
+      "from": "n192",
+      "to": "n193"
+    },
+    {
+      "id": "c272",
+      "from": "n193",
+      "to": "n194"
+    },
+    {
+      "id": "c273",
+      "from": "n191",
+      "to": "n194"
+    },
+    {
+      "id": "c274",
+      "from": "n4",
+      "to": "n195"
+    },
+    {
+      "id": "c275",
+      "from": "n194",
+      "to": "n196"
+    },
+    {
+      "id": "c276",
+      "from": "n196",
+      "to": "n197"
+    },
+    {
+      "id": "c277",
+      "from": "n195",
+      "to": "n197"
+    },
+    {
+      "id": "c278",
+      "from": "n197",
+      "to": "n198"
+    },
+    {
+      "id": "c279",
+      "from": "n194",
+      "to": "n198"
+    },
+    {
+      "id": "c280",
+      "from": "n198",
+      "to": "n199"
+    },
+    {
+      "id": "c281",
+      "from": "n199",
+      "to": "n200"
+    },
+    {
+      "id": "c282",
+      "from": "n200",
+      "to": "n201"
+    },
+    {
+      "id": "c283",
+      "from": "n198",
+      "to": "n201"
+    },
+    {
+      "id": "c284",
+      "from": "n201",
+      "to": "n202"
+    },
+    {
+      "id": "c285",
+      "from": "n202",
+      "to": "n203"
+    },
+    {
+      "id": "c286",
+      "from": "n203",
+      "to": "n204"
+    }
+  ]
+}
