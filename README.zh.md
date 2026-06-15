@@ -9,7 +9,7 @@
 [![domains](https://img.shields.io/badge/domains-11-f59e0b)](#目录)
 [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
-**English: [README.md](README.md)** · **完整清单: [CATALOG.md](CATALOG.md)** · **架构对比: [COMPARISONS.md](COMPARISONS.md)** · **在浏览器里打开: [一键打开](#一键在浏览器里打开任意架构)**
+**English: [README.md](README.md)** · **图库: [在线浏览 ↗](https://neurarch-ai.github.io/awesome-llm-model-zoo/)** · **完整清单: [CATALOG.md](CATALOG.md)** · **架构对比: [COMPARISONS.md](COMPARISONS.md)**
 
 </div>
 

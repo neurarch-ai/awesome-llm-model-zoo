@@ -12,7 +12,7 @@
 
 **English** · **[简体中文](README.zh.md)**
 
-**[Full catalog](CATALOG.md)** · **[Compare architectures](COMPARISONS.md)** · **[Open one in your browser](#open-any-architecture-in-one-click)** · **[As data (index.json)](index.json)** · **[Contribute](CONTRIBUTING.md)**
+**[Browse the gallery ↗](https://neurarch-ai.github.io/awesome-llm-model-zoo/)** · **[Full catalog](CATALOG.md)** · **[Compare architectures](COMPARISONS.md)** · **[As data (index.json)](index.json)** · **[Contribute](CONTRIBUTING.md)**
 
 <br/>
 

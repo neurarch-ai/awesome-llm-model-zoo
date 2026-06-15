@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Neurarch Model Zoo — 78 architectures you can open, edit, and run</title>
+<meta name="description" content="78 reference neural-net architectures as live, validated, editable graphs. Filter by domain, attention, parameter check. Open any one in your browser." />
+<meta property="og:title" content="Neurarch Model Zoo" />
+<meta property="og:description" content="78 reference architectures as live, validated graphs. Not pictures." />
+<meta property="og:image" content="assets/promo.png" />
+<style>
+  :root {
+    --indigo: #6366f1; --indigo-d: #4f46e5; --ink: #1f2937; --muted: #64748b;
+    --line: #e2e8f0; --bg: #f8fafc; --card: #ffffff; --green: #16a34a; --amber: #d97706;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: -apple-system, 'Segoe UI', Inter, Helvetica, Arial, sans-serif; color: var(--ink); background: var(--bg); }
+  a { color: var(--indigo-d); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  header { background: linear-gradient(135deg, #eef2ff, #f8fafc); border-bottom: 1px solid var(--line); padding: 32px 20px 24px; }
+  .wrap { max-width: 1200px; margin: 0 auto; }
+  h1 { margin: 0 0 6px; font-size: 26px; }
+  h1 .em { font-size: 22px; }
+  .tagline { color: var(--muted); margin: 0 0 14px; font-size: 15px; }
+  .toplinks { font-size: 14px; display: flex; gap: 16px; flex-wrap: wrap; }
+  .controls { position: sticky; top: 0; z-index: 5; background: rgba(248,250,252,.92); backdrop-filter: blur(6px); border-bottom: 1px solid var(--line); padding: 12px 20px; }
+  .controls .wrap { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  #q { flex: 1; min-width: 200px; padding: 9px 13px; border: 1px solid var(--line); border-radius: 9px; font-size: 14px; background: #fff; }
+  #q:focus { outline: none; border-color: var(--indigo); }
+  select, .toggle { padding: 8px 11px; border: 1px solid var(--line); border-radius: 9px; font-size: 13px; background: #fff; cursor: pointer; }
+  .toggle.on { background: var(--indigo); color: #fff; border-color: var(--indigo); }
+  .count { color: var(--muted); font-size: 13px; white-space: nowrap; }
+  main { padding: 22px 20px 60px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; transition: box-shadow .15s, transform .15s; }
+  .card:hover { box-shadow: 0 8px 24px rgba(15,23,42,.10); transform: translateY(-2px); }
+  .thumb { height: 168px; background: #fff; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid var(--line); padding: 10px; }
+  .thumb img { max-width: 100%; max-height: 148px; object-fit: contain; }
+  .body { padding: 13px 14px 14px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+  .name { font-weight: 700; font-size: 15px; }
+  .badges { display: flex; gap: 6px; flex-wrap: wrap; }
+  .badge { font-size: 11px; padding: 2px 8px; border-radius: 20px; background: #eef2ff; color: var(--indigo-d); border: 1px solid #e0e7ff; }
+  .badge.dev-ok { background: #f0fdf4; color: var(--green); border-color: #dcfce7; }
+  .badge.dev-warn { background: #fffbeb; color: var(--amber); border-color: #fef3c7; }
+  .meta { font-size: 12.5px; color: var(--muted); }
+  .actions { display: flex; gap: 8px; margin-top: auto; padding-top: 4px; }
+  .btn { flex: 1; text-align: center; font-size: 13px; padding: 8px; border-radius: 9px; border: 1px solid var(--line); }
+  .btn.primary { background: var(--indigo); color: #fff; border-color: var(--indigo); }
+  .btn.primary:hover { background: var(--indigo-d); text-decoration: none; }
+  .btn:hover { text-decoration: none; }
+  footer { text-align: center; color: var(--muted); font-size: 13px; padding: 30px 20px 50px; border-top: 1px solid var(--line); }
+  .empty { text-align: center; color: var(--muted); padding: 60px; }
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <h1>🧠 Neurarch Model Zoo</h1>
+  <p class="tagline">78 reference architectures as live, validated, editable graphs. Not pictures. Graphs.</p>
+  <div class="toplinks">
+    <a href="https://github.com/neurarch-ai/awesome-llm-model-zoo">GitHub repo</a>
+    <a href="CATALOG.md">Full catalog</a>
+    <a href="COMPARISONS.md">Compare architectures</a>
+    <a href="https://www.neurarch.com/">Neurarch ↗</a>
+  </div>
+</div></header>
+
+<div class="controls"><div class="wrap">
+  <input id="q" type="search" placeholder="Search models, e.g. deepseek, GQA, recsys…" autocomplete="off" />
+  <select id="domain"><option value="">All domains</option></select>
+  <button id="checked" class="toggle">Param-checked only</button>
+  <span class="count" id="count"></span>
+</div></div>
+
+<main><div class="wrap">
+  <div class="grid" id="grid"></div>
+  <div class="empty" id="empty" hidden>No models match those filters.</div>
+</div></main>
+
+<footer>
+  Generated from <a href="index.json">index.json</a>. Every graph is structurally validated and parameter-checked in
+  <a href="https://github.com/neurarch-ai/awesome-llm-model-zoo/actions/workflows/validate.yml">CI</a>.
+  Made with <a href="https://www.neurarch.com/">Neurarch</a>.
+</footer>
+
+<script>
+const REPO = 'https://github.com/neurarch-ai/awesome-llm-model-zoo/tree/main/';
+const fmtPct = p => (p > 0 ? '+' : '') + p + '%';
+let MODELS = [];
+
+function card(m) {
+  const dev = m.paramCheck && m.paramCheck.deviationPct != null ? m.paramCheck.deviationPct : null;
+  const devBadge = dev != null
+    ? `<span class="badge ${Math.abs(dev) <= 5 ? 'dev-ok' : 'dev-warn'}" title="per-layer estimate vs real weights">${fmtPct(dev)}</span>`
+    : '';
+  const attn = (m.attention || []).map(a => a.replace(/Attention$/, '')).filter(Boolean)[0];
+  return `<div class="card">
+    <a class="thumb" href="${REPO}architectures/${m.id}"><img loading="lazy" src="${m.diagram}" alt="${m.title} architecture"/></a>
+    <div class="body">
+      <div class="name">${m.title}</div>
+      <div class="badges">
+        <span class="badge">${m.domain}</span>
+        ${devBadge}
+        ${attn ? `<span class="badge">${attn}</span>` : ''}
+      </div>
+      <div class="meta">${[m.params, m.layers ? m.layers + ' layers' : null].filter(Boolean).join(' · ') || m.nodes + ' nodes'}</div>
+      <div class="actions">
+        <a class="btn primary" href="${m.urls.neurarch}" target="_blank" rel="noopener">Open in Neurarch</a>
+        <a class="btn" href="${REPO}architectures/${m.id}">Details</a>
+      </div>
+    </div>
+  </div>`;
+}
+
+function render() {
+  const q = document.getElementById('q').value.toLowerCase().trim();
+  const dom = document.getElementById('domain').value;
+  const onlyChecked = document.getElementById('checked').classList.contains('on');
+  const hits = MODELS.filter(m => {
+    if (dom && m.domain !== dom) return false;
+    if (onlyChecked && !m.paramCheck) return false;
+    if (!q) return true;
+    return (m.id + ' ' + m.title + ' ' + m.domain + ' ' + (m.type || '') + ' ' + (m.attention || []).join(' ') + ' ' + (m.params || '')).toLowerCase().includes(q);
+  });
+  document.getElementById('grid').innerHTML = hits.map(card).join('');
+  document.getElementById('empty').hidden = hits.length > 0;
+  document.getElementById('count').textContent = `${hits.length} of ${MODELS.length}`;
+}
+
+fetch('index.json').then(r => r.json()).then(data => {
+  MODELS = data.models;
+  const sel = document.getElementById('domain');
+  [...new Set(MODELS.map(m => m.domain))].sort().forEach(d => {
+    const o = document.createElement('option'); o.value = o.textContent = d; sel.appendChild(o);
+  });
+  render();
+}).catch(() => { document.getElementById('grid').innerHTML = '<p class="empty">Could not load index.json.</p>'; });
+
+document.getElementById('q').addEventListener('input', render);
+document.getElementById('domain').addEventListener('change', render);
+document.getElementById('checked').addEventListener('click', e => { e.target.classList.toggle('on'); render(); });
+</script>
+</body>
+</html>
