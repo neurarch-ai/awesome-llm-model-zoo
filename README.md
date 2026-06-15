@@ -53,6 +53,9 @@ Every diagram of Qwen or Mixtral you have ever seen is a dead image. The entries
 <tr>
 <td align="center" valign="top" colspan="2"><b><a href="architectures/flamingo/">Flamingo</a></b><br/><sub>vision blocks · perceiver resampler · gated cross-attention into a frozen LLM</sub><br/><img src="architectures/flamingo/assets/diagram.png" width="660" alt="Flamingo gated cross-attention architecture"/></td>
 </tr>
+<tr>
+<td align="center" valign="top" colspan="2"><b><a href="architectures/sli-rec/">SLi-Rec</a></b><br/><sub>recsys / CTR · time-aware short-term (Time-LSTM) ‖ long-term attention, fused by target attention</sub><br/><img src="architectures/sli-rec/assets/diagram.png" width="620" alt="SLi-Rec time-aware recommendation architecture"/></td>
+</tr>
 </table>
 
 The full expanded graph (every one of those 371 / 300 / … nodes) is one click away in Neurarch via the **Open in Neurarch** link on each entry. Parameter-faithful CNNs are here too: [ResNet-50](architectures/resnet-50/) (all 16 bottleneck blocks, 25.6M, exact) and [VGG-16](architectures/vgg-16/) (138M, exact).

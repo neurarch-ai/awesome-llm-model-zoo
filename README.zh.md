@@ -42,6 +42,9 @@
 <tr>
 <td align="center" valign="top" colspan="2"><b><a href="architectures/flamingo/">Flamingo</a></b><br/><sub>视觉块 · perceiver resampler · 门控交叉注意力注入冻结的 LLM</sub><br/><img src="architectures/flamingo/assets/diagram.png" width="660" alt="Flamingo gated cross-attention architecture"/></td>
 </tr>
+<tr>
+<td align="center" valign="top" colspan="2"><b><a href="architectures/sli-rec/">SLi-Rec</a></b><br/><sub>推荐 / CTR · 时间感知短期(Time-LSTM)‖ 长期注意力,用目标注意力融合</sub><br/><img src="architectures/sli-rec/assets/diagram.png" width="620" alt="SLi-Rec time-aware recommendation architecture"/></td>
+</tr>
 </table>
 
 完整展开的图(那 371 / 300 / … 个节点)在每个条目的 **Open in Neurarch** 链接里一键可达。
