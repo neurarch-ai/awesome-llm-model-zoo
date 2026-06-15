@@ -36,6 +36,10 @@
 <td align="center" valign="top"><b><a href="architectures/qwen2.5-7b/">Qwen2.5-7B</a></b><br/><sub>GQA 28:4 · QKV bias · 28 块</sub><br/><img src="architectures/qwen2.5-7b/assets/diagram.png" width="215" alt="Qwen2.5-7B architecture"/></td>
 </tr>
 <tr>
+<td align="center" valign="top"><b><a href="architectures/gemma-4-12b/">Gemma 4 12B</a></b><br/><sub>多模态 · 视觉 + 文本 + 音频三塔 · 48 个解码块</sub><br/><img src="architectures/gemma-4-12b/assets/diagram.png" width="330" alt="Gemma 4 12B multimodal architecture"/></td>
+<td align="center" valign="top"><b><a href="architectures/llama-4-scout/">Llama 4 Scout</a></b><br/><sub>多模态 MoE · 视觉 ×34 + 48 个解码块,16 专家</sub><br/><img src="architectures/llama-4-scout/assets/diagram.png" width="330" alt="Llama 4 Scout multimodal MoE architecture"/></td>
+</tr>
+<tr>
 <td align="center" valign="top" colspan="2"><b><a href="architectures/flamingo/">Flamingo</a></b><br/><sub>视觉块 · perceiver resampler · 门控交叉注意力注入冻结的 LLM</sub><br/><img src="architectures/flamingo/assets/diagram.png" width="660" alt="Flamingo gated cross-attention architecture"/></td>
 </tr>
 </table>
