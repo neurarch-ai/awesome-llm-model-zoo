@@ -1,77 +1,77 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="646" height="1936" viewBox="0 0 646 1936" font-family="-apple-system, 'Segoe UI', Inter, Helvetica, Arial, sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" width="856" height="1936" viewBox="0 0 856 1936" font-family="-apple-system, 'Segoe UI', Inter, Helvetica, Arial, sans-serif">
 <defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#94a3b8"/></marker></defs>
-<rect x="0" y="0" width="646" height="1936" fill="#ffffff"/>
-<rect x="166.0" y="258.0" width="196.0" height="388.0" rx="14" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1.5"/>
-<rect x="158.0" y="250.0" width="196.0" height="388.0" rx="14" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1.5"/>
-<rect x="150.0" y="242.0" width="196.0" height="388.0" rx="14" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="7 6"/>
-<rect x="368.0" y="417.0" width="66" height="38" rx="19" fill="#4f46e5"/>
-<text x="401.0" y="442.0" text-anchor="middle" font-size="17" font-weight="700" fill="#ffffff">× 34</text>
-<rect x="166.0" y="986.0" width="196.0" height="596.0" rx="14" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1.5"/>
-<rect x="158.0" y="978.0" width="196.0" height="596.0" rx="14" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1.5"/>
-<rect x="150.0" y="970.0" width="196.0" height="596.0" rx="14" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="7 6"/>
-<rect x="368.0" y="1249.0" width="66" height="38" rx="19" fill="#4f46e5"/>
-<text x="401.0" y="1274.0" text-anchor="middle" font-size="17" font-weight="700" fill="#ffffff">× 48</text>
-<path d="M132.0,96.0 C132.0,121.0 132.0,121.0 132.0,146.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M364.0,96.0 C364.0,121.0 364.0,121.0 364.0,146.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M364.0,200.0 C364.0,225.0 248.0,225.0 248.0,250.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M248.0,304.0 C248.0,329.0 248.0,329.0 248.0,354.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M248.0,408.0 C248.0,433.0 248.0,433.0 248.0,458.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M364.0,200.0 C364.0,329.0 248.0,329.0 248.0,458.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M248.0,512.0 C248.0,537.0 248.0,537.0 248.0,562.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M248.0,720.0 C248.0,745.0 248.0,745.0 248.0,770.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M132.0,200.0 C132.0,537.0 248.0,537.0 248.0,874.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M248.0,824.0 C248.0,849.0 248.0,849.0 248.0,874.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M248.0,928.0 C248.0,953.0 248.0,953.0 248.0,978.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M248.0,1032.0 C248.0,1057.0 248.0,1057.0 248.0,1082.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M248.0,1136.0 C248.0,1161.0 248.0,1161.0 248.0,1186.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M248.0,928.0 C248.0,1057.0 248.0,1057.0 248.0,1186.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M248.0,1240.0 C248.0,1265.0 248.0,1265.0 248.0,1290.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M248.0,1344.0 C248.0,1369.0 248.0,1369.0 248.0,1394.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M248.0,1448.0 C248.0,1473.0 248.0,1473.0 248.0,1498.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M248.0,1240.0 C248.0,1369.0 248.0,1369.0 248.0,1498.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M248.0,1656.0 C248.0,1681.0 248.0,1681.0 248.0,1706.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M248.0,1760.0 C248.0,1785.0 248.0,1785.0 248.0,1810.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M248.0,616.0 C248.0,641.0 248.0,641.0 248.0,666.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<path d="M248.0,1552.0 C248.0,1577.0 248.0,1577.0 248.0,1602.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
-<rect x="48.0" y="48.0" width="168" height="48" rx="10" fill="rgb(224, 247, 232)" stroke="#22c55e" stroke-width="1.5"/>
-<text x="132.0" y="76.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">Input</text>
-<rect x="48.0" y="152.0" width="168" height="48" rx="10" fill="rgb(254, 241, 221)" stroke="#f59e0b" stroke-width="1.5"/>
-<text x="132.0" y="180.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">Embedding</text>
-<rect x="280.0" y="48.0" width="168" height="48" rx="10" fill="rgb(224, 247, 232)" stroke="#22c55e" stroke-width="1.5"/>
-<text x="364.0" y="76.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">Vision input</text>
-<rect x="280.0" y="152.0" width="168" height="48" rx="10" fill="rgb(235, 235, 236)" stroke="#71717a" stroke-width="1.5"/>
-<text x="364.0" y="180.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">PatchEmbed</text>
-<rect x="164.0" y="256.0" width="168" height="48" rx="10" fill="rgb(233, 236, 239)" stroke="#64748b" stroke-width="1.5"/>
-<text x="248.0" y="284.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">Vision_LN</text>
-<rect x="164.0" y="360.0" width="168" height="48" rx="10" fill="rgb(243, 231, 254)" stroke="#a855f7" stroke-width="1.5"/>
-<text x="248.0" y="388.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">Vision_Attn</text>
-<circle cx="248.0" cy="488.0" r="22" fill="rgb(220, 245, 249)" stroke="#06b6d4" stroke-width="1.5"/>
-<text x="248.0" y="496.0" text-anchor="middle" font-size="24" fill="#06b6d4">⊕</text>
-<rect x="164.0" y="568.0" width="168" height="48" rx="10" fill="rgb(222, 245, 243)" stroke="#14b8a6" stroke-width="1.5"/>
-<text x="248.0" y="596.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">Vision_FFN</text>
-<rect x="164.0" y="672.0" width="168" height="48" rx="10" fill="rgb(235, 235, 236)" stroke="#71717a" stroke-width="1.5"/>
-<text x="248.0" y="700.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">Vision projector</text>
-<rect x="164.0" y="776.0" width="168" height="48" rx="10" fill="rgb(235, 235, 236)" stroke="#71717a" stroke-width="1.5"/>
-<text x="248.0" y="804.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">Vision tokens</text>
-<circle cx="248.0" cy="904.0" r="22" fill="rgb(220, 245, 249)" stroke="#06b6d4" stroke-width="1.5"/>
-<text x="248.0" y="912.0" text-anchor="middle" font-size="24" fill="#06b6d4">∥</text>
-<rect x="164.0" y="984.0" width="168" height="48" rx="10" fill="rgb(233, 236, 239)" stroke="#64748b" stroke-width="1.5"/>
-<text x="248.0" y="1012.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">RMSNorm</text>
-<rect x="164.0" y="1088.0" width="168" height="48" rx="10" fill="rgb(243, 231, 254)" stroke="#a855f7" stroke-width="1.5"/>
-<text x="248.0" y="1116.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">Attention</text>
-<circle cx="248.0" cy="1216.0" r="22" fill="rgb(220, 245, 249)" stroke="#06b6d4" stroke-width="1.5"/>
-<text x="248.0" y="1224.0" text-anchor="middle" font-size="24" fill="#06b6d4">⊕</text>
-<rect x="164.0" y="1296.0" width="168" height="48" rx="10" fill="rgb(233, 236, 239)" stroke="#64748b" stroke-width="1.5"/>
-<text x="248.0" y="1324.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">RMSNorm</text>
-<rect x="164.0" y="1400.0" width="168" height="48" rx="10" fill="rgb(235, 235, 236)" stroke="#71717a" stroke-width="1.5"/>
-<text x="248.0" y="1428.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">MoE</text>
-<circle cx="248.0" cy="1528.0" r="22" fill="rgb(220, 245, 249)" stroke="#06b6d4" stroke-width="1.5"/>
-<text x="248.0" y="1536.0" text-anchor="middle" font-size="24" fill="#06b6d4">⊕</text>
-<rect x="164.0" y="1608.0" width="168" height="48" rx="10" fill="rgb(233, 236, 239)" stroke="#64748b" stroke-width="1.5"/>
-<text x="248.0" y="1636.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">Final_RMSNorm</text>
-<rect x="164.0" y="1712.0" width="168" height="48" rx="10" fill="rgb(222, 245, 243)" stroke="#14b8a6" stroke-width="1.5"/>
-<text x="248.0" y="1740.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">LM_Head</text>
-<rect x="164.0" y="1816.0" width="168" height="48" rx="10" fill="rgb(253, 229, 229)" stroke="#ef4444" stroke-width="1.5"/>
-<text x="248.0" y="1844.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">Output</text>
-<text x="598.0" y="1925.0" text-anchor="end" font-size="11" fill="#9aa6b8">Made with Neurarch · neurarch.com</text>
+<rect x="0" y="0" width="856" height="1936" fill="#ffffff"/>
+<rect x="200.0" y="258.0" width="196.0" height="388.0" rx="14" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1.5"/>
+<rect x="192.0" y="250.0" width="196.0" height="388.0" rx="14" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1.5"/>
+<rect x="184.0" y="242.0" width="196.0" height="388.0" rx="14" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="7 6"/>
+<rect x="96.0" y="417.0" width="66" height="38" rx="19" fill="#4f46e5"/>
+<text x="129.0" y="442.0" text-anchor="middle" font-size="17" font-weight="700" fill="#ffffff">× 34</text>
+<rect x="492.0" y="986.0" width="196.0" height="596.0" rx="14" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1.5"/>
+<rect x="484.0" y="978.0" width="196.0" height="596.0" rx="14" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1.5"/>
+<rect x="476.0" y="970.0" width="196.0" height="596.0" rx="14" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="7 6"/>
+<rect x="694.0" y="1249.0" width="66" height="38" rx="19" fill="#4f46e5"/>
+<text x="727.0" y="1274.0" text-anchor="middle" font-size="17" font-weight="700" fill="#ffffff">× 48</text>
+<path d="M574.0,96.0 C574.0,121.0 574.0,121.0 574.0,146.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M282.0,96.0 C282.0,121.0 282.0,121.0 282.0,146.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M282.0,200.0 C282.0,225.0 282.0,225.0 282.0,250.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M282.0,304.0 C282.0,329.0 282.0,329.0 282.0,354.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M282.0,408.0 C282.0,433.0 282.0,433.0 282.0,458.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M282.0,200.0 C282.0,329.0 282.0,329.0 282.0,458.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M282.0,512.0 C282.0,537.0 282.0,537.0 282.0,562.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M282.0,720.0 C282.0,745.0 282.0,745.0 282.0,770.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M574.0,200.0 C574.0,537.0 574.0,537.0 574.0,874.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M282.0,824.0 C282.0,849.0 574.0,849.0 574.0,874.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M574.0,928.0 C574.0,953.0 574.0,953.0 574.0,978.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M574.0,1032.0 C574.0,1057.0 574.0,1057.0 574.0,1082.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M574.0,1136.0 C574.0,1161.0 574.0,1161.0 574.0,1186.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M574.0,928.0 C574.0,1057.0 574.0,1057.0 574.0,1186.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M574.0,1240.0 C574.0,1265.0 574.0,1265.0 574.0,1290.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M574.0,1344.0 C574.0,1369.0 574.0,1369.0 574.0,1394.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M574.0,1448.0 C574.0,1473.0 574.0,1473.0 574.0,1498.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M574.0,1240.0 C574.0,1369.0 574.0,1369.0 574.0,1498.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M574.0,1656.0 C574.0,1681.0 574.0,1681.0 574.0,1706.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M574.0,1760.0 C574.0,1785.0 574.0,1785.0 574.0,1810.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M282.0,616.0 C282.0,641.0 282.0,641.0 282.0,666.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M574.0,1552.0 C574.0,1577.0 574.0,1577.0 574.0,1602.0" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arrow)"/>
+<rect x="490.0" y="48.0" width="168" height="48" rx="10" fill="rgb(224, 247, 232)" stroke="#22c55e" stroke-width="1.5"/>
+<text x="574.0" y="76.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">Input</text>
+<rect x="490.0" y="152.0" width="168" height="48" rx="10" fill="rgb(254, 241, 221)" stroke="#f59e0b" stroke-width="1.5"/>
+<text x="574.0" y="180.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">Embedding</text>
+<rect x="198.0" y="48.0" width="168" height="48" rx="10" fill="rgb(224, 247, 232)" stroke="#22c55e" stroke-width="1.5"/>
+<text x="282.0" y="76.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">Vision input</text>
+<rect x="198.0" y="152.0" width="168" height="48" rx="10" fill="rgb(235, 235, 236)" stroke="#71717a" stroke-width="1.5"/>
+<text x="282.0" y="180.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">PatchEmbed</text>
+<rect x="198.0" y="256.0" width="168" height="48" rx="10" fill="rgb(233, 236, 239)" stroke="#64748b" stroke-width="1.5"/>
+<text x="282.0" y="284.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">Vision_LN</text>
+<rect x="198.0" y="360.0" width="168" height="48" rx="10" fill="rgb(243, 231, 254)" stroke="#a855f7" stroke-width="1.5"/>
+<text x="282.0" y="388.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">Vision_Attn</text>
+<circle cx="282.0" cy="488.0" r="22" fill="rgb(220, 245, 249)" stroke="#06b6d4" stroke-width="1.5"/>
+<text x="282.0" y="496.0" text-anchor="middle" font-size="24" fill="#06b6d4">⊕</text>
+<rect x="198.0" y="568.0" width="168" height="48" rx="10" fill="rgb(222, 245, 243)" stroke="#14b8a6" stroke-width="1.5"/>
+<text x="282.0" y="596.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">Vision_FFN</text>
+<rect x="198.0" y="672.0" width="168" height="48" rx="10" fill="rgb(235, 235, 236)" stroke="#71717a" stroke-width="1.5"/>
+<text x="282.0" y="700.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">Vision projector</text>
+<rect x="198.0" y="776.0" width="168" height="48" rx="10" fill="rgb(235, 235, 236)" stroke="#71717a" stroke-width="1.5"/>
+<text x="282.0" y="804.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">Vision tokens</text>
+<circle cx="574.0" cy="904.0" r="22" fill="rgb(220, 245, 249)" stroke="#06b6d4" stroke-width="1.5"/>
+<text x="574.0" y="912.0" text-anchor="middle" font-size="24" fill="#06b6d4">∥</text>
+<rect x="490.0" y="984.0" width="168" height="48" rx="10" fill="rgb(233, 236, 239)" stroke="#64748b" stroke-width="1.5"/>
+<text x="574.0" y="1012.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">RMSNorm</text>
+<rect x="490.0" y="1088.0" width="168" height="48" rx="10" fill="rgb(243, 231, 254)" stroke="#a855f7" stroke-width="1.5"/>
+<text x="574.0" y="1116.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">Attention</text>
+<circle cx="574.0" cy="1216.0" r="22" fill="rgb(220, 245, 249)" stroke="#06b6d4" stroke-width="1.5"/>
+<text x="574.0" y="1224.0" text-anchor="middle" font-size="24" fill="#06b6d4">⊕</text>
+<rect x="490.0" y="1296.0" width="168" height="48" rx="10" fill="rgb(233, 236, 239)" stroke="#64748b" stroke-width="1.5"/>
+<text x="574.0" y="1324.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">RMSNorm</text>
+<rect x="490.0" y="1400.0" width="168" height="48" rx="10" fill="rgb(235, 235, 236)" stroke="#71717a" stroke-width="1.5"/>
+<text x="574.0" y="1428.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">MoE</text>
+<circle cx="574.0" cy="1528.0" r="22" fill="rgb(220, 245, 249)" stroke="#06b6d4" stroke-width="1.5"/>
+<text x="574.0" y="1536.0" text-anchor="middle" font-size="24" fill="#06b6d4">⊕</text>
+<rect x="490.0" y="1608.0" width="168" height="48" rx="10" fill="rgb(233, 236, 239)" stroke="#64748b" stroke-width="1.5"/>
+<text x="574.0" y="1636.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">Final_RMSNorm</text>
+<rect x="490.0" y="1712.0" width="168" height="48" rx="10" fill="rgb(222, 245, 243)" stroke="#14b8a6" stroke-width="1.5"/>
+<text x="574.0" y="1740.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">LM_Head</text>
+<rect x="490.0" y="1816.0" width="168" height="48" rx="10" fill="rgb(253, 229, 229)" stroke="#ef4444" stroke-width="1.5"/>
+<text x="574.0" y="1844.5" text-anchor="middle" font-size="13" font-weight="600" fill="#1f2937">Output</text>
+<text x="808.0" y="1925.0" text-anchor="end" font-size="11" fill="#9aa6b8">Made with Neurarch · neurarch.com</text>
 </svg>

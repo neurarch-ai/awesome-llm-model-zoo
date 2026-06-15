@@ -7,7 +7,8 @@
     "generate": "tsx --tsconfig ../Neurarch/tsconfig.json scripts/generate.mts",
     "validate": "node scripts/validate.mjs",
     "catalog": "node scripts/generate-catalog.mjs",
-    "index": "node scripts/build-index.mjs"
+    "index": "node scripts/build-index.mjs",
+    "rerender": "tsx --tsconfig ../Neurarch/tsconfig.json scripts/rerender.mjs"
   },
   "devDependencies": {
     "@resvg/resvg-js": "^2.6.2",
