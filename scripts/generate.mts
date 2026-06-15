@@ -2635,8 +2635,16 @@ function writeAssets(id: string, model: Graph): number {
 }
 
 const ALL: Spec[] = [...DECODERS, ...FRONTIER, ...ENCODERS, ...HFFULL, ...TEMPLATES, ...PARSED];
+// Optional id filter: `npm run generate -- t5-small bert-base` rebuilds only
+// those entries (leaves every other folder untouched). No args = rebuild all.
+const ONLY = process.argv.slice(2).filter((a) => !a.startsWith('-'));
+const SPECS = ONLY.length ? ALL.filter((s) => ONLY.includes(s.id)) : ALL;
+if (ONLY.length && SPECS.length !== ONLY.length) {
+  const missing = ONLY.filter((id) => !ALL.some((s) => s.id === id));
+  throw new Error(`unknown entry id(s): ${missing.join(', ')}`);
+}
 let count = 0;
-for (const s of ALL) {
+for (const s of SPECS) {
   if (s.kind === 'decoder' || s.kind === 'encoder') {
     const attn = s.kind === 'decoder'
       ? (s.mla ? 'MLA' : s.kvHeads < s.heads ? `GQA ${s.heads}:${s.kvHeads}` : `MHA ${s.heads}`)

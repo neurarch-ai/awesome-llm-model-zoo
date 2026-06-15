@@ -14,7 +14,7 @@ The text-to-text encoder-decoder that reframed every NLP task as sequence genera
 
 ![T5-Small architecture](assets/diagram.png)
 
-*Identical repeated blocks are folded into one representative block with a `× N` badge, so the whole architecture fits on screen. `model.json` keeps all 53 nodes (open it in Neurarch to see and edit every layer). Vector: [diagram.svg](assets/diagram.svg).*
+*Identical repeated blocks are folded into one representative block with a `× N` badge, so the whole architecture fits on screen. `model.json` keeps all 71 nodes (open it in Neurarch to see and edit every layer). Vector: [diagram.svg](assets/diagram.svg).*
 
 | Hyperparameter | Value |
 |---|---|
@@ -32,9 +32,9 @@ The text-to-text encoder-decoder that reframed every NLP task as sequence genera
 
 ## Parameter check
 
-Neurarch's per-layer parameter estimate over this graph: **87.2M**.
+Neurarch's per-layer parameter estimate over this graph: **60.6M**.
 Hugging Face safetensors metadata reports **60.5M** for the real weights.
-Deviation from the authoritative count (60.5M): **+44.1%**.
+Deviation from the authoritative count (60.5M): **+0.1%**.
 
 > T5 ties the encoder embedding, decoder embedding, and LM head to one 16.4M-parameter matrix; the graph carries each occurrence separately, so the naive per-layer sum overcounts by roughly 27M. The real unique count is 60.5M (safetensors).
 
