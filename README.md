@@ -16,11 +16,9 @@
 
 <br/>
 
-<!-- Demo: this is the video poster frame, linked to the live app. To upgrade
-     to an inline autoplaying GIF (GitHub strips <video> in READMEs), run:
-       ffmpeg -i assets/demo.webm -vf "fps=12,scale=720:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" -loop 0 assets/demo.gif
-     then replace the <img src="assets/demo-poster.jpg" ...> below with assets/demo.gif. -->
-<a href="https://www.neurarch.com/" title="Try Neurarch live"><img src="assets/demo-poster.jpg" width="680" alt="Import a checkpoint, fold the repeated blocks, export runnable training code"/></a>
+<!-- Autoplaying demo GIF (GitHub strips <video> in READMEs). Regenerate from the
+     source video via: ffmpeg -i assets/demo.webm -vf "fps=12,scale=720:-1:flags=lanczos,split[s0][s1];[s0]palettegen=max_colors=128[p];[s1][p]paletteuse=dither=bayer" -loop 0 assets/demo.gif -->
+<a href="https://www.neurarch.com/" title="Try Neurarch live"><img src="assets/demo.gif" width="680" alt="Import a checkpoint, fold the repeated blocks, export runnable training code"/></a>
 
 ▶ **[Watch the 30-second demo](assets/demo.webm)** — import a checkpoint → fold the repeated blocks → export runnable training code. Or **[try it live](https://www.neurarch.com/)**.
 
