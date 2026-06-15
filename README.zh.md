@@ -26,6 +26,20 @@
 
 `model.json` 永远保存**完整**的图(每一层、真实维度)。架构图会把重复的相同块折叠成一个代表块加 `× N` 角标,所以即使是 671B 的模型也能放进一屏,跟论文的画法一样。
 
+<table>
+<tr>
+<td align="center" valign="top"><b><a href="architectures/deepseek-v3/">DeepSeek-V3</a></b><br/><sub>671B MoE · MLA · 3 dense + 58 MoE 块</sub><br/><img src="architectures/deepseek-v3/assets/diagram.png" width="215" alt="DeepSeek-V3 architecture"/></td>
+<td align="center" valign="top"><b><a href="architectures/clip-vit-b32/">CLIP ViT-B/32</a></b><br/><sub>双编码器 · 两个塔投到同一空间</sub><br/><img src="architectures/clip-vit-b32/assets/diagram.png" width="430" alt="CLIP dual-encoder architecture"/></td>
+</tr>
+<tr>
+<td align="center" valign="top"><b><a href="architectures/whisper-small/">Whisper Small</a></b><br/><sub>卷积前端 · 12+12 编码-解码 · 交叉注意力</sub><br/><img src="architectures/whisper-small/assets/diagram.png" width="430" alt="Whisper Small architecture"/></td>
+<td align="center" valign="top"><b><a href="architectures/qwen2.5-7b/">Qwen2.5-7B</a></b><br/><sub>GQA 28:4 · QKV bias · 28 块</sub><br/><img src="architectures/qwen2.5-7b/assets/diagram.png" width="215" alt="Qwen2.5-7B architecture"/></td>
+</tr>
+<tr>
+<td align="center" valign="top" colspan="2"><b><a href="architectures/flamingo/">Flamingo</a></b><br/><sub>视觉块 · perceiver resampler · 门控交叉注意力注入冻结的 LLM</sub><br/><img src="architectures/flamingo/assets/diagram.png" width="660" alt="Flamingo gated cross-attention architecture"/></td>
+</tr>
+</table>
+
 完整展开的图(那 371 / 300 / … 个节点)在每个条目的 **Open in Neurarch** 链接里一键可达。
 
 ## 一键在浏览器里打开任意架构
