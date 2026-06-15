@@ -10,7 +10,9 @@
 [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)](CONTRIBUTING.md)
 
-**[Full catalog](CATALOG.md)** · **[Browse by domain](#catalog)** · **[Open one in your browser](#open-any-architecture-in-one-click)** · **[Contribute](CONTRIBUTING.md)**
+**English** · **[简体中文](README.zh.md)**
+
+**[Full catalog](CATALOG.md)** · **[Compare architectures](COMPARISONS.md)** · **[Open one in your browser](#open-any-architecture-in-one-click)** · **[As data (index.json)](index.json)** · **[Contribute](CONTRIBUTING.md)**
 
 <br/>
 

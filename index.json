@@ -1,0 +1,1578 @@
+{
+  "name": "Neurarch Model Zoo",
+  "generated_by": "scripts/build-index.mjs",
+  "count": 78,
+  "models": [
+    {
+      "id": "all-minilm-l6",
+      "title": "all-MiniLM-L6-v2",
+      "domain": "Embeddings and retrieval",
+      "params": "22.7M",
+      "layers": "6",
+      "type": "Bidirectional encoder, sentence embedding",
+      "nodes": 27,
+      "attention": [
+        "multiHeadAttention"
+      ],
+      "paramCheck": {
+        "estimate": 22400000,
+        "real": 22700000,
+        "deviationPct": -1.5
+      },
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/all-minilm-l6/model.json",
+        "paper": "https://arxiv.org/abs/2002.10957",
+        "huggingface": "https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2"
+      },
+      "diagram": "architectures/all-minilm-l6/assets/diagram.png"
+    },
+    {
+      "id": "baichuan2-7b",
+      "title": "Baichuan2-7B",
+      "domain": "Chinese LLMs",
+      "params": "7.5B",
+      "layers": "32",
+      "type": "Decoder-only transformer (causal LM)",
+      "nodes": 197,
+      "attention": [
+        "groupedQueryAttention"
+      ],
+      "paramCheck": {
+        "estimate": 7510000000,
+        "real": 7510000000,
+        "deviationPct": 0
+      },
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/baichuan2-7b/model.json",
+        "huggingface": "https://huggingface.co/baichuan-inc/Baichuan2-7B-Base",
+        "github": "https://github.com/baichuan-inc/Baichuan2"
+      },
+      "diagram": "architectures/baichuan2-7b/assets/diagram.png"
+    },
+    {
+      "id": "bert-base",
+      "title": "BERT-Base",
+      "domain": "NLP encoders and seq2seq",
+      "params": "110M",
+      "layers": "12",
+      "type": "Bidirectional encoder (BERT family)",
+      "nodes": 51,
+      "attention": [
+        "multiHeadAttention"
+      ],
+      "paramCheck": {
+        "estimate": 108500000,
+        "real": 110100000,
+        "deviationPct": -1.5
+      },
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/bert-base/model.json",
+        "huggingface": "https://huggingface.co/google-bert/bert-base-uncased",
+        "github": "https://github.com/google-research/bert"
+      },
+      "diagram": "architectures/bert-base/assets/diagram.png"
+    },
+    {
+      "id": "bert4rec",
+      "title": "BERT4Rec",
+      "domain": "Recommendation and ranking",
+      "params": null,
+      "layers": null,
+      "type": "Sequential recommendation",
+      "nodes": 17,
+      "attention": [
+        "multiHeadAttention"
+      ],
+      "paramCheck": null,
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/bert4rec/model.json",
+        "paper": "https://arxiv.org/abs/1904.06690"
+      },
+      "diagram": "architectures/bert4rec/assets/diagram.png"
+    },
+    {
+      "id": "bge-base-en",
+      "title": "BGE-base-en-v1.5",
+      "domain": "Embeddings and retrieval",
+      "params": "109M",
+      "layers": "12",
+      "type": "Bidirectional encoder, retrieval embedding",
+      "nodes": 51,
+      "attention": [
+        "multiHeadAttention"
+      ],
+      "paramCheck": {
+        "estimate": 108500000,
+        "real": 109500000,
+        "deviationPct": -0.9
+      },
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/bge-base-en/model.json",
+        "paper": "https://arxiv.org/abs/2309.07597",
+        "huggingface": "https://huggingface.co/BAAI/bge-base-en-v1.5",
+        "github": "https://github.com/FlagOpen/FlagEmbedding"
+      },
+      "diagram": "architectures/bge-base-en/assets/diagram.png"
+    },
+    {
+      "id": "blip2",
+      "title": "BLIP-2",
+      "domain": "Multimodal",
+      "params": null,
+      "layers": null,
+      "type": "Multimodal (image-to-text)",
+      "nodes": 51,
+      "attention": [
+        "multiHeadAttention",
+        "crossAttention"
+      ],
+      "paramCheck": null,
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/blip2/model.json",
+        "paper": "https://arxiv.org/abs/2301.12597",
+        "huggingface": "https://huggingface.co/Salesforce/blip2-opt-2.7b"
+      },
+      "diagram": "architectures/blip2/assets/diagram.png"
+    },
+    {
+      "id": "bst",
+      "title": "Behavior Sequence Transformer",
+      "domain": "Recommendation and ranking",
+      "params": null,
+      "layers": null,
+      "type": "Params",
+      "nodes": 19,
+      "attention": [],
+      "paramCheck": null,
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/bst/model.json",
+        "paper": "https://arxiv.org/abs/1905.06874"
+      },
+      "diagram": "architectures/bst/assets/diagram.png"
+    },
+    {
+      "id": "chatglm3-6b",
+      "title": "ChatGLM3-6B",
+      "domain": "Chinese LLMs",
+      "params": "6.2B",
+      "layers": "28",
+      "type": "Decoder-only transformer (causal LM)",
+      "nodes": 173,
+      "attention": [
+        "groupedQueryAttention"
+      ],
+      "paramCheck": {
+        "estimate": 6240000000,
+        "real": 6240000000,
+        "deviationPct": 0
+      },
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/chatglm3-6b/model.json",
+        "huggingface": "https://huggingface.co/THUDM/chatglm3-6b",
+        "github": "https://github.com/THUDM/ChatGLM3"
+      },
+      "diagram": "architectures/chatglm3-6b/assets/diagram.png"
+    },
+    {
+      "id": "chinese-roberta-wwm-ext",
+      "title": "Chinese-RoBERTa-wwm-ext",
+      "domain": "NLP encoders and seq2seq",
+      "params": "102M",
+      "layers": "12",
+      "type": "Bidirectional encoder (BERT family)",
+      "nodes": 51,
+      "attention": [
+        "multiHeadAttention"
+      ],
+      "paramCheck": {
+        "estimate": 101300000,
+        "real": 102000000,
+        "deviationPct": -0.7
+      },
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/chinese-roberta-wwm-ext/model.json",
+        "huggingface": "https://huggingface.co/hfl/chinese-roberta-wwm-ext",
+        "github": "https://github.com/ymcui/Chinese-BERT-wwm"
+      },
+      "diagram": "architectures/chinese-roberta-wwm-ext/assets/diagram.png"
+    },
+    {
+      "id": "clip-vit-b32",
+      "title": "CLIP ViT-B/32",
+      "domain": "Multimodal",
+      "params": "151M (88M vision + 63M text)",
+      "layers": null,
+      "type": "Contrastive image-text dual encoder",
+      "nodes": 38,
+      "attention": [],
+      "paramCheck": {
+        "estimate": 151200000,
+        "real": 151300000,
+        "deviationPct": -0.1
+      },
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/clip-vit-b32/model.json",
+        "paper": "https://arxiv.org/abs/2103.00020",
+        "github": "https://github.com/openai/CLIP",
+        "huggingface": "https://huggingface.co/openai/clip-vit-base-patch32"
+      },
+      "diagram": "architectures/clip-vit-b32/assets/diagram.png"
+    },
+    {
+      "id": "cnn-lstm-1d",
+      "title": "1D CNN + LSTM",
+      "domain": "Time series and biosignals",
+      "params": null,
+      "layers": null,
+      "type": "Params",
+      "nodes": 13,
+      "attention": [],
+      "paramCheck": null,
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/cnn-lstm-1d/model.json"
+      },
+      "diagram": "architectures/cnn-lstm-1d/assets/diagram.png"
+    },
+    {
+      "id": "convnext-tiny",
+      "title": "ConvNeXt-Tiny",
+      "domain": "Computer vision",
+      "params": "28M",
+      "layers": null,
+      "type": "Modernized convolutional network",
+      "nodes": 117,
+      "attention": [],
+      "paramCheck": null,
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/convnext-tiny/model.json",
+        "paper": "https://arxiv.org/abs/2201.03545",
+        "huggingface": "https://huggingface.co/facebook/convnext-tiny-224"
+      },
+      "diagram": "architectures/convnext-tiny/assets/diagram.png"
+    },
+    {
+      "id": "dcn",
+      "title": "DCN (Deep & Cross)",
+      "domain": "Recommendation and ranking",
+      "params": null,
+      "layers": null,
+      "type": "CTR / click prediction",
+      "nodes": 15,
+      "attention": [
+        "flatten"
+      ],
+      "paramCheck": null,
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/dcn/model.json",
+        "paper": "https://arxiv.org/abs/1708.05123"
+      },
+      "diagram": "architectures/dcn/assets/diagram.png"
+    },
+    {
+      "id": "deepfm",
+      "title": "DeepFM",
+      "domain": "Recommendation and ranking",
+      "params": null,
+      "layers": null,
+      "type": "CTR / click prediction",
+      "nodes": 11,
+      "attention": [
+        "flatten"
+      ],
+      "paramCheck": null,
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/deepfm/model.json",
+        "paper": "https://arxiv.org/abs/1703.04247"
+      },
+      "diagram": "architectures/deepfm/assets/diagram.png"
+    },
+    {
+      "id": "deepseek-llm-7b",
+      "title": "DeepSeek-LLM-7B",
+      "domain": "Chinese LLMs",
+      "params": "6.9B",
+      "layers": "30",
+      "type": "Decoder-only transformer (causal LM)",
+      "nodes": 185,
+      "attention": [
+        "groupedQueryAttention"
+      ],
+      "paramCheck": {
+        "estimate": 6910000000,
+        "real": 6910000000,
+        "deviationPct": 0
+      },
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/deepseek-llm-7b/model.json",
+        "huggingface": "https://huggingface.co/deepseek-ai/deepseek-llm-7b-base",
+        "github": "https://github.com/deepseek-ai/DeepSeek-LLM"
+      },
+      "diagram": "architectures/deepseek-llm-7b/assets/diagram.png"
+    },
+    {
+      "id": "deepseek-v2",
+      "title": "DeepSeek-V2",
+      "domain": "Frontier LLMs (2025-2026 wave)",
+      "params": "236B total, 21B active",
+      "layers": "60",
+      "type": "Decoder-only transformer, sparse MoE (causal LM)",
+      "nodes": 365,
+      "attention": [
+        "groupedQueryAttention"
+      ],
+      "paramCheck": {
+        "estimate": 233080000000,
+        "real": 235740000000,
+        "deviationPct": -1.1
+      },
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/deepseek-v2/model.json",
+        "huggingface": "https://huggingface.co/deepseek-ai/DeepSeek-V2",
+        "github": "https://github.com/deepseek-ai/DeepSeek-V2"
+      },
+      "diagram": "architectures/deepseek-v2/assets/diagram.png"
+    },
+    {
+      "id": "deepseek-v2-lite",
+      "title": "DeepSeek-V2-Lite",
+      "domain": "Frontier LLMs (2025-2026 wave)",
+      "params": "15.7B total, 2.4B active",
+      "layers": "27",
+      "type": "Decoder-only transformer, sparse MoE (causal LM)",
+      "nodes": 167,
+      "attention": [
+        "groupedQueryAttention"
+      ],
+      "paramCheck": {
+        "estimate": 15790000000,
+        "real": 15710000000,
+        "deviationPct": 0.5
+      },
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/deepseek-v2-lite/model.json",
+        "paper": "https://arxiv.org/abs/2405.04434",
+        "huggingface": "https://huggingface.co/deepseek-ai/DeepSeek-V2-Lite"
+      },
+      "diagram": "architectures/deepseek-v2-lite/assets/diagram.png"
+    },
+    {
+      "id": "deepseek-v3",
+      "title": "DeepSeek-V3",
+      "domain": "Frontier LLMs (2025-2026 wave)",
+      "params": "671B total, 37B active",
+      "layers": "61",
+      "type": "Decoder-only transformer, sparse MoE (causal LM)",
+      "nodes": 371,
+      "attention": [
+        "groupedQueryAttention"
+      ],
+      "paramCheck": {
+        "estimate": 672150000000,
+        "real": 684530000000,
+        "deviationPct": -1.8
+      },
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/deepseek-v3/model.json",
+        "huggingface": "https://huggingface.co/deepseek-ai/DeepSeek-V3",
+        "github": "https://github.com/deepseek-ai/DeepSeek-V3"
+      },
+      "diagram": "architectures/deepseek-v3/assets/diagram.png"
+    },
+    {
+      "id": "densenet-121",
+      "title": "DenseNet-121",
+      "domain": "Computer vision",
+      "params": "8M",
+      "layers": null,
+      "type": "Densely-connected convolutional network",
+      "nodes": 363,
+      "attention": [],
+      "paramCheck": null,
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/densenet-121/model.json",
+        "paper": "https://arxiv.org/abs/1608.06993",
+        "huggingface": "https://huggingface.co/timm/densenet121.tv_in1k"
+      },
+      "diagram": "architectures/densenet-121/assets/diagram.png"
+    },
+    {
+      "id": "diffusion-unet",
+      "title": "Diffusion U-Net (Stable Diffusion)",
+      "domain": "Generative",
+      "params": null,
+      "layers": null,
+      "type": "Params",
+      "nodes": 15,
+      "attention": [
+        "crossAttention"
+      ],
+      "paramCheck": null,
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/diffusion-unet/model.json",
+        "paper": "https://arxiv.org/abs/2112.10752",
+        "github": "https://github.com/CompVis/stable-diffusion",
+        "huggingface": "https://huggingface.co/CompVis/stable-diffusion-v1-4"
+      },
+      "diagram": "architectures/diffusion-unet/assets/diagram.png"
+    },
+    {
+      "id": "din",
+      "title": "DIN (Deep Interest Network)",
+      "domain": "Recommendation and ranking",
+      "params": null,
+      "layers": null,
+      "type": "CTR with user-behavior sequence",
+      "nodes": 12,
+      "attention": [
+        "multiHeadAttention"
+      ],
+      "paramCheck": null,
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/din/model.json",
+        "paper": "https://arxiv.org/abs/1706.06978"
+      },
+      "diagram": "architectures/din/assets/diagram.png"
+    },
+    {
+      "id": "dit-xl2",
+      "title": "DiT-XL/2",
+      "domain": "Generative",
+      "params": "675M (XL/2)",
+      "layers": "28 DiT blocks",
+      "type": "Diffusion model, Transformer backbone",
+      "nodes": 204,
+      "attention": [
+        "multiHeadAttention"
+      ],
+      "paramCheck": null,
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/dit-xl2/model.json",
+        "paper": "https://arxiv.org/abs/2212.09748",
+        "github": "https://github.com/facebookresearch/DiT"
+      },
+      "diagram": "architectures/dit-xl2/assets/diagram.png"
+    },
+    {
+      "id": "dlrm",
+      "title": "DLRM",
+      "domain": "Recommendation and ranking",
+      "params": null,
+      "layers": null,
+      "type": "Params",
+      "nodes": 14,
+      "attention": [],
+      "paramCheck": null,
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/dlrm/model.json",
+        "paper": "https://arxiv.org/abs/1906.00091",
+        "github": "https://github.com/facebookresearch/dlrm"
+      },
+      "diagram": "architectures/dlrm/assets/diagram.png"
+    },
+    {
+      "id": "eeg-conformer",
+      "title": "EEG Conformer",
+      "domain": "Time series and biosignals",
+      "params": null,
+      "layers": null,
+      "type": "Params",
+      "nodes": 22,
+      "attention": [
+        "multiHeadAttention",
+        "flatten"
+      ],
+      "paramCheck": null,
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/eeg-conformer/model.json",
+        "paper": "https://ieeexplore.ieee.org/document/9991178",
+        "github": "https://github.com/eeyhsong/EEG-Conformer"
+      },
+      "diagram": "architectures/eeg-conformer/assets/diagram.png"
+    },
+    {
+      "id": "eegnet",
+      "title": "EEGNet",
+      "domain": "Time series and biosignals",
+      "params": null,
+      "layers": null,
+      "type": "Params",
+      "nodes": 16,
+      "attention": [
+        "flatten"
+      ],
+      "paramCheck": null,
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/eegnet/model.json",
+        "paper": "https://arxiv.org/abs/1611.08024",
+        "github": "https://github.com/vlawhern/arl-eegmodels"
+      },
+      "diagram": "architectures/eegnet/assets/diagram.png"
+    },
+    {
+      "id": "efficientnet-b0",
+      "title": "EfficientNet-B0",
+      "domain": "Computer vision",
+      "params": "5.3M",
+      "layers": null,
+      "type": "Efficient convolutional network",
+      "nodes": 78,
+      "attention": [],
+      "paramCheck": null,
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/efficientnet-b0/model.json",
+        "paper": "https://arxiv.org/abs/1905.11946",
+        "huggingface": "https://huggingface.co/google/efficientnet-b0"
+      },
+      "diagram": "architectures/efficientnet-b0/assets/diagram.png"
+    },
+    {
+      "id": "encodec",
+      "title": "EnCodec",
+      "domain": "Audio and speech",
+      "params": null,
+      "layers": null,
+      "type": "Neural audio codec (autoencoder + quantizer)",
+      "nodes": 21,
+      "attention": [],
+      "paramCheck": null,
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/encodec/model.json",
+        "paper": "https://arxiv.org/abs/2210.13438",
+        "huggingface": "https://huggingface.co/facebook/encodec_24khz"
+      },
+      "diagram": "architectures/encodec/assets/diagram.png"
+    },
+    {
+      "id": "ernie-3.0-base-zh",
+      "title": "ERNIE 3.0 Base (Chinese)",
+      "domain": "NLP encoders and seq2seq",
+      "params": "118M",
+      "layers": "12",
+      "type": "Bidirectional encoder (BERT family)",
+      "nodes": 51,
+      "attention": [
+        "multiHeadAttention"
+      ],
+      "paramCheck": {
+        "estimate": 115800000,
+        "real": 118000000,
+        "deviationPct": -1.9
+      },
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/ernie-3.0-base-zh/model.json",
+        "huggingface": "https://huggingface.co/nghuyong/ernie-3.0-base-zh",
+        "github": "https://github.com/PaddlePaddle/PaddleNLP/tree/develop/model_zoo/ernie-3.0"
+      },
+      "diagram": "architectures/ernie-3.0-base-zh/assets/diagram.png"
+    },
+    {
+      "id": "flamingo",
+      "title": "Flamingo",
+      "domain": "Multimodal",
+      "params": null,
+      "layers": null,
+      "type": "Few-shot visual language model",
+      "nodes": 43,
+      "attention": [
+        "crossAttention",
+        "groupedQueryAttention"
+      ],
+      "paramCheck": null,
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/flamingo/model.json",
+        "paper": "https://arxiv.org/abs/2204.14198"
+      },
+      "diagram": "architectures/flamingo/assets/diagram.png"
+    },
+    {
+      "id": "gemma-4-12b",
+      "title": "Gemma 4 12B",
+      "domain": "Frontier LLMs (2025-2026 wave)",
+      "params": "12B",
+      "layers": "48",
+      "type": "Decoder-only transformer (causal LM)",
+      "nodes": 300,
+      "attention": [
+        "groupedQueryAttention"
+      ],
+      "paramCheck": {
+        "estimate": 11790000000,
+        "real": 11960000000,
+        "deviationPct": -1.5
+      },
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/gemma-4-12b/model.json",
+        "huggingface": "https://huggingface.co/google/gemma-4-12b",
+        "github": "https://github.com/google-deepmind/gemma"
+      },
+      "diagram": "architectures/gemma-4-12b/assets/diagram.png"
+    },
+    {
+      "id": "glm-4.5-air",
+      "title": "GLM-4.5-Air",
+      "domain": "Frontier LLMs (2025-2026 wave)",
+      "params": "106B total, 12B active",
+      "layers": "46",
+      "type": "Decoder-only transformer, sparse MoE (causal LM)",
+      "nodes": 281,
+      "attention": [
+        "groupedQueryAttention"
+      ],
+      "paramCheck": {
+        "estimate": 106850000000,
+        "real": 110470000000,
+        "deviationPct": -3.3
+      },
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/glm-4.5-air/model.json",
+        "huggingface": "https://huggingface.co/zai-org/GLM-4.5-Air",
+        "github": "https://github.com/zai-org/GLM-4.5"
+      },
+      "diagram": "architectures/glm-4.5-air/assets/diagram.png"
+    },
+    {
+      "id": "gpt-oss-120b",
+      "title": "gpt-oss-120b",
+      "domain": "Frontier LLMs (2025-2026 wave)",
+      "params": "117B total, 5.1B active",
+      "layers": "36",
+      "type": "Decoder-only transformer, sparse MoE (causal LM)",
+      "nodes": 221,
+      "attention": [
+        "groupedQueryAttention"
+      ],
+      "paramCheck": {
+        "estimate": 116790000000,
+        "real": 120410000000,
+        "deviationPct": -3
+      },
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/gpt-oss-120b/model.json",
+        "github": "https://github.com/openai/gpt-oss",
+        "huggingface": "https://huggingface.co/openai/gpt-oss-120b"
+      },
+      "diagram": "architectures/gpt-oss-120b/assets/diagram.png"
+    },
+    {
+      "id": "gpt-oss-20b",
+      "title": "gpt-oss-20b",
+      "domain": "Frontier LLMs (2025-2026 wave)",
+      "params": "21B total, 3.6B active",
+      "layers": "24",
+      "type": "Decoder-only transformer, sparse MoE (causal LM)",
+      "nodes": 149,
+      "attention": [
+        "groupedQueryAttention"
+      ],
+      "paramCheck": {
+        "estimate": 20910000000,
+        "real": 21510000000,
+        "deviationPct": -2.8
+      },
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/gpt-oss-20b/model.json",
+        "huggingface": "https://huggingface.co/openai/gpt-oss-20b",
+        "github": "https://github.com/openai/gpt-oss"
+      },
+      "diagram": "architectures/gpt-oss-20b/assets/diagram.png"
+    },
+    {
+      "id": "gpt2-small",
+      "title": "GPT-2 Small",
+      "domain": "LLM classics and building blocks",
+      "params": "124M",
+      "layers": "12",
+      "type": "Decoder-only transformer (causal LM)",
+      "nodes": 75,
+      "attention": [
+        "multiHeadAttention"
+      ],
+      "paramCheck": {
+        "estimate": 123600000,
+        "real": 137000000,
+        "deviationPct": -0.6
+      },
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/gpt2-small/model.json",
+        "huggingface": "https://huggingface.co/openai-community/gpt2",
+        "github": "https://github.com/openai/gpt-2"
+      },
+      "diagram": "architectures/gpt2-small/assets/diagram.png"
+    },
+    {
+      "id": "graph-sage-rec",
+      "title": "GraphSAGE Recommender",
+      "domain": "Recommendation and ranking",
+      "params": null,
+      "layers": null,
+      "type": "Params",
+      "nodes": 10,
+      "attention": [],
+      "paramCheck": null,
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/graph-sage-rec/model.json",
+        "paper": "https://arxiv.org/abs/1706.02216"
+      },
+      "diagram": "architectures/graph-sage-rec/assets/diagram.png"
+    },
+    {
+      "id": "gru4rec",
+      "title": "GRU4Rec",
+      "domain": "Recommendation and ranking",
+      "params": null,
+      "layers": null,
+      "type": "Session-based recommendation",
+      "nodes": 7,
+      "attention": [],
+      "paramCheck": null,
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/gru4rec/model.json",
+        "paper": "https://arxiv.org/abs/1511.06939"
+      },
+      "diagram": "architectures/gru4rec/assets/diagram.png"
+    },
+    {
+      "id": "hubert-base",
+      "title": "HuBERT base",
+      "domain": "Audio and speech",
+      "params": "95M",
+      "layers": null,
+      "type": "Self-supervised speech encoder",
+      "nodes": 30,
+      "attention": [],
+      "paramCheck": null,
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/hubert-base/model.json",
+        "paper": "https://arxiv.org/abs/2106.07447",
+        "huggingface": "https://huggingface.co/facebook/hubert-base-ls960"
+      },
+      "diagram": "architectures/hubert-base/assets/diagram.png"
+    },
+    {
+      "id": "internlm2-7b",
+      "title": "InternLM2-7B",
+      "domain": "Chinese LLMs",
+      "params": "7.7B",
+      "layers": "32",
+      "type": "Decoder-only transformer (causal LM)",
+      "nodes": 197,
+      "attention": [
+        "groupedQueryAttention"
+      ],
+      "paramCheck": {
+        "estimate": 7740000000,
+        "real": 7740000000,
+        "deviationPct": 0
+      },
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/internlm2-7b/model.json",
+        "huggingface": "https://huggingface.co/internlm/internlm2-7b",
+        "github": "https://github.com/InternLM/InternLM"
+      },
+      "diagram": "architectures/internlm2-7b/assets/diagram.png"
+    },
+    {
+      "id": "kimi-k2.6",
+      "title": "Kimi K2.6",
+      "domain": "Frontier LLMs (2025-2026 wave)",
+      "params": "~1.06T total, ~32B active",
+      "layers": "61",
+      "type": "Decoder-only transformer, sparse MoE (causal LM)",
+      "nodes": 247,
+      "attention": [],
+      "paramCheck": {
+        "estimate": 1020000000000,
+        "real": 1060000000000,
+        "deviationPct": -3.3
+      },
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/kimi-k2.6/model.json",
+        "huggingface": "https://huggingface.co/moonshotai/Kimi-K2.6",
+        "github": "https://github.com/MoonshotAI/Kimi-K2"
+      },
+      "diagram": "architectures/kimi-k2.6/assets/diagram.png"
+    },
+    {
+      "id": "lightgcn",
+      "title": "LightGCN",
+      "domain": "Recommendation and ranking",
+      "params": null,
+      "layers": null,
+      "type": "Params",
+      "nodes": 14,
+      "attention": [],
+      "paramCheck": null,
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/lightgcn/model.json",
+        "paper": "https://arxiv.org/abs/2002.02126",
+        "github": "https://github.com/gusye1234/LightGCN-PyTorch"
+      },
+      "diagram": "architectures/lightgcn/assets/diagram.png"
+    },
+    {
+      "id": "llama-4-scout",
+      "title": "Llama 4 Scout",
+      "domain": "Frontier LLMs (2025-2026 wave)",
+      "params": "109B total, 17B active",
+      "layers": "48",
+      "type": "Decoder-only transformer, sparse MoE (causal LM)",
+      "nodes": 434,
+      "attention": [
+        "multiHeadAttention",
+        "groupedQueryAttention"
+      ],
+      "paramCheck": {
+        "estimate": 102550000000,
+        "real": 108640000000,
+        "deviationPct": -5.6
+      },
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/llama-4-scout/model.json",
+        "huggingface": "https://huggingface.co/meta-llama/Llama-4-Scout-17B-16E",
+        "github": "https://github.com/meta-llama/llama-models"
+      },
+      "diagram": "architectures/llama-4-scout/assets/diagram.png"
+    },
+    {
+      "id": "llama3-8b",
+      "title": "Llama-3-8B",
+      "domain": "LLM classics and building blocks",
+      "params": "8B",
+      "layers": "32",
+      "type": "Decoder-only transformer (causal LM)",
+      "nodes": 197,
+      "attention": [
+        "groupedQueryAttention"
+      ],
+      "paramCheck": {
+        "estimate": 8029999999.999999,
+        "real": 8029999999.999999,
+        "deviationPct": 0
+      },
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/llama3-8b/model.json",
+        "huggingface": "https://huggingface.co/meta-llama/Meta-Llama-3-8B",
+        "github": "https://github.com/meta-llama/llama3"
+      },
+      "diagram": "architectures/llama3-8b/assets/diagram.png"
+    },
+    {
+      "id": "llama3-block",
+      "title": "Llama-3 Decoder Block",
+      "domain": "LLM classics and building blocks",
+      "params": null,
+      "layers": null,
+      "type": "Params",
+      "nodes": 10,
+      "attention": [
+        "groupedQueryAttention"
+      ],
+      "paramCheck": null,
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/llama3-block/model.json",
+        "paper": "https://arxiv.org/abs/2407.21783",
+        "github": "https://github.com/meta-llama/llama3",
+        "huggingface": "https://huggingface.co/meta-llama/Meta-Llama-3-8B"
+      },
+      "diagram": "architectures/llama3-block/assets/diagram.png"
+    },
+    {
+      "id": "llava-1.5-7b",
+      "title": "LLaVA-1.5-7B",
+      "domain": "Multimodal",
+      "params": "~7B (mostly the LLM)",
+      "layers": null,
+      "type": "Multimodal LLM (vision + language)",
+      "nodes": 228,
+      "attention": [
+        "groupedQueryAttention"
+      ],
+      "paramCheck": null,
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/llava-1.5-7b/model.json",
+        "paper": "https://arxiv.org/abs/2310.03744",
+        "github": "https://github.com/haotian-liu/LLaVA"
+      },
+      "diagram": "architectures/llava-1.5-7b/assets/diagram.png"
+    },
+    {
+      "id": "mamba-block",
+      "title": "Mamba SSM Block",
+      "domain": "LLM classics and building blocks",
+      "params": null,
+      "layers": null,
+      "type": "Params",
+      "nodes": 16,
+      "attention": [],
+      "paramCheck": null,
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/mamba-block/model.json",
+        "paper": "https://arxiv.org/abs/2312.00752",
+        "github": "https://github.com/state-spaces/mamba"
+      },
+      "diagram": "architectures/mamba-block/assets/diagram.png"
+    },
+    {
+      "id": "minicpm-2b",
+      "title": "MiniCPM-2B",
+      "domain": "Chinese LLMs",
+      "params": "2.7B total (2.4B non-embedding)",
+      "layers": "40",
+      "type": "Decoder-only transformer (causal LM)",
+      "nodes": 243,
+      "attention": [
+        "groupedQueryAttention"
+      ],
+      "paramCheck": {
+        "estimate": 2720000000,
+        "real": 2720000000,
+        "deviationPct": 0.2
+      },
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/minicpm-2b/model.json",
+        "huggingface": "https://huggingface.co/openbmb/MiniCPM-2B-sft-bf16",
+        "github": "https://github.com/OpenBMB/MiniCPM"
+      },
+      "diagram": "architectures/minicpm-2b/assets/diagram.png"
+    },
+    {
+      "id": "mistral-7b",
+      "title": "Mistral-7B",
+      "domain": "LLM classics and building blocks",
+      "params": "7.2B",
+      "layers": "32",
+      "type": "Decoder-only transformer (causal LM)",
+      "nodes": 197,
+      "attention": [
+        "groupedQueryAttention"
+      ],
+      "paramCheck": {
+        "estimate": 7240000000,
+        "real": 7240000000,
+        "deviationPct": 0
+      },
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/mistral-7b/model.json",
+        "huggingface": "https://huggingface.co/mistralai/Mistral-7B-v0.1",
+        "github": "https://github.com/mistralai/mistral-inference"
+      },
+      "diagram": "architectures/mistral-7b/assets/diagram.png"
+    },
+    {
+      "id": "mixtral-block",
+      "title": "Mixtral MoE Block",
+      "domain": "LLM classics and building blocks",
+      "params": null,
+      "layers": null,
+      "type": "Params",
+      "nodes": 9,
+      "attention": [
+        "groupedQueryAttention"
+      ],
+      "paramCheck": null,
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/mixtral-block/model.json",
+        "paper": "https://arxiv.org/abs/2401.04088",
+        "huggingface": "https://huggingface.co/mistralai/Mixtral-8x7B-v0.1"
+      },
+      "diagram": "architectures/mixtral-block/assets/diagram.png"
+    },
+    {
+      "id": "mobilenet-v2",
+      "title": "MobileNetV2",
+      "domain": "Computer vision",
+      "params": "3.5M",
+      "layers": null,
+      "type": "Efficient convolutional network",
+      "nodes": 67,
+      "attention": [],
+      "paramCheck": null,
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/mobilenet-v2/model.json",
+        "paper": "https://arxiv.org/abs/1801.04381",
+        "huggingface": "https://huggingface.co/google/mobilenet_v2_1.0_224"
+      },
+      "diagram": "architectures/mobilenet-v2/assets/diagram.png"
+    },
+    {
+      "id": "modernbert-base",
+      "title": "ModernBERT-Base",
+      "domain": "NLP encoders and seq2seq",
+      "params": "149M",
+      "layers": "22",
+      "type": "Bidirectional encoder",
+      "nodes": 91,
+      "attention": [
+        "multiHeadAttention"
+      ],
+      "paramCheck": {
+        "estimate": 149100000,
+        "real": 149700000,
+        "deviationPct": -0.4
+      },
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/modernbert-base/model.json",
+        "paper": "https://arxiv.org/abs/2412.13663",
+        "huggingface": "https://huggingface.co/answerdotai/ModernBERT-base",
+        "github": "https://github.com/AnswerDotAI/ModernBERT"
+      },
+      "diagram": "architectures/modernbert-base/assets/diagram.png"
+    },
+    {
+      "id": "ncf",
+      "title": "NCF (concat-MLP)",
+      "domain": "Recommendation and ranking",
+      "params": null,
+      "layers": null,
+      "type": "Params",
+      "nodes": 12,
+      "attention": [],
+      "paramCheck": null,
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/ncf/model.json",
+        "paper": "https://arxiv.org/abs/1708.05031",
+        "github": "https://github.com/hexiangnan/neural_collaborative_filtering"
+      },
+      "diagram": "architectures/ncf/assets/diagram.png"
+    },
+    {
+      "id": "neumf",
+      "title": "NeuMF (GMF + MLP)",
+      "domain": "Recommendation and ranking",
+      "params": null,
+      "layers": null,
+      "type": "Params",
+      "nodes": 16,
+      "attention": [],
+      "paramCheck": null,
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/neumf/model.json",
+        "paper": "https://arxiv.org/abs/1708.05031",
+        "github": "https://github.com/hexiangnan/neural_collaborative_filtering"
+      },
+      "diagram": "architectures/neumf/assets/diagram.png"
+    },
+    {
+      "id": "olmo-7b",
+      "title": "OLMo-7B",
+      "domain": "Open & research LLMs (distinct architectures)",
+      "params": "6.9B",
+      "layers": "32",
+      "type": "Decoder-only transformer (causal LM)",
+      "nodes": 197,
+      "attention": [
+        "groupedQueryAttention"
+      ],
+      "paramCheck": {
+        "estimate": 6890000000,
+        "real": 6890000000,
+        "deviationPct": 0
+      },
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/olmo-7b/model.json",
+        "paper": "https://arxiv.org/abs/2402.00838",
+        "huggingface": "https://huggingface.co/allenai/OLMo-7B-0724-hf",
+        "github": "https://github.com/allenai/OLMo"
+      },
+      "diagram": "architectures/olmo-7b/assets/diagram.png"
+    },
+    {
+      "id": "patch-tst",
+      "title": "PatchTST",
+      "domain": "Time series and biosignals",
+      "params": null,
+      "layers": null,
+      "type": "Params",
+      "nodes": 19,
+      "attention": [
+        "multiHeadAttention",
+        "flatten"
+      ],
+      "paramCheck": null,
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/patch-tst/model.json",
+        "paper": "https://arxiv.org/abs/2211.14730",
+        "github": "https://github.com/yuqinie98/PatchTST"
+      },
+      "diagram": "architectures/patch-tst/assets/diagram.png"
+    },
+    {
+      "id": "phi-2",
+      "title": "Phi-2",
+      "domain": "Open & research LLMs (distinct architectures)",
+      "params": "2.78B",
+      "layers": "32",
+      "type": "Decoder-only transformer (causal LM)",
+      "nodes": 197,
+      "attention": [
+        "groupedQueryAttention"
+      ],
+      "paramCheck": {
+        "estimate": 2780000000,
+        "real": 2780000000,
+        "deviationPct": 0
+      },
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/phi-2/model.json",
+        "paper": "https://arxiv.org/abs/2309.05463",
+        "huggingface": "https://huggingface.co/microsoft/phi-2"
+      },
+      "diagram": "architectures/phi-2/assets/diagram.png"
+    },
+    {
+      "id": "phi3-mini",
+      "title": "Phi-3 Mini Block",
+      "domain": "LLM classics and building blocks",
+      "params": null,
+      "layers": null,
+      "type": "Params",
+      "nodes": 12,
+      "attention": [
+        "groupedQueryAttention"
+      ],
+      "paramCheck": null,
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/phi3-mini/model.json",
+        "paper": "https://arxiv.org/abs/2404.14219",
+        "huggingface": "https://huggingface.co/microsoft/Phi-3-mini-4k-instruct"
+      },
+      "diagram": "architectures/phi3-mini/assets/diagram.png"
+    },
+    {
+      "id": "pythia-1.4b",
+      "title": "Pythia-1.4B",
+      "domain": "Open & research LLMs (distinct architectures)",
+      "params": "1.4B",
+      "layers": "24",
+      "type": "Decoder-only transformer (causal LM)",
+      "nodes": 149,
+      "attention": [
+        "multiHeadAttention"
+      ],
+      "paramCheck": {
+        "estimate": 1410000000,
+        "real": 1520000000,
+        "deviationPct": -6.6
+      },
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/pythia-1.4b/model.json",
+        "paper": "https://arxiv.org/abs/2304.01373",
+        "huggingface": "https://huggingface.co/EleutherAI/pythia-1.4b",
+        "github": "https://github.com/EleutherAI/pythia"
+      },
+      "diagram": "architectures/pythia-1.4b/assets/diagram.png"
+    },
+    {
+      "id": "qwen2.5-7b",
+      "title": "Qwen2.5-7B",
+      "domain": "Chinese LLMs",
+      "params": "7.6B",
+      "layers": "28",
+      "type": "Decoder-only transformer (causal LM)",
+      "nodes": 173,
+      "attention": [
+        "groupedQueryAttention"
+      ],
+      "paramCheck": {
+        "estimate": 7620000000,
+        "real": 7620000000,
+        "deviationPct": 0
+      },
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/qwen2.5-7b/model.json",
+        "huggingface": "https://huggingface.co/Qwen/Qwen2.5-7B",
+        "github": "https://github.com/QwenLM/Qwen2.5"
+      },
+      "diagram": "architectures/qwen2.5-7b/assets/diagram.png"
+    },
+    {
+      "id": "qwen3-8b",
+      "title": "Qwen3-8B",
+      "domain": "Frontier LLMs (2025-2026 wave)",
+      "params": "8.2B",
+      "layers": "36",
+      "type": "Decoder-only transformer (causal LM)",
+      "nodes": 221,
+      "attention": [
+        "groupedQueryAttention"
+      ],
+      "paramCheck": {
+        "estimate": 8189999999.999999,
+        "real": 8189999999.999999,
+        "deviationPct": 0
+      },
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/qwen3-8b/model.json",
+        "huggingface": "https://huggingface.co/Qwen/Qwen3-8B",
+        "github": "https://github.com/QwenLM/Qwen3"
+      },
+      "diagram": "architectures/qwen3-8b/assets/diagram.png"
+    },
+    {
+      "id": "resnet-50",
+      "title": "ResNet-50",
+      "domain": "Computer vision",
+      "params": "25.6M",
+      "layers": null,
+      "type": "Convolutional network (image classification)",
+      "nodes": 176,
+      "attention": [],
+      "paramCheck": {
+        "estimate": 25600000,
+        "real": 25600000,
+        "deviationPct": -0.1
+      },
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/resnet-50/model.json",
+        "paper": "https://arxiv.org/abs/1512.03385",
+        "huggingface": "https://huggingface.co/microsoft/resnet-50"
+      },
+      "diagram": "architectures/resnet-50/assets/diagram.png"
+    },
+    {
+      "id": "resnet-block",
+      "title": "ResNet Residual Block",
+      "domain": "Computer vision",
+      "params": null,
+      "layers": null,
+      "type": "Params",
+      "nodes": 9,
+      "attention": [],
+      "paramCheck": null,
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/resnet-block/model.json",
+        "paper": "https://arxiv.org/abs/1512.03385"
+      },
+      "diagram": "architectures/resnet-block/assets/diagram.png"
+    },
+    {
+      "id": "sasrec",
+      "title": "SASRec",
+      "domain": "Recommendation and ranking",
+      "params": null,
+      "layers": null,
+      "type": "Sequential recommendation",
+      "nodes": 16,
+      "attention": [
+        "causalAttention"
+      ],
+      "paramCheck": null,
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/sasrec/model.json",
+        "paper": "https://arxiv.org/abs/1808.09781"
+      },
+      "diagram": "architectures/sasrec/assets/diagram.png"
+    },
+    {
+      "id": "siglip-base",
+      "title": "SigLIP base",
+      "domain": "Multimodal",
+      "params": "203M",
+      "layers": null,
+      "type": "Contrastive image-text dual encoder",
+      "nodes": 36,
+      "attention": [],
+      "paramCheck": null,
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/siglip-base/model.json",
+        "paper": "https://arxiv.org/abs/2303.15343",
+        "huggingface": "https://huggingface.co/google/siglip-base-patch16-224"
+      },
+      "diagram": "architectures/siglip-base/assets/diagram.png"
+    },
+    {
+      "id": "simple-cnn",
+      "title": "Simple CNN",
+      "domain": "Computer vision",
+      "params": null,
+      "layers": null,
+      "type": "Params",
+      "nodes": 9,
+      "attention": [
+        "flatten"
+      ],
+      "paramCheck": null,
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/simple-cnn/model.json",
+        "paper": "https://ieeexplore.ieee.org/document/726791"
+      },
+      "diagram": "architectures/simple-cnn/assets/diagram.png"
+    },
+    {
+      "id": "simple-rnn",
+      "title": "Simple RNN",
+      "domain": "NLP encoders and seq2seq",
+      "params": null,
+      "layers": null,
+      "type": "Params",
+      "nodes": 4,
+      "attention": [],
+      "paramCheck": null,
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/simple-rnn/model.json",
+        "paper": "https://onlinelibrary.wiley.com/doi/10.1207/s15516709cog1402_1"
+      },
+      "diagram": "architectures/simple-rnn/assets/diagram.png"
+    },
+    {
+      "id": "skywork-13b",
+      "title": "Skywork-13B",
+      "domain": "Chinese LLMs",
+      "params": "13.8B",
+      "layers": "52",
+      "type": "Decoder-only transformer (causal LM)",
+      "nodes": 317,
+      "attention": [
+        "groupedQueryAttention"
+      ],
+      "paramCheck": {
+        "estimate": 13850000000,
+        "real": 13850000000,
+        "deviationPct": 0
+      },
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/skywork-13b/model.json",
+        "huggingface": "https://huggingface.co/Skywork/Skywork-13B-base",
+        "github": "https://github.com/SkyworkAI/Skywork"
+      },
+      "diagram": "architectures/skywork-13b/assets/diagram.png"
+    },
+    {
+      "id": "sli-rec",
+      "title": "SLi-Rec",
+      "domain": "Recommendation and ranking",
+      "params": null,
+      "layers": null,
+      "type": "Params",
+      "nodes": 18,
+      "attention": [
+        "selfAttention"
+      ],
+      "paramCheck": null,
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/sli-rec/model.json",
+        "paper": "https://www.ijcai.org/proceedings/2019/585",
+        "github": "https://github.com/recommenders-team/recommenders"
+      },
+      "diagram": "architectures/sli-rec/assets/diagram.png"
+    },
+    {
+      "id": "swin-tiny",
+      "title": "Swin Transformer (Tiny)",
+      "domain": "Computer vision",
+      "params": "28M",
+      "layers": null,
+      "type": "Hierarchical Vision Transformer",
+      "nodes": 81,
+      "attention": [
+        "multiHeadAttention"
+      ],
+      "paramCheck": null,
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/swin-tiny/model.json",
+        "paper": "https://arxiv.org/abs/2103.14030",
+        "huggingface": "https://huggingface.co/microsoft/swin-tiny-patch4-window7-224"
+      },
+      "diagram": "architectures/swin-tiny/assets/diagram.png"
+    },
+    {
+      "id": "t5-small",
+      "title": "T5-Small",
+      "domain": "NLP encoders and seq2seq",
+      "params": "60.5M",
+      "layers": "6 encoder + 6 decoder",
+      "type": "Encoder-decoder transformer (text-to-text)",
+      "nodes": 71,
+      "attention": [
+        "multiHeadAttention",
+        "crossAttention"
+      ],
+      "paramCheck": {
+        "estimate": 60600000,
+        "real": 60500000,
+        "deviationPct": 0.1
+      },
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/t5-small/model.json",
+        "paper": "https://arxiv.org/abs/1910.10683",
+        "huggingface": "https://huggingface.co/google-t5/t5-small"
+      },
+      "diagram": "architectures/t5-small/assets/diagram.png"
+    },
+    {
+      "id": "transformer-block",
+      "title": "Transformer Encoder Block",
+      "domain": "LLM classics and building blocks",
+      "params": null,
+      "layers": null,
+      "type": "Params",
+      "nodes": 8,
+      "attention": [
+        "multiHeadAttention"
+      ],
+      "paramCheck": null,
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/transformer-block/model.json",
+        "paper": "https://arxiv.org/abs/1706.03762"
+      },
+      "diagram": "architectures/transformer-block/assets/diagram.png"
+    },
+    {
+      "id": "two-tower",
+      "title": "Two-Tower Retrieval",
+      "domain": "Recommendation and ranking",
+      "params": null,
+      "layers": null,
+      "type": "Params",
+      "nodes": 12,
+      "attention": [],
+      "paramCheck": null,
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/two-tower/model.json",
+        "paper": "https://dl.acm.org/doi/10.1145/3298689.3346996"
+      },
+      "diagram": "architectures/two-tower/assets/diagram.png"
+    },
+    {
+      "id": "unet",
+      "title": "U-Net",
+      "domain": "Computer vision",
+      "params": null,
+      "layers": null,
+      "type": "Params",
+      "nodes": 24,
+      "attention": [],
+      "paramCheck": null,
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/unet/model.json",
+        "paper": "https://arxiv.org/abs/1505.04597"
+      },
+      "diagram": "architectures/unet/assets/diagram.png"
+    },
+    {
+      "id": "vgg-16",
+      "title": "VGG-16",
+      "domain": "Computer vision",
+      "params": null,
+      "layers": null,
+      "type": "Params",
+      "nodes": 42,
+      "attention": [
+        "flatten"
+      ],
+      "paramCheck": {
+        "estimate": 138400000,
+        "real": 138400000,
+        "deviationPct": 0
+      },
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/vgg-16/model.json",
+        "paper": "https://arxiv.org/abs/1409.1556"
+      },
+      "diagram": "architectures/vgg-16/assets/diagram.png"
+    },
+    {
+      "id": "vit-b16",
+      "title": "ViT-B/16",
+      "domain": "Computer vision",
+      "params": "86M",
+      "layers": "12 encoder blocks",
+      "type": "Vision Transformer (image classification)",
+      "nodes": 75,
+      "attention": [
+        "multiHeadAttention"
+      ],
+      "paramCheck": {
+        "estimate": 85200000,
+        "real": 86600000,
+        "deviationPct": -1.6
+      },
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/vit-b16/model.json",
+        "paper": "https://arxiv.org/abs/2010.11929",
+        "huggingface": "https://huggingface.co/google/vit-base-patch16-224"
+      },
+      "diagram": "architectures/vit-b16/assets/diagram.png"
+    },
+    {
+      "id": "wav2vec2-base",
+      "title": "Wav2Vec2 base",
+      "domain": "Audio and speech",
+      "params": "95M",
+      "layers": null,
+      "type": "Self-supervised speech encoder",
+      "nodes": 30,
+      "attention": [],
+      "paramCheck": null,
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/wav2vec2-base/model.json",
+        "paper": "https://arxiv.org/abs/2006.11477",
+        "huggingface": "https://huggingface.co/facebook/wav2vec2-base-960h"
+      },
+      "diagram": "architectures/wav2vec2-base/assets/diagram.png"
+    },
+    {
+      "id": "whisper-small",
+      "title": "Whisper Small",
+      "domain": "Audio and speech",
+      "params": "244M",
+      "layers": "12 encoder + 12 decoder",
+      "type": "Speech-to-text encoder-decoder",
+      "nodes": 48,
+      "attention": [
+        "crossAttention"
+      ],
+      "paramCheck": {
+        "estimate": 240200000,
+        "real": 241700000,
+        "deviationPct": -0.6
+      },
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/whisper-small/model.json",
+        "paper": "https://arxiv.org/abs/2212.04356",
+        "github": "https://github.com/openai/whisper",
+        "huggingface": "https://huggingface.co/openai/whisper-small"
+      },
+      "diagram": "architectures/whisper-small/assets/diagram.png"
+    },
+    {
+      "id": "wide-and-deep",
+      "title": "Wide & Deep",
+      "domain": "Recommendation and ranking",
+      "params": null,
+      "layers": null,
+      "type": "Params",
+      "nodes": 12,
+      "attention": [],
+      "paramCheck": null,
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/wide-and-deep/model.json",
+        "paper": "https://arxiv.org/abs/1606.07792"
+      },
+      "diagram": "architectures/wide-and-deep/assets/diagram.png"
+    },
+    {
+      "id": "yi-6b",
+      "title": "Yi-6B",
+      "domain": "Chinese LLMs",
+      "params": "6B",
+      "layers": "32",
+      "type": "Decoder-only transformer (causal LM)",
+      "nodes": 197,
+      "attention": [
+        "groupedQueryAttention"
+      ],
+      "paramCheck": {
+        "estimate": 6060000000,
+        "real": 6060000000,
+        "deviationPct": 0
+      },
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/yi-6b/model.json",
+        "huggingface": "https://huggingface.co/01-ai/Yi-6B",
+        "github": "https://github.com/01-ai/Yi"
+      },
+      "diagram": "architectures/yi-6b/assets/diagram.png"
+    }
+  ]
+}

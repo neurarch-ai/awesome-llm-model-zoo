@@ -14,6 +14,7 @@ import { fileURLToPath } from 'node:url';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const ARCH = join(ROOT, 'architectures');
+const PARAM_TOLERANCE = 10; // percent; the published estimate-vs-real gate
 
 const entries = readdirSync(ARCH).filter((d) => statSync(join(ARCH, d)).isDirectory());
 let failed = 0;
@@ -71,6 +72,17 @@ for (const id of entries) {
     return false;
   };
   for (const n of ids) if (state.get(n) === undefined && hasCycle(n)) { fail(id, 'graph has a cycle'); break; }
+
+  // 6. parameter check — for every entry that publishes a deviation, the
+  //    per-layer estimate (from the app, captured in the README at generation)
+  //    must stay within PARAM_TOLERANCE of the real weight count. Makes the
+  //    README's headline "every checked entry within 10%" a live CI gate, with
+  //    no app dependency.
+  const readme = readFileSync(join(dir, 'README.md'), 'utf8');
+  const devM = readme.match(/Deviation from the authoritative count \([^)]*\):\s*\*\*([+-]?[\d.]+)%\*\*/i);
+  if (devM && Math.abs(parseFloat(devM[1])) > PARAM_TOLERANCE) {
+    fail(id, `published deviation ${devM[1]}% is over ±${PARAM_TOLERANCE}%`);
+  }
 
   if (problems.length > before) failed++;
 }
