@@ -1177,7 +1177,220 @@ function buildEnCodec(): Graph {
   });
 }
 
+// ── Decoder LLMs the app importer can't model accurately (gated config, or it
+//    mis-counts multi-query / parallel-residual attention), hand-built from the
+//    official config so the param gate holds. ───────────────────────────────
+function buildDecoderFull(cfg: {
+  id: string; name: string; description: string;
+  hidden: number; layers: number; heads: number; kvHeads: number; headDim: number;
+  ffn: number; vocab: number; norm: 'rmsNorm' | 'layerNorm';
+  parallel?: boolean; tied?: boolean;
+}): Graph {
+  const comps: Comp[] = []; const conns: Conn[] = []; let ci = 0; let y = 50;
+  const add = (type: string, name: string, params: Record<string, unknown>, opts: { x?: number; scope?: string; notes?: string; sameRow?: boolean } = {}) => {
+    if (!opts.sameRow) y += 130;
+    const c: Comp = { id: `${type}-${comps.length + 1}`, type, name, position: { x: opts.x ?? 300, y }, params, inputs: [], outputs: [] };
+    if (opts.scope) c.scope = opts.scope; if (opts.notes) c.notes = opts.notes;
+    comps.push(c); return c;
+  };
+  const wire = (a: Comp, b: Comp) => { conns.push({ id: `c${++ci}`, from: a.id, to: b.id }); };
+  const attnParams = { embedDim: cfg.hidden, numHeads: cfg.heads, numKVHeads: cfg.kvHeads, headDim: cfg.headDim };
+
+  y -= 130;
+  const inp = add('input', 'tokens', { shape: [1, 2048] });
+  const emb = add('embedding', 'token_embed', { numEmbeddings: cfg.vocab, embeddingDim: cfg.hidden }, { scope: 'embeddings' });
+  wire(inp, emb);
+  let prev: Comp = emb;
+  for (let l = 0; l < cfg.layers; l++) {
+    const scope = `layer.${l}`;
+    const note = l === 0 ? `One of ${cfg.layers} decoder blocks.` : undefined;
+    if (cfg.parallel) {
+      // Falcon / GPT-NeoX: one norm feeds attention AND MLP, both summed into the residual.
+      const n = add(cfg.norm, `norm_${l + 1}`, { normalizedShape: cfg.hidden }, { scope, notes: note });
+      wire(prev, n);
+      const attn = add('groupedQueryAttention', `attn_${l + 1}`, attnParams, { scope });
+      wire(n, attn);
+      const ffn = add('feedForward', `mlp_${l + 1}`, { embedDim: cfg.hidden, ffDim: cfg.ffn }, { scope, x: 580, sameRow: true });
+      wire(n, ffn);
+      const sum = add('add', `residual_${l + 1}`, {}, { scope });
+      wire(prev, sum); wire(attn, sum); wire(ffn, sum);
+      prev = sum;
+    } else {
+      const n1 = add(cfg.norm, `attn_norm_${l + 1}`, { normalizedShape: cfg.hidden }, { scope, notes: note });
+      wire(prev, n1);
+      const attn = add('groupedQueryAttention', `attn_${l + 1}`, attnParams, { scope });
+      wire(n1, attn);
+      const a1 = add('add', `attn_residual_${l + 1}`, {}, { scope });
+      wire(prev, a1); wire(attn, a1);
+      const n2 = add(cfg.norm, `mlp_norm_${l + 1}`, { normalizedShape: cfg.hidden }, { scope });
+      wire(a1, n2);
+      const ffn = add('feedForward', `mlp_${l + 1}`, { embedDim: cfg.hidden, ffDim: cfg.ffn }, { scope });
+      wire(n2, ffn);
+      const a2 = add('add', `mlp_residual_${l + 1}`, {}, { scope });
+      wire(a1, a2); wire(ffn, a2);
+      prev = a2;
+    }
+  }
+  const fnorm = add(cfg.norm, 'final_norm', { normalizedShape: cfg.hidden }, { scope: 'norm' });
+  wire(prev, fnorm);
+  const head = add('linear', 'lm_head', { inFeatures: cfg.hidden, outFeatures: cfg.vocab, ...(cfg.tied ? { tied: true } : {}) }, { scope: 'head' });
+  wire(fnorm, head);
+  const out = add('output', 'logits', {});
+  wire(head, out);
+  return { id: cfg.id, name: cfg.name, description: cfg.description, components: comps, connections: conns };
+}
+
+function buildFalcon7B(): Graph {
+  return buildDecoderFull({
+    id: 'falcon-7b', name: 'Falcon-7B',
+    description: 'Falcon-7B (TII 2023): full 32-layer decoder with parallel attention + MLP (one input LayerNorm feeds both, summed into the residual) and multi-query attention (71 query heads share a single KV head). RoPE positions, GELU MLP, no biases. Parameter-faithful (7.2B).',
+    hidden: 4544, layers: 32, heads: 71, kvHeads: 1, headDim: 64, ffn: 18176, vocab: 65024,
+    norm: 'layerNorm', parallel: true, tied: false,
+  });
+}
+
+function buildMPT7B(): Graph {
+  return buildDecoderFull({
+    id: 'mpt-7b', name: 'MPT-7B',
+    description: 'MPT-7B (MosaicML 2023): full 32-layer decoder using ALiBi positional bias instead of learned or rotary positions, with no biases anywhere and tied input/output embeddings. Standard multi-head attention, GELU MLP. Parameter-faithful (6.6B).',
+    hidden: 4096, layers: 32, heads: 32, kvHeads: 32, headDim: 128, ffn: 16384, vocab: 50432,
+    norm: 'layerNorm', parallel: false, tied: true,
+  });
+}
+
+function buildJamba(): Graph {
+  // Jamba-v0.1 (AI21 2024): 32 layers as 4 repeating 8-layer blocks. Each block
+  // is 7 Mamba (SSM) mixers + 1 attention mixer (layer 4); the second sub-layer
+  // is a 16-expert top-2 MoE on odd layers, a single MLP on even ones.
+  const comps: Comp[] = []; const conns: Conn[] = []; let ci = 0; let y = 50;
+  const add = (type: string, name: string, params: Record<string, unknown>, opts: { x?: number; scope?: string; notes?: string } = {}) => {
+    y += 130;
+    const c: Comp = { id: `${type}-${comps.length + 1}`, type, name, position: { x: 300, y }, params, inputs: [], outputs: [] };
+    if (opts.scope) c.scope = opts.scope; if (opts.notes) c.notes = opts.notes;
+    comps.push(c); return c;
+  };
+  const wire = (a: Comp, b: Comp) => { conns.push({ id: `c${++ci}`, from: a.id, to: b.id }); };
+  const H = 4096;
+  y -= 130;
+  const inp = add('input', 'tokens', { shape: [1, 4096] });
+  const emb = add('embedding', 'token_embed', { numEmbeddings: 65536, embeddingDim: H }, { scope: 'embeddings' });
+  wire(inp, emb);
+  let prev: Comp = emb;
+  // One representative 8-layer Jamba block (7 Mamba mixers + 1 attention; MoE on
+  // odd layers). The full model stacks 4 of these for 32 layers; folding the
+  // whole stack reads poorly because the block's internal period isn't uniform,
+  // so the canonical block is shown the way mamba-block / mixtral-block are.
+  for (let l = 0; l < 8; l++) {
+    const scope = `layer.${l}`;
+    const isAttn = l === 4;
+    const isMoE = (l % 2) === 1;
+    const n1 = add('rmsNorm', `mixer_norm_${l + 1}`, { normalizedShape: H }, { scope, notes: l === 0 ? 'One 8-layer Jamba block: 7 Mamba mixers + 1 attention (layer 5), MoE every other layer. The full model stacks 4 of these (32 layers).' : undefined });
+    wire(prev, n1);
+    const mixer = isAttn
+      ? add('groupedQueryAttention', `attn_${l + 1}`, { embedDim: H, numHeads: 32, numKVHeads: 8, headDim: 128 }, { scope })
+      : add('mamba', `mamba_${l + 1}`, { dModel: H, dState: 16, expand: 2 }, { scope });
+    wire(n1, mixer);
+    const a1 = add('add', `mixer_residual_${l + 1}`, {}, { scope });
+    wire(prev, a1); wire(mixer, a1);
+    const n2 = add('rmsNorm', `ffn_norm_${l + 1}`, { normalizedShape: H }, { scope });
+    wire(a1, n2);
+    const ffn = isMoE
+      ? add('moeLayer', `moe_${l + 1}`, { embedDim: H, numExperts: 16, topK: 2, expertDim: 14336 }, { scope })
+      : add('feedForward', `mlp_${l + 1}`, { embedDim: H, ffDim: 14336 }, { scope });
+    wire(n2, ffn);
+    const a2 = add('add', `ffn_residual_${l + 1}`, {}, { scope });
+    wire(a1, a2); wire(ffn, a2);
+    prev = a2;
+  }
+  const fnorm = add('rmsNorm', 'final_norm', { normalizedShape: H }, { scope: 'norm' });
+  wire(prev, fnorm);
+  const head = add('linear', 'lm_head', { inFeatures: H, outFeatures: 65536 }, { scope: 'head' });
+  wire(fnorm, head);
+  const out = add('output', 'logits', {});
+  wire(head, out);
+  return {
+    id: 'jamba', name: 'Jamba',
+    description: 'Jamba-v0.1 (AI21 2024): a hybrid SSM-Transformer-MoE. It interleaves Mamba (state-space) mixers with periodic attention, and swaps some MLPs for a 16-expert top-2 MoE. Shown here as one representative 8-layer block (7 Mamba + 1 attention; MoE every other layer); the full model stacks 4 of these for 32 layers. 52B total / 12B active; structural reference (the SSM + MoE parameter mix is not param-gated).',
+    components: comps, connections: conns,
+  };
+}
+
 const HFFULL: HFFullEntry[] = [
+  {
+    kind: 'hffull', id: 'falcon-7b', displayName: 'Falcon-7B', org: 'Technology Innovation Institute (TII)',
+    paramsLabel: '7.2B', fullBuild: buildFalcon7B, officialParams: 7.22e9,
+    links: [
+      ['Paper (The Falcon Series)', 'https://arxiv.org/abs/2311.16867'],
+      ['Hugging Face', 'https://huggingface.co/tiiuae/falcon-7b'],
+    ],
+    license: 'Apache 2.0',
+    archRows: [
+      ['Type', 'Decoder-only transformer (causal LM)'], ['Parameters', '7.2B'],
+      ['Layers', '32'], ['Hidden size', '4,544'],
+      ['Attention', 'Multi-query: 71 query heads, 1 KV head, head dim 64'],
+      ['FFN', 'GELU MLP, intermediate size 18,176 (4x)'],
+      ['Residual', 'Parallel: one LayerNorm feeds attention and MLP, both summed'],
+      ['Normalization', 'LayerNorm, pre-norm'], ['Positions', 'RoPE'],
+      ['Vocabulary', '65,024'], ['Max context', '2,048'],
+    ],
+    blurb: 'TII\'s 2023 open LLM, briefly the top of the Open LLM Leaderboard. Two architecture bets define it: multi-query attention (all 71 query heads share a single key/value head, shrinking the KV cache ~70x) and a parallel residual block where one LayerNorm feeds attention and the MLP at once, both summed back.',
+    notes: [
+      'Multi-query attention: 71 query heads but only 1 KV head, the extreme end of the MHA -> GQA -> MQA spectrum.',
+      'Parallel attention + MLP (GPT-NeoX style): both consume the same normed input and add into the residual, saving a norm per layer.',
+      'GELU MLP (not gated SwiGLU) and no biases anywhere; RoPE for positions.',
+    ],
+  },
+  {
+    kind: 'hffull', id: 'mpt-7b', displayName: 'MPT-7B', org: 'MosaicML (Databricks)',
+    paramsLabel: '6.6B', fullBuild: buildMPT7B, officialParams: 6.65e9,
+    tyingNote: 'MPT ties the LM head to the token embedding, so the 50,432 x 4,096 matrix is counted once.',
+    links: [
+      ['Blog (MosaicML)', 'https://www.databricks.com/blog/mpt-7b-7b-8k'],
+      ['Hugging Face', 'https://huggingface.co/mosaicml/mpt-7b'],
+    ],
+    license: 'Apache 2.0',
+    archRows: [
+      ['Type', 'Decoder-only transformer (causal LM)'], ['Parameters', '6.6B'],
+      ['Layers', '32'], ['Hidden size', '4,096'],
+      ['Attention', 'Multi-head: 32 heads, head dim 128'],
+      ['FFN', 'GELU MLP, intermediate size 16,384 (4x)'],
+      ['Normalization', 'LayerNorm, pre-norm'],
+      ['Positions', 'ALiBi (linear attention bias, no positional embeddings)'],
+      ['Vocabulary', '50,432'], ['Max context', '2,048 trained; extrapolates via ALiBi'],
+    ],
+    blurb: 'MosaicML\'s 2023 open, commercially-usable LLM. Its defining choice is ALiBi: instead of learned or rotary position embeddings, it biases attention scores by a linear penalty on key-query distance, which lets the model extrapolate to context lengths well beyond training. No biases, tied embeddings, plain GELU MLP.',
+    notes: [
+      'ALiBi (Attention with Linear Biases): no positional embedding tensor at all; a fixed per-head linear distance penalty is added to attention scores, enabling length extrapolation.',
+      'No biases anywhere and tied input/output embeddings, keeping the parameter count tight.',
+      'Standard multi-head attention with a 128 head dim; a clean baseline for the ALiBi positional approach.',
+    ],
+  },
+  {
+    kind: 'hffull', id: 'jamba', displayName: 'Jamba', org: 'AI21 Labs',
+    paramsLabel: '52B total / 12B active', fullBuild: buildJamba,
+    links: [
+      ['Paper (Jamba)', 'https://arxiv.org/abs/2403.19887'],
+      ['Hugging Face', 'https://huggingface.co/ai21labs/Jamba-v0.1'],
+    ],
+    license: 'Apache 2.0',
+    archRows: [
+      ['Type', 'Hybrid SSM-Transformer-MoE decoder (causal LM)'],
+      ['Parameters', '52B total / 12B active'],
+      ['Layers', '32 (4 blocks of 8)'], ['Hidden size', '4,096'],
+      ['Mixers', '7 Mamba (SSM) + 1 attention per 8-layer block'],
+      ['Attention', 'GQA: 32 query heads, 8 KV heads (1 in every 8 layers)'],
+      ['FFN', 'MoE on odd layers (16 experts, top-2); single MLP on even layers'],
+      ['Normalization', 'RMSNorm, pre-norm'],
+      ['Positions', 'None; Mamba mixers carry order through the SSM recurrence'],
+      ['Max context', '256K'],
+    ],
+    blurb: 'AI21\'s 2024 hybrid: the first production-scale model to interleave Mamba state-space mixers with Transformer attention, plus MoE. Most layers are Mamba (linear-time, no KV cache); one in eight is attention (for in-context recall); MoE replaces every other MLP. The result fits a 256K context on a single 80GB GPU.',
+    notes: [
+      'Hybrid mixer stack: 7 Mamba SSM layers per 1 attention layer, so the KV cache and quadratic cost only appear on 1/8 of layers.',
+      'MoE every other layer: 16 experts, top-2 routing, giving 52B total but ~12B active per token.',
+      'Shown as a structural reference: the SSM + MoE parameter mix is documented (52B / 12B) rather than recomputed by the per-layer estimator, so this entry carries no param-gate deviation.',
+    ],
+  },
   {
     kind: 'hffull', id: 'resnet-50', displayName: 'ResNet-50', org: 'Microsoft Research (He et al.)',
     paramsLabel: '25.6M', fullBuild: buildResNet50Full, officialParams: 25.6e6,
@@ -2427,6 +2640,13 @@ function specArchTable(s: DecoderSpec | EncoderSpec): string {
 }
 
 function paramCheckSection(model: Graph, check: ParamCheck, tyingNote?: string): string {
+  // Ungated structural reference (e.g. Jamba's SSM + MoE mix, or a one-block
+  // view): no authoritative whole-model count to gate against, so don't print a
+  // bare estimate that could be misread as the model size.
+  if (!check.expected) {
+    return ['## Parameter check', '',
+      'This entry is a **structural reference**: its parameter mix is not recomputed by the per-layer estimator, so it carries no deviation gate. See the hyperparameter table above for the authoritative total / active parameter counts.'].join('\n');
+  }
   const lines: string[] = ['## Parameter check', ''];
   lines.push(`Neurarch's per-layer parameter estimate over this graph: **${fmtP(check.est)}**.`);
   if (model.realParamCount) lines.push(`Hugging Face safetensors metadata reports **${fmtP(model.realParamCount)}** for the real weights.`);

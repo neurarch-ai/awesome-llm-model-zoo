@@ -1,7 +1,7 @@
 {
   "name": "Neurarch Model Zoo",
   "generated_by": "scripts/build-index.mjs",
-  "count": 78,
+  "count": 81,
   "models": [
     {
       "id": "all-minilm-l6",
@@ -566,6 +566,29 @@
       "diagram": "architectures/ernie-3.0-base-zh/assets/diagram.png"
     },
     {
+      "id": "falcon-7b",
+      "title": "Falcon-7B",
+      "domain": "Open & research LLMs (distinct architectures)",
+      "params": "7.2B",
+      "layers": "32",
+      "type": "Decoder-only transformer (causal LM)",
+      "nodes": 133,
+      "attention": [
+        "groupedQueryAttention"
+      ],
+      "paramCheck": {
+        "estimate": 7220000000,
+        "real": 7220000000,
+        "deviationPct": 0
+      },
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/falcon-7b/model.json",
+        "paper": "https://arxiv.org/abs/2311.16867",
+        "huggingface": "https://huggingface.co/tiiuae/falcon-7b"
+      },
+      "diagram": "architectures/falcon-7b/assets/diagram.png"
+    },
+    {
       "id": "flamingo",
       "title": "Flamingo",
       "domain": "Multimodal",
@@ -770,6 +793,25 @@
         "github": "https://github.com/InternLM/InternLM"
       },
       "diagram": "architectures/internlm2-7b/assets/diagram.png"
+    },
+    {
+      "id": "jamba",
+      "title": "Jamba",
+      "domain": "Open & research LLMs (distinct architectures)",
+      "params": "52B total / 12B active",
+      "layers": "32 (4 blocks of 8)",
+      "type": "Hybrid SSM-Transformer-MoE decoder (causal LM)",
+      "nodes": 53,
+      "attention": [
+        "groupedQueryAttention"
+      ],
+      "paramCheck": null,
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/jamba/model.json",
+        "paper": "https://arxiv.org/abs/2403.19887",
+        "huggingface": "https://huggingface.co/ai21labs/Jamba-v0.1"
+      },
+      "diagram": "architectures/jamba/assets/diagram.png"
     },
     {
       "id": "kimi-k2.6",
@@ -1017,6 +1059,28 @@
         "github": "https://github.com/AnswerDotAI/ModernBERT"
       },
       "diagram": "architectures/modernbert-base/assets/diagram.png"
+    },
+    {
+      "id": "mpt-7b",
+      "title": "MPT-7B",
+      "domain": "Open & research LLMs (distinct architectures)",
+      "params": "6.6B",
+      "layers": "32",
+      "type": "Decoder-only transformer (causal LM)",
+      "nodes": 197,
+      "attention": [
+        "groupedQueryAttention"
+      ],
+      "paramCheck": {
+        "estimate": 6650000000,
+        "real": 6650000000,
+        "deviationPct": 0
+      },
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/mpt-7b/model.json",
+        "huggingface": "https://huggingface.co/mosaicml/mpt-7b"
+      },
+      "diagram": "architectures/mpt-7b/assets/diagram.png"
     },
     {
       "id": "ncf",
