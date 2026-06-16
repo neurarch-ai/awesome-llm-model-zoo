@@ -1,0 +1,121 @@
+{
+  "id": "attn-full",
+  "name": "Full Attention Block",
+  "components": [
+    {
+      "id": "input-1",
+      "type": "input",
+      "name": "hidden",
+      "position": {
+        "x": 300,
+        "y": 60
+      },
+      "params": {
+        "shape": [
+          128,
+          512
+        ]
+      },
+      "inputs": [],
+      "outputs": [
+        "norm-1",
+        "add-1"
+      ]
+    },
+    {
+      "id": "norm-1",
+      "type": "layerNorm",
+      "name": "attn_norm",
+      "position": {
+        "x": 300,
+        "y": 220
+      },
+      "params": {
+        "normalizedShape": 512
+      },
+      "inputs": [
+        "input-1"
+      ],
+      "outputs": [
+        "attn-1"
+      ]
+    },
+    {
+      "id": "attn-1",
+      "type": "multiHeadAttention",
+      "name": "FullAttention",
+      "position": {
+        "x": 300,
+        "y": 380
+      },
+      "params": {
+        "embedDim": 512,
+        "numHeads": 8
+      },
+      "inputs": [
+        "norm-1"
+      ],
+      "outputs": [
+        "add-1"
+      ]
+    },
+    {
+      "id": "add-1",
+      "type": "add",
+      "name": "residual",
+      "position": {
+        "x": 300,
+        "y": 540
+      },
+      "params": {},
+      "inputs": [
+        "attn-1",
+        "input-1"
+      ],
+      "outputs": [
+        "output-1"
+      ]
+    },
+    {
+      "id": "output-1",
+      "type": "output",
+      "name": "output",
+      "position": {
+        "x": 300,
+        "y": 700
+      },
+      "params": {},
+      "inputs": [
+        "add-1"
+      ],
+      "outputs": []
+    }
+  ],
+  "connections": [
+    {
+      "id": "c1",
+      "from": "input-1",
+      "to": "norm-1"
+    },
+    {
+      "id": "c2",
+      "from": "norm-1",
+      "to": "attn-1"
+    },
+    {
+      "id": "c3",
+      "from": "attn-1",
+      "to": "add-1"
+    },
+    {
+      "id": "c4",
+      "from": "input-1",
+      "to": "add-1"
+    },
+    {
+      "id": "c5",
+      "from": "add-1",
+      "to": "output-1"
+    }
+  ]
+}
