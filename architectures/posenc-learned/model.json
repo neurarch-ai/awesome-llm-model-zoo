@@ -1,0 +1,169 @@
+{
+  "id": "posenc-learned",
+  "name": "Learned Absolute Positions",
+  "components": [
+    {
+      "id": "input-1",
+      "type": "input",
+      "name": "tokens",
+      "position": {
+        "x": 300,
+        "y": 60
+      },
+      "params": {
+        "shape": [
+          1,
+          128
+        ]
+      },
+      "inputs": [],
+      "outputs": [
+        "embed-1"
+      ]
+    },
+    {
+      "id": "embed-1",
+      "type": "embedding",
+      "name": "embed",
+      "position": {
+        "x": 300,
+        "y": 210
+      },
+      "params": {
+        "numEmbeddings": 32000,
+        "embeddingDim": 512
+      },
+      "inputs": [
+        "input-1"
+      ],
+      "outputs": [
+        "pe-1"
+      ]
+    },
+    {
+      "id": "pe-1",
+      "type": "learnedPositionalEmbedding",
+      "name": "pos_embed",
+      "position": {
+        "x": 300,
+        "y": 360
+      },
+      "params": {
+        "maxLen": 512,
+        "embedDim": 512
+      },
+      "inputs": [
+        "embed-1"
+      ],
+      "outputs": [
+        "norm-1",
+        "add-1"
+      ]
+    },
+    {
+      "id": "norm-1",
+      "type": "layerNorm",
+      "name": "attn_norm",
+      "position": {
+        "x": 300,
+        "y": 510
+      },
+      "params": {
+        "normalizedShape": 512
+      },
+      "inputs": [
+        "pe-1"
+      ],
+      "outputs": [
+        "attn-1"
+      ]
+    },
+    {
+      "id": "attn-1",
+      "type": "multiHeadAttention",
+      "name": "attention",
+      "position": {
+        "x": 300,
+        "y": 660
+      },
+      "params": {
+        "embedDim": 512,
+        "numHeads": 8
+      },
+      "inputs": [
+        "norm-1"
+      ],
+      "outputs": [
+        "add-1"
+      ]
+    },
+    {
+      "id": "add-1",
+      "type": "add",
+      "name": "residual",
+      "position": {
+        "x": 300,
+        "y": 810
+      },
+      "params": {},
+      "inputs": [
+        "attn-1",
+        "pe-1"
+      ],
+      "outputs": [
+        "output-1"
+      ]
+    },
+    {
+      "id": "output-1",
+      "type": "output",
+      "name": "output",
+      "position": {
+        "x": 300,
+        "y": 960
+      },
+      "params": {},
+      "inputs": [
+        "add-1"
+      ],
+      "outputs": []
+    }
+  ],
+  "connections": [
+    {
+      "id": "c1",
+      "from": "input-1",
+      "to": "embed-1"
+    },
+    {
+      "id": "c2",
+      "from": "embed-1",
+      "to": "pe-1"
+    },
+    {
+      "id": "c3",
+      "from": "pe-1",
+      "to": "norm-1"
+    },
+    {
+      "id": "c4",
+      "from": "norm-1",
+      "to": "attn-1"
+    },
+    {
+      "id": "c5",
+      "from": "attn-1",
+      "to": "add-1"
+    },
+    {
+      "id": "c6",
+      "from": "pe-1",
+      "to": "add-1"
+    },
+    {
+      "id": "c7",
+      "from": "add-1",
+      "to": "output-1"
+    }
+  ]
+}

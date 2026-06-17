@@ -34,6 +34,34 @@ How you scale total parameters without scaling the per-token compute.
 
 Then open [llama-4-scout](architectures/llama-4-scout/) (16 fat experts, top-1) next to `deepseek-v3` (256 fine experts, top-8): the same idea, opposite granularity bets.
 
+## Attention sparsity: full → sliding-window → sparse
+
+How you cut attention's O(n²) cost as context gets longer. Same pre-norm
+residual attention block in all three; only the attention node changes, so the
+diff is exactly the mechanism.
+
+| Step | Model | What it does | Open |
+|---|---|---|---|
+| Full | [attn-full](architectures/attn-full/) | Every token attends to every token — quadratic, maximally expressive | [open](https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/attn-full/model.json) |
+| Sliding-window | [attn-sliding-window](architectures/attn-sliding-window/) | Each token attends to a fixed window of neighbours — linear; depth grows the reach (Longformer, Mistral) | [open](https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/attn-sliding-window/model.json) |
+| Block-sparse | [attn-sparse](architectures/attn-sparse/) | Chunk into blocks, attend to a selected top-k anywhere — long-range, hardware-aligned (DeepSeek NSA) | [open](https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/attn-sparse/model.json) |
+
+All three have identical input/output shapes, so on the canvas it is a one-node swap. Open two and the only box that differs is the attention op.
+
+## Positional encoding: learned → RoPE → ALiBi
+
+How position gets into the model. The arc moves position out of the embedding
+table and into attention, trading a hard length ceiling for clean
+extrapolation. Watch *where* the position node sits.
+
+| Step | Model | Where position lives | Open |
+|---|---|---|---|
+| Learned absolute | [posenc-learned](architectures/posenc-learned/) | A trained table added to embeddings in the main path; caps at `maxLen` (GPT, BERT) | [open](https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/posenc-learned/model.json) |
+| Rotary (RoPE) | [posenc-rope](architectures/posenc-rope/) | Rotates Q/K inside attention; encodes relative position, extrapolates (Llama, Qwen, Mistral) | [open](https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/posenc-rope/model.json) |
+| Linear bias (ALiBi) | [posenc-alibi](architectures/posenc-alibi/) | No embedding; a per-head distance penalty on attention scores, extrapolates (MPT, BLOOM) | [open](https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/posenc-alibi/model.json) |
+
+The graph makes the design visible: in `posenc-learned` the position node is in the residual stream; in `posenc-rope` and `posenc-alibi` it is a side input feeding the attention op instead.
+
 ## Post-norm → Pre-norm
 
 Where the LayerNorm sits relative to the residual add. Pre-norm trains more

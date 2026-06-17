@@ -2,11 +2,11 @@
 
 # 🧠 Neurarch Model Zoo
 
-### 81 reference architectures you can actually open, edit, validate, and train. From DeepSeek-V3's latent attention to ResNet's first skip connection. Not pictures. Graphs.
+### 87 reference architectures you can actually open, edit, validate, and train. From DeepSeek-V3's latent attention to ResNet's first skip connection. Not pictures. Graphs.
 
-[![architectures](https://img.shields.io/badge/architectures-81-6366f1)](CATALOG.md)
+[![architectures](https://img.shields.io/badge/architectures-87-6366f1)](CATALOG.md)
 [![validate](https://github.com/neurarch-ai/awesome-llm-model-zoo/actions/workflows/validate.yml/badge.svg)](https://github.com/neurarch-ai/awesome-llm-model-zoo/actions/workflows/validate.yml)
-[![domains](https://img.shields.io/badge/domains-11-f59e0b)](#catalog)
+[![domains](https://img.shields.io/badge/domains-12-f59e0b)](#catalog)
 [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)](CONTRIBUTING.md)
 
@@ -28,7 +28,7 @@
 
 Every diagram of Qwen or Mixtral you have ever seen is a dead image. The entries here are live, structurally validated model graphs:
 
-- **Shape-checked end to end**: tensor shapes, attention head divisibility, GQA constraints. All 81 graphs pass with zero errors.
+- **Shape-checked end to end**: tensor shapes, attention head divisibility, GQA constraints. All 87 graphs pass with zero errors.
 - **Verified numbers**: LLM hyperparameters are taken from each model's official `config.json`, not from blog posts.
 - **One click to editable**: every entry opens straight onto the [Neurarch](https://www.neurarch.com/) canvas, where you can fork it, swap the attention, and re-validate before you ever launch a run.
 - **Exportable to runnable training code**: TRL, torchtune, Unsloth, plain PyTorch.
@@ -126,6 +126,19 @@ Selection informed by [awesome-pretrained-chinese-nlp-models](https://github.com
 | [mamba-block](architectures/mamba-block/) | Gu and Dao | block | Selective SSM, no attention, O(T) |
 | [phi3-mini](architectures/phi3-mini/) | Microsoft | block | 3.8B-class compact decoder block |
 | [transformer-block](architectures/transformer-block/) | Vaswani et al. | block | The original 2017 post-norm encoder block |
+
+### 🧩 Attention and positional-encoding variants
+
+Sibling blocks that isolate one design choice, so the graph diff is exactly the mechanism. Two side-by-side stories: see [COMPARISONS.md](COMPARISONS.md#attention-sparsity-full--sliding-window--sparse).
+
+| Architecture | Mechanism | Notable |
+|--------------|-----------|---------|
+| [attn-full](architectures/attn-full/) | Full attention | O(n²) dense baseline (Vaswani et al.) |
+| [attn-sliding-window](architectures/attn-sliding-window/) | Sliding-window attention | Linear-cost local window (Longformer, Mistral) |
+| [attn-sparse](architectures/attn-sparse/) | Block-sparse attention | Top-k blocks, hardware-aligned (DeepSeek NSA) |
+| [posenc-learned](architectures/posenc-learned/) | Learned absolute positions | Trained table added to embeddings (GPT, BERT) |
+| [posenc-rope](architectures/posenc-rope/) | Rotary positions (RoPE) | Relative, extrapolates (Llama, Qwen) |
+| [posenc-alibi](architectures/posenc-alibi/) | Linear-bias positions (ALiBi) | No embedding, distance penalty (MPT, BLOOM) |
 
 ### 🔬 Open & research LLMs (distinct architectures)
 
@@ -231,7 +244,7 @@ Selection informed by [awesome-pretrained-chinese-nlp-models](https://github.com
 
 This zoo has one bar, and it is not "looks right":
 
-1. Every graph passes **structural validation with zero errors** — well-formed, fully connected, acyclic. A standalone, dependency-free checker ([`npm run validate`](scripts/validate.mjs)) re-runs this across all 81 entries and gates every push in [CI](https://github.com/neurarch-ai/awesome-llm-model-zoo/actions/workflows/validate.yml), so the badge above is a live check, not a claim. The generator additionally runs Neurarch's full shape propagation (tensor shapes, attention head divisibility, GQA constraints).
+1. Every graph passes **structural validation with zero errors** — well-formed, fully connected, acyclic. A standalone, dependency-free checker ([`npm run validate`](scripts/validate.mjs)) re-runs this across all 87 entries and gates every push in [CI](https://github.com/neurarch-ai/awesome-llm-model-zoo/actions/workflows/validate.yml), so the badge above is a live check, not a claim. The generator additionally runs Neurarch's full shape propagation (tensor shapes, attention head divisibility, GQA constraints).
 2. Every full-model `model.json` is the **complete layer stack**, built with the same import path the Neurarch app uses for "load from Hugging Face", and carries a **parameter check**: Neurarch's per-layer estimate vs. the real weight count (HF safetensors metadata or the official figure). **All 38 checked checkpoints land within 10%**, worst case 6.6%, most within a couple of percent. Tied weights (shared encoder/decoder embeddings, tied LM heads) and seq2seq cross-attention are modelled explicitly, so the per-layer sum matches the real count instead of over- or under-shooting. Every number is shown in the entry README and in [CATALOG.md](CATALOG.md), sorted worst-first. Nothing is rounded away.
 3. Every full LLM entry's hyperparameters are pulled from the model's **official `config.json`**, with quirks (Qwen's QKV bias, Baichuan's NormHead, ChatGLM's 2 KV groups) called out in the entry README instead of papered over.
 4. Every entry **exports to runnable training code** from the Neurarch canvas.

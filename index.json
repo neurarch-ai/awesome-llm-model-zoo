@@ -1,7 +1,7 @@
 {
   "name": "Neurarch Model Zoo",
   "generated_by": "scripts/build-index.mjs",
-  "count": 81,
+  "count": 87,
   "models": [
     {
       "id": "all-minilm-l6",
@@ -25,6 +25,60 @@
         "huggingface": "https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2"
       },
       "diagram": "architectures/all-minilm-l6/assets/diagram.png"
+    },
+    {
+      "id": "attn-full",
+      "title": "Full Attention Block",
+      "domain": "Attention and positional-encoding variants",
+      "params": null,
+      "layers": null,
+      "type": "Params",
+      "nodes": 5,
+      "attention": [
+        "multiHeadAttention"
+      ],
+      "paramCheck": null,
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/attn-full/model.json",
+        "paper": "https://arxiv.org/abs/1706.03762"
+      },
+      "diagram": "architectures/attn-full/assets/diagram.png"
+    },
+    {
+      "id": "attn-sliding-window",
+      "title": "Sliding-Window Attention Block",
+      "domain": "Attention and positional-encoding variants",
+      "params": null,
+      "layers": null,
+      "type": "Params",
+      "nodes": 5,
+      "attention": [
+        "localAttention"
+      ],
+      "paramCheck": null,
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/attn-sliding-window/model.json",
+        "paper": "https://arxiv.org/abs/2004.05150"
+      },
+      "diagram": "architectures/attn-sliding-window/assets/diagram.png"
+    },
+    {
+      "id": "attn-sparse",
+      "title": "Native Sparse Attention Block",
+      "domain": "Attention and positional-encoding variants",
+      "params": null,
+      "layers": null,
+      "type": "Params",
+      "nodes": 5,
+      "attention": [
+        "nativeSparseAttention"
+      ],
+      "paramCheck": null,
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/attn-sparse/model.json",
+        "paper": "https://arxiv.org/abs/2502.11089"
+      },
+      "diagram": "architectures/attn-sparse/assets/diagram.png"
     },
     {
       "id": "baichuan2-7b",
@@ -1201,6 +1255,60 @@
         "huggingface": "https://huggingface.co/microsoft/Phi-3-mini-4k-instruct"
       },
       "diagram": "architectures/phi3-mini/assets/diagram.png"
+    },
+    {
+      "id": "posenc-alibi",
+      "title": "Linear Bias Positions (ALiBi)",
+      "domain": "Attention and positional-encoding variants",
+      "params": null,
+      "layers": null,
+      "type": "Params",
+      "nodes": 7,
+      "attention": [
+        "multiHeadAttention"
+      ],
+      "paramCheck": null,
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/posenc-alibi/model.json",
+        "paper": "https://arxiv.org/abs/2108.12409"
+      },
+      "diagram": "architectures/posenc-alibi/assets/diagram.png"
+    },
+    {
+      "id": "posenc-learned",
+      "title": "Learned Absolute Positions",
+      "domain": "Attention and positional-encoding variants",
+      "params": null,
+      "layers": null,
+      "type": "Params",
+      "nodes": 7,
+      "attention": [
+        "multiHeadAttention"
+      ],
+      "paramCheck": null,
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/posenc-learned/model.json",
+        "paper": "https://arxiv.org/abs/1810.04805"
+      },
+      "diagram": "architectures/posenc-learned/assets/diagram.png"
+    },
+    {
+      "id": "posenc-rope",
+      "title": "Rotary Positions (RoPE)",
+      "domain": "Attention and positional-encoding variants",
+      "params": null,
+      "layers": null,
+      "type": "Params",
+      "nodes": 7,
+      "attention": [
+        "multiHeadAttention"
+      ],
+      "paramCheck": null,
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/posenc-rope/model.json",
+        "paper": "https://arxiv.org/abs/2104.09864"
+      },
+      "diagram": "architectures/posenc-rope/assets/diagram.png"
     },
     {
       "id": "pythia-1.4b",
