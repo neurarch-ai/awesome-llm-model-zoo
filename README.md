@@ -60,6 +60,21 @@ Every diagram of Qwen or Mixtral you have ever seen is a dead image. The entries
 
 The full expanded graph (every one of those 371 / 300 / … nodes) is one click away in Neurarch via the **Open in Neurarch** link on each entry. Parameter-faithful CNNs are here too: [ResNet-50](architectures/resnet-50/) (all 16 bottleneck blocks, 25.6M, exact) and [VGG-16](architectures/vgg-16/) (138M, exact).
 
+### Reading the diagrams
+
+A few conventions, drawn the way papers do, so a diagram is readable without a key:
+
+| Mark | Meaning |
+|------|---------|
+| **⊕** | Element-wise **add** — sums two same-shape tensors. This is the **residual / skip connection** (`y = x + F(x)`); the curved line bypassing a block is the skip. |
+| **∥** | **Concatenate** — joins two streams along one axis into a wider tensor (e.g. DenseNet, NCF, DCN). Shape grows on the join axis instead of staying fixed. |
+| **⊗** | Element-wise **multiply / gate** — one stream scales another. |
+| `similarity`, `cross_att`, `matmul` | Named two-input ops where streams meet. **matmul / similarity** is a dot product (multiply *and sum*, a contraction, not an add) — e.g. CLIP's image·text score. **cross-attention** is where one stream's queries attend to another's keys/values (encoder-decoder, VLMs). |
+| **`× N` badge** | A run of **N identical blocks folded into one** so the figure fits on a screen. `model.json` always holds all N at real dimensions. |
+| **Parallel columns** | Independent **streams / towers** that run separately and merge only where their arrows meet (e.g. CLIP's image + text towers → `similarity`). |
+
+The same legend appears live on the canvas in Neurarch (bottom-left **Legend**), listing only the marks a given model actually uses.
+
 ## Open any architecture in one click
 
 Every entry has an **Open in Neurarch** link that loads its graph straight onto the canvas, no download step:
