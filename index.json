@@ -1,7 +1,7 @@
 {
   "name": "Neurarch Model Zoo",
   "generated_by": "scripts/build-index.mjs",
-  "count": 87,
+  "count": 92,
   "models": [
     {
       "id": "all-minilm-l6",
@@ -323,6 +323,24 @@
       "diagram": "architectures/dcn/assets/diagram.png"
     },
     {
+      "id": "dcn-v2",
+      "title": "DCN-v2",
+      "domain": "Other",
+      "params": null,
+      "layers": null,
+      "type": "CTR / click prediction",
+      "nodes": 18,
+      "attention": [
+        "flatten"
+      ],
+      "paramCheck": null,
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/dcn-v2/model.json",
+        "paper": "https://arxiv.org/abs/2008.13535"
+      },
+      "diagram": "architectures/dcn-v2/assets/diagram.png"
+    },
+    {
       "id": "deepfm",
       "title": "DeepFM",
       "domain": "Recommendation and ranking",
@@ -448,6 +466,25 @@
         "huggingface": "https://huggingface.co/timm/densenet121.tv_in1k"
       },
       "diagram": "architectures/densenet-121/assets/diagram.png"
+    },
+    {
+      "id": "dien",
+      "title": "DIEN",
+      "domain": "Other",
+      "params": null,
+      "layers": null,
+      "type": "CTR with user-behavior sequence",
+      "nodes": 13,
+      "attention": [
+        "multiHeadAttention",
+        "flatten"
+      ],
+      "paramCheck": null,
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/dien/model.json",
+        "paper": "https://arxiv.org/abs/1809.03672"
+      },
+      "diagram": "architectures/dien/assets/diagram.png"
     },
     {
       "id": "diffusion-unet",
@@ -618,6 +655,24 @@
         "github": "https://github.com/PaddlePaddle/PaddleNLP/tree/develop/model_zoo/ernie-3.0"
       },
       "diagram": "architectures/ernie-3.0-base-zh/assets/diagram.png"
+    },
+    {
+      "id": "esmm",
+      "title": "ESMM",
+      "domain": "Other",
+      "params": null,
+      "layers": null,
+      "type": "CVR / post-click conversion",
+      "nodes": 14,
+      "attention": [
+        "flatten"
+      ],
+      "paramCheck": null,
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/esmm/model.json",
+        "paper": "https://arxiv.org/abs/1804.07931"
+      },
+      "diagram": "architectures/esmm/assets/diagram.png"
     },
     {
       "id": "falcon-7b",
@@ -1074,6 +1129,24 @@
       "diagram": "architectures/mixtral-block/assets/diagram.png"
     },
     {
+      "id": "mmoe",
+      "title": "MMoE",
+      "domain": "Other",
+      "params": null,
+      "layers": null,
+      "type": "Multi-task ranking",
+      "nodes": 29,
+      "attention": [
+        "flatten"
+      ],
+      "paramCheck": null,
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/mmoe/model.json",
+        "paper": "https://dl.acm.org/doi/10.1145/3219819.3220007"
+      },
+      "diagram": "architectures/mmoe/assets/diagram.png"
+    },
+    {
       "id": "mobilenet-v2",
       "title": "MobileNetV2",
       "domain": "Computer vision",
@@ -1255,6 +1328,24 @@
         "huggingface": "https://huggingface.co/microsoft/Phi-3-mini-4k-instruct"
       },
       "diagram": "architectures/phi3-mini/assets/diagram.png"
+    },
+    {
+      "id": "ple",
+      "title": "PLE (CGC)",
+      "domain": "Other",
+      "params": null,
+      "layers": null,
+      "type": "Multi-task ranking",
+      "nodes": 23,
+      "attention": [
+        "flatten"
+      ],
+      "paramCheck": null,
+      "urls": {
+        "neurarch": "https://www.neurarch.com/?import=https://raw.githubusercontent.com/neurarch-ai/awesome-llm-model-zoo/main/architectures/ple/model.json",
+        "paper": "https://dl.acm.org/doi/10.1145/3383313.3412236"
+      },
+      "diagram": "architectures/ple/assets/diagram.png"
     },
     {
       "id": "posenc-alibi",

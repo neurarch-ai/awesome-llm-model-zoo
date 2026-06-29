@@ -1,0 +1,439 @@
+{
+  "id": "dcn-v2",
+  "name": "DCN-v2",
+  "description": "DCN-v2 (Google): full graph; dimensions verified against the official config.json.",
+  "components": [
+    {
+      "id": "n1",
+      "type": "input",
+      "name": "features",
+      "position": {
+        "x": 300,
+        "y": 50
+      },
+      "params": {
+        "shape": [
+          1,
+          39
+        ]
+      },
+      "inputs": [],
+      "outputs": [
+        "n2"
+      ]
+    },
+    {
+      "id": "n2",
+      "type": "embedding",
+      "name": "embed",
+      "position": {
+        "x": 300,
+        "y": 200
+      },
+      "params": {
+        "numEmbeddings": 1000000,
+        "embeddingDim": 16
+      },
+      "inputs": [
+        "n1"
+      ],
+      "outputs": [
+        "n3"
+      ]
+    },
+    {
+      "id": "n3",
+      "type": "flatten",
+      "name": "stack",
+      "position": {
+        "x": 300,
+        "y": 350
+      },
+      "params": {},
+      "inputs": [
+        "n2"
+      ],
+      "outputs": [
+        "n4"
+      ]
+    },
+    {
+      "id": "n4",
+      "type": "linear",
+      "name": "input_proj",
+      "position": {
+        "x": 300,
+        "y": 500
+      },
+      "params": {
+        "outFeatures": 256,
+        "inFeatures": 16
+      },
+      "inputs": [
+        "n3"
+      ],
+      "outputs": [
+        "n5",
+        "n6",
+        "n7",
+        "n9",
+        "n11"
+      ]
+    },
+    {
+      "id": "n5",
+      "type": "linear",
+      "name": "cross_w_1",
+      "position": {
+        "x": 80,
+        "y": 650
+      },
+      "params": {
+        "inFeatures": 256,
+        "outFeatures": 256
+      },
+      "inputs": [
+        "n4"
+      ],
+      "outputs": [
+        "n6"
+      ]
+    },
+    {
+      "id": "n6",
+      "type": "multiply",
+      "name": "cross_mul_1",
+      "position": {
+        "x": 80,
+        "y": 800
+      },
+      "params": {},
+      "inputs": [
+        "n5",
+        "n4"
+      ],
+      "outputs": [
+        "n7"
+      ]
+    },
+    {
+      "id": "n7",
+      "type": "add",
+      "name": "cross_res_1",
+      "position": {
+        "x": 80,
+        "y": 950
+      },
+      "params": {},
+      "inputs": [
+        "n6",
+        "n4"
+      ],
+      "outputs": [
+        "n8",
+        "n10"
+      ]
+    },
+    {
+      "id": "n8",
+      "type": "linear",
+      "name": "cross_w_2",
+      "position": {
+        "x": 80,
+        "y": 970
+      },
+      "params": {
+        "inFeatures": 256,
+        "outFeatures": 256
+      },
+      "inputs": [
+        "n7"
+      ],
+      "outputs": [
+        "n9"
+      ]
+    },
+    {
+      "id": "n9",
+      "type": "multiply",
+      "name": "cross_mul_2",
+      "position": {
+        "x": 80,
+        "y": 1120
+      },
+      "params": {},
+      "inputs": [
+        "n8",
+        "n4"
+      ],
+      "outputs": [
+        "n10"
+      ]
+    },
+    {
+      "id": "n10",
+      "type": "add",
+      "name": "cross_res_2",
+      "position": {
+        "x": 80,
+        "y": 1270
+      },
+      "params": {},
+      "inputs": [
+        "n9",
+        "n7"
+      ],
+      "outputs": [
+        "n15"
+      ]
+    },
+    {
+      "id": "n11",
+      "type": "linear",
+      "name": "deep_1",
+      "position": {
+        "x": 540,
+        "y": 650
+      },
+      "params": {
+        "inFeatures": 256,
+        "outFeatures": 256
+      },
+      "inputs": [
+        "n4"
+      ],
+      "outputs": [
+        "n12"
+      ]
+    },
+    {
+      "id": "n12",
+      "type": "relu",
+      "name": "relu_1",
+      "position": {
+        "x": 540,
+        "y": 800
+      },
+      "params": {},
+      "inputs": [
+        "n11"
+      ],
+      "outputs": [
+        "n13"
+      ]
+    },
+    {
+      "id": "n13",
+      "type": "linear",
+      "name": "deep_2",
+      "position": {
+        "x": 540,
+        "y": 950
+      },
+      "params": {
+        "inFeatures": 256,
+        "outFeatures": 256
+      },
+      "inputs": [
+        "n12"
+      ],
+      "outputs": [
+        "n14"
+      ]
+    },
+    {
+      "id": "n14",
+      "type": "relu",
+      "name": "relu_2",
+      "position": {
+        "x": 540,
+        "y": 1100
+      },
+      "params": {},
+      "inputs": [
+        "n13"
+      ],
+      "outputs": [
+        "n15"
+      ]
+    },
+    {
+      "id": "n15",
+      "type": "concatenate",
+      "name": "concat",
+      "position": {
+        "x": 300,
+        "y": 1320
+      },
+      "params": {},
+      "inputs": [
+        "n10",
+        "n14"
+      ],
+      "outputs": [
+        "n16"
+      ]
+    },
+    {
+      "id": "n16",
+      "type": "linear",
+      "name": "logit",
+      "position": {
+        "x": 300,
+        "y": 1470
+      },
+      "params": {
+        "outFeatures": 1,
+        "inFeatures": 512
+      },
+      "inputs": [
+        "n15"
+      ],
+      "outputs": [
+        "n17"
+      ]
+    },
+    {
+      "id": "n17",
+      "type": "sigmoid",
+      "name": "ctr",
+      "position": {
+        "x": 300,
+        "y": 1620
+      },
+      "params": {},
+      "inputs": [
+        "n16"
+      ],
+      "outputs": [
+        "n18"
+      ]
+    },
+    {
+      "id": "n18",
+      "type": "output",
+      "name": "click_prob",
+      "position": {
+        "x": 300,
+        "y": 1770
+      },
+      "params": {},
+      "inputs": [
+        "n17"
+      ],
+      "outputs": []
+    }
+  ],
+  "connections": [
+    {
+      "id": "c1",
+      "from": "n1",
+      "to": "n2"
+    },
+    {
+      "id": "c2",
+      "from": "n2",
+      "to": "n3"
+    },
+    {
+      "id": "c3",
+      "from": "n3",
+      "to": "n4"
+    },
+    {
+      "id": "c4",
+      "from": "n4",
+      "to": "n5"
+    },
+    {
+      "id": "c5",
+      "from": "n5",
+      "to": "n6"
+    },
+    {
+      "id": "c6",
+      "from": "n4",
+      "to": "n6"
+    },
+    {
+      "id": "c7",
+      "from": "n6",
+      "to": "n7"
+    },
+    {
+      "id": "c8",
+      "from": "n4",
+      "to": "n7"
+    },
+    {
+      "id": "c9",
+      "from": "n7",
+      "to": "n8"
+    },
+    {
+      "id": "c10",
+      "from": "n8",
+      "to": "n9"
+    },
+    {
+      "id": "c11",
+      "from": "n4",
+      "to": "n9"
+    },
+    {
+      "id": "c12",
+      "from": "n9",
+      "to": "n10"
+    },
+    {
+      "id": "c13",
+      "from": "n7",
+      "to": "n10"
+    },
+    {
+      "id": "c14",
+      "from": "n4",
+      "to": "n11"
+    },
+    {
+      "id": "c15",
+      "from": "n11",
+      "to": "n12"
+    },
+    {
+      "id": "c16",
+      "from": "n12",
+      "to": "n13"
+    },
+    {
+      "id": "c17",
+      "from": "n13",
+      "to": "n14"
+    },
+    {
+      "id": "c18",
+      "from": "n10",
+      "to": "n15"
+    },
+    {
+      "id": "c19",
+      "from": "n14",
+      "to": "n15"
+    },
+    {
+      "id": "c20",
+      "from": "n15",
+      "to": "n16"
+    },
+    {
+      "id": "c21",
+      "from": "n16",
+      "to": "n17"
+    },
+    {
+      "id": "c22",
+      "from": "n17",
+      "to": "n18"
+    }
+  ]
+}

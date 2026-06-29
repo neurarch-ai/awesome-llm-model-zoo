@@ -2,9 +2,9 @@
 
 # 🧠 Neurarch 模型库 (Model Zoo)
 
-### 87 个能直接打开、编辑、校验、训练的参考架构。从 DeepSeek-V3 的潜在注意力到 ResNet 的第一条残差连接。不是图片,是计算图。
+### 92 个能直接打开、编辑、校验、训练的参考架构。从 DeepSeek-V3 的潜在注意力到 ResNet 的第一条残差连接。不是图片,是计算图。
 
-[![architectures](https://img.shields.io/badge/architectures-87-6366f1)](CATALOG.md)
+[![architectures](https://img.shields.io/badge/architectures-92-6366f1)](CATALOG.md)
 [![validate](https://github.com/neurarch-ai/awesome-llm-model-zoo/actions/workflows/validate.yml/badge.svg)](https://github.com/neurarch-ai/awesome-llm-model-zoo/actions/workflows/validate.yml)
 [![domains](https://img.shields.io/badge/domains-12-f59e0b)](#目录)
 [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
@@ -17,7 +17,7 @@
 
 你见过的每一张 Qwen 或 Mixtral 架构图,都是一张死图片。这里的每一个条目都是**活的、经过结构校验的模型计算图**:
 
-- **端到端形状校验**:张量形状、注意力头整除、GQA 约束。全部 87 个图零错误通过。
+- **端到端形状校验**:张量形状、注意力头整除、GQA 约束。全部 92 个图零错误通过。
 - **数字可核对**:LLM 的超参数全部取自各模型官方的 `config.json`,不是博客里抄来的。
 - **一键变可编辑**:每个条目都能直接加载到 [Neurarch](https://www.neurarch.com/) 画布上,你可以 fork、换掉注意力、在跑训练之前重新校验。
 - **可导出为能跑的训练代码**:TRL、torchtune、Unsloth、原生 PyTorch。
@@ -248,7 +248,7 @@ MoE 一代。下表每个超参数都读自模型官方的 `config.json`(含 202
 
 这个库只有一条标准,而且不是"看起来对":
 
-1. 每个图都通过**结构校验,零错误**:格式良好、全连通、无环。一个零依赖的独立检查器([`npm run validate`](scripts/validate.mjs))会在全部 87 个条目上重跑这套校验,并在 [CI](https://github.com/neurarch-ai/awesome-llm-model-zoo/actions/workflows/validate.yml) 里把关每一次 push,所以上面那个徽章是活的检查,不是一句口号。生成时还会额外跑 Neurarch 的完整形状传播(张量形状、注意力头整除、GQA 约束)。
+1. 每个图都通过**结构校验,零错误**:格式良好、全连通、无环。一个零依赖的独立检查器([`npm run validate`](scripts/validate.mjs))会在全部 92 个条目上重跑这套校验,并在 [CI](https://github.com/neurarch-ai/awesome-llm-model-zoo/actions/workflows/validate.yml) 里把关每一次 push,所以上面那个徽章是活的检查,不是一句口号。生成时还会额外跑 Neurarch 的完整形状传播(张量形状、注意力头整除、GQA 约束)。
 2. 每个完整模型的 `model.json` 都是**完整的层堆叠**,用和 Neurarch app "从 Hugging Face 加载" 完全相同的导入路径生成,并带一个**参数核对**:Neurarch 的逐层估计 vs 真实权重数(HF safetensors 元数据或官方数字)。**全部 38 个被核对的 checkpoint 都落在 10% 以内**,最差 6.6%,大多在百分之几以内。权重共享(共享的编码器/解码器嵌入、tied LM head)和 seq2seq 交叉注意力都被显式建模,所以逐层求和能对上真实数字,而不是高估或低估。每个数字都在条目 README 和 [CATALOG.md](CATALOG.md) 里列出,按偏差从大到小排。一个都不四舍五入抹掉。
 3. 每个完整 LLM 条目的超参数都取自模型**官方的 `config.json`**,各种怪癖(Qwen 的 QKV bias、Baichuan 的 NormHead、ChatGLM 的 2 个 KV 组)在条目 README 里点明,而不是糊过去。
 4. 每个条目都能**从 Neurarch 画布导出成能跑的训练代码**。

@@ -1,0 +1,688 @@
+{
+  "id": "mmoe",
+  "name": "MMoE",
+  "description": "MMoE (Google): full graph; dimensions verified against the official config.json.",
+  "components": [
+    {
+      "id": "n1",
+      "type": "input",
+      "name": "features",
+      "position": {
+        "x": 300,
+        "y": 50
+      },
+      "params": {
+        "shape": [
+          1,
+          39
+        ]
+      },
+      "inputs": [],
+      "outputs": [
+        "n2"
+      ]
+    },
+    {
+      "id": "n2",
+      "type": "embedding",
+      "name": "embed",
+      "position": {
+        "x": 300,
+        "y": 200
+      },
+      "params": {
+        "numEmbeddings": 1000000,
+        "embeddingDim": 16
+      },
+      "inputs": [
+        "n1"
+      ],
+      "outputs": [
+        "n3"
+      ]
+    },
+    {
+      "id": "n3",
+      "type": "flatten",
+      "name": "flatten",
+      "position": {
+        "x": 300,
+        "y": 350
+      },
+      "params": {},
+      "inputs": [
+        "n2"
+      ],
+      "outputs": [
+        "n4"
+      ]
+    },
+    {
+      "id": "n4",
+      "type": "linear",
+      "name": "shared_bottom",
+      "position": {
+        "x": 300,
+        "y": 500
+      },
+      "params": {
+        "outFeatures": 128,
+        "inFeatures": 16
+      },
+      "inputs": [
+        "n3"
+      ],
+      "outputs": [
+        "n5"
+      ]
+    },
+    {
+      "id": "n5",
+      "type": "relu",
+      "name": "bottom_relu",
+      "position": {
+        "x": 300,
+        "y": 650
+      },
+      "params": {},
+      "inputs": [
+        "n4"
+      ],
+      "outputs": [
+        "n6",
+        "n8",
+        "n10",
+        "n12",
+        "n21"
+      ]
+    },
+    {
+      "id": "n6",
+      "type": "linear",
+      "name": "expert_1",
+      "position": {
+        "x": 60,
+        "y": 800
+      },
+      "params": {
+        "inFeatures": 128,
+        "outFeatures": 128
+      },
+      "inputs": [
+        "n5"
+      ],
+      "outputs": [
+        "n7"
+      ]
+    },
+    {
+      "id": "n7",
+      "type": "relu",
+      "name": "expert_relu_1",
+      "position": {
+        "x": 60,
+        "y": 950
+      },
+      "params": {},
+      "inputs": [
+        "n6"
+      ],
+      "outputs": [
+        "n14",
+        "n23"
+      ]
+    },
+    {
+      "id": "n8",
+      "type": "linear",
+      "name": "expert_2",
+      "position": {
+        "x": 240,
+        "y": 800
+      },
+      "params": {
+        "inFeatures": 128,
+        "outFeatures": 128
+      },
+      "inputs": [
+        "n5"
+      ],
+      "outputs": [
+        "n9"
+      ]
+    },
+    {
+      "id": "n9",
+      "type": "relu",
+      "name": "expert_relu_2",
+      "position": {
+        "x": 240,
+        "y": 950
+      },
+      "params": {},
+      "inputs": [
+        "n8"
+      ],
+      "outputs": [
+        "n14",
+        "n23"
+      ]
+    },
+    {
+      "id": "n10",
+      "type": "linear",
+      "name": "expert_3",
+      "position": {
+        "x": 420,
+        "y": 800
+      },
+      "params": {
+        "inFeatures": 128,
+        "outFeatures": 128
+      },
+      "inputs": [
+        "n5"
+      ],
+      "outputs": [
+        "n11"
+      ]
+    },
+    {
+      "id": "n11",
+      "type": "relu",
+      "name": "expert_relu_3",
+      "position": {
+        "x": 420,
+        "y": 950
+      },
+      "params": {},
+      "inputs": [
+        "n10"
+      ],
+      "outputs": [
+        "n14",
+        "n23"
+      ]
+    },
+    {
+      "id": "n12",
+      "type": "linear",
+      "name": "gate_a",
+      "position": {
+        "x": 640,
+        "y": 800
+      },
+      "params": {
+        "inFeatures": 128,
+        "outFeatures": 3
+      },
+      "inputs": [
+        "n5"
+      ],
+      "outputs": [
+        "n13"
+      ]
+    },
+    {
+      "id": "n13",
+      "type": "softmax",
+      "name": "gate_a_softmax",
+      "position": {
+        "x": 640,
+        "y": 950
+      },
+      "params": {},
+      "inputs": [
+        "n12"
+      ],
+      "outputs": [
+        "n15"
+      ]
+    },
+    {
+      "id": "n14",
+      "type": "add",
+      "name": "task_a_mixture",
+      "position": {
+        "x": 120,
+        "y": 1100
+      },
+      "params": {},
+      "inputs": [
+        "n7",
+        "n9",
+        "n11"
+      ],
+      "outputs": [
+        "n15"
+      ]
+    },
+    {
+      "id": "n15",
+      "type": "concatenate",
+      "name": "task_a_join",
+      "position": {
+        "x": 120,
+        "y": 1250
+      },
+      "params": {},
+      "inputs": [
+        "n14",
+        "n13"
+      ],
+      "outputs": [
+        "n16"
+      ]
+    },
+    {
+      "id": "n16",
+      "type": "linear",
+      "name": "tower_a_1",
+      "position": {
+        "x": 120,
+        "y": 1400
+      },
+      "params": {
+        "outFeatures": 64,
+        "inFeatures": 131
+      },
+      "inputs": [
+        "n15"
+      ],
+      "outputs": [
+        "n17"
+      ]
+    },
+    {
+      "id": "n17",
+      "type": "relu",
+      "name": "tower_a_relu",
+      "position": {
+        "x": 120,
+        "y": 1550
+      },
+      "params": {},
+      "inputs": [
+        "n16"
+      ],
+      "outputs": [
+        "n18"
+      ]
+    },
+    {
+      "id": "n18",
+      "type": "linear",
+      "name": "tower_a_2",
+      "position": {
+        "x": 120,
+        "y": 1700
+      },
+      "params": {
+        "inFeatures": 64,
+        "outFeatures": 1
+      },
+      "inputs": [
+        "n17"
+      ],
+      "outputs": [
+        "n19"
+      ]
+    },
+    {
+      "id": "n19",
+      "type": "sigmoid",
+      "name": "p_click",
+      "position": {
+        "x": 120,
+        "y": 1850
+      },
+      "params": {},
+      "inputs": [
+        "n18"
+      ],
+      "outputs": [
+        "n20"
+      ]
+    },
+    {
+      "id": "n20",
+      "type": "output",
+      "name": "click_prob",
+      "position": {
+        "x": 120,
+        "y": 2000
+      },
+      "params": {},
+      "inputs": [
+        "n19"
+      ],
+      "outputs": []
+    },
+    {
+      "id": "n21",
+      "type": "linear",
+      "name": "gate_b",
+      "position": {
+        "x": 640,
+        "y": 1100
+      },
+      "params": {
+        "inFeatures": 128,
+        "outFeatures": 3
+      },
+      "inputs": [
+        "n5"
+      ],
+      "outputs": [
+        "n22"
+      ]
+    },
+    {
+      "id": "n22",
+      "type": "softmax",
+      "name": "gate_b_softmax",
+      "position": {
+        "x": 640,
+        "y": 1250
+      },
+      "params": {},
+      "inputs": [
+        "n21"
+      ],
+      "outputs": [
+        "n24"
+      ]
+    },
+    {
+      "id": "n23",
+      "type": "add",
+      "name": "task_b_mixture",
+      "position": {
+        "x": 460,
+        "y": 1100
+      },
+      "params": {},
+      "inputs": [
+        "n7",
+        "n9",
+        "n11"
+      ],
+      "outputs": [
+        "n24"
+      ]
+    },
+    {
+      "id": "n24",
+      "type": "concatenate",
+      "name": "task_b_join",
+      "position": {
+        "x": 460,
+        "y": 1400
+      },
+      "params": {},
+      "inputs": [
+        "n23",
+        "n22"
+      ],
+      "outputs": [
+        "n25"
+      ]
+    },
+    {
+      "id": "n25",
+      "type": "linear",
+      "name": "tower_b_1",
+      "position": {
+        "x": 460,
+        "y": 1550
+      },
+      "params": {
+        "outFeatures": 64,
+        "inFeatures": 131
+      },
+      "inputs": [
+        "n24"
+      ],
+      "outputs": [
+        "n26"
+      ]
+    },
+    {
+      "id": "n26",
+      "type": "relu",
+      "name": "tower_b_relu",
+      "position": {
+        "x": 460,
+        "y": 1700
+      },
+      "params": {},
+      "inputs": [
+        "n25"
+      ],
+      "outputs": [
+        "n27"
+      ]
+    },
+    {
+      "id": "n27",
+      "type": "linear",
+      "name": "tower_b_2",
+      "position": {
+        "x": 460,
+        "y": 1850
+      },
+      "params": {
+        "inFeatures": 64,
+        "outFeatures": 1
+      },
+      "inputs": [
+        "n26"
+      ],
+      "outputs": [
+        "n28"
+      ]
+    },
+    {
+      "id": "n28",
+      "type": "sigmoid",
+      "name": "p_like",
+      "position": {
+        "x": 460,
+        "y": 2000
+      },
+      "params": {},
+      "inputs": [
+        "n27"
+      ],
+      "outputs": [
+        "n29"
+      ]
+    },
+    {
+      "id": "n29",
+      "type": "output",
+      "name": "like_prob",
+      "position": {
+        "x": 460,
+        "y": 2150
+      },
+      "params": {},
+      "inputs": [
+        "n28"
+      ],
+      "outputs": []
+    }
+  ],
+  "connections": [
+    {
+      "id": "c1",
+      "from": "n1",
+      "to": "n2"
+    },
+    {
+      "id": "c2",
+      "from": "n2",
+      "to": "n3"
+    },
+    {
+      "id": "c3",
+      "from": "n3",
+      "to": "n4"
+    },
+    {
+      "id": "c4",
+      "from": "n4",
+      "to": "n5"
+    },
+    {
+      "id": "c5",
+      "from": "n5",
+      "to": "n6"
+    },
+    {
+      "id": "c6",
+      "from": "n6",
+      "to": "n7"
+    },
+    {
+      "id": "c7",
+      "from": "n5",
+      "to": "n8"
+    },
+    {
+      "id": "c8",
+      "from": "n8",
+      "to": "n9"
+    },
+    {
+      "id": "c9",
+      "from": "n5",
+      "to": "n10"
+    },
+    {
+      "id": "c10",
+      "from": "n10",
+      "to": "n11"
+    },
+    {
+      "id": "c11",
+      "from": "n5",
+      "to": "n12"
+    },
+    {
+      "id": "c12",
+      "from": "n12",
+      "to": "n13"
+    },
+    {
+      "id": "c13",
+      "from": "n7",
+      "to": "n14"
+    },
+    {
+      "id": "c14",
+      "from": "n9",
+      "to": "n14"
+    },
+    {
+      "id": "c15",
+      "from": "n11",
+      "to": "n14"
+    },
+    {
+      "id": "c16",
+      "from": "n14",
+      "to": "n15"
+    },
+    {
+      "id": "c17",
+      "from": "n13",
+      "to": "n15"
+    },
+    {
+      "id": "c18",
+      "from": "n15",
+      "to": "n16"
+    },
+    {
+      "id": "c19",
+      "from": "n16",
+      "to": "n17"
+    },
+    {
+      "id": "c20",
+      "from": "n17",
+      "to": "n18"
+    },
+    {
+      "id": "c21",
+      "from": "n18",
+      "to": "n19"
+    },
+    {
+      "id": "c22",
+      "from": "n19",
+      "to": "n20"
+    },
+    {
+      "id": "c23",
+      "from": "n5",
+      "to": "n21"
+    },
+    {
+      "id": "c24",
+      "from": "n21",
+      "to": "n22"
+    },
+    {
+      "id": "c25",
+      "from": "n7",
+      "to": "n23"
+    },
+    {
+      "id": "c26",
+      "from": "n9",
+      "to": "n23"
+    },
+    {
+      "id": "c27",
+      "from": "n11",
+      "to": "n23"
+    },
+    {
+      "id": "c28",
+      "from": "n23",
+      "to": "n24"
+    },
+    {
+      "id": "c29",
+      "from": "n22",
+      "to": "n24"
+    },
+    {
+      "id": "c30",
+      "from": "n24",
+      "to": "n25"
+    },
+    {
+      "id": "c31",
+      "from": "n25",
+      "to": "n26"
+    },
+    {
+      "id": "c32",
+      "from": "n26",
+      "to": "n27"
+    },
+    {
+      "id": "c33",
+      "from": "n27",
+      "to": "n28"
+    },
+    {
+      "id": "c34",
+      "from": "n28",
+      "to": "n29"
+    }
+  ]
+}

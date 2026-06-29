@@ -827,6 +827,139 @@ function buildDIN(): Graph {
   });
 }
 
+function buildMMoE(): Graph {
+  return rsGraph('mmoe', 'MMoE', 'MMoE (Ma et al. 2018, Google): one shared bottom feeds several expert MLPs, and a per-task softmax gate weights those experts, so related and conflicting objectives can share representation without fighting. The workhorse of multi-task ranking (watch-time plus like plus share).', ({ add, wire }) => {
+    const inp = add('input', 'features', { shape: [1, 39] }, 300, 50);
+    const emb = add('embedding', 'embed', { numEmbeddings: 1000000, embeddingDim: 16 }, 300, 200); wire(inp, emb);
+    const flat = add('flatten', 'flatten', {}, 300, 350); wire(emb, flat);
+    const bottom = add('linear', 'shared_bottom', { outFeatures: 128 }, 300, 500); wire(flat, bottom);
+    const br = add('relu', 'bottom_relu', {}, 300, 650); wire(bottom, br);
+    const experts: Comp[] = [];
+    for (let i = 0; i < 3; i++) {
+      const e = add('linear', `expert_${i + 1}`, { inFeatures: 128, outFeatures: 128 }, 60 + i * 180, 800); wire(br, e);
+      const er = add('relu', `expert_relu_${i + 1}`, {}, 60 + i * 180, 950); wire(e, er);
+      experts.push(er);
+    }
+    // Task A: softmax gate weights the experts; the mixture feeds the task tower.
+    const gateA = add('linear', 'gate_a', { inFeatures: 128, outFeatures: 3 }, 640, 800); wire(br, gateA);
+    const gateAs = add('softmax', 'gate_a_softmax', {}, 640, 950); wire(gateA, gateAs);
+    const mixA = add('add', 'task_a_mixture', {}, 120, 1100); for (const e of experts) wire(e, mixA);
+    const catA = add('concatenate', 'task_a_join', {}, 120, 1250); wire(mixA, catA); wire(gateAs, catA);
+    const ta1 = add('linear', 'tower_a_1', { outFeatures: 64 }, 120, 1400); wire(catA, ta1);
+    const tar = add('relu', 'tower_a_relu', {}, 120, 1550); wire(ta1, tar);
+    const ta2 = add('linear', 'tower_a_2', { inFeatures: 64, outFeatures: 1 }, 120, 1700); wire(tar, ta2);
+    const sigA = add('sigmoid', 'p_click', {}, 120, 1850); wire(ta2, sigA);
+    const outA = add('output', 'click_prob', {}, 120, 2000); wire(sigA, outA);
+    // Task B: its own gate, same shared experts.
+    const gateB = add('linear', 'gate_b', { inFeatures: 128, outFeatures: 3 }, 640, 1100); wire(br, gateB);
+    const gateBs = add('softmax', 'gate_b_softmax', {}, 640, 1250); wire(gateB, gateBs);
+    const mixB = add('add', 'task_b_mixture', {}, 460, 1100); for (const e of experts) wire(e, mixB);
+    const catB = add('concatenate', 'task_b_join', {}, 460, 1400); wire(mixB, catB); wire(gateBs, catB);
+    const tb1 = add('linear', 'tower_b_1', { outFeatures: 64 }, 460, 1550); wire(catB, tb1);
+    const tbr = add('relu', 'tower_b_relu', {}, 460, 1700); wire(tb1, tbr);
+    const tb2 = add('linear', 'tower_b_2', { inFeatures: 64, outFeatures: 1 }, 460, 1850); wire(tbr, tb2);
+    const sigB = add('sigmoid', 'p_like', {}, 460, 2000); wire(tb2, sigB);
+    const outB = add('output', 'like_prob', {}, 460, 2150); wire(sigB, outB);
+  });
+}
+
+function buildPLE(): Graph {
+  return rsGraph('ple', 'PLE (CGC)', 'PLE / CGC (Tang et al. 2020, Tencent): multi-task learning that splits experts into task-specific and shared groups, so each task draws on its own experts plus the shared pool but is shielded from other tasks\' specialists. Reduces the negative transfer that plain shared-bottom and MMoE still suffer.', ({ add, wire }) => {
+    const inp = add('input', 'features', { shape: [1, 39] }, 300, 50);
+    const emb = add('embedding', 'embed', { numEmbeddings: 1000000, embeddingDim: 16 }, 300, 200); wire(inp, emb);
+    const flat = add('flatten', 'flatten', {}, 300, 350); wire(emb, flat);
+    const bottom = add('linear', 'shared_bottom', { outFeatures: 128 }, 300, 500); wire(flat, bottom);
+    const br = add('relu', 'bottom_relu', {}, 300, 650); wire(bottom, br);
+    const mkExpert = (nm: string, x: number): Comp => {
+      const e = add('linear', nm, { inFeatures: 128, outFeatures: 128 }, x, 800); wire(br, e);
+      const r = add('relu', `${nm}_relu`, {}, x, 950); wire(e, r); return r;
+    };
+    const expertA = mkExpert('expert_task_a', 60);
+    const shared = mkExpert('expert_shared', 300);
+    const expertB = mkExpert('expert_task_b', 540);
+    // Task A: own expert plus the shared expert (CGC gating, modelled as selection).
+    const mixA = add('add', 'task_a_select', {}, 120, 1100); wire(expertA, mixA); wire(shared, mixA);
+    const ta1 = add('linear', 'tower_a_1', { outFeatures: 64 }, 120, 1250); wire(mixA, ta1);
+    const tar = add('relu', 'tower_a_relu', {}, 120, 1400); wire(ta1, tar);
+    const ta2 = add('linear', 'tower_a_2', { inFeatures: 64, outFeatures: 1 }, 120, 1550); wire(tar, ta2);
+    const sigA = add('sigmoid', 'p_click', {}, 120, 1700); wire(ta2, sigA);
+    const outA = add('output', 'click_prob', {}, 120, 1850); wire(sigA, outA);
+    // Task B: own expert plus the same shared expert.
+    const mixB = add('add', 'task_b_select', {}, 480, 1100); wire(expertB, mixB); wire(shared, mixB);
+    const tb1 = add('linear', 'tower_b_1', { outFeatures: 64 }, 480, 1250); wire(mixB, tb1);
+    const tbr = add('relu', 'tower_b_relu', {}, 480, 1400); wire(tb1, tbr);
+    const tb2 = add('linear', 'tower_b_2', { inFeatures: 64, outFeatures: 1 }, 480, 1550); wire(tbr, tb2);
+    const sigB = add('sigmoid', 'p_convert', {}, 480, 1700); wire(tb2, sigB);
+    const outB = add('output', 'convert_prob', {}, 480, 1850); wire(sigB, outB);
+  });
+}
+
+function buildDCNv2(): Graph {
+  return rsGraph('dcn-v2', 'DCN-v2', 'DCN-v2 (Wang et al. 2021, Google): the cross network upgraded from a rank-1 vector cross to a full weight-matrix cross at each layer, run in parallel with a deep MLP and concatenated. The production-grade successor to DCN, deployed in Google ad and feed ranking.', ({ add, wire }) => {
+    const inp = add('input', 'features', { shape: [1, 39] }, 300, 50);
+    const emb = add('embedding', 'embed', { numEmbeddings: 1000000, embeddingDim: 16 }, 300, 200); wire(inp, emb);
+    const flat = add('flatten', 'stack', {}, 300, 350); wire(emb, flat);
+    const x0 = add('linear', 'input_proj', { outFeatures: 256 }, 300, 500); wire(flat, x0);
+    // Cross network: x_{l+1} = x0 . (W x_l) + x_l, with W a full matrix (the v2 change).
+    let xl = x0;
+    for (let i = 0; i < 2; i++) {
+      const w = add('linear', `cross_w_${i + 1}`, { inFeatures: 256, outFeatures: 256 }, 80, 650 + i * 320); wire(xl, w);
+      const mul = add('multiply', `cross_mul_${i + 1}`, {}, 80, 800 + i * 320); wire(w, mul); wire(x0, mul);
+      const res = add('add', `cross_res_${i + 1}`, {}, 80, 950 + i * 320); wire(mul, res); wire(xl, res);
+      xl = res;
+    }
+    // Deep network in parallel.
+    const d1 = add('linear', 'deep_1', { inFeatures: 256, outFeatures: 256 }, 540, 650); wire(x0, d1);
+    const r1 = add('relu', 'relu_1', {}, 540, 800); wire(d1, r1);
+    const d2 = add('linear', 'deep_2', { inFeatures: 256, outFeatures: 256 }, 540, 950); wire(r1, d2);
+    const r2 = add('relu', 'relu_2', {}, 540, 1100); wire(d2, r2);
+    const cat = add('concatenate', 'concat', {}, 300, 1320); wire(xl, cat); wire(r2, cat);
+    const head = add('linear', 'logit', { outFeatures: 1 }, 300, 1470); wire(cat, head);
+    const sig = add('sigmoid', 'ctr', {}, 300, 1620); wire(head, sig);
+    const out = add('output', 'click_prob', {}, 300, 1770); wire(sig, out);
+  });
+}
+
+function buildDIEN(): Graph {
+  return rsGraph('dien', 'DIEN (Deep Interest Evolution Network)', 'DIEN (Zhou et al. 2019, Alibaba): adds an interest-evolution layer on top of DIN. A target-aware attention scores the behaviour sequence, then a GRU evolves the attended interests over time before the CTR head, capturing how a user\'s interest drifts and not just which past items matter.', ({ add, wire }) => {
+    const hist = add('input', 'behavior_seq', { shape: [1, 100] }, 150, 50);
+    const target = add('input', 'candidate_item', { shape: [1, 1] }, 600, 50);
+    const histEmb = add('embedding', 'behavior_embed', { numEmbeddings: 1000000, embeddingDim: 64 }, 150, 200); wire(hist, histEmb);
+    const targetEmb = add('embedding', 'item_embed', { numEmbeddings: 1000000, embeddingDim: 64 }, 600, 200); wire(target, targetEmb);
+    const attn = add('multiHeadAttention', 'interest_attention', { embedDim: 64, numHeads: 1 }, 300, 400); wire(histEmb, attn); wire(targetEmb, attn);
+    const gru = add('gru', 'interest_evolving', { hiddenSize: 64, inputSize: 64 }, 300, 550); wire(attn, gru);
+    const tflat = add('flatten', 'target_flat', {}, 600, 550); wire(targetEmb, tflat);
+    const cat = add('concatenate', 'concat', {}, 450, 700); wire(gru, cat); wire(tflat, cat);
+    const d1 = add('linear', 'fc_1', { outFeatures: 200 }, 450, 850); wire(cat, d1);
+    const r1 = add('relu', 'prelu_1', {}, 450, 1000); wire(d1, r1);
+    const d2 = add('linear', 'fc_2', { inFeatures: 200, outFeatures: 1 }, 450, 1150); wire(r1, d2);
+    const sig = add('sigmoid', 'ctr', {}, 450, 1300); wire(d2, sig);
+    const out = add('output', 'click_prob', {}, 450, 1450); wire(sig, out);
+  });
+}
+
+function buildESMM(): Graph {
+  return rsGraph('esmm', 'ESMM', 'ESMM (Ma et al. 2018, Alibaba): two towers (pCVR and pCTR) share one embedding table, and the model is trained over the entire impression space on pCTCVR = pCTR x pCVR, so the conversion tower learns without the sample-selection bias of click-only CVR training.', ({ add, wire }) => {
+    const inp = add('input', 'features', { shape: [1, 39] }, 300, 50);
+    const emb = add('embedding', 'shared_embed', { numEmbeddings: 1000000, embeddingDim: 16 }, 300, 200); wire(inp, emb);
+    const flat = add('flatten', 'flatten', {}, 300, 350); wire(emb, flat);
+    // CTR tower.
+    const c1 = add('linear', 'ctr_1', { outFeatures: 128 }, 100, 500); wire(flat, c1);
+    const cr = add('relu', 'ctr_relu', {}, 100, 650); wire(c1, cr);
+    const c2 = add('linear', 'ctr_2', { inFeatures: 128, outFeatures: 1 }, 100, 800); wire(cr, c2);
+    const pctr = add('sigmoid', 'p_ctr', {}, 100, 950); wire(c2, pctr);
+    const outCtr = add('output', 'ctr_out', {}, 100, 1100); wire(pctr, outCtr);
+    // CVR tower (supervised only through the product below).
+    const v1 = add('linear', 'cvr_1', { outFeatures: 128 }, 520, 500); wire(flat, v1);
+    const vr = add('relu', 'cvr_relu', {}, 520, 650); wire(v1, vr);
+    const v2 = add('linear', 'cvr_2', { inFeatures: 128, outFeatures: 1 }, 520, 800); wire(vr, v2);
+    const pcvr = add('sigmoid', 'p_cvr', {}, 520, 950); wire(v2, pcvr);
+    // pCTCVR = pCTR x pCVR, the objective trained over the entire space.
+    const ctcvr = add('multiply', 'p_ctcvr', {}, 300, 1100); wire(pctr, ctcvr); wire(pcvr, ctcvr);
+    const outCtcvr = add('output', 'ctcvr_out', {}, 300, 1250); wire(ctcvr, outCtcvr);
+  });
+}
+
 // ── Hand-built distinct architectures (vision / multimodal / diffusion / audio) ──
 // The HF importer / parser can't reconstruct these faithfully, so they are built
 // by hand. They are topology references (the real param counts depend on the
@@ -1770,6 +1903,88 @@ const HFFULL: HFFullEntry[] = [
       'The activation unit is a local attention between the candidate item and each historical behaviour; high-relevance behaviours dominate the pooled interest.',
       'This is the recsys insight that "a user\'s interest is multi-modal, attend to the part relevant to what you are scoring".',
       'Followed by DIEN (adds a GRU-based interest-evolution layer); compare with [bst](../bst/), which instead runs a full Transformer over the behaviour sequence.',
+    ],
+  },
+  {
+    kind: 'hffull', id: 'mmoe', displayName: 'MMoE', org: 'Google',
+    paramsLabel: 'Reference graph', fullBuild: buildMMoE,
+    links: [['Paper (Ma et al. 2018)', 'https://dl.acm.org/doi/10.1145/3219819.3220007']],
+    archRows: [
+      ['Type', 'Multi-task ranking'], ['Experts', 'Shared bottom feeds N expert MLPs'],
+      ['Gates', 'Per-task softmax gate over the experts'], ['Towers', 'One MLP head per objective'],
+      ['Key idea', 'Soft expert sharing avoids multi-task negative transfer'],
+    ],
+    blurb: 'Multi-gate Mixture-of-Experts: instead of one shared bottom feeding every task (which forces conflicting objectives to share a representation), MMoE gives each task a softmax gate that mixes a shared pool of experts its own way. The default multi-task ranker behind feed and video systems that optimize several objectives at once.',
+    notes: [
+      'Every task reads the same experts but through its own gate, so tasks that disagree can lean on different experts without a hard split.',
+      'Reference topology: the per-task gate softmax is shown joining the expert mixture; in the paper the gate weights are the mixture coefficients.',
+      'Compare [ple](../ple/), which hardens the soft gating into explicit task-specific vs shared expert groups.',
+    ],
+  },
+  {
+    kind: 'hffull', id: 'ple', displayName: 'PLE (CGC)', org: 'Tencent',
+    paramsLabel: 'Reference graph', fullBuild: buildPLE,
+    links: [['Paper (Tang et al. 2020)', 'https://dl.acm.org/doi/10.1145/3383313.3412236']],
+    archRows: [
+      ['Type', 'Multi-task ranking'], ['Experts', 'Task-specific groups plus a shared group'],
+      ['Routing', 'Each task uses its own experts plus shared'], ['Towers', 'One MLP head per objective'],
+      ['Key idea', 'Explicit expert separation cuts negative transfer'],
+    ],
+    blurb: 'Progressive Layered Extraction (and its single-level form CGC): splits experts into task-specific groups and a shared group, so each task draws on its own specialists plus the shared pool but never on another task\'s specialists. Tencent\'s answer to the "seesaw" effect where improving one task quietly degrades another.',
+    notes: [
+      'CGC is the single-extraction-layer version; PLE stacks several extraction layers to progressively separate and recombine representations.',
+      'Reference topology: one extraction layer with a task-A expert, a shared expert, and a task-B expert.',
+      'Direct lineage from [mmoe](../mmoe/): same multi-task goal, but explicit expert grouping instead of purely soft gates.',
+    ],
+  },
+  {
+    kind: 'hffull', id: 'dcn-v2', displayName: 'DCN-v2', org: 'Google',
+    paramsLabel: 'Reference graph', fullBuild: buildDCNv2,
+    links: [['Paper (Wang et al. 2021)', 'https://arxiv.org/abs/2008.13535']],
+    archRows: [
+      ['Type', 'CTR / click prediction'], ['Cross network', 'Matrix-weighted cross per layer, plus residual'],
+      ['Deep network', 'Parallel MLP'], ['Fusion', 'Concatenate cross + deep then logit'],
+      ['Key idea', 'Full (low-rank) cross matrix replaces DCN\'s rank-1 cross'],
+    ],
+    blurb: 'The production successor to DCN. Each cross layer applies a full weight matrix to the feature vector before the element-wise cross with the input (x0 . (W x_l) + x_l), so the crosses are far more expressive than DCN\'s rank-1 version, while a low-rank factorization keeps the cost down. Deployed across Google ad and feed ranking.',
+    notes: [
+      'The defining change from [dcn](../dcn/): the cross uses a learned matrix W (here a full linear), where the original used a rank-1 weight vector.',
+      'Reference topology: features projected to a base vector x0, two matrix-cross layers, a parallel deep MLP, then concatenation.',
+      'In practice the cross matrix is low-rank (a bottleneck) to control parameters at production feature counts.',
+    ],
+  },
+  {
+    kind: 'hffull', id: 'dien', displayName: 'DIEN', org: 'Alibaba',
+    paramsLabel: 'Reference graph', fullBuild: buildDIEN,
+    links: [['Paper (Zhou et al. 2019)', 'https://arxiv.org/abs/1809.03672']],
+    archRows: [
+      ['Type', 'CTR with user-behavior sequence'],
+      ['Interest attention', 'Target-aware scoring of the behaviour sequence'],
+      ['Interest evolution', 'GRU over the attended interests'],
+      ['Head', 'Concat evolved interest + candidate then MLP'],
+      ['Key idea', 'Model how interest drifts, not just which items matter'],
+    ],
+    blurb: 'Deep Interest Evolution Network: the sequel to DIN. After a target-aware attention scores the behaviour history, a GRU-based interest-evolution layer models how the user\'s interest moves over time before the CTR head. Captures temporal drift that DIN\'s single attention pool cannot.',
+    notes: [
+      'Builds directly on [din](../din/): same target-aware activation idea, with a recurrent interest-evolution layer added on top.',
+      'Reference topology: behaviour attention into a GRU, concatenated with the candidate embedding before the MLP head.',
+      'The full paper adds an auxiliary loss on the interest-extraction GRU and an attention-gated AUGRU; this graph shows the core evolution path.',
+    ],
+  },
+  {
+    kind: 'hffull', id: 'esmm', displayName: 'ESMM', org: 'Alibaba',
+    paramsLabel: 'Reference graph', fullBuild: buildESMM,
+    links: [['Paper (Ma et al. 2018)', 'https://arxiv.org/abs/1804.07931']],
+    archRows: [
+      ['Type', 'CVR / post-click conversion'], ['Towers', 'Shared embeddings feed a pCTR and a pCVR tower'],
+      ['Objective', 'pCTCVR = pCTR x pCVR, supervised over all impressions'],
+      ['Key idea', 'Train CVR over the entire space to kill sample-selection bias'],
+    ],
+    blurb: 'Entire Space Multi-task Model: conversion-rate models trained only on clicked impressions suffer sample-selection bias and data sparsity. ESMM trains a pCTR and a pCVR tower (sharing embeddings) over every impression, supervising the product pCTCVR = pCTR x pCVR, so the CVR tower learns from the full space without ever needing click-only labels.',
+    notes: [
+      'The two towers share one embedding table, which also eases the data-sparsity problem for the CVR tower.',
+      'pCVR is never supervised directly: the losses are on pCTR and on the pCTCVR product, both defined over all impressions.',
+      'A staple of e-commerce ads ranking; pairs with the multi-task rankers [mmoe](../mmoe/) and [ple](../ple/).',
     ],
   },
   {
